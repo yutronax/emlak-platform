@@ -1,0 +1,16 @@
+{
+  "name": "emlak-platform-baileys-sidecar",
+  "version": "0.1.0",
+  "description": "WhatsApp emlak gruplarını dinleyip Python orchestrator'a (/baileys-webhook) POST eden köprü",
+  "main": "bridge.js",
+  "scripts": {
+    "start": "node bridge.js"
+  },
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@whiskeysockets/baileys": "^7.0.0-rc14",
+    "pino": "^10.3.1",
+    "qrcode-terminal": "^0.12.0"
+  }
+}
