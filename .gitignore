@@ -7,4 +7,5 @@ node_modules/
 .next/
 scraper/sidecar/session/
 scraper/data/
+supabase/.temp/
 *.log

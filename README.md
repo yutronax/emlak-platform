@@ -32,6 +32,16 @@ cp ../.env.example ../.env   # doldurup proje köküne koy
 python orchestrator.py
 ```
 
+#### Doğrulama
+
+Supabase bağlantısını, şemayı ve RLS politikalarını kontrol etmek için:
+
+```bash
+cd scraper && python -m scripts.verify_supabase
+```
+
+Çıktının sonunda `GENEL: PASS` görmelisiniz. `FAIL` alırsanız `.env` içindeki `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` ve `SUPABASE_ANON_KEY` değerlerini kontrol edin.
+
 ### 3. WhatsApp sidecar (Node.js)
 
 ```bash

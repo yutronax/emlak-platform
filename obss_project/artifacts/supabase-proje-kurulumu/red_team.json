@@ -1,0 +1,82 @@
+{
+  "task": "supabase-proje-kurulumu",
+  "reviewed_at": "2026-10-16T00:00:00Z",
+  "summary": "verify_supabase.py uygulamasi atdd.md AC-2/3/4 u karsilayacak saglam ve karamsar (fail-by-default) bir karar mantigiyla yazilmis, testler tutarli ve mocklu dogrulamalar geciyor. Ancak plan.md de taahhut edilen iki dosya degisikligi (.gitignore, README.md) hic yapilmadi ve code_diff.md bunu hic raporlamadi; ayrica RPC varlik kontrolu ve env degisken adi gibi iki karar kullaniciya sorulmadan alt-ajan tarafindan verildi.",
+  "findings": [
+    {
+      "severity": "medium",
+      "category": "scope",
+      "file": ".gitignore",
+      "issue": "plan.md Files to Modify tablosunda .gitignore a supabase/.temp/ eklenmesi gerektigi acikca yazilmis (link/init sonrasi olusacak klasorun commite girmemesi icin), ama git status/diff bu dosyada hic degisiklik gostermiyor ve code_diff.md bunu hic raporlamiyor.",
+      "better_approach": ".gitignore a supabase/.temp/ satiri eklenmeli veya code_diff.md de neden atlandigi acikca not edilmeli.",
+      "reason": "Kullanici supabase link calistirdiginda olusan .temp/ klasoru icinde proje erisim bilgileri olabilir; .gitignore da yoksa yanlislikla commit edilme riski var."
+    },
+    {
+      "severity": "low",
+      "category": "scope",
+      "file": "README.md",
+      "issue": "plan.md README.md nin kurulum adimlarini gercek proje linki + dogrulama script ini calistirma talimatiyla guncellenmesini planlamisti; code_diff.md bu dosyayi degistirilenler listesinde gostermiyor, README hala genel supabase link/db push komutlarini iceriyor, python -m scripts.verify_supabase adimindan bahsetmiyor.",
+      "better_approach": "README.md ye dogrulama scriptinin nasil calistirilacagi ve .env.example deki SUPABASE_ANON_KEY eklentisi not edilmeliydi, ya da bu acikca siradaki insan adimina devredildigi code_diff.md de belirtilmeliydi.",
+      "reason": "Dokumantasyon planla uyumsuz kaldiginda, projeyi devralan biri script in varligindan haberdar olmaz; AC-2/3/4 un nasil dogrulanacagi README de gorunmuyor."
+    },
+    {
+      "severity": "low",
+      "category": "reliability",
+      "file": "scraper/scripts/verify_supabase.py",
+      "issue": "check_schema daki RPC varlik kontrolu, migration dosyasindaki Turkce RAISE EXCEPTION metnini (bulunamadi) fonksiyon var kaniti olarak kullaniyor (satir 88). Bu, 0002_admin_review.sql deki hata metni degisirse sessizce FAIL e doner; code_diff.md bunu kendisi de gercek projede ayrica dogrulanmali diyerek kabul ediyor, henuz canlida test edilmedi.",
+      "better_approach": "RPC varligini PostgREST OpenAPI semasi veya information_schema.routines sorgusuyla dogrulamak daha az kirilgan olurdu; mevcut yaklasim da kabul edilebilir (fail-safe).",
+      "reason": "Mesaj metnine baglilik, migration metni degisirse sessiz bir false-negative uretebilir. Kritik degil cunku yanlis yonde (fazla kati), kullaniciyi kandirmaz."
+    },
+    {
+      "severity": "low",
+      "category": "correctness",
+      "file": "scraper/scripts/verify_supabase.py",
+      "issue": "check_rls_rejection, anon insert basarili olursa (RLS atlanmis senaryo) temizlik yapmiyor - satir 166-172, test kaydi raw_listings de kalici kaliyor ve main() sadece temizlenemedi uyarisi basiyor.",
+      "better_approach": "Davranis dogru (atdd.md Risk bolumu de bunu zaten ongormus), ama service-role client ile ek bir temizlik denemesi eklenebilirdi.",
+      "reason": "Bu atdd.md de zaten bilinen ve kabul edilmis bir sinirlama, kritik degil - sadece gelecekte script birden cok kez FAIL modunda calisirsa tabloda cop veri birikebilir."
+    }
+  ],
+  "strengths": [
+    "Karar fonksiyonlari (evaluate_*, schema_missing, describe_write_read, overall_verdict) I/O dan tamamen ayrilmis - test edilebilirlik ve CAVEMAN ilkesine uygun, gereksiz soyutlama yok.",
+    "Davranis Sozlesmesi nin sessiz basari, kismi basari ve bos-hata ayrimi satirlari ayri dallarda (status: error/empty/ok) ele alinmis, genel bir except pass ile birlestirilmemis.",
+    "Fallback her yerde pessimist: belirsiz/erisilemeyen durum FAIL sayiliyor.",
+    "code_diff.md, backend-copilot un stub paketle test ettigini bagimsiz olarak gercek supabase paketiyle yeniden dogrulamis (34 passed, 3 skipped) - bagimsiz dogrulama disiplini iyi."
+  ],
+  "risks": [
+    "Gercek Supabase projesine karsi canli dogrulama henuz yapilmadi (verify_report.md gate 3: FAIL/bloklu) - AC-1/2/3/4 un gercek ortamda calistigi kanitlanmamis, sadece mocklu unit testlerle dogrulanmis.",
+    ".gitignore da supabase/.temp/ haric tutulmamis olmasi, kullanici supabase link calistirdiginda proje erisim meta verisinin yanlislikla commit edilmesi riskini tasiyor."
+  ],
+  "caveman_review": {
+    "complexity": "low",
+    "unnecessary_files": 0,
+    "unnecessary_helpers": 0,
+    "unnecessary_abstractions": 0
+  },
+  "scope_review": {
+    "matches_atdd": true,
+    "scope_expansion": false
+  },
+  "compliance_check": {
+    "unapproved_decisions": [
+      "RPC varlik kontrol yontemi (PostgREST hata metnindeki Turkce bulunamadi raise mesajini kanit olarak kullanma) code-copilot alt-ajani tarafindan kendi basina secildi; plan.md/test_diff.md bunu henuz netlesmedi, code-copilot dogrulamali olarak isaretlemisti ama kullaniciya sorulmadi.",
+      "SUPABASE_ANON_KEY ortam degiskeni adi code-copilot tarafindan secildi (.env.example de daha once yoktu) - test_diff.md bunu acik varsayim olarak isaretlemis ama kullaniciya onaylatilmadan .env.example a eklendi.",
+      "plan.md de taahhut edilen .gitignore (supabase/.temp/) ve README.md guncellemeleri hic yapilmadi ve bu sessizce (code_diff.md de belirtilmeden) atlandi."
+    ],
+    "open_questions_silently_resolved": [
+      "plan.md deki Open Questions (Supabase hesap/proje varsayimi, bolge tercihi eu-central-1) kullanicinin acik yetki devriyle Opus alt-ajanina cozdurulmus - bu ONAYLI bir devir, ihlal sayilmiyor, dogrulandi."
+    ],
+    "note": "Bolge/hesap varsayimi konusunda kullanici yetkisi dogrulandi ve sorun yok; ancak RPC kontrol yontemi, env degisken adi secimi ve plan.md de taahhut edilip sessizce atlanan .gitignore/README degisiklikleri kullaniciya hic sorulmadan karara baglanmis - bunlar dusuk/orta risk ama seffaflik ihlali, commit oncesi kullaniciya acikca bildirilmeli."
+  },
+  "ready_to_commit": {
+    "atdd_satisfied": true,
+    "tests_passed": true,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": true,
+    "security_acceptable": true,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": true,
+    "compliance_clean": false
+  },
+  "verdict": "approve-with-changes"
+}
