@@ -1,0 +1,74 @@
+{
+  "task": "pricing-plans-sort-order-fix",
+  "reviewed_at": "2026-10-18T00:00:00Z",
+  "summary": "Fix minimal ve isabetli: tek migration (sort_order kolonu + fiyata göre backfill) + fake-supabase.ts'e iki küçük metod. Gerçek Supabase'de plans tablosunun hiç var olmadığı keşfedilip (0003 hiç uygulanmamış) kullanıcıya açıkça bildirilip elle düzeltildi — şeffaf, kabul edilebilir bir önkoşul düzeltmesi. Tek gerçek compliance sorunu: plan.md, atdd.md'nin kendisinin 'kullanıcı onayı alınmadı' dediği backfill sıralaması varsayımı için 'kullanıcı devam onayı ile kabul etti' diyor — bu iki belge birbiriyle çelişiyor, hangisi doğru belirsiz.",
+  "findings": [
+    {
+      "severity": "medium",
+      "category": "compliance",
+      "file": "obss_project/artifacts/pricing-plans-sort-order-fix/plan.md",
+      "issue": "atdd.md'nin Assumptions bölümü ('Mevcut plans tablosunda satır varsa bunlar fiyata göre backfill edilecek — bu bir varsayım, kullanıcı onayı alınmadı') ile plan.md'nin Risks bölümü ('Kullanıcı \"devam\" onayı ile bu varsayımı kabul etti') birbiriyle çelişiyor. Hangi ifadenin doğru olduğu bu iki dosyadan anlaşılamıyor — ya atdd.md güncellenmeden bir onay alındı ve belgeye yansıtılmadı, ya da plan.md yanlış/erken bir 'onaylandı' iddiasında bulundu.",
+      "better_approach": "Gerçek bir kullanıcı onayı varsa atdd.md'nin Assumptions satırı da güncellenmeliydi ('onaylandı: <tarih/mesaj>'); yoksa plan.md'nin bu iddiayı düzeltmesi gerekir. Şu an iki belge arasında tutarsızlık var.",
+      "reason": "atdd.md kullanıcı onaylı sözleşme belgesi; bir varsayımın onay durumu konusunda plan.md ile çelişmesi, ileride 'bu karar onaylandı mı' sorusuna net cevap verilemeyeceği anlamına gelir. Pratik etkisi şu an düşük çünkü gerçek `plans` tablosu boş çıktı (backfill hiçbir satırı etkilemedi), ama süreç olarak düzeltilmeli."
+    },
+    {
+      "severity": "low",
+      "category": "test-gap",
+      "file": "web/src/test/fake-supabase.ts",
+      "issue": "`fake-supabase.ts:70`'teki kullanılmayan generic `T` lint uyarısı (verify_report.md'de de not edilmiş) temizlenmedi.",
+      "better_approach": "Generic parametre gerçekten kullanılmıyorsa kaldırılabilir ya da `returns<T>()` imzasının tip-only amacını açıklayan kısa bir not/underscore-prefix ile susturulabilir.",
+      "reason": "Kritik değil, davranışı etkilemiyor — küçük bir temizlik maddesi."
+    },
+    {
+      "severity": "low",
+      "category": "test-gap",
+      "file": "obss_project/artifacts/pricing-plans-sort-order-fix/test_diff.md",
+      "issue": "AC-5 (backfill sıralamasının gerçekten fiyata göre doğru uygulandığı) hiçbir otomatik testle doğrulanmadı — gerçek `plans` tablosu şu an boş olduğu için migration'ın `row_number() over (order by price_minor_unit asc, created_at asc)` ifadesi gerçek veriyle hiç çalıştırılmamış durumda.",
+      "better_approach": "En azından migration'ın kendi SQL'i üzerinde (ör. birkaç test satırı insert edip backfill mantığını yerel/test Supabase'inde çalıştıran bir integration testi) AC-5'i doğrulayan bir test eklenebilir; bu, tabloya ileride satır eklendiğinde backfill mantığının (zaten migration tek seferlik çalıştığı için yeni satırlara uygulanmayacağını da göz önünde bulundurarak) doğruluğunu kanıtlardı.",
+      "reason": "Şu an AC-5 'tartışmasız doğru' değil, sadece 'test edilecek veri yok' durumunda — bu ikisi aynı şey değil; tablo veriyle dolduğunda backfill mantığının gerçekten çalıştığını kanıtlayan hiçbir kanıt yok, sadece SQL'in mantıksal olarak doğru göründüğüne dayanılıyor."
+    }
+  ],
+  "strengths": [
+    "Fix minimal: migration + fake-supabase.ts'e iki küçük metod (order/returns), page.tsx'e hiç dokunulmadı (zaten doğruydu) — CAVEMAN'a tam uygun.",
+    "Migration numarası doğru şekilde gerçek migration geçmişine göre düzeltildi (atdd.md'nin varsayımsal 0004'ü değil, gerçek 0006) — plan.md bu tutarsızlığı doğru tespit edip düzeltti.",
+    "AC-4 (42703 regresyon) ve AC-3 (boş liste) davranış sözleşmesi netliği korunmuş; boş sonuç/hata ayrımı testlerle kanıtlanmış.",
+    "Gerçek Supabase'de `plans` tablosunun hiç var olmadığı (0003 migration'ı hiç uygulanmamış) keşfedilince bu açıkça 'EML-19'un orijinal varsayımı yanlış' diye raporlanmış, gizlenmemiş — kullanıcıya adım adım hangi SQL'in hangi sırada çalıştırılması gerektiği bildirilmiş ve kullanıcı bunu kendisi uygulamış.",
+    "Transaction/rollback davranışı (migration ya tam uygulanır ya hiç) ve 'add column if not exists' gibi tekrar-çalıştırılabilirlik önlemleri atdd.md'nin Rollback Beklentisi'yle uyumlu.",
+    "44/44 unit test PASS, build/lint/typecheck PASS, gerçek Supabase REST ile canlı doğrulama (200, kolonlar/tablo var) yapılmış."
+  ],
+  "risks": [
+    "Backfill sıralaması (price_minor_unit asc, created_at asc) gerçek veriyle hiç test edilmedi — tablo şu an boş, ileride satır eklendiğinde bu migration tekrar çalışmayacağı için (tek seferlik backfill) yeni satırların sort_order'ının ayrıca (uygulama kodu veya elle) set edilmesi gerektiği açık değil; bu nokta code_diff.md/verify_report.md'de vurgulanmamış.",
+    "0003 migration'ının gerçek projede hiç uygulanmamış olması, bu migration geçmişinin (0001-0006) dashboard'dan elle uygulanma sürecinde en az bir dosyanın tamamen atlanabildiğini gösteriyor — aynı sessiz atlama riski gelecekteki migration'lar için de geçerli (0004/0005'in gerçekten uygulanıp uygulanmadığı bu görevde de ayrıca doğrulanmadı, verify_report.md bunu açıkça not etmiş)."
+  ],
+  "caveman_review": {
+    "complexity": "low",
+    "unnecessary_files": 0,
+    "unnecessary_helpers": 0,
+    "unnecessary_abstractions": 0
+  },
+  "scope_review": {
+    "matches_atdd": true,
+    "scope_expansion": false
+  },
+  "compliance_check": {
+    "unapproved_decisions": [
+      "plan.md, atdd.md'nin 'kullanıcı onayı alınmadı' dediği backfill-sıralaması varsayımı için 'kullanıcı devam onayı ile kabul etti' diyor — bu onayın nerede/ne zaman verildiği iki belgeden de görülemiyor, tutarsızlık var."
+    ],
+    "open_questions_silently_resolved": [
+      "atdd.md'nin Unknowns'ındaki 'plans tablosunda satır var mı' sorusu verify adımında 'tablo hiç yoktu' olarak çözüldü — bu sessizce değil, açıkça raporlanıp kullanıcıya SQL çalıştırma talimatı olarak iletildi, kullanıcı da bunu uyguladı; bu yüzden gerçek bir 'sessiz' ihlal değil, ama atdd.md'nin kendisi hâlâ bu çözümü yansıtacak şekilde güncellenmedi."
+    ],
+    "note": "0003'ün gerçek projeye hiç uygulanmamış olmasının keşfedilip düzeltilmesi scope-creep değil — EML-19'un bitmesi için zorunlu bir önkoşuldu ve şeffaf şekilde kullanıcıya bildirilip kullanıcının kendi eylemiyle uygulandı, bu nedenle engelleyici bir compliance sorunu değil. Asıl ilkesel sorun plan.md/atdd.md arasındaki backfill-onayı çelişkisi; pratik etkisi düşük (tablo boş çıktı) ama belgeler arası tutarsızlık commit onayı verilirken not edilmeli."
+  },
+  "ready_to_commit": {
+    "atdd_satisfied": true,
+    "tests_passed": true,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": true,
+    "security_acceptable": true,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": true,
+    "compliance_clean": false
+  },
+  "verdict": "approve-with-changes"
+}

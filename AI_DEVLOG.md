@@ -81,3 +81,32 @@ hattı; risk düşük, sonraya bırakıldı.
 **Gerçek canlı doğrulama:** `supabase/migrations/0005_agents_immutable_columns.sql`
 gerçek projeye uygulandı, `created_at` değişikliği denemesi 403 + 42501 ile
 reddediliyor, DB'de değer değişmediği ayrıca doğrulandı (7/7 test PASS).
+
+## pricing-plans-sort-order-fix (2026-10-18, EML-19)
+
+**Risk/Varsayım** (kaynak: atdd.md, plan.md): Mevcut `plans` satırlarının
+(varsa) backfill sıralaması fiyata göre (price_minor_unit artan, eşitlikte
+created_at) yapıldı — bu bir varsayım, gerçek iş sıralaması (pazarlama
+tercihi) farklıysa elle düzeltme gerekebilir; kullanıcıya ayrıca, tek tek
+sorulmadı (atdd.md'nin Hard Stop onayı genel pipeline'a izin verdi, bu
+spesifik varsayıma değil — `red_team.json` bunu compliance bulgusu olarak
+işaretledi).
+
+**Kalan sınırlama** (kaynak: code_diff.md, red_team.json): Backfill
+mantığı (`row_number() over (order by price_minor_unit asc, created_at
+asc)`) gerçek veriyle hiç test edilmedi — gerçek `plans` tablosu migration
+uygulandığında boştu. Migration tek seferlik çalıştığı için ileride eklenen
+yeni satırların `sort_order`'ının ayrıca (uygulama kodu veya elle) set
+edilmesi gerektiği şu an koda yansımıyor.
+
+**Gerçek canlı doğrulama** (kaynak: verify_report.md): Gerçek Supabase
+projesinde `plans` tablosunun migration `0003_subscriptions_payment.sql`
+hiç uygulanmadığı için **hiç var olmadığı** keşfedildi (0001-0002 dışında
+hiçbir migration gerçek projeye uygulanmamıştı). Kullanıcı 0003 + 0006'yı
+SQL Editor'den elle uyguladı (0003'ün partial index'indeki
+`status::text` cast'i STABLE olduğu için IMMUTABLE gerektiren index
+predicate'inde hataya yol açtı, doğrudan enum karşılaştırmasına
+düzeltildi). Sonrasında `plans`/`sort_order`, `subscriptions.plan_id`,
+`payment_events` REST ile canlıda doğrulandı (200, bkz. verify_report.md).
+0004/0005'in gerçek projeye uygulanıp uygulanmadığı bu görevde ayrıca
+doğrulanmadı.
