@@ -15,6 +15,12 @@ const path = require('path');
 const WEBHOOK_URL = process.env.WEBHOOK_URL || 'http://localhost:8090/baileys-webhook';
 const AUTH_DIR = process.env.WHATSAPP_SESSION_DIR || path.join(__dirname, 'session');
 
+const WEBHOOK_SECRET = process.env.BAILEYS_WEBHOOK_SECRET;
+if (!WEBHOOK_SECRET) {
+  console.error('[YAPILANDIRMA HATASI] BAILEYS_WEBHOOK_SECRET env değişkeni set edilmemiş, köprü başlatılmıyor.');
+  process.exit(1);
+}
+
 function extractText(message) {
   if (!message) return null;
   const unwrapped =
@@ -48,11 +54,17 @@ async function postMessage(payload) {
   try {
     const res = await fetch(WEBHOOK_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${WEBHOOK_SECRET}`,
+      },
       body: JSON.stringify(payload),
     });
     if (!res.ok) {
       console.error(`[WEBHOOK HATA] ${res.status} ${res.statusText}`);
+      if (res.status === 401) {
+        console.error('[WEBHOOK AUTH HATASI] webhook auth failed (401), BAILEYS_WEBHOOK_SECRET uyuşmuyor');
+      }
     }
   } catch (e) {
     console.error('[WEBHOOK BAGLANTI HATASI]', e.message, `(hedef: ${WEBHOOK_URL}, orchestrator.py çalışıyor mu?)`);

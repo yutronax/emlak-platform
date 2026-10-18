@@ -1,0 +1,48 @@
+{
+  "task": "eml-20-scraper-webhook-auth",
+  "reviewed_at": "2026-10-18T00:00:00Z",
+  "summary": "Shared-secret auth, fail-closed yapılandırma ve bind adresi sınırlaması atdd.md AC'lerine (AC-1, AC-S1..S5, AC-7, AC-8, AC-9) birebir uyumlu, minimal (CAVEMAN'a uygun) bir diff ile uygulanmış. 14 testten 13'ü PASS, 1'i (AC-S2 timing) pytest+Windows soket ortamında flaky FAIL ama aynı AC başka bir testle (compare_digest çağrı kontrolü) zaten kanıtlanmış.",
+  "findings": [
+    {
+      "severity": "low",
+      "category": "test-gap",
+      "file": "scraper/tests/test_webhook_auth.py",
+      "issue": "test_ac_s2_timing_does_not_leak_correct_vs_incorrect_token pytest+Windows soket ortamında ConnectionAbortedError ile tutarlı şekilde FAIL veriyor; bu altyapı kırılganlığı CI'da sürekli kırmızı/yanıltıcı sinyal üretir.",
+      "better_approach": "Gerçek TCP round-trip yerine WebhookHandler.do_POST içindeki token-karşılaştırma mantığını izole çağıran bir unit-level timing testine çevir (verify_report.md'nin önerdiği gibi) veya testi mevcut haliyle xfail/skip-on-windows işaretle.",
+      "reason": "AC-S2'nin asıl iddiası (hmac.compare_digest kullanımı) ayrı bir testle (PASS) zaten kanıtlanmış; bu nedenle correctness değil test-gap/kırılganlık olarak sınıflandırıldı, implementasyonu bloklayan bir bulgu değil."
+    },
+    {
+      "severity": "low",
+      "category": "correctness",
+      "file": "scraper/orchestrator.py",
+      "issue": "Satır 106: `not secret or not hmac.compare_digest(token, secret)` kısa-devre değerlendirmesi nedeniyle secret boşsa compare_digest hiç çağrılmıyor. run() zaten secret boşsa sys.exit(1) ile süreci başlatmadığı için production'da bu dal erişilemez, ama handler izole test edilirse/başka bir giriş noktasından çağrılırsa (ör. ileride başka bir entrypoint eklenirse) fail-closed varsayımı kırılabilir.",
+      "better_approach": "Yorum satırıyla bu bağımlılığı (run()'ın secret kontrolü garanti ettiği) açıkça not düşmek, veya handler seviyesinde de aynı korumayı tekrar etmek.",
+      "reason": "Şu an gerçek bir güvenlik açığı değil (run() koruyor) ama örtük bir varsayım; ileride handler başka bir yoldan çağrılırsa sessizce fail-open olabilir."
+    }
+  ],
+  "strengths": [
+    "Auth kontrolü path kontrolünden sonra, JSON parse'tan önce yerleştirilmiş — AC-S3/S4 sıralaması kodda doğrulandı (orchestrator.py satır 98-123).",
+    "hmac.compare_digest(token, secret) kullanımı doğrulandı; eksik/yanlış token için aynı 401 + {\"error\":\"unauthorized\"} + WWW-Authenticate: Bearer döndürülüyor, oracle verilmiyor.",
+    "bridge.js tarafında fail-closed (secret yoksa process.exit(1)), Authorization header ekleme ve 401'de token loglamadan hata basma davranışı kod incelemesiyle teyit edildi.",
+    "CAVEMAN'a uygun: yeni soyutlama/yardımcı fonksiyon yok, auth kontrolü mevcut do_POST içine tek bir if bloğu olarak eklenmiş; tek yeni dosya (.env.example) atdd.md'de zaten planlanmıştı."
+  ],
+  "risks": [
+    "orchestrator.py ve bridge.js aynı anda deploy edilmezse (biri secret ile biri olmadan) mesaj akışı 401 ile durur — atdd.md'de bilinçli olarak not edilmiş, veri kaybı yok sadece gecikme.",
+    "Gemini kota tüketimi / rate limiting bilinçli kapsam dışı bırakılmış; token çalınırsa/sidecar ele geçirilirse DoS riski hâlâ açık (ayrı Jira issue önerilmiş, bu task'ın scope'unda değil)."
+  ],
+  "caveman_review": {"complexity": "low", "unnecessary_files": 0, "unnecessary_helpers": 0, "unnecessary_abstractions": 0},
+  "scope_review": {"matches_atdd": true, "scope_expansion": false},
+  "compliance_check": {
+    "unapproved_decisions": [],
+    "open_questions_silently_resolved": [
+      "atdd.md Unknowns'daki 'prod'da sidecar/orchestrator ayrı host'ta mı' sorusu plan.md'de 'tasarıma zaten yansıtıldı' denerek kapatılmış (BAILEYS_WEBHOOK_HOST env override edilebilir olduğu gerekçesiyle) — bu teknik olarak doğru bir çözüm ama kullanıcıya hiç sorulmadan kapatılmış bir Open Question; AC-7'nin kapsamını gerçekten karşılıyor (varsayılan 127.0.0.1 + env override), kodda da doğrulandı, sızan gizli bir varsayım yok."
+    ],
+    "note": "Persona/saldırgan/hedef/sıralama/kapsam-dışı kararları Opus alt-ajanı tarafından atdd.md'nin 4z adımında yanıtlanmış (bilinen akış, ihlal değil); bunların koda sızıp sızmadığı bağımsız olarak kod okunarak doğrulandı (orchestrator.py satır 96-150, bridge.js satır 18-66) ve atdd.md'deki AC'lerle tam örtüşüyor, kullanıcının görmediği ek bir davranış sızmamış."
+  },
+  "ready_to_commit": {
+    "atdd_satisfied": true, "tests_passed": true, "no_critical_findings": true,
+    "scope_respected": true, "caveman_satisfied": true, "security_acceptable": true,
+    "maintainability_acceptable": true, "no_blocking_risks": true, "compliance_clean": true
+  },
+  "verdict": "approve"
+}

@@ -10,9 +10,11 @@ queue.Queue + ThreadPoolExecutor + üç katmanlı dedup desenine karşılık gel
 """
 
 import asyncio
+import hmac
 import json
 import logging
 import os
+import sys
 import threading
 from concurrent.futures import ThreadPoolExecutor
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -98,6 +100,19 @@ class WebhookHandler(BaseHTTPRequestHandler):
             self.end_headers()
             return
 
+        secret = os.getenv("BAILEYS_WEBHOOK_SECRET", "")
+        auth_header = self.headers.get("Authorization", "")
+        token = auth_header[len("Bearer "):] if auth_header.startswith("Bearer ") else ""
+        if not secret or not hmac.compare_digest(token, secret):
+            body = json.dumps({"error": "unauthorized"}).encode("utf-8")
+            self.send_response(401)
+            self.send_header("WWW-Authenticate", "Bearer")
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
+
         length = int(self.headers.get("Content-Length", 0))
         body = self.rfile.read(length) if length else b""
         try:
@@ -126,14 +141,19 @@ class WebhookHandler(BaseHTTPRequestHandler):
 
 
 def run() -> None:
+    if not os.getenv("BAILEYS_WEBHOOK_SECRET", ""):
+        logger.error("BAILEYS_WEBHOOK_SECRET env değişkeni set edilmemiş, sunucu başlatılmıyor.")
+        sys.exit(1)
+
+    host = os.getenv("BAILEYS_WEBHOOK_HOST", "127.0.0.1")
     port = int(os.getenv("BAILEYS_WEBHOOK_PORT", "8090"))
     executor = ThreadPoolExecutor(max_workers=MAX_WORKERS)
 
     worker_thread = threading.Thread(target=_background_worker_loop, args=(executor,), daemon=True)
     worker_thread.start()
 
-    server = HTTPServer(("0.0.0.0", port), WebhookHandler)
-    logger.info("Scraper worker :%s/baileys-webhook adresinde dinliyor.", port)
+    server = HTTPServer((host, port), WebhookHandler)
+    logger.info("Scraper worker %s:%s/baileys-webhook adresinde dinliyor.", host, port)
     server.serve_forever()
 
 

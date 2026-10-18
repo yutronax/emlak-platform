@@ -110,3 +110,40 @@ düzeltildi). Sonrasında `plans`/`sort_order`, `subscriptions.plan_id`,
 `payment_events` REST ile canlıda doğrulandı (200, bkz. verify_report.md).
 0004/0005'in gerçek projeye uygulanıp uygulanmadığı bu görevde ayrıca
 doğrulanmadı.
+
+## eml-20-scraper-webhook-auth (2026-10-18, EML-20)
+
+**Risk** (kaynak: atdd.md): Gemini kota tüketimi / rate limiting bu
+sürümde bilinçli olarak kapsam dışı bırakıldı — token çalınırsa/sidecar
+ele geçirilirse DoS riski hâlâ açık, ayrı bir Jira issue'su açılmalı.
+`orchestrator.py` ve `bridge.js` aynı anda deploy edilmezse mesaj akışı
+401 ile durur (veri kaybı yok, sadece gecikme).
+
+**Rollback Beklentisi** (kaynak: atdd.md): Auth eklemesi geriye dönük
+uyumsuz — iki tarafın (orchestrator.py + bridge.js) aynı anda deploy
+edilmesi gerekiyor.
+
+**Kalan sınırlama** (kaynak: red_team.json, low): `WebhookHandler.do_POST`'taki
+`not secret or not hmac.compare_digest(token, secret)` kontrolü, `run()`'ın
+`BAILEYS_WEBHOOK_SECRET` boşsa süreci hiç başlatmaması varsayımına örtük
+olarak bağımlı — handler ileride başka bir giriş noktasından çağrılırsa bu
+fail-closed garanti tekrar edilmemiş olur. Şu an gerçek bir açık değil
+(run() koruyor), ileride not edilmesi gereken bir varsayım.
+
+**Test-gap** (kaynak: verify_report.md, red_team.json): Timing-leak testi
+(`test_ac_s2_timing_does_not_leak_correct_vs_incorrect_token`) pytest+Windows
+soket ortamında tutarlı `ConnectionAbortedError` ile FAIL veriyor; aynı
+senaryo pytest dışında sorunsuz çalıştı. AC-S2'nin asıl iddiası
+(`hmac.compare_digest` kullanımı) ayrı bir testle (PASS) zaten kanıtlı,
+bu nedenle implementasyonu bloklamadı — ama testin kendisi (gerçek TCP
+round-trip yerine izole bir unit test) sağlamlaştırılmalı.
+
+**Yeni env değişkenleri** (SETUP.md yok, bu repoda kurulum `scraper/.env.example`
+üzerinden belgeleniyor — ayrı bir SETUP.md oluşturmak gereksiz tekrar
+yaratırdı): `BAILEYS_WEBHOOK_SECRET` (zorunlu, boşsa süreç başlamaz),
+`BAILEYS_WEBHOOK_HOST` (opsiyonel, varsayılan `127.0.0.1`).
+
+**Gerçek doğrulama** (kaynak: verify_report.md): `scraper/tests/test_webhook_auth.py`
+scraper'ın kendi `.venv`'inde çalıştırıldı, 13/14 PASS. `security-scan`
+skill'i değişen dosyalara karşı çalıştırıldı — `secrets: PASS`,
+`python_sast: PASS`.
