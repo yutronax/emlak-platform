@@ -1,0 +1,93 @@
+{
+  "task": "agents-self-update-rls-yetki-yukseltme-acigi",
+  "reviewed_at": "2026-10-18T00:00:00Z",
+  "summary": "BEFORE UPDATE trigger ile is_admin yetki yükseltme açığı kapatılmış ve gerçek Supabase'e karşı 6/6 testle doğrulanmış; fix minimal ve isabetli. İki süreç kararı (frontend-pipeline adımının atlanması, anon-key testinin/atdd davranış sözleşmesinin orkestratör tarafından güncellenmesi) kullanıcıya sorulmadan alınmış ve bunlar makul ama onay gerektiren kapsam kararlarıdır; ayrıca AC-2 (id/created_at değişmezliği) hâlâ test edilmemiş durumda.",
+  "findings": [
+    {
+      "severity": "medium",
+      "category": "compliance",
+      "file": "obss_project/artifacts/agents-self-update-rls-yetki-yukseltme-acigi/verify_report.md",
+      "issue": "verify adımında bir testin (AC-S2 ek, anon key) yanlış beklentisi (401/403) gerçek davranışla (200 + boş data) çakışınca, hem test hem de atdd.md'nin Davranış Sözleşmesi satır 4'ü orkestratör tarafından kendi kararıyla güncellendi; kullanıcıya atdd.md'nin onaylı bir davranış sözleşmesi maddesinin değiştiği bildirilip onaylatılmadı.",
+      "better_approach": "Davranış sözleşmesi gibi kullanıcı onaylı bir belge güncellenecekse, güncellemeden önce (veya en azından commit'ten önce) kullanıcıya 'atdd.md'nin X maddesi gerçek davranışla çakıştığı için şu şekilde güncellendi, onaylıyor musunuz' diye açıkça sorulmalı.",
+      "reason": "Bu teknik olarak doğru bir düzeltme olsa da (güvenlik açısından zararsız — veri sızmıyor, sadece dönüş şekli farklı), atdd.md kullanıcı onaylı bir sözleşme belgesi; onun içeriğini sessizce değiştirmek süreç ihlali ve ileride 'neden atdd ile kod uyuşmuyor' karışıklığına yol açabilir."
+    },
+    {
+      "severity": "low",
+      "category": "compliance",
+      "file": "obss_project/artifacts/agents-self-update-rls-yetki-yukseltme-acigi/plan.md",
+      "issue": "plan.md'de frontend-pipeline tetikleyicisi (atdd.md'nin Etkilenen Dosyalar listesinde page.tsx vardı) orkestratör kendi kod okumasıyla 'yanlış pozitif' diye değerlendirip atladı; kullanıcıya bu atlama kararı sorulmadı.",
+      "better_approach": "Gerekçe kod okumayla net ve doğru olsa da (page.tsx gerçekten agents tablosuna dokunmuyor), atdd.md'de listelenmiş bir dosyanın kapsam dışına alınması kısa bir onay/bilgi notuyla kullanıcıya iletilmeliydi.",
+      "reason": "Düşük risk — gerekçe doğru ve dosya gerçekten etkilenmiyor, ama atdd.md'nin kendi listelediği bir modülü sessizce kapsam dışına almak, ilkesel olarak kullanıcı onayı gerektiren bir kapsam kararı."
+    },
+    {
+      "severity": "medium",
+      "category": "test-gap",
+      "file": "supabase/migrations/0004_fix_agents_self_update_rls.sql",
+      "issue": "AC-2 (id/created_at gibi alanların değişmezliği) için trigger'da açık bir koruma yok ve bağımsız bir test de yazılmadı; code_diff.md ve test_diff.md bu boşluğu not etmiş ama kapatılmamış.",
+      "better_approach": "En azından created_at için de `new.created_at is distinct from old.created_at` kontrolü trigger'a eklenebilir, ya da en azından açık bir Postgres GRANT/REVOKE ile created_at kolonunun UPDATE yetkisi authenticated rolünden alınabilir.",
+      "reason": "atdd.md AC-2'yi 'High' önceliğiyle acceptance criteria listesine koymuş; şu an sadece dolaylı/doğrulanmamış bir güvenceye dayanıyor (id zaten PK/immutable, created_at için hiçbir koruma yok — bir client teorik olarak created_at'i değiştirebilir, bu test edilmedi)."
+    },
+    {
+      "severity": "low",
+      "category": "reliability",
+      "file": "obss_project/artifacts/agents-self-update-rls-yetki-yukseltme-acigi/verify_report.md",
+      "issue": "Migration 0004, kullanıcı tarafından Supabase Dashboard SQL Editor'den elle uygulandı — repodaki migration dosyasıyla gerçek projedeki şema arasında otomatik bir doğrulama/diff adımı yok.",
+      "better_approach": "Migration'ın gerçek projeye bir CLI/CD akışıyla (örn. `supabase db push`) uygulanması ve uygulanan SQL'in dosyadakiyle birebir eşleştiğinin otomatik doğrulanması önerilir.",
+      "reason": "Elle kopyala-yapıştır uygulamalarda dosya ile gerçek şema arasında sessiz bir sapma riski var (örn. ileride biri migration dosyasını değiştirip gerçek projeye tekrar uygulamayı unutursa, kod/şema birbirinden sessizce uzaklaşır)."
+    },
+    {
+      "severity": "low",
+      "category": "readability",
+      "file": "web/src/test/agents-self-update-rls.test.ts",
+      "issue": "`clientB` değişkeni tanımlanıp set ediliyor ama hiçbir testte kullanılmıyor (lint uyarısı, verify_report.md'de de not edilmiş).",
+      "better_approach": "clientB kullanılmıyorsa kaldırılmalı, ya da AC-S2 testi (başka kullanıcının satırını güncelleme) clientB ile B'nin kendi oturumundan A'yı güncellemeye çalışması şeklinde yazılıp gerçek anlamda kullanılmalı.",
+      "reason": "Kritik değil ama ölü kod / kullanılmayan test fixture'ı CAVEMAN ilkesine aykırı küçük bir temizlik maddesi."
+    }
+  ],
+  "strengths": [
+    "Fix minimal ve isabetli: tek migration dosyası, tek trigger fonksiyonu, spekülatif soyutlama yok.",
+    "WITH CHECK yerine BEFORE UPDATE trigger seçimi gerekçeli ve doğru (OLD/NEW karşılaştırması net, subquery/MVCC varsayımına dayanmıyor).",
+    "security definer + search_path=public sabitlemesi, projenin diğer fonksiyonlarıyla (approve_raw_listing vb.) aynı güvenli kalıbı takip ediyor.",
+    "service_role istisnası (auth.role() <> 'service_role') admin akışını kırmıyor, AC-3 ile doğrulanmış.",
+    "Testler gerçek Supabase'e karşı (mock yok) yazılmış ve authz-test/threat-model matrisine birebir eşleniyor; kısmi başarı (satır 7) ve anon key (satır 4) senaryoları da kapsanmış.",
+    "Rollback/backfill konusunda atdd.md'nin kısıtları (otomatik backfill yapılmaması, rollback'te eski açık policy'nin geri gelmemesi) koda sadık şekilde uygulanmış — migration sadece şema değişikliği, data audit'e dokunmamış."
+  ],
+  "risks": [
+    "Üretim verisi denetimi ('is_admin=true' satırları) kullanıcı tarafından çalıştırıldı ama sonuç ayrıntısı paylaşılmadı — 'success/hata yok' bildirimi, geçmiş istismarın gerçekten olmadığını kanıtlamıyor, sadece kullanıcının o anki beyanına dayanıyor.",
+    "Migration'ın dashboard'dan elle uygulanması, dosya/şema senkronizasyonunu süreçsel olarak garantilemiyor (bkz. test-gap/reliability bulgusu).",
+    "AC-2 (id/created_at değişmezliği) hâlâ fiilen doğrulanmamış bir varsayım."
+  ],
+  "caveman_review": {
+    "complexity": "low",
+    "unnecessary_files": 0,
+    "unnecessary_helpers": 0,
+    "unnecessary_abstractions": 0
+  },
+  "scope_review": {
+    "matches_atdd": true,
+    "scope_expansion": false
+  },
+  "compliance_check": {
+    "unapproved_decisions": [
+      "Plan adımında frontend-pipeline tetikleyicisi (atdd.md'de page.tsx listelenmişti) orkestratörün kendi kod okumasıyla 'yanlış pozitif' sayılıp kullanıcıya sorulmadan atlandı.",
+      "Verify adımında anon-key testinin beklentisi (401/403) ile atdd.md'nin Davranış Sözleşmesi satır 4'ü, gerçek sistem davranışıyla (200 + boş data) çakışınca kullanıcıya onaylatılmadan birlikte güncellendi."
+    ],
+    "open_questions_silently_resolved": [
+      "'page.tsx bu göreve dahil mi' sorusu kullanıcıya sorulmadan 'hayır' olarak çözüldü.",
+      "'Davranış sözleşmesinin anon-key maddesi doğru mu' sorusu kullanıcıya sorulmadan 'hayır, güncellenmeli' olarak çözüldü."
+    ],
+    "note": "İkisi de teknik olarak savunulabilir ve doğru kararlar (page.tsx gerçekten agents tablosuna dokunmuyor; anon-key davranışı gerçek PostgREST davranışıyla eşleşmesi gerekiyordu, güvenlik açısından veri sızmıyor). Ancak ikisi de kullanıcı onaylı belgelerin (atdd.md'nin Etkilenen Dosyalar listesi ve Davranış Sözleşmesi) içeriğini değiştiriyor — bunlar 'makul teknik karar' ile 'kullanıcıya sorulması gereken kapsam/sözleşme değişikliği' arasında bir çizgide duruyor. Önerim: ikisi de commit'ten önce kullanıcıya kısa bir 'şunu fark ettim, şöyle güncelledim, onaylıyor musun' notuyla bildirilmeli — engelleyici (blocking) değil ama commit onayı bu bilgiyle birlikte verilmeli."
+  },
+  "ready_to_commit": {
+    "atdd_satisfied": true,
+    "tests_passed": true,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": true,
+    "security_acceptable": true,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": true,
+    "compliance_clean": false
+  },
+  "verdict": "approve-with-changes"
+}

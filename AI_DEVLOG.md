@@ -38,3 +38,37 @@ değişkeni/doğrulama script'i adımı bu görevde doğrudan README.md'ye eklen
 **Gerçek canlı doğrulama** (kaynak: verify_report.md): Gerçek Supabase
 projesi (ref: `bbjmjzixcugdwbcwydux`) bağlandı, migration'lar uygulandı,
 `python -m scripts.verify_supabase` canlı projede çalıştırıldı — `GENEL: PASS`.
+
+## agents-self-update-rls-yetki-yukseltme-acigi (2026-10-18, EML-18)
+
+**Risk** (kaynak: atdd.md): Mevcut üretim verisinde açık daha önce istismar
+edilmiş olabilir — `SELECT id, email, updated_at FROM agents WHERE is_admin
+= true` ile salt-okunur bir denetim yapıldı, anormallik bildirilmedi (kullanıcı
+beyanı, ayrıntılı satır çıktısı paylaşılmadı).
+
+**Teknik karar** (kaynak: plan.md): `WITH CHECK` yerine BEFORE UPDATE trigger
+seçildi — `WITH CHECK`'te OLD satırına (önceki `is_admin` değerine) doğrudan
+referans yok, subquery ile aynı tabloyu okumak MVCC/command-counter
+davranışına bağımlı güvenilmez bir varsayım olurdu; trigger'da `OLD`/`NEW`
+açıkça mevcut.
+
+**Kalan sınırlamalar / varsayımlar** (kaynak: code_diff.md, red_team.json):
+- AC-2 (`id`/`created_at` alanlarının değişmezliği) için trigger'da açık bir
+  koruma yok, bağımsız bir test de yazılmadı — dolaylı/doğrulanmamış bir
+  güvenceye dayanıyor (PM bulgusu, medium, sonraya bırakıldı — kullanıcı
+  onayıyla).
+- Migration, Supabase Dashboard SQL Editor'den elle uygulandı — dosya ile
+  gerçek proje şeması arasında otomatik bir senkronizasyon/diff kontrolü yok.
+
+**Süreç notu** (kaynak: red_team.json compliance_check): Pipeline sırasında
+iki küçük kapsam kararı orkestratör tarafından kullanıcıya sorulmadan alındı
+(frontend-pipeline adımının `page.tsx`'in bu göreve dokunmadığı gerekçesiyle
+atlanması; bir testin yanlış beklentisi düzeltilirken atdd.md'nin Davranış
+Sözleşmesi'nin de güncellenmesi) — PM ikisini de teknik olarak doğru ama
+şeffaflık notu gerektiren kararlar olarak işaretledi, kullanıcı commit
+onayında bilgilendirildi.
+
+**Gerçek canlı doğrulama** (kaynak: verify_report.md): Migration gerçek
+Supabase projesine (ref: `bbjmjzixcugdwbcwydux`) uygulandı,
+`web/src/test/agents-self-update-rls.test.ts` gerçek projeye karşı 6/6 PASS
+— `is_admin` yetki yükseltme denemesi 403 + Postgres 42501 ile reddediliyor.
