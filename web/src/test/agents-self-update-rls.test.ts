@@ -50,6 +50,7 @@ type AgentRow = {
   company_name: string;
   phone: string | null;
   is_admin: boolean;
+  created_at: string;
 };
 
 describe.skipIf(!hasRealSupabaseEnv)(
@@ -61,6 +62,7 @@ describe.skipIf(!hasRealSupabaseEnv)(
     let anonClient: SupabaseClient;
     let userAId: string;
     let userBId: string;
+    let originalCreatedAtA: string;
 
     const emailA = `rls-test-a-${randomUUID()}@example.com`;
     const emailB = `rls-test-b-${randomUUID()}@example.com`;
@@ -97,6 +99,14 @@ describe.skipIf(!hasRealSupabaseEnv)(
         .from("agents")
         .insert({ id: userBId, company_name: "Test Danışman B", phone: "5553334444" });
       if (insertErrB) throw insertErrB;
+
+      const { data: insertedA, error: fetchErrA } = await serviceClient
+        .from("agents")
+        .select("created_at")
+        .eq("id", userAId)
+        .single<Pick<AgentRow, "created_at">>();
+      if (fetchErrA || !insertedA) throw fetchErrA ?? new Error("userA created_at okunamadı");
+      originalCreatedAtA = insertedA.created_at;
 
       anonClient = createClient(SUPABASE_URL as string, ANON_KEY as string, {
         auth: { autoRefreshToken: false, persistSession: false },
@@ -142,6 +152,28 @@ describe.skipIf(!hasRealSupabaseEnv)(
       expect(status).toBe(200);
       expect(data?.company_name).toBe("Güncellenmiş A");
       expect(data?.is_admin).toBe(false);
+    });
+
+    it("AC-2 — id/created_at alanları değiştirilemez", async () => {
+      const fakeCreatedAt = new Date();
+      fakeCreatedAt.setMonth(fakeCreatedAt.getMonth() - 1);
+
+      const { error, status } = await clientA
+        .from("agents")
+        .update({ created_at: fakeCreatedAt.toISOString() })
+        .eq("id", userAId)
+        .select();
+
+      expect(error).not.toBeNull();
+      expect(error?.code).toBe("42501");
+      expect(status).toBe(403);
+
+      const { data: check } = await serviceClient
+        .from("agents")
+        .select("created_at")
+        .eq("id", userAId)
+        .single<Pick<AgentRow, "created_at">>();
+      expect(check?.created_at).toBe(originalCreatedAtA);
     });
 
     it("AC-S1 / Davranış Sözleşmesi #2 — is_admin=true denemesi 403 + Postgres 42501 ile reddedilir, DB'de false kalır", async () => {

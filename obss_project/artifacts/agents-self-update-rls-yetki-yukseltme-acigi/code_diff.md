@@ -35,6 +35,13 @@ dokunulmamış.
 - `auth.role()` fonksiyonunun Supabase projesinde mevcut/erişilebilir
   olduğu varsayıldı (standart Supabase `auth` şemasının bir parçası).
 
+## Ek (EML-25) — AC-2 kapatıldı
+`supabase/migrations/0005_agents_immutable_columns.sql` eklendi:
+`prevent_self_is_admin_escalation()` fonksiyonu `CREATE OR REPLACE FUNCTION`
+ile genişletildi — `id`/`created_at` değişikliği (rol istisnası olmadan)
+42501 ile reddediliyor. Gerçek Supabase'e karşı test edildi, PASS.
+Önceki "AC-2 dolaylı/doğrulanmamış" sınırlaması artık geçersiz.
+
 ## CAVEMAN self-review
 - Yeni dosya: sadece 1 migration dosyası (gerekli minimum).
 - Yeni soyutlama/yardımcı fonksiyon: 1 trigger fonksiyonu — zorunlu (Postgres

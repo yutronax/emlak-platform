@@ -53,10 +53,8 @@ davranışına bağımlı güvenilmez bir varsayım olurdu; trigger'da `OLD`/`NE
 açıkça mevcut.
 
 **Kalan sınırlamalar / varsayımlar** (kaynak: code_diff.md, red_team.json):
-- AC-2 (`id`/`created_at` alanlarının değişmezliği) için trigger'da açık bir
-  koruma yok, bağımsız bir test de yazılmadı — dolaylı/doğrulanmamış bir
-  güvenceye dayanıyor (PM bulgusu, medium, sonraya bırakıldı — kullanıcı
-  onayıyla).
+- ~~AC-2 (`id`/`created_at` alanlarının değişmezliği) için trigger'da açık
+  bir koruma yoktu~~ — **EML-25 ile kapatıldı** (bkz. aşağıdaki ek).
 - Migration, Supabase Dashboard SQL Editor'den elle uygulandı — dosya ile
   gerçek proje şeması arasında otomatik bir senkronizasyon/diff kontrolü yok.
 
@@ -72,3 +70,14 @@ onayında bilgilendirildi.
 Supabase projesine (ref: `bbjmjzixcugdwbcwydux`) uygulandı,
 `web/src/test/agents-self-update-rls.test.ts` gerçek projeye karşı 6/6 PASS
 — `is_admin` yetki yükseltme denemesi 403 + Postgres 42501 ile reddediliyor.
+
+### Ek — EML-25: AC-2 (id/created_at değişmezliği) kapatıldı (2026-10-18)
+
+**Kalan sınırlama** (kaynak: red_team.json, low): `id` alanı için ayrı bir
+UPDATE denemesi/test yok — trigger kodunda `new.id is distinct from old.id`
+kontrolü var ama `id` zaten PK olduğu için pratikte ikinci bir savunma
+hattı; risk düşük, sonraya bırakıldı.
+
+**Gerçek canlı doğrulama:** `supabase/migrations/0005_agents_immutable_columns.sql`
+gerçek projeye uygulandı, `created_at` değişikliği denemesi 403 + 42501 ile
+reddediliyor, DB'de değer değişmediği ayrıca doğrulandı (7/7 test PASS).
