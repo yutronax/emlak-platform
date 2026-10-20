@@ -1,0 +1,56 @@
+{
+  "task": "agent-dashboard-auth-ve-ilan-akisi",
+  "reviewed_at": "2026-10-20T00:00:00Z",
+  "summary": "Auth guard (AC-S1), RLS tek yetki kaynağı (AC-S2), abonelik rozet mantığı ve erişim-koşullu listings akışı atdd.md ile birebir eşleşiyor; hasAccess mantığı 0001_init.sql'deki listings_subscriber_select RLS kuralıyla kelimesi kelimesine aynı doğrulandı. Promise.all'dan vazgeçme kararı gerçek bir bağımlılık zinciri (listings, subscription sonucuna bağımlı) olduğu için teknik olarak haklı. Tek gerçek bulgu: iki sayfa (agent/dashboard, account/subscription) aynı subscription durumları için farklı Türkçe metinler kullanıyor; bu düşük önemde bir maintainability notu, bloklayıcı değil.",
+  "findings": [
+    {
+      "severity": "low",
+      "category": "maintainability",
+      "file": "web/src/app/agent/dashboard/page.tsx",
+      "issue": "BADGE_LABELS (bu dosyada 'past_due'->'Ödeme gecikmiş') ile account/subscription/page.tsx'teki STATUS_LABELS ('past_due'->'Gecikmiş') aynı subscription durumu için farklı Türkçe metin üretiyor. Kullanıcı aynı oturumda iki sayfada gezinirse tutarsız terminolojiyle karşılaşır.",
+      "better_approach": "Ortak bir status->label haritası (örn. web/src/lib/subscription-labels.ts) paylaşılabilir; ama atdd.md bu görevde bu tutarlılığı talep etmedi ve CAVEMAN ilkesi gereksiz soyutlamayı engeller, bu yüzden şu an için sadece not edilmesi, gelecekte bilinçli bir karar olarak ayrı bir görevde ele alınması öneriliyor.",
+      "reason": "Kullanıcı deneyiminde küçük bir tutarsızlık; fonksiyonel bir hata değil, atdd.md kapsamında zorunlu değil."
+    }
+  ],
+  "strengths": [
+    "AC-S1: redirect('/login') auth.getUser() sonrası ve herhangi bir DB sorgusundan önce çağrılıyor; test de 'subscriptions'/'listings' tablolarının hiç sorgulanmadığını doğruluyor.",
+    "AC-S2: createClient() (cookie/RLS tabanlı) kullanılıyor, createServiceRoleClient() hiç çağrılmıyor, listings sorgusuna agent_id filtresi eklenmemiş — RLS tek yetki kaynağı korunuyor.",
+    "hasAccess mantığı (status in active/trialing AND current_period_end > now()) supabase/migrations/0001_init.sql'deki listings_subscriber_select RLS politikasıyla birebir aynı — bağımsız doğrulandı.",
+    "Davranış Sözleşmesi'ndeki 7 dalın (redirect, 4 rozet durumu, 3 liste durumu) hepsi ayrı ayrı test edilmiş, sessiz boş sayfa senaryosu yok.",
+    "Kısmi başarı kuralı (subscription hata -> erişim yok sayılır, pessimist varsayım) kodda doğru uygulanmış.",
+    "CAVEMAN: yeni dosya/soyutlama yok, mevcut BADGE_LABELS/badgeLabel deseni genişletildi."
+  ],
+  "risks": [
+    "RLS kuralı ile sayfanın kendi hasAccess kararı iki ayrı yerde aynı mantığı tutuyor (atdd.md'de zaten bilinçli kabul edilmiş bir risk) — ileride RLS politikası değişirse sayfa kodu senkron güncellenmeyi unutabilir.",
+    "listings havuzunun gerçek hacmi bilinmediği için limit(20) varsayımı; üretim verisiyle revize gerekebilir (atdd.md'de zaten not edilmiş, yeni risk değil)."
+  ],
+  "caveman_review": {
+    "complexity": "low",
+    "unnecessary_files": 0,
+    "unnecessary_helpers": 0,
+    "unnecessary_abstractions": 0
+  },
+  "scope_review": {
+    "matches_atdd": true,
+    "scope_expansion": false
+  },
+  "compliance_check": {
+    "unapproved_decisions": [],
+    "open_questions_silently_resolved": [
+      "plan.md'nin Promise.all'dan vazgeçme kararı kullanıcıya sorulmadı; ancak bağımsız doğrulama bunun gerçek bir teknik zorunluluk olduğunu gösteriyor (listings sorgusu subscription sonucuna/hasAccess kararına bağımlı, iki sorgu paralel başlatılamaz) — kaçınılabilir sıralı-await DEĞİL, bu yüzden bir 'karar' değil 'gerçeklik düzeltmesi' olarak kabul edilebilir."
+    ],
+    "note": "atdd.md'nin Open Questions'ı boştu; Opus alt-ajanına dispatch edilen 8 netleştirme sorusunun (abonelik seçimi, rozet etiketleri, listings alanları, erişim-yok/boş-havuz davranışı) hepsi kod ile birebir eşleşiyor, sapma yok. Promise.all kararı dışında kullanıcıya sorulmadan alınmış ek bir karar bulunmadı."
+  },
+  "ready_to_commit": {
+    "atdd_satisfied": true,
+    "tests_passed": true,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": true,
+    "security_acceptable": true,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": true,
+    "compliance_clean": true
+  },
+  "verdict": "approve"
+}
