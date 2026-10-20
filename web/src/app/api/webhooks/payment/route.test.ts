@@ -120,18 +120,102 @@ describe("POST /api/webhooks/payment", () => {
   });
 
   it("imza geçerli ama DB update hata verirse 200 needs_review döner", async () => {
-    fake.failUpdatesWith(new Error("db unavailable"));
+    fake.failNextUpdateWith(new Error("db unavailable"));
     const rawBody = JSON.stringify(PAYMENT_SUCCESS_EVENT);
 
     const res = await POST(webhookRequest(rawBody, VALID_SIGNATURE));
 
     expect(createServiceRoleClient).toHaveBeenCalled();
-    expect(fake.update).toHaveBeenCalledTimes(1);
+    expect(fake.update).toHaveBeenCalledTimes(2);
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({
       received: true,
       subscription_id: "sub-1",
       status: "needs_review",
     });
+  });
+
+  it("AC-S1: abonelik zaten active ise koşullu update 0 satır etkiler, hiçbir alan değişmez", async () => {
+    fake.tables.subscriptions = [
+      { id: "sub-1", agent_id: "user-1", plan_id: PRO_PLAN_ID, status: "active", current_period_end: "2026-01-01T00:00:00.000Z" },
+    ];
+    const rawBody = JSON.stringify(PAYMENT_SUCCESS_EVENT);
+
+    const res = await POST(webhookRequest(rawBody, VALID_SIGNATURE));
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ received: true });
+    expect(fake.tables.subscriptions[0]).toEqual({
+      id: "sub-1",
+      agent_id: "user-1",
+      plan_id: PRO_PLAN_ID,
+      status: "active",
+      current_period_end: "2026-01-01T00:00:00.000Z",
+    });
+  });
+
+  it("AC-3: abonelik failed iken success event'i gelirse needs_review'a çekilir", async () => {
+    fake.tables.subscriptions = [
+      { id: "sub-1", agent_id: "user-1", plan_id: PRO_PLAN_ID, status: "failed" },
+    ];
+    const rawBody = JSON.stringify(PAYMENT_SUCCESS_EVENT);
+
+    const res = await POST(webhookRequest(rawBody, VALID_SIGNATURE));
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ received: true });
+    expect(fake.tables.subscriptions[0]).toMatchObject({ id: "sub-1", status: "needs_review" });
+  });
+
+  it("AC-S2: subscription_id DB'de hiç yoksa 200 received:true döner, hiçbir satır etkilenmez", async () => {
+    const event = { ...PAYMENT_SUCCESS_EVENT, subscription_id: "sub-does-not-exist" };
+    const rawBody = JSON.stringify(event);
+
+    const res = await POST(webhookRequest(rawBody, VALID_SIGNATURE));
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ received: true });
+    expect(fake.tables.subscriptions).toEqual([
+      { id: "sub-1", agent_id: "user-1", plan_id: PRO_PLAN_ID, status: "pending" },
+    ]);
+  });
+
+  it("AC-5: ilk update hata verir ama needs_review update'i başarılı olursa 200 needs_review döner ve DB'ye de yazılır", async () => {
+    fake.failNextUpdateWith(new Error("db unavailable"));
+    const rawBody = JSON.stringify(PAYMENT_SUCCESS_EVENT);
+
+    const res = await POST(webhookRequest(rawBody, VALID_SIGNATURE));
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({
+      received: true,
+      subscription_id: "sub-1",
+      status: "needs_review",
+    });
+    expect(fake.tables.subscriptions[0]).toMatchObject({ id: "sub-1", status: "needs_review" });
+  });
+
+  it("AC-5: hem ilk update hem needs_review update'i başarısız olursa 500 döner ve payment_events processing_error=true olur", async () => {
+    fake.failNextUpdateWith(new Error("db unavailable")); // ilk koşullu update
+    fake.failNextUpdateWith(new Error("db unavailable")); // needs_review update'i
+    const rawBody = JSON.stringify(PAYMENT_SUCCESS_EVENT);
+
+    const res = await POST(webhookRequest(rawBody, VALID_SIGNATURE));
+
+    expect(res.status).toBe(500);
+    const event = fake.tables.payment_events.find((row) => row.provider_event_id === "evt-1");
+    expect(event).toMatchObject({ processing_error: true });
+  });
+
+  it("AC-6: bilinmeyen event_type için hiçbir update çağrılmaz, 200 received:true döner", async () => {
+    const event = { ...PAYMENT_SUCCESS_EVENT, event_type: "SOME_UNKNOWN_TYPE" };
+    const rawBody = JSON.stringify(event);
+
+    const res = await POST(webhookRequest(rawBody, VALID_SIGNATURE));
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ received: true });
+    expect(fake.update).not.toHaveBeenCalled();
+    expect(fake.tables.subscriptions[0]).toMatchObject({ status: "pending" });
   });
 });

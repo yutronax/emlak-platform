@@ -1,0 +1,44 @@
+{
+  "task": "webhook-subscription-id-dogrulama",
+  "reviewed_at": "2026-10-20T19:31:00Z",
+  "summary": "Önceki incelemede bulunan YÜKSEK önemli bulgu (ikinci select'in error kanalının kontrol edilmemesi) route.ts satır 82'ye eklenen `if (readError) throw readError;` ile düzeltildi; tsc --noEmit hatasız ve 50/50 test PASS. Önceki 'düşük' doküman-kod uyumsuzluğu bulgusu yeniden incelendi ve geçersiz çıktı: route.ts satır 90'daki needs_review update'inin hata alanı hiç destructure edilmiyor (throw yok), yani gerçekten sessizce yutuluyor — code_diff.md'nin 'Kalan sınırlamalar' bölümündeki beyanı kodla uyumlu. Onay veriliyor.",
+  "findings": [
+    {
+      "severity": "low",
+      "category": "test-gap",
+      "file": "web/src/app/api/webhooks/payment/route.ts",
+      "issue": "Satır 90: AC-3 anomali dalındaki `needs_review` update çağrısının `error` alanı destructure edilip kontrol edilmiyor (`await supabase...update(...)` — dönüş değeri hiç yakalanmıyor). Bu, code_diff.md'nin 'Kalan sınırlamalar' bölümünde doğru şekilde belgelenmiş bilinçli bir sınırlama (processing_error mekanizması bu dal için tekrarlanmadı) ve atdd.md AC-3 sadece 'needs_review'a çekilir' diyor, ikinci katman hatayı tarif etmiyor.",
+      "better_approach": "İsteğe bağlı, kapsam dışı değil ama küçük bir iyileştirme adayı: bu update'in hatası da yakalanıp en azından console.error ile loglanabilir (processing_error'a kadar götürmeden). Şu an engelleyici değil.",
+      "reason": "atdd.md AC-3 bu ikinci katman hatayı tarif etmiyor; code_diff.md bunu doğru ve şeffaf şekilde 'bilinçli dar tutuldu' olarak belgeliyor. Önceki red_team.json'daki 'doküman kodla uyumsuz' iddiası yanlıştı — kod satır 90'da throw yok, bu yüzden outer catch'e düşmüyor, gerçekten sessizce yutuluyor, code_diff.md'nin beyanı doğru. Sadece gelecekte AC-3 için ayrı bir test/karar gerekebileceğini not etmek için düşük önemle tutuluyor."
+    }
+  ],
+  "strengths": [
+    "Önceki YÜKSEK bulgu doğru şekilde düzeltildi: route.ts satır 77-82'de ikinci select'in `error` alanı artık destructure ediliyor ve `if (readError) throw readError;` ile dış catch/needs_review/processing_error zincirine (AC-5 yolu) doğru şekilde yönlendiriliyor — gerçek bir DB hatası artık AC-S2 ('kayıt yok') ile karıştırılmıyor.",
+      "npx tsc --noEmit hatasız tamamlandı (web/ dizininde).",
+    "npx vitest run: 8 test dosyası, 50/50 test PASS.",
+    "AC-1/AC-S1/AC-3/AC-S2/AC-5/AC-6'nın tümü route.ts'te doğru ayrıştırılıyor ve testlerle izole ediliyor.",
+    "Migration additive ve geriye dönük uyumlu, kapsam dışı maddeler (iyzico'ya subscription_id gönderimi, retry cron, yeni event_type mantığı) koda eklenmemiş."
+  ],
+  "risks": [
+    "Satır 90'daki needs_review update'inin kendi hatası görünür bir iz bırakmıyor (console.error dahi yok) — bu, atdd.md'nin kapsamı dışında bilinçli bir karar olarak belgelenmiş, ama ileride bu ikinci katmanın da gözlemlenebilir olması istenirse ayrı bir görev gerekir."
+  ],
+  "caveman_review": {"complexity": "low", "unnecessary_files": 0, "unnecessary_helpers": 0, "unnecessary_abstractions": 0},
+  "scope_review": {"matches_atdd": true, "scope_expansion": false},
+  "compliance_check": {
+    "unapproved_decisions": [],
+    "open_questions_silently_resolved": [],
+    "note": "atdd.md'deki tüm açık kararlar (Opus alt-ajanı tarafından yanıtlanan 10 soru) koda doğru yansımış; kontrol edildi, onay dışı/sessizce alınmış bir karar bulunamadı. Önceki incelemede işaretlenen 'code_diff.md kodla uyumsuz' iddiası bu re-review'da yeniden doğrulandı ve GEÇERSİZ bulundu (kod gerçekten belgelenen şekilde davranıyor) — bu nedenle compliance ihlali yok."
+  },
+  "ready_to_commit": {
+    "atdd_satisfied": true,
+    "tests_passed": true,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": true,
+    "security_acceptable": true,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": true,
+    "compliance_clean": true
+  },
+  "verdict": "approve"
+}

@@ -43,6 +43,7 @@ interface FakeContext {
   uniqueColumns: Record<string, string>;
   queries: QueryLog[];
   updateError: Error | null;
+  failNextUpdateErrors: Error[];
   insertSpy: Spy;
   updateSpy: Spy;
 }
@@ -87,6 +88,10 @@ class FakeQuery implements PromiseLike<FakeResult> {
     this.op = "update";
     this.payload = patch;
     this.ctx.updateSpy(this.table, patch);
+    if (this.ctx.failNextUpdateErrors.length > 0) {
+      const error = this.ctx.failNextUpdateErrors.shift()!;
+      throw error;
+    }
     if (this.ctx.updateError) {
       throw this.ctx.updateError;
     }
@@ -191,6 +196,8 @@ export interface FakeSupabase {
   setUser(user: { id: string } | null): void;
   /** Sonraki update(...) çağrıları bu hatayı fırlatır (DB hatası simülasyonu). */
   failUpdatesWith(error: Error | null): void;
+  /** Sıradaki update(...) çağrısı bu hatayı fırlatır (kuyruğa eklenir); art arda çağrılırsa her biri sırayla bir sonraki update'i başarısız kılar, kuyruk tükenince normale döner. */
+  failNextUpdateWith(error: Error): void;
 }
 
 export function createFakeSupabase(options: FakeSupabaseOptions = {}): FakeSupabase {
@@ -200,6 +207,7 @@ export function createFakeSupabase(options: FakeSupabaseOptions = {}): FakeSupab
     uniqueColumns: options.uniqueColumns ?? {},
     queries: [],
     updateError: null,
+    failNextUpdateErrors: [],
     insertSpy: vi.fn(),
     updateSpy: vi.fn(),
   };
@@ -228,6 +236,9 @@ export function createFakeSupabase(options: FakeSupabaseOptions = {}): FakeSupab
     },
     failUpdatesWith(error) {
       ctx.updateError = error;
+    },
+    failNextUpdateWith(error) {
+      ctx.failNextUpdateErrors.push(error);
     },
   };
 }

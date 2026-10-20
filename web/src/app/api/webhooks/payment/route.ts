@@ -36,12 +36,15 @@ export async function POST(request: NextRequest) {
   const supabase = createServiceRoleClient();
 
   // Idempotency: provider_event_id unique. Aynı olay ikinci kez gelirse state değişmez.
-  const { error: insertError } = await supabase.from("payment_events").insert({
-    provider_event_id: event.event_id,
-    event_type: event.event_type,
-    subscription_id: event.subscription_id,
-    raw_payload: event,
-  });
+  const { data: insertedEvent, error: insertError } = (await supabase
+    .from("payment_events")
+    .insert({
+      provider_event_id: event.event_id,
+      event_type: event.event_type,
+      subscription_id: event.subscription_id,
+      raw_payload: event,
+    })
+    .select("id")) as { data: { id: string }[] | null; error: { code: string } | null };
   if (insertError) {
     if (insertError.code === "23505") {
       return NextResponse.json({ received: true, duplicate: true, event_id: event.event_id });
@@ -49,6 +52,8 @@ export async function POST(request: NextRequest) {
     console.error("payment_events insert başarısız", insertError);
     return NextResponse.json({ error: "INTERNAL_ERROR" }, { status: 500 });
   }
+  const insertedRows = Array.isArray(insertedEvent) ? insertedEvent : insertedEvent ? [insertedEvent] : [];
+  const paymentEventId = insertedRows[0]?.id;
 
   const status = STATUS_BY_EVENT_TYPE[event.event_type];
   if (!status) {
@@ -64,14 +69,51 @@ export async function POST(request: NextRequest) {
       .from("subscriptions")
       .update(patch)
       .eq("id", event.subscription_id)
+      .eq("status", "pending")
       .select("id");
     if (error) throw error;
+
     if (!data || data.length === 0) {
-      console.warn("payment webhook: subscription_id bulunamadı", event.subscription_id);
+      const { data: current, error: readError } = await supabase
+        .from("subscriptions")
+        .select("status")
+        .eq("id", event.subscription_id)
+        .maybeSingle();
+      if (readError) throw readError;
+
+      if (!current) {
+        console.warn("payment webhook: subscription_id bulunamadı", event.subscription_id);
+      } else if (current.status === status) {
+        console.warn("payment webhook: abonelik zaten hedef durumda, no-op", event.subscription_id);
+      } else {
+        console.warn("payment webhook: beklenmeyen abonelik durumu, needs_review'a çekiliyor", event.subscription_id, current.status);
+        await supabase.from("subscriptions").update({ status: "needs_review" }).eq("id", event.subscription_id);
+      }
     }
   } catch (error) {
     // Sağlayıcıya ve istemciye ham hata gönderilmez; yalnızca sunucu logu.
     console.error("abonelik güncellenemedi", event.subscription_id, error);
+    try {
+      const { error: needsReviewError } = await supabase
+        .from("subscriptions")
+        .update({ status: "needs_review" })
+        .eq("id", event.subscription_id);
+      if (needsReviewError) throw needsReviewError;
+    } catch (needsReviewError) {
+      console.error("abonelik needs_review'a da çekilemedi", event.subscription_id, needsReviewError);
+      if (paymentEventId) {
+        try {
+          const { error: processingErrorUpdateError } = await supabase
+            .from("payment_events")
+            .update({ processing_error: true })
+            .eq("id", paymentEventId);
+          if (processingErrorUpdateError) throw processingErrorUpdateError;
+        } catch (processingErrorUpdateError) {
+          console.error("payment_events processing_error işaretlenemedi", paymentEventId, processingErrorUpdateError);
+        }
+      }
+      return NextResponse.json({ error: "INTERNAL_ERROR" }, { status: 500 });
+    }
     return NextResponse.json({
       received: true,
       subscription_id: event.subscription_id,
