@@ -1,0 +1,31 @@
+{
+  "task": "admin-listings-defense-in-depth",
+  "reviewed_at": "2026-10-20T00:00:00Z",
+  "summary": "requireAdmin() RPC/sorgudan önce gerçekten çağrılıyor, error.message hiçbir yerde istemciye sızmıyor, agents sorgusu .eq(\"id\", userId) ile RLS'in agents_self_select politikasına uyumlu, helper side-effect'siz. Testler ve diff atdd.md kapsamıyla tam örtüşüyor.",
+  "findings": [],
+  "strengths": [
+    "actions.ts: requireAdmin() çağrısı ve ok:false kontrolü supabase.rpc() çağrısından önce, RPC'ye asla erken gidilmiyor (actions.ts satır 14-25, 39-50).",
+    "page.tsx: requireAdmin() çağrısı raw_listings sorgusundan önce (satır 29-40), redirect dallanması doğru (no-session->/login, not-admin->/agent/dashboard).",
+    "Her iki dosyada da error.message asla kullanıcıya dönen string'e karışmıyor; console.error(error) sadece sunucu logunda, throw/UI mesajı sabit generic metin.",
+    "requireAdmin.ts gerçekten side-effect'siz: redirect/throw yok, sadece {ok,...} discriminated union döner; çağıran taraf kendi bağlamına uygun davranışı uyguluyor.",
+    "agents sorgusu .select(\"is_admin\").eq(\"id\", auth.user.id).maybeSingle() - RLS agents_self_select (id=auth.uid()) ile tutarlı, kullanıcı sadece kendi satırını okuyabiliyor; requireAdmin.test.ts bunu .eq çağrısıyla bağımsız doğruluyor.",
+    "AC-S1/S2/S3 ve AC-4/AC-5 için ayrı testler mevcut, negatif assertion ile DB hata detayının sızmadığı açıkça doğrulanmış (actions.test.ts satır 133).",
+    "Kapsam dışı bırakılan konulara (RLS değişikliği, escalation koruması, rate limiting, audit log) hiç dokunulmamış."
+  ],
+  "risks": [
+    "requireAdmin() helper'ı redirect/throw seçimini çağırana bırakıyor; gelecekte bir action içinde yanlışlıkla page-tarzı redirect çağrılırsa (plan.md'de de not edilmiş bir risk) sorun oluşabilir — şu an için her iki çağrı noktasında doğru kullanılmış, bu bir ileri-dönük bakım riski, güncel kodda sorun yok."
+  ],
+  "caveman_review": {"complexity": "low", "unnecessary_files": 0, "unnecessary_helpers": 0, "unnecessary_abstractions": 0},
+  "scope_review": {"matches_atdd": true, "scope_expansion": false},
+  "compliance_check": {
+    "unapproved_decisions": [],
+    "open_questions_silently_resolved": [],
+    "note": "atdd.md'deki tüm Sorular ve Cevaplar kayıtları (helper tasarımı, redirect/throw davranışı, generic hata mesajları) koda doğru yansımış; kontrol edildi, sorun yok."
+  },
+  "ready_to_commit": {
+    "atdd_satisfied": true, "tests_passed": true, "no_critical_findings": true,
+    "scope_respected": true, "caveman_satisfied": true, "security_acceptable": true,
+    "maintainability_acceptable": true, "no_blocking_risks": true, "compliance_clean": true
+  },
+  "verdict": "approve"
+}

@@ -1,4 +1,6 @@
-import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
+
+import { requireAdmin } from "@/lib/auth/requireAdmin";
 
 import { approveListing, rejectListing } from "./actions";
 
@@ -24,7 +26,12 @@ type RawListingRow = {
 };
 
 export default async function AdminListingsPage() {
-  const supabase = await createClient();
+  const auth = await requireAdmin();
+  if (!auth.ok) {
+    redirect(auth.reason === "no-session" ? "/login" : "/agent/dashboard");
+  }
+  const { supabase } = auth;
+
   const { data: rawListings, error } = await supabase
     .from("raw_listings")
     .select("id, source_group, raw_text, parsed, quality_score, created_at")
@@ -33,9 +40,10 @@ export default async function AdminListingsPage() {
     .returns<RawListingRow[]>();
 
   if (error) {
+    console.error("raw_listings sorgusu başarısız", error);
     return (
       <main className="mx-auto max-w-3xl p-8">
-        <p className="text-red-600">İlanlar yüklenemedi: {error.message}</p>
+        <p className="text-red-600">İlanlar yüklenemedi, lütfen tekrar deneyin.</p>
       </main>
     );
   }
