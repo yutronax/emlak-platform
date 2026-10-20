@@ -69,11 +69,13 @@ describe("AccountSubscriptionPage", () => {
 
   it("giriş yapmış kullanıcının kendi aktif aboneliğini, planı ve dönem sonunu gösterir", async () => {
     const { from, subscriptionsQuery } = setupSupabase({
-      data: {
-        status: "active",
-        current_period_end: "2026-12-31T00:00:00.000Z",
-        plan: { name: "Pro" },
-      },
+      data: [
+        {
+          status: "active",
+          current_period_end: "2026-12-31T00:00:00.000Z",
+          plan: { name: "Pro" },
+        },
+      ],
       error: null,
     });
 
@@ -116,11 +118,13 @@ describe("AccountSubscriptionPage", () => {
 
   it("abonelik past_due durumundaysa ödeme gecikmesi uyarısı gösterir", async () => {
     setupSupabase({
-      data: {
-        status: "past_due",
-        current_period_end: "2026-12-31T00:00:00.000Z",
-        plan: { name: "Pro" },
-      },
+      data: [
+        {
+          status: "past_due",
+          current_period_end: "2026-12-31T00:00:00.000Z",
+          plan: { name: "Pro" },
+        },
+      ],
       error: null,
     });
 
@@ -128,5 +132,202 @@ describe("AccountSubscriptionPage", () => {
     render(jsx);
 
     expect(screen.getByText(/ödeme.*(gecik|başarısız)/i)).toBeInTheDocument();
+  });
+
+  // --- EML-39: birden fazla subscription satırı (atdd.md AC-1..AC-8) ---
+
+  it("birden fazla subscription satırı varsa hata vermez ve aktif satırı gösterir (AC-1)", async () => {
+    setupSupabase({
+      data: [
+        {
+          status: "failed",
+          current_period_end: null,
+          plan: { name: "Basic" },
+          created_at: "2026-06-01T00:00:00.000Z",
+        },
+        {
+          status: "active",
+          current_period_end: "2026-12-31T00:00:00.000Z",
+          plan: { name: "Pro" },
+          created_at: "2026-01-01T00:00:00.000Z",
+        },
+      ],
+      error: null,
+    });
+
+    const jsx = await Page();
+    render(jsx);
+
+    expect(screen.queryByText(/yüklenemedi/i)).toBeNull();
+    expect(screen.getByText("Aktif")).toBeInTheDocument();
+    expect(screen.getByText(/\bPro\b/)).toBeInTheDocument();
+  });
+
+  it("öncelik sırasına göre 'active' satırı, canceled/past_due satırlarından önce seçer (AC-2)", async () => {
+    setupSupabase({
+      data: [
+        {
+          status: "canceled",
+          current_period_end: null,
+          plan: { name: "Basic" },
+          created_at: "2026-06-01T00:00:00.000Z",
+        },
+        {
+          status: "active",
+          current_period_end: "2026-12-31T00:00:00.000Z",
+          plan: { name: "Pro" },
+          created_at: "2026-03-01T00:00:00.000Z",
+        },
+        {
+          status: "past_due",
+          current_period_end: null,
+          plan: { name: "Basic" },
+          created_at: "2026-02-01T00:00:00.000Z",
+        },
+      ],
+      error: null,
+    });
+
+    const jsx = await Page();
+    render(jsx);
+
+    expect(screen.getByText("Aktif")).toBeInTheDocument();
+    expect(screen.queryByText("İptal edildi")).toBeNull();
+    expect(screen.queryByText("Gecikmiş")).toBeNull();
+  });
+
+  it("aynı öncelikteki birden fazla satırda dizideki ilk (en yeni, created_at desc) satırı seçer (AC-3)", async () => {
+    setupSupabase({
+      data: [
+        {
+          status: "canceled",
+          current_period_end: "2026-07-01T00:00:00.000Z",
+          plan: { name: "Yeni" },
+          created_at: "2026-06-01T00:00:00.000Z",
+        },
+        {
+          status: "canceled",
+          current_period_end: "2026-02-01T00:00:00.000Z",
+          plan: { name: "Eski" },
+          created_at: "2026-01-01T00:00:00.000Z",
+        },
+      ],
+      error: null,
+    });
+
+    const jsx = await Page();
+    render(jsx);
+
+    expect(screen.getByText("İptal edildi")).toBeInTheDocument();
+    expect(screen.getByText(/\bYeni\b/)).toBeInTheDocument();
+    expect(screen.queryByText(/\bEski\b/)).toBeNull();
+  });
+
+  it("boş dizi (data: []) için mevcut 'aboneliğiniz yok' davranışını korur (AC-4)", async () => {
+    setupSupabase({ data: [], error: null });
+
+    const jsx = await Page();
+    render(jsx);
+
+    expect(screen.getByText(/aboneliğiniz yok/i)).toBeInTheDocument();
+    expect(screen.queryByText(/yüklenemedi/i)).toBeNull();
+  });
+
+  it("seçilen satır past_due ise uyarı role=\"alert\" ile vurgulanır ve /pricing linki gösterilir (AC-5)", async () => {
+    setupSupabase({
+      data: [
+        {
+          status: "past_due",
+          current_period_end: "2026-12-31T00:00:00.000Z",
+          plan: { name: "Pro" },
+          created_at: "2026-06-01T00:00:00.000Z",
+        },
+        {
+          status: "canceled",
+          current_period_end: null,
+          plan: { name: "Basic" },
+          created_at: "2026-01-01T00:00:00.000Z",
+        },
+      ],
+      error: null,
+    });
+
+    const jsx = await Page();
+    const { container } = render(jsx);
+
+    const alert = screen.getByRole("alert");
+    expect(alert).toHaveTextContent(/ödeme.*(gecik|başarısız)/i);
+    expect(container.querySelector('a[href="/pricing"]')).not.toBeNull();
+  });
+
+  it("yalnızca seçilen satırın plan adını gösterir, diğer satırların plan adını göstermez (AC-6)", async () => {
+    setupSupabase({
+      data: [
+        {
+          status: "active",
+          current_period_end: "2026-12-31T00:00:00.000Z",
+          plan: { name: "Pro" },
+          created_at: "2026-06-01T00:00:00.000Z",
+        },
+        {
+          status: "failed",
+          current_period_end: null,
+          plan: { name: "Basic" },
+          created_at: "2026-01-01T00:00:00.000Z",
+        },
+      ],
+      error: null,
+    });
+
+    const jsx = await Page();
+    render(jsx);
+
+    expect(screen.getByText(/\bPro\b/)).toBeInTheDocument();
+    expect(screen.queryByText(/\bBasic\b/)).toBeNull();
+  });
+
+  it("seçilen satır trialing ise 'Deneme sürümü' etiketini gösterir (AC-7)", async () => {
+    setupSupabase({
+      data: [
+        {
+          status: "trialing",
+          current_period_end: "2026-12-31T00:00:00.000Z",
+          plan: { name: "Pro" },
+          created_at: "2026-06-01T00:00:00.000Z",
+        },
+      ],
+      error: null,
+    });
+
+    const jsx = await Page();
+    render(jsx);
+
+    expect(screen.getByText("Deneme sürümü")).toBeInTheDocument();
+  });
+
+  it("çoklu satır senaryosunda sorgu hâlâ agent_id = auth.user.id filtresini kullanır (AC-8 regresyon)", async () => {
+    const { from, subscriptionsQuery } = setupSupabase({
+      data: [
+        {
+          status: "failed",
+          current_period_end: null,
+          plan: { name: "Basic" },
+          created_at: "2026-06-01T00:00:00.000Z",
+        },
+        {
+          status: "active",
+          current_period_end: "2026-12-31T00:00:00.000Z",
+          plan: { name: "Pro" },
+          created_at: "2026-01-01T00:00:00.000Z",
+        },
+      ],
+      error: null,
+    });
+
+    const jsx = await Page();
+    render(jsx);
+
+    expect(from).toHaveBeenCalledWith("subscriptions");
+    expect(subscriptionsQuery.eq).toHaveBeenCalledWith("agent_id", "user-1");
   });
 });

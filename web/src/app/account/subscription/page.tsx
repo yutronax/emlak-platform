@@ -20,8 +20,19 @@ const STATUS_LABELS: Record<string, string> = {
   pending: "Ödeme bekleniyor",
   failed: "Başarısız",
   needs_review: "İnceleniyor",
+  trialing: "Deneme sürümü",
   canceled: "İptal edildi",
 };
+
+const STATUS_PRIORITY = ["active","trialing","past_due","pending","needs_review","failed","canceled"];
+function pickSubscription(rows: SubscriptionRow[]): SubscriptionRow | null {
+  if (rows.length === 0) return null;
+  for (const status of STATUS_PRIORITY) {
+    const match = rows.find((r) => r.status === status);
+    if (match) return match;
+  }
+  return rows[0]; // bilinmeyen status — en yeni satır (rows zaten created_at desc)
+}
 
 const dateFormatter = new Intl.DateTimeFormat("tr-TR", {
   day: "2-digit",
@@ -47,7 +58,7 @@ export default async function AccountSubscriptionPage() {
     .from("subscriptions")
     .select("status, current_period_end, plan:plans(name)")
     .eq("agent_id", auth.user.id)
-    .maybeSingle();
+    .order("created_at", { ascending: false });
 
   if (error) {
     console.error("subscriptions sorgusu başarısız", error);
@@ -61,7 +72,9 @@ export default async function AccountSubscriptionPage() {
     );
   }
 
-  const subscription = data as SubscriptionRow | null;
+  const rows: SubscriptionRow[] =
+    (data as unknown as SubscriptionRow[] | null) ?? [];
+  const subscription = pickSubscription(rows);
 
   if (!subscription) {
     return (
@@ -84,10 +97,15 @@ export default async function AccountSubscriptionPage() {
       <h1 className="text-xl font-semibold">Aboneliğim</h1>
 
       {isPastDue && (
-        <p className="mt-4 rounded border border-red-300 p-4 text-sm text-red-600">
-          Ödemeniz gecikti. Aboneliğinizin devamı için lütfen ödemenizi
-          tamamlayın.
-        </p>
+        <div role="alert" className="mt-4 rounded border border-red-300 p-4 text-sm text-red-600">
+          <p>
+            Ödemeniz gecikti. Aboneliğinizin devamı için lütfen ödemenizi
+            tamamlayın.
+          </p>
+          <Link href="/pricing" className="underline">
+            Planları görüntüle
+          </Link>
+        </div>
       )}
 
       <dl className="mt-6 grid grid-cols-2 gap-2 text-sm">
