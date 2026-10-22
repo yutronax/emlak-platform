@@ -3,6 +3,18 @@
 Pipeline adımlarının (atdd/plan/code_diff/verify) kendi dosyalarına yazdığı
 karar/risk/varsayım kayıtlarının aktarımı — yeniden yorumlanmadan, kaynağıyla.
 
+## checkout-webhook-test-gaps — refactor eki (2026-10-22)
+
+**Kalan sınırlamalar / gerçek zorluk** (kaynak: refactor.md):
+- İlk refactor denemesi, `parsePaymentEvent`'in JSON-parse hatası ile
+  eksik-alan hatasını aynı `null` dönüşüyle birleştirip orijinal kodun
+  ürettiği İKİ FARKLI hata mesajını tek mesaja indirgemişti — testler bunu
+  yakalamadı (mesaj metnini hiç kontrol etmiyorlardı) ama kod okunarak
+  tespit edilip düzeltildi. Bu, "testler yeşil = davranış korundu"
+  varsayımının tek başına yeterli olmadığını gösteren somut bir örnek;
+  gerçek diff karşılaştırması da gerekiyor. Test-gap backlog'a (madde 25)
+  eklendi.
+
 ## checkout-webhook-test-gaps (2026-10-22)
 
 **Kalan sınırlamalar / gerçek zorluk** (kaynak: test_diff.md, verify_report.md):
