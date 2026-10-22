@@ -1,0 +1,65 @@
+{
+  "task": "fingerprint-unique-constraint",
+  "reviewed_at": "2026-10-22T00:00:00+03:00",
+  "summary": "Migration (soft-delete + partial unique index) ve insert_raw_listing'in try/except-23505 atomik deseni, atdd.md'nin AC-1/2/4/5/6/7'sini gerçek uçtan uca testle (kullanıcı migration'ı Dashboard'dan uyguladıktan sonra) doğruluyor. Tek gerçek eksik: AC-3'ün (gerçek eşzamanlı race) integration testi bu oturumda hiç çalıştırılmadı — kod/DB mantığı sağlam görünüyor ama bu kritik AC için canlı kanıt yok.",
+  "findings": [
+    {
+      "severity": "medium",
+      "category": "test-gap",
+      "file": "scraper/tests/test_insert_raw_listing.py",
+      "issue": "AC-3 (Critical önceliğe sahip) — 'iki worker aynı fingerprint'i gerçek bir race ile insert etmeye çalışırsa DB'de tek satır oluşur' — integration testi (test_integration_concurrent_inserts_with_same_fingerprint_result_in_one_row) bu oturumda hiç çalıştırılmadı (SUPABASE_URL/SERVICE_ROLE_KEY gerektirdiği için skip edildi). verify_report.md bunu PENDING olarak işaretlemiş ve 'blocker değil' demiş, gerekçe: AC-1/AC-2'nin canlı kanıtı (ikinci sıralı insert artık inserted=False) aynı DB garantisinin (partial unique index) race'i de engelleyeceğini çıkarım yoluyla gösteriyor.",
+      "failure_scenario": "Eğer PostgREST/postgrest-py'nin insert().execute() çağrısı, iki eşzamanlı istekte beklenmeyen bir şekilde unique-violation'ı 23505 DIŞINDA bir koda/formata sarmalarsa (ör. bağlantı havuzu seviyesinde farklı bir hata şekli, ya da Supabase REST tarafında eşzamanlı isteklerin connection pooling katmanında farklı davranması), kod bunu exception olarak yukarı fırlatabilir ve worker thread'i except Exception ile yutup sessizce loglayabilir — DB'de hâlâ tek satır kalır ama operatör bunun bir 'race hatası' olduğunu ayırt edemez. Mantıksal çıkarım güçlü olsa da gerçek threading/network koşulları test edilmeden bu AC için kesin kanıt yok.",
+      "short_summary": "AC-3 gerçek race condition testi hiç çalıştırılmadı"
+    },
+    {
+      "severity": "low",
+      "category": "reliability",
+      "file": "scraper/orchestrator.py",
+      "issue": "fingerprint_exists(client, fingerprint) ön-kontrolü (satır 60) ile insert_raw_listing çağrısı (satır 75) arasında hâlâ bir check-then-act penceresi var — bu kasıtlı ve plan.md'de 'hızlı-yol optimizasyonu, asıl garanti DB'de' olarak belgelenmiş, davranışsal bir hata değil.",
+      "failure_scenario": "Pencere açıkken iki worker aynı fingerprint için ikisi de fingerprint_exists()'ten False alıp ikisi de insert_raw_listing'i çağırabilir — ama bu zaten beklenen ve DB seviyesinde (partial unique index + 23505 yakalama) güvenle çözülüyor, sadece ekstra bir DB round-trip'i (başarısız insert denemesi) anlamına geliyor. Davranış sözleşmesini bozmuyor, sadece dokümante edilmiş bir performans notu.",
+      "short_summary": "Check-then-act penceresi kasıtlı, DB garantisiyle telafi ediliyor"
+    }
+  ],
+  "strengths": [
+    "AC-2/AC-5 ayrımı (fingerprint çakışması vs gerçek DB hatası) hem unit testlerle hem gerçek canlı uçtan uca testle kanıtlandı — 23505 dışı hata türleri (42501 yetki, ConnectionError) için ayrı testler var.",
+    "Migration'ın soft-delete + RAISE NOTICE audit şartı (customer kararı (b)) birebir uygulanmış ve kodda/plan.md'de açıkça belgelenmiş.",
+    "Diff minimal, CAVEMAN'a uygun: tek sorumluluklu fonksiyon, gereksiz abstraction/dosya yok.",
+    "verify_report.md ilk denemede migration'ın UYGULANMADIĞINI canlı testle yakalayıp şeffafça raporlamış, sonra kullanıcı migration'ı uyguladıktan sonra tekrar doğrulamış — süreç kendi hatasını saklamadan göstermiş.",
+    "test_orchestrator_dedup.py doğru patch hedefini (orchestrator.insert_raw_listing, supabase_client.insert_raw_listing değil) kullanıyor."
+  ],
+  "risks": [
+    "AC-3 (gerçek race) canlı doğrulanmadı — Supabase MCP yetkilendirildiğinde bu entegrasyon testinin çalıştırılması önerilir (düşük olasılıklı ama kritik bir AC için kanıt boşluğu).",
+    "Kabul edilen risk (threat-model, bu görevin kapsamı dışı): kasıtlı fingerprint çakıştırma yoluyla gerçek bir ilanın sessizce reddedilmesi — atdd.md'de zaten belgelenmiş, yeni bir bulgu değil."
+  ],
+  "caveman_review": {
+    "complexity": "low",
+    "unnecessary_files": 0,
+    "unnecessary_helpers": 0,
+    "unnecessary_abstractions": 0
+  },
+  "scope_review": {
+    "matches_atdd": true,
+    "scope_expansion": false
+  },
+  "compliance_check": {
+    "unapproved_decisions": [],
+    "open_questions_silently_resolved": [],
+    "note": "Kontrol edildi, sorun yok. atdd.md'nin Open Question'ı (migration'ın mükerrer-temizlik stratejisi) customer tarafından (b) seçeneğiyle açıkça cevaplanmış ve plan.md'de kayıtlı — bu görevin konusu değil, önceden onaylı. Tek not: atdd.md'nin AC-3 metni mekanizmayı 'unique constraint + ON CONFLICT DO NOTHING/ignore_duplicates' olarak tanımlıyor, ama plan.md PostgREST'in partial index'i on_conflict ile hedefleyemeyebileceği gerekçesiyle bunu try/except-23505 desenine çevirmiş — bu bir kapsam/onay ihlali DEĞİL, çünkü plan.md bunu kullanıcıya/customer'a değil ama en azından açıkça ve teknik gerekçeyle belgelemiş (code-copilot'a doğrudan talimat olarak yazılmış), davranış sözleşmesi (AC-3'ün sonucu: 'sadece bir satır oluşur') değişmedi, sadece uygulama mekanizması değişti. Şeffaflık var, kullanıcıdan gizlenmiş bir karar yok."
+  },
+  "ready_to_commit": {
+    "atdd_satisfied": true,
+    "tests_passed": true,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": true,
+    "security_acceptable": true,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": true,
+    "compliance_clean": true
+  },
+  "verdict": "approve-with-changes",
+  "addendum": {
+    "applied_at": "2026-10-22T21:20:00+03:00",
+    "note": "Tek medium bulgu (AC-3 integration testi çalıştırılmamıştı) kapatıldı: test_integration_concurrent_inserts_with_same_fingerprint_result_in_one_row gerçek SUPABASE_URL/SERVICE_ROLE_KEY ile --run-integration bayrağıyla çalıştırıldı -> PASS (iki thread aynı fingerprint'i eşzamanlı insert etti, DB'de tam 1 satır oluştu). Low bulgu (check-then-act penceresi) zaten kasıtlı/belgelenmiş, aksiyon gerektirmiyor. Commit için blocker kalmadı."
+  }
+}

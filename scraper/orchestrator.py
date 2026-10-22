@@ -72,14 +72,20 @@ def handle_message(payload: dict) -> None:
             "quality_score": score,
             "status": "pending",
         }
-        insert_raw_listing(client, record)
-        logger.info(
-            "raw_listings'e yazıldı: %s (skor=%.2f, auto_approve_uygun=%s, sorunlar=%s)",
-            message_id,
-            score,
-            is_safe_to_auto_approve(score, float(os.getenv("QUALITY_GATE_THRESHOLD", "0.5"))),
-            issues,
-        )
+        _inserted_row, inserted = insert_raw_listing(client, record)
+        if inserted:
+            logger.info(
+                "raw_listings'e yazıldı: %s (skor=%.2f, auto_approve_uygun=%s, sorunlar=%s)",
+                message_id,
+                score,
+                is_safe_to_auto_approve(score, float(os.getenv("QUALITY_GATE_THRESHOLD", "0.5"))),
+                issues,
+            )
+        else:
+            logger.info(
+                "Mükerrer ilan (fingerprint çakışması, DB seviyesinde atlandı): %s",
+                message_id,
+            )
     except Exception:  # noqa: BLE001 - worker thread hatayı yutmasın, logla ve devam et
         logger.exception("Mesaj işlenirken hata: %s", message_id)
     finally:

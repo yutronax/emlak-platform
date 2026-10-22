@@ -64,3 +64,68 @@ yazılmaz"). Elendi, eyleme dönüştürülmedi.
    çıktı ama 8 görevlik bir örneklemde bu eşik "henüz veri yetersiz"
    sınırında — üçüncü bir tekrar gelmeden ek bir kontrol listesi maddesi
    EKLENMEDİ (postmortem'in kendi kuralı: az veriden kalıp uydurma).
+
+## Koşum 2 — 2026-10-22
+Görev sayısı: 13 (Koşum 1'deki 8 + yeni: account-subscription-coklu-kayit-secimi,
+checkout-reconciliation-job, login-role-aware-redirect,
+scraper-dm-grup-filtresi, signup-agents-kaydi-olusturma)
+Toplam bulgu: 22 (5 medium, 17 low — hiç critical/high yok)
+
+### Kategori dağılımı
+| Kategori | Bulgu | Farklı görev |
+|---|---|---|
+| reliability | 6 | 4 |
+| test-gap | 6 | 5 |
+| other | 3 | 2 |
+| scope | 2 | 1 |
+| correctness | 2 | 2 |
+| maintainability | 2 | 2 |
+| readability | 1 | 1 |
+
+### Tekrar eden kategoriler (süreç kusuru adayları)
+- **reliability** (4 görev — 2 yeni: checkout-reconciliation-job,
+  scraper-dm-grup-filtresi; 2 Koşum 1'den devam eden: abonelik-plani-odeme-
+  entegrasyonu, supabase-proje-kurulumu). 3 bulgu ortak bir kalıp paylaşıyor:
+  beklenen/başarılı bir yol çalışıyor ama bunu operatörün gözlemlemesini
+  sağlayan HİÇBİR log/sayaç/metrik yok (checkout-reconciliation-job'ta
+  başarılı güncellemeler hiç loglanmıyor; scraper-dm-grup-filtresi'nde
+  grup+boş-metin durumunda hiçbir sayaç artmıyordu; abonelik-plani-odeme-
+  entegrasyonu'nda subscription_id bulunamayınca sadece console.warn,
+  izlenebilir bir durum/sayaç yok). Üçü de "sessizce doğru ya da sessizce
+  eksik" — ikisi ayırt edilemiyor.
+- **test-gap** (5 görev, Koşum 1'den devam — sadece 1 yeni görev:
+  scraper-dm-grup-filtresi). Koşum 1'in "ikinci seviye hata" düzeltmesi
+  (zaten `test-copilot` SKILL.md'ye eklenmişti) farklı bir alt-kalıbı
+  kapsıyordu; scraper-dm-grup-filtresi'nin bulgusu (sayaç DEĞERİ hiç assert
+  edilmemiş, sadece dolaylı/fetch-call-count üzerinden) henüz 3 tekrara
+  ulaşmadı — ayrı bir kontrol listesi maddesi olarak EKLENMEDİ, izlemede
+  tutuluyor (az veriden kalıp uydurma yasak).
+
+### Sıcak dosya
+`web/src/app/api/webhooks/payment/route.ts` — Koşum 1'den bu yana yeni
+bulgu almadı (bu koşumun 22 bulgusunun hiçbiri bu dosyada değil); Koşum
+1'in eylemi (verify'ın refactor-aday kontrolüne özel not) hâlâ yürürlükte,
+dosya bir sonraki dokunulduğunda tekrar değerlendirilecek.
+
+### Verify gate notu
+`AI code review` ve `İnsan onayı` yine her görevde PENDING — Koşum 1'deki
+aynı gerekçeyle (tasarım gereği) elendi, eyleme dönüştürülmedi.
+
+### Önerilen somut eylemler
+
+1. **`atdd` şablonuna madde:** Davranış Sözleşmesi tablosunun her satırı
+   artık "dönen değer/yan etki" ile birlikte **"operatör bunu nasıl fark
+   eder"** sorusunu da düşünmeli — bir yol sessizce başarılı VEYA sessizce
+   eksik kalabiliyorsa (log yok, sayaç yok, metrik yok), bu satırda açıkça
+   bir log/sayaç/metrik taahhüt edilmeli ve `test-copilot` bunu test
+   etmeli. Gerekçe: bu koşumun `reliability` bulgularının 3'ü (4 görevin
+   3'ü) tam bu kalıptan çıktı — "çalışıyor ama görünmez" sessiz hata
+   sınıfı, `atdd`'nin mevcut "kısmi başarı"/"hiçbir şey yapılamadı"
+   satırlarıyla örtüşüyor ama onlardan farklı: burada hata YOK, sadece
+   GÖRÜNÜRLÜK yok.
+   **Nereye:** `atdd` SKILL.md'nin 4a adımındaki Davranış Sözleşmesi
+   tablosu talimatına bir satır — "operatör görünürlüğü" sütunu/notu.
+
+2. **Henüz kalıp sayılmayan:** scraper-dm-grup-filtresi'nin "sayaç DEĞERİ
+   assert edilmemiş" test-gap bulgusu tek örnek — üçüncü bir tekrar
+   gelmeden `test-copilot`'a yeni bir madde EKLENMEDİ.

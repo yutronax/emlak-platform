@@ -3,6 +3,43 @@
 Pipeline adımlarının (atdd/plan/code_diff/verify) kendi dosyalarına yazdığı
 karar/risk/varsayım kayıtlarının aktarımı — yeniden yorumlanmadan, kaynağıyla.
 
+## fingerprint-unique-constraint (2026-10-22)
+
+**Riskler** (kaynak: atdd.md, plan.md):
+- Kabul edilen risk (threat-model): kasıtlı fingerprint çakıştırma yoluyla
+  gerçek bir ilanın sessizce reddedilmesi — bu görevin yarattığı değil,
+  `fingerprint_exists()` ön-kontrolünün zaten bugün sergilediği davranış,
+  sadece DB seviyesinde garantiye bağlanıyor.
+- Migration'ın tabloda mevcut mükerrer fingerprint varsa başarısız olma
+  riski — customer kararıyla (Seçenek b) migration'a önce soft-delete
+  temizlik adımı eklendi.
+
+**Kararlar** (kaynak: plan.md, customer session onayıyla):
+- Migration yaklaşımı: önce mükerrer fingerprint'li satırları `status=
+  'rejected'`e soft-çeken bir DO bloğu (RAISE NOTICE ile etkilenen satır
+  sayısı audit için loglanır), sonra `status <> 'rejected'` koşuluyla
+  PARTIAL unique index. Hard-delete değil soft-delete tercih edildi
+  (customer'ın açık şartı: audit görünürlüğü + geri döndürülebilirlik).
+- PostgREST'in partial unique index'i `on_conflict` parametresiyle
+  güvenilir şekilde hedefleyemeyebileceği teknik gerekçesiyle, atomiklik
+  `upsert(on_conflict=...)` yerine try/except 23505 deseniyle sağlandı —
+  davranış sözleşmesi (AC-3'ün sonucu) değişmedi, sadece uygulama
+  mekanizması (PM tarafından compliance açısından "şeffaf, onay ihlali
+  değil" olarak değerlendirildi).
+
+**Kalan sınırlamalar / gerçek zorluk** (kaynak: verify_report.md, red_team.json):
+- `verify` adımının ilk koşumunda canlı uçtan uca test, migration'ın
+  gerçek Supabase projesine HENÜZ UYGULANMAMIŞ olduğunu yakaladı (aynı
+  fingerprint ile ikinci insert de başarıyla eklendi) — bu, "migration
+  dosyası repoda var" ile "migration projeye uygulandı" arasındaki farkı
+  somut olarak gösteren canlı bir örnek (`supabase-check`/gate 3'ün var
+  olma sebebi). Kullanıcı SQL'i Dashboard'dan çalıştırdıktan sonra gate
+  tekrar koşulup PASS'a döndü.
+- PM incelemesi, AC-3'ün (gerçek race condition) integration testinin
+  `verify` aşamasında hiç çalıştırılmadığını buldu (medium bulgu) — bu
+  bulgu üzerine test gerçek Supabase'e karşı ayrıca çalıştırıldı ve PASS
+  etti, commit öncesi kapatıldı.
+
 ## scraper-dm-grup-filtresi (2026-10-22)
 
 **Riskler** (kaynak: atdd.md, plan.md):
