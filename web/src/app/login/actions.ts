@@ -21,6 +21,7 @@ export async function login(formData: FormData): Promise<{ error: string } | nev
   }
 
   const { data: userData } = await supabase.auth.getUser();
+  let isAdmin = false;
   if (userData.user) {
     const companyName = String(userData.user.user_metadata?.company_name ?? "");
     if (companyName) {
@@ -30,7 +31,22 @@ export async function login(formData: FormData): Promise<{ error: string } | nev
         console.error("login: ensureAgentRow başarısız", err);
       }
     }
+
+    try {
+      const { data: agent, error: agentError } = await supabase
+        .from("agents")
+        .select("is_admin")
+        .eq("id", userData.user.id)
+        .maybeSingle();
+      if (agentError) {
+        console.error("login: agents.is_admin okunamadı", agentError);
+      } else {
+        isAdmin = agent?.is_admin === true;
+      }
+    } catch (err) {
+      console.error("login: agents.is_admin okunamadı", err);
+    }
   }
 
-  redirect("/admin/listings");
+  redirect(isAdmin ? "/admin/listings" : "/agent/dashboard");
 }

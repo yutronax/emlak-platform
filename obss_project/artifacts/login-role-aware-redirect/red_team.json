@@ -1,0 +1,37 @@
+{
+  "task": "login-role-aware-redirect",
+  "reviewed_at": "2026-10-22T00:00:00Z",
+  "summary": "login/actions.ts artık ensureAgentRow() sonrasında agents.is_admin okuyup redirect kararını veriyor; sıra, pessimist fallback ve testler atdd.md'nin tüm AC'leriyle tutarlı. Kapsam dışına taşma yok.",
+  "findings": [
+    {
+      "severity": "low",
+      "category": "readability",
+      "file": "web/src/app/login/actions.ts",
+      "issue": "agents.is_admin okuma bloğu iç içe try/catch + if/else ile biraz derinleşiyor (companyName if'inin içinde ayrı bir try bloğu).",
+      "better_approach": "İsteğe bağlı: is_admin okuma mantığını küçük bir yardımcı fonksiyona çıkarmak okunabilirliği artırabilir.",
+      "reason": "Fonksiyon hâlâ 50 satırın altında ve tek sorumluluk taşıyor; bu bir blocker değil, kozmetik bir not."
+    }
+  ],
+  "strengths": [
+    "ensureAgentRow() çağrısı ve sırası (signIn → getUser → ensureAgentRow → is_admin oku → redirect) atdd.md AC-4 ile tam uyumlu, kod incelemesiyle doğrulandı.",
+    "Pessimist varsayım (hata VEYA satır-yok → isAdmin=false) koddaki if/else ve catch bloklarında doğru uygulanmış; AC-2 ve AC-3 ayrımı (sessiz vs console.error) da doğru.",
+    "9 testin 4'ü (AC-1/2a/2b/3) yeni davranışı dalları ayrı ayrı kapsıyor, 2 güncellenen test (AC-4 ve negatif) gerçek bir davranış değişikliğini (agents mock kurulmadığı için from() patlıyor → pessimist /agent/dashboard) yansıtıyor, test gevşetmesi değil.",
+    "admin/listings/page.tsx'e dokunulmamış, kapsam dışı net bırakılmış."
+  ],
+  "risks": [
+    "agents sorgusunda from() çağrısının kendisi senkron throw edebilirse (mock senaryosunda olduğu gibi) dış try/catch bunu yakalıyor; gerçek Supabase client'ında bu normalde promise reject olarak gelir, davranış aynı kalıyor."
+  ],
+  "caveman_review": {"complexity": "low", "unnecessary_files": 0, "unnecessary_helpers": 0, "unnecessary_abstractions": 0},
+  "scope_review": {"matches_atdd": true, "scope_expansion": false},
+  "compliance_check": {
+    "unapproved_decisions": [],
+    "open_questions_silently_resolved": [],
+    "note": "atdd.md zaten 'Opus alt-ajanına dispatch edilmedi, doğrudan tasarlandı' diye not ediyor; kod ve testler bu dokümanla tam örtüşüyor, kullanıcıya sorulmadan alınmış gizli bir karar bulunmadı; kontrol edildi, sorun yok."
+  },
+  "ready_to_commit": {
+    "atdd_satisfied": true, "tests_passed": true, "no_critical_findings": true,
+    "scope_respected": true, "caveman_satisfied": true, "security_acceptable": true,
+    "maintainability_acceptable": true, "no_blocking_risks": true, "compliance_clean": true
+  },
+  "verdict": "approve"
+}
