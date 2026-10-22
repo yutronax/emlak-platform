@@ -36,7 +36,7 @@
 | 17 | Webhook route testine geçersiz imza (401) ve `PAYMENT_FAILED` senaryosu ekle | Şu an sadece unit (iyzico.test.ts) seviyesinde | `web/src/test/app/api/webhooks/payment/` |
 | 18 | Fingerprint'i unique index yap veya insert'i atomik hale getir | Paralel worker'lar aynı ilanı iki kez yazabiliyor | `supabase/migrations/`, `scraper/supabase_client.py` |
 | 19 | Sidecar'a grup filtresi ekle (DM'leri iletme) — **işleniyor: EML-51** | Kişisel veri Gemini'ye ve `raw_listings`'e sızabiliyor | `scraper/sidecar/bridge.js` |
-| 20 | `scripts/verify_supabase.py::REQUIRED_TABLES`'a `plans`/`payment_events` ekle | 0003 tabloları kontrol edilmiyor | `scraper/scripts/verify_supabase.py` |
+| 20 | ~~`scripts/verify_supabase.py::REQUIRED_TABLES`'a `plans`/`payment_events` ekle~~ — **tamamlandı** | 0003 tabloları kontrol edilmiyor | `scraper/scripts/verify_supabase.py` |
 | 21 | `.env.example`'a iyzico + `WEBHOOK_URL` değişkenlerini ekle | Yanlış yapılandırma riski | `.env.example` |
 | 22 | `docs/ARCHITECTURE.md`'yi gerçek koda göre güncelle (agent/dashboard, ödeme akışı eksik) | Kod↔doc çelişkisi | `docs/ARCHITECTURE.md` |
 | 23 | `raw_listings`'e EML-51 düzeltmesinden ÖNCE sızmış olabilecek geçmiş DM (PII) kayıtlarının tespiti + temizliği (silme/anonimleştirme) — **karar gerçek kullanıcıya sorulmalı, customer mode bu kararı veremez** | EML-51 sadece yeni sızıntıyı durduruyor, geçmiş veriyi temizlemiyor | `raw_listings` tablosu (Supabase) |
