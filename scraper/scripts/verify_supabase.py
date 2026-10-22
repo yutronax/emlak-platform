@@ -24,6 +24,8 @@ REQUIRED_TABLES = (
     "listings",
     "properties",
     "property_videos",
+    "plans",
+    "payment_events",
 )
 REQUIRED_RPCS = ("approve_raw_listing", "reject_raw_listing")
 
