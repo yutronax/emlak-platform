@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 
+import { ensureAgentRow } from "@/lib/auth/ensureAgentRow";
 import { createClient } from "@/lib/supabase/server";
 
 export async function login(formData: FormData): Promise<{ error: string } | never> {
@@ -17,6 +18,18 @@ export async function login(formData: FormData): Promise<{ error: string } | nev
 
   if (error) {
     return { error: "Giriş başarısız: e-posta veya şifre hatalı." };
+  }
+
+  const { data: userData } = await supabase.auth.getUser();
+  if (userData.user) {
+    const companyName = String(userData.user.user_metadata?.company_name ?? "");
+    if (companyName) {
+      try {
+        await ensureAgentRow(supabase, userData.user.id, companyName);
+      } catch (err) {
+        console.error("login: ensureAgentRow başarısız", err);
+      }
+    }
   }
 
   redirect("/admin/listings");

@@ -1,0 +1,39 @@
+{
+  "task": "signup-agents-kaydi-olusturma",
+  "reviewed_at": "2026-10-22T00:00:00Z",
+  "summary": "Re-review: onceki iki medium bulgu (yakalanmayan ensureAgentRow hatasi, data.user! non-null assertion) dogrulanmis sekilde duzeltildi. 104/104 test PASS, tsc --noEmit hatasiz. AC-S1..S4 ve enumeration-onleme tutarli kaldi.",
+  "findings": [],
+  "strengths": [
+    "signup/actions.ts: ensureAgentRow cagrisi try/catch icinde, 23505-disi hatalar console.error ile loglanip yutuluyor, redirect('/agent/dashboard') yine de calisiyor — atddmd'nin 'kismi basari' sozlesmesine tam uyumlu.",
+    "login/actions.ts: aynı try/catch deseni uygulanmis, hata redirect('/admin/listings') akisini bozmuyor.",
+    "signup/actions.ts: data.user! non-null assertion kaldirilmis, if (data.session && data.user) acik kontrolune cevrilmis — runtime TypeError riski ortadan kalkti.",
+    "ensureAgentRow INSERT payload'i sadece {id, company_name} iceriyor, is_admin hicbir koddan okunmuyor/eklenmiyor (AC-S1).",
+    "Migration'daki agents_self_insert policy'si id = auth.uid() VE coalesce(is_admin, false) = false sartlarinin ikisini de tasiyor (AC-S1/S2).",
+    "signup/actions.ts'te signUp hatasi (error dali) ile session-yok (data.session falsy) dali AYNI GENERIC_MESSAGE sabitini donuyor (AC-S3, enumeration-onleme).",
+    "ensureAgentRow sadece error.code === '23505' kontrolu yapiyor; diger hata kodlari dogru sekilde throw ediliyor ve action katmaninda artik duzgun yakalaniyor (AC-S4).",
+    "login/actions.ts'teki redirect('/admin/listings') hedefi bilerek degistirilmemis, atdd.md'nin Kapsam Disi notuyla tutarli.",
+    "104/104 test PASS, npx tsc --noEmit hatasiz tamamlandi."
+  ],
+  "risks": [
+    "Migration henuz canli Supabase'e uygulanmamis olabilir (onceki verify_report.md'de PENDING notu) — bu re-review kapsaminda yeniden dogrulanmadi, deploy/verify adiminda canli RLS probu gerekli kalmaya devam ediyor."
+  ],
+  "caveman_review": {"complexity": "low", "unnecessary_files": 0, "unnecessary_helpers": 0, "unnecessary_abstractions": 0},
+  "scope_review": {"matches_atdd": true, "scope_expansion": false},
+  "compliance_check": {
+    "unapproved_decisions": [],
+    "open_questions_silently_resolved": [],
+    "note": "company_name'in user_metadata uzerinden tasinmasi karari atdd.md'de acikca Opus alt-ajani tarafindan yanitlanmis bir Open Question olarak kayitli ve kod bu karara uyumlu; bu re-review'da yeni bir sessizce alinmis karar veya atdd.md disi varsayim bulunamadi."
+  },
+  "ready_to_commit": {
+    "atdd_satisfied": true,
+    "tests_passed": true,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": true,
+    "security_acceptable": true,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": true,
+    "compliance_clean": true
+  },
+  "verdict": "approve"
+}
