@@ -3,6 +3,31 @@
 Pipeline adımlarının (atdd/plan/code_diff/verify) kendi dosyalarına yazdığı
 karar/risk/varsayım kayıtlarının aktarımı — yeniden yorumlanmadan, kaynağıyla.
 
+## scraper-dm-grup-filtresi (2026-10-22)
+
+**Riskler** (kaynak: atdd.md, plan.md):
+- Baileys'in JID sonek sözleşmesini (`@g.us`/`@s.whatsapp.net`) gelecekte
+  değiştirmesi durumunda filtre fail-closed davranır — grup mesajları da
+  yanlışlıkla düşebilir. Kabul edilen risk: PII sızıntısından daha az
+  zararlı; `forwarded` sayacı 0'da kalırsa operatör fark eder.
+- `raw_listings` tablosunda bu düzeltmeden ÖNCE sızmış olabilecek geçmiş
+  DM verisinin temizliği bu görevin kapsamı dışında bırakıldı — ayrı bir
+  görev olarak backlog'a (`is-listesi-ve-sayfa-envanteri.md`, madde 23)
+  eklendi, silme/anonimleştirme kararı gerçek kullanıcıya bırakıldı.
+
+**Kalan sınırlamalar / varsayımlar** (kaynak: plan.md, code_diff.md):
+- `bridge.js`'in `require` edildiğinde (test'ten import edilince) yan
+  etkili kod (env kontrolü + WhatsApp bağlantısı) çalışmaması için
+  `require.main === module` koruması eklendi — `node bridge.js` ile
+  doğrudan çalıştırma davranışı değişmedi.
+- İlk red-step testleri, entegrasyon/log testlerinde gerçek handler'ı
+  değil kendi yazdıkları `if` dalını çağırıyordu ("doğrudan tetikleme"
+  ihlali) — PM/verify öncesinde fark edilip `processIncomingMessage`'ı
+  doğrudan çağıracak şekilde düzeltildi.
+- PM incelemesinde bulunan bir boşluk (grup mesajı + boş/çıkarılamayan
+  metin durumunda hiçbir sayaç artmıyordu) düzeltildi — `type=no_text`
+  kategorisiyle `skipped` sayacına eklendi.
+
 ## supabase-proje-kurulumu (2026-10-16)
 
 **Riskler** (kaynak: atdd.md, plan.md):

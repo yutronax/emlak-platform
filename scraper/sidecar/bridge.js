@@ -16,9 +16,43 @@ const WEBHOOK_URL = process.env.WEBHOOK_URL || 'http://localhost:8090/baileys-we
 const AUTH_DIR = process.env.WHATSAPP_SESSION_DIR || path.join(__dirname, 'session');
 
 const WEBHOOK_SECRET = process.env.BAILEYS_WEBHOOK_SECRET;
-if (!WEBHOOK_SECRET) {
-  console.error('[YAPILANDIRMA HATASI] BAILEYS_WEBHOOK_SECRET env değişkeni set edilmemiş, köprü başlatılmıyor.');
-  process.exit(1);
+
+const counters = { forwarded: 0, skipped: 0 };
+
+// Grup JID'leri her zaman TAM OLARAK "@g.us" sonekiyle biter (Baileys sözleşmesi).
+// Kesin sonek eşleşmesi kullanılır (`endsWith`), `.includes()` DEĞİL — JID
+// alt-dize sahteciliğine (ör. "xxx@g.us.evil", "fake@g.us@s.whatsapp.net") karşı.
+function isGroupJid(jid) {
+  if (typeof jid !== 'string') return false;
+  return jid.endsWith('@g.us');
+}
+
+function classifySkipType(jid) {
+  if (typeof jid !== 'string' || jid.length === 0) return 'invalid';
+  if (jid.endsWith('@s.whatsapp.net')) return 'dm';
+  return 'other';
+}
+
+async function processIncomingMessage(msg) {
+  if (msg?.key?.fromMe) return;
+
+  const remoteJid = msg?.key?.remoteJid;
+
+  if (!isGroupJid(remoteJid)) {
+    counters.skipped += 1;
+    // PII'siz sabit şablon log: JID/telefon numarası/mesaj metni ASLA interpolasyona eklenmez.
+    console.log(`[filter] skipped (type=${classifySkipType(remoteJid)}, total_skipped=${counters.skipped})`);
+    return;
+  }
+
+  const payload = toWebhookPayload(msg);
+  if (payload) {
+    await postMessage(payload);
+    counters.forwarded += 1;
+  } else {
+    counters.skipped += 1;
+    console.log(`[filter] skipped (type=no_text, total_skipped=${counters.skipped})`);
+  }
 }
 
 function extractText(message) {
@@ -114,16 +148,21 @@ async function bridge() {
     if (type !== 'notify') return;
 
     for (const msg of messages) {
-      if (msg.key.fromMe) continue;
-      const payload = toWebhookPayload(msg);
-      if (payload) {
-        await postMessage(payload);
-      }
+      await processIncomingMessage(msg);
     }
   });
 }
 
-bridge().catch((e) => {
-  console.error('[BRIDGE BAŞLATMA HATASI]', e);
-  process.exit(1);
-});
+if (require.main === module) {
+  if (!WEBHOOK_SECRET) {
+    console.error('[YAPILANDIRMA HATASI] BAILEYS_WEBHOOK_SECRET env değişkeni set edilmemiş, köprü başlatılmıyor.');
+    process.exit(1);
+  }
+
+  bridge().catch((e) => {
+    console.error('[BRIDGE BAŞLATMA HATASI]', e);
+    process.exit(1);
+  });
+}
+
+module.exports = { isGroupJid, processIncomingMessage };

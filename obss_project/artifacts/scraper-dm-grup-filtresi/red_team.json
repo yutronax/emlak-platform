@@ -1,0 +1,53 @@
+{
+  "task": "scraper-dm-grup-filtresi",
+  "reviewed_at": "2026-10-22T00:00:00Z",
+  "summary": "Filtre, atdd.md'nin tüm AC ve AC-S kriterlerini (fail-closed allowlist, kesin sonek eşleşmesi, PII'siz sabit şablon log, sıfır ağ çağrısı) doğru ve minimal bir diff ile karşılıyor; testler gerçek processIncomingMessage'ı doğrudan tetikliyor, iki düzeltme turu da doğru uygulanmış. Bir orta öncelikli davranış boşluğu (grup mesajı+boş metin durumunda ne forwarded ne skipped artıyor) dışında ciddi bulgu yok.",
+  "findings": [
+    {
+      "severity": "medium",
+      "category": "reliability",
+      "file": "scraper/sidecar/bridge.js",
+      "issue": "processIncomingMessage içinde grup JID'i doğru tanınsa da toWebhookPayload(msg) null döndürürse (örn. reaction/protokol mesajı, metin çıkarılamayan içerik) ne counters.forwarded ne de counters.skipped artırılıyor (satır 48-52). AC-6'nın amacı 'forwarded uzun süre 0 kalırsa operatör fark etsin' şeklindeki anomali görünürlüğü; bu kod yolu sayaçlarda hiç görünmeyen sessiz bir üçüncü durum yaratıyor.",
+      "better_approach": "Bu dalda da ayrı bir sayaç (örn. counters.ignored) tutulmalı veya en azından bir bilgi logu eklenmeli, böylece 'grup mesajı geldi ama hiçbir sayaç artmadı' durumu operatör için görünür olsun.",
+      "reason": "Davranış Sözleşmesi tablosu (atdd.md satır 69-70) kısmi başarı/sessiz hiçbir-şey-yapılamadı durumlarının her zaman bir sayaçla görünür kılınacağını taahhüt ediyor; bu kod yolu o taahhüdün dışında kalan tek dal."
+    },
+    {
+      "severity": "low",
+      "category": "test-gap",
+      "file": "scraper/sidecar/bridge.filter.test.js",
+      "issue": "AC-6 (forwarded/skipped sayaçlarının gerçek sayısal değerleri) için doğrudan bir assertion yok; test_diff.md bunun 'dolaylı' kapsandığını belirtiyor ama counters.forwarded/counters.skipped hiçbir testte doğrudan okunmuyor (modül export'u da yapmıyor).",
+      "better_approach": "counters nesnesi de module.exports'a eklenip en az bir testte forwarded/skipped değerlerinin beklenen şekilde arttığı doğrudan assert edilebilir.",
+      "reason": "AC-6 [Medium] açıkça sayaçların ayrı ayrı tutulmasını talep ediyor; şu an bu sadece dolaylı/örtük olarak (fetch call count üzerinden) doğrulanıyor, sayaçların kendisi test edilmiyor."
+    }
+  ],
+  "strengths": [
+    "isGroupJid kesin sonek eşleşmesi (endsWith) kullanıyor, AC-S2'deki tüm substring-sahteciliği örnekleri (@g.us.evil, fake@g.us@s.whatsapp.net, xxx@g.usX) testlerle doğrulanmış şekilde reddediliyor.",
+    "Log satırı sabit şablon (`[filter] skipped (type=..., total_skipped=...)`) ile üretiliyor, hiçbir yerde JID/telefon/mesaj metni string'e enterpolasyon yapılmıyor; test bunu regex + içerik-yokluğu kontrolüyle doğruluyor (AC-S3).",
+    "require.main === module koruması doğru uygulanmış: node bridge.js davranışı değişmemiş, require() ile test'ten import edilince yan etkili kod (process.exit, WhatsApp bağlantısı) tetiklenmiyor.",
+    "Testler plan.md'de talimat edilen 'doğrudan tetikleme' düzeltmesine uygun şekilde gerçek processIncomingMessage'ı çağırıyor, kendi if dalını yazmıyor — implementasyon hatası testten kaçamaz.",
+    "toWebhookPayload/postMessage imzalarına dokunulmamış, filtre tamamen önlerine eklenmiş; regresyon riski minimize edilmiş.",
+    "Diff minimal ve CAVEMAN'a uygun: tek dosyada 3 küçük tek-sorumluluklu fonksiyon, gereksiz soyutlama/yardımcı dosya/config yok."
+  ],
+  "risks": [
+    "Baileys'in gelecekte JID sonek sözleşmesini değiştirmesi durumunda fail-closed davranış grup mesajlarını da düşürebilir (atdd.md'de kabul edilmiş risk, forwarded sayacıyla fark edilir) — kod bu riske uygun şekilde fail-closed tasarlanmış.",
+    "Grup mesajı + boş/çıkarılamayan metin kombinasyonunda hiçbir sayaç artmıyor (yukarıdaki medium bulgu) — düşük olasılıklı ama operatör görünürlüğünde küçük bir kör nokta.",
+    "counters modül-seviyesinde paylaşılan mutable state; aynı process içinde ardışık test çalıştırmalarında sıfırlanmıyor, ancak testler mutlak sayaç değeri değil fetch call count'u kontrol ettiği için bu pratikte sorun yaratmıyor."
+  ],
+  "caveman_review": {"complexity": "low", "unnecessary_files": 0, "unnecessary_helpers": 0, "unnecessary_abstractions": 0},
+  "scope_review": {"matches_atdd": true, "scope_expansion": false},
+  "compliance_check": {
+    "unapproved_decisions": [],
+    "open_questions_silently_resolved": [],
+    "note": "code_diff.md/test_diff.md ile atdd.md/plan.md karşılaştırıldı: tüm değişiklikler (isGroupJid, classifySkipType, processIncomingMessage, require.main koruması, module.exports) plan.md'de açıkça önceden tarif edilmiş ve customer onaylı atdd.md kapsamına birebir uyuyor; kapsam dışı maddelerden (grup allowlist'i, orchestrator.py değişikliği, auth yönetimi, geçmiş DM verisi temizliği) hiçbirine dokunulmamış. Geçmiş sızmış DM verisi temizliği sorusu zaten atdd.md'de kullanıcıya sorulacak şekilde açıkça flag'lenmiş ve backlog'a eklenmiş (kullanıcı tarafından customer session'da onaylanmış), bu nedenle 'sessizce çözülmüş açık soru' değil - kontrol edildi, sorun yok."
+  },
+  "ready_to_commit": {
+    "atdd_satisfied": true, "tests_passed": true, "no_critical_findings": true,
+    "scope_respected": true, "caveman_satisfied": true, "security_acceptable": true,
+    "maintainability_acceptable": true, "no_blocking_risks": true, "compliance_clean": true
+  },
+  "verdict": "approve-with-changes",
+  "addendum": {
+    "applied_at": "2026-10-22T00:00:00Z",
+    "note": "İki bulgu da (medium: sayaç boşluğu, low: test-gap) tek düzeltmeyle kapatıldı — processIncomingMessage artık boş-metin durumunda counters.skipped'ı type=no_text kategorisiyle artırıyor, yeni bir test (Integration AC-6) bunu doğrudan doğruluyor. node --test: 17/17 PASS, security-scan: PASS. Commit için blocker kalmadı."
+  }
+}
