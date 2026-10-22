@@ -30,6 +30,12 @@ const PAYMENT_SUCCESS_EVENT = {
   subscription_id: "sub-1",
 };
 
+const PAYMENT_FAILED_EVENT = {
+  event_id: "evt-failed-1",
+  event_type: "PAYMENT_FAILED",
+  subscription_id: "sub-1",
+};
+
 let fake: FakeSupabase;
 
 function webhookRequest(rawBody: string, signature?: string): NextRequest {
@@ -217,5 +223,23 @@ describe("POST /api/webhooks/payment", () => {
     expect(await res.json()).toEqual({ received: true });
     expect(fake.update).not.toHaveBeenCalled();
     expect(fake.tables.subscriptions[0]).toMatchObject({ status: "pending" });
+  });
+
+  it("AC-5: pending aboneliğe PAYMENT_FAILED gelirse 200 received:true döner, status failed olur ve current_period_end hiç yazılmaz", async () => {
+    const rawBody = JSON.stringify(PAYMENT_FAILED_EVENT);
+
+    const res = await POST(webhookRequest(rawBody, VALID_SIGNATURE));
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ received: true });
+
+    const subscriptionUpdates = fake.update.mock.calls.filter(([table]) => table === "subscriptions");
+    expect(subscriptionUpdates).toStrictEqual([["subscriptions", { status: "failed" }]]);
+    expect(fake.tables.subscriptions[0]).toStrictEqual({
+      id: "sub-1",
+      agent_id: "user-1",
+      plan_id: PRO_PLAN_ID,
+      status: "failed",
+    });
   });
 });

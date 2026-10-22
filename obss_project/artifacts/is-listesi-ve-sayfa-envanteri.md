@@ -32,14 +32,15 @@
 |---|---|---|---|
 | 14 | `parser.py`, `quality_gate.py`, `fingerprint.py`, `orchestrator.py`, `bridge.js` için birim test yaz | Hiç test yok | `scraper/tests/` |
 | 15 | `/admin/listings`, `/login`, `admin/layout.tsx` yetki kontrolü için test yaz | Test yok | `web/src/test/` |
-| 16 | Checkout route: 400/502/504/23505 senaryoları için test ekle | Test yok | `web/src/test/app/api/subscriptions/checkout/` |
-| 17 | Webhook route testine geçersiz imza (401) ve `PAYMENT_FAILED` senaryosu ekle | Şu an sadece unit (iyzico.test.ts) seviyesinde | `web/src/test/app/api/webhooks/payment/` |
-| 18 | Fingerprint'i unique index yap veya insert'i atomik hale getir | Paralel worker'lar aynı ilanı iki kez yazabiliyor | `supabase/migrations/`, `scraper/supabase_client.py` |
+| 16 | ~~Checkout route: 400/502/504/23505 senaryoları için test ekle~~ — **tamamlandı: EML-57** | Test yok | `web/src/app/api/subscriptions/checkout/route.test.ts` |
+| 17 | ~~Webhook route testine geçersiz imza (401) ve `PAYMENT_FAILED` senaryosu ekle~~ — **tamamlandı: EML-57** (401 zaten vardı, sadece PAYMENT_FAILED eklendi) | Şu an sadece unit (iyzico.test.ts) seviyesinde | `web/src/app/api/webhooks/payment/route.test.ts` |
+| 18 | ~~Fingerprint'i unique index yap veya insert'i atomik hale getir~~ — **tamamlandı: EML-54** | Paralel worker'lar aynı ilanı iki kez yazabiliyor | `supabase/migrations/`, `scraper/supabase_client.py` |
 | 19 | Sidecar'a grup filtresi ekle (DM'leri iletme) — **işleniyor: EML-51** | Kişisel veri Gemini'ye ve `raw_listings`'e sızabiliyor | `scraper/sidecar/bridge.js` |
 | 20 | ~~`scripts/verify_supabase.py::REQUIRED_TABLES`'a `plans`/`payment_events` ekle~~ — **tamamlandı** | 0003 tabloları kontrol edilmiyor | `scraper/scripts/verify_supabase.py` |
 | 21 | ~~`.env.example`'a iyzico + `WEBHOOK_URL` değişkenlerini ekle~~ — **tamamlandı** | Yanlış yapılandırma riski | `.env.example` |
 | 22 | `docs/ARCHITECTURE.md`'yi gerçek koda göre güncelle (agent/dashboard, ödeme akışı eksik) | Kod↔doc çelişkisi | `docs/ARCHITECTURE.md` |
 | 23 | `raw_listings`'e EML-51 düzeltmesinden ÖNCE sızmış olabilecek geçmiş DM (PII) kayıtlarının tespiti + temizliği (silme/anonimleştirme) — **karar gerçek kullanıcıya sorulmalı, customer mode bu kararı veremez** | EML-51 sadece yeni sızıntıyı durduruyor, geçmiş veriyi temizlemiyor | `raw_listings` tablosu (Supabase) |
+| 24 | `web/src/test/fake-supabase.ts`'deki `FakeQuery.execute()`'in `single()`/`maybeSingle()` modu, insert'teki 23505 (duplicate) hatasını `PGRST116`("satır yok") ile EZİYOR — `result.data===null` olan her durumu (hem "hiç satır yok" hem "duplicate hatası") aynı şekilde ele alıyor. EML-57'de keşfedildi, bir testte workaround'la (doğrudan `createServiceRoleClient` stub'lanarak) aşıldı ama kök neden düzeltilmedi — başka testler de aynı tuzağa düşebilir | Test altyapısı hatası, `.insert().select().single()` zinciriyle 23505 simüle etmeye çalışan HER test etkilenir | `web/src/test/fake-supabase.ts` |
 
 ### P3 — Faz 5 (henüz başlanmamış, iskelet)
 | # | İş | Dosya |

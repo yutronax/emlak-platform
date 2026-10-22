@@ -3,6 +3,21 @@
 Pipeline adımlarının (atdd/plan/code_diff/verify) kendi dosyalarına yazdığı
 karar/risk/varsayım kayıtlarının aktarımı — yeniden yorumlanmadan, kaynağıyla.
 
+## checkout-webhook-test-gaps (2026-10-22)
+
+**Kalan sınırlamalar / gerçek zorluk** (kaynak: test_diff.md, verify_report.md):
+- `web/src/test/fake-supabase.ts`'in `single()`/`maybeSingle()` modu,
+  insert'teki 23505 (duplicate) hatasını `PGRST116`("satır yok") ile
+  EZİYOR — `result.data===null` olan her durumu aynı şekilde ele alıyor.
+  AC-4 testi bu yüzden plan.md'nin öngördüğü `uniqueColumns` mekanizması
+  yerine `createServiceRoleClient`'ı doğrudan stub'layan bir workaround
+  kullandı (route'un gerçek 23505 dalı yine de gerçekten tetikleniyor).
+  Kök neden düzeltilmedi, backlog'a ayrı madde (24) olarak eklendi.
+- `web/src/app/api/webhooks/payment/route.ts` 3. kez (EML-5, webhook-
+  subscription-id-dogrulama, şimdi bu görev) gündeme geldi — tek handler'da
+  4 seviyeli hata-yönetim zinciri. `verify` adımında somut refactor adayı
+  olarak işaretlendi, bu görevde refactor YAPILMADI (kapsam dışıydı).
+
 ## fingerprint-unique-constraint (2026-10-22)
 
 **Riskler** (kaynak: atdd.md, plan.md):

@@ -1,0 +1,66 @@
+{
+  "task": "checkout-webhook-test-gaps",
+  "reviewed_at": "2026-10-22T00:00:00+03:00",
+  "summary": "Test-only görev: checkout/webhook route implementasyonları değişmedi, atdd.md'nin 5 AC'si (400/502/504/23505/PAYMENT_FAILED) için 5 yeni test eklendi, hepsi tam eşleşme assert'leriyle (toEqual/toStrictEqual/toHaveBeenCalledWith) doğru AC'ye bağlanıyor. AC-4'ün plandan sapması (fake-supabase.ts'de keşfedilen gerçek bir bug nedeniyle) şeffaf belgelenmiş ve backlog'a eklenmiş — gizli bir karar değil. Tek gerçek risk, keşfedilen fake-supabase.ts bug'ının kendisinin (23505'in single() modunda PGRST116 ile ezilmesi) bu görevin dışında kalan diğer testleri de etkileyebilecek bir test-altyapısı defekti olması.",
+  "findings": [
+    {
+      "severity": "medium",
+      "category": "test-gap",
+      "file": "web/src/test/fake-supabase.ts",
+      "issue": "Bu görevde keşfedilen gerçek bug (`single()` modunda 23505 unique-violation'ın 'hiç satır yok' durumuyla aynı şekilde PGRST116'ya ezilmesi) düzeltilmedi — backlog madde 24'e bırakıldı. AC-4 testi bunu bir service-role client stub'ıyla atlattı, ama `fake-supabase.ts`'i `.insert().select().single()` zinciriyle KULLANAN başka mevcut/gelecek testler (bu görevin dışında) aynı bug'a sessizce çarpabilir — yani bir unique-violation testinin aslında route'un gerçek 23505 dalını değil, 'kayıt yok' dalını test ettiğini fark etmeden PASS verme riski var.",
+      "better_approach": "Backlog madde 24'ün önceliği (sadece bu görevde bulunan, kapsam dışı bırakılan bir not olarak kalmasın) bir sonraki test-altyapısı görevi olarak ATDD'ye alınabilir; bu arada `fake-supabase.ts`'i `single()` + duplicate-insert deseniyle kullanan diğer dosyalar (grep ile taranmalı) manuel olarak gözden geçirilmeli.",
+      "reason": "Bir test yardımcısındaki sessiz bug, üstüne yazılan testlerin YANLIŞ GÜVEN vermesine yol açar — test PASS olur ama gerçekte test ettiğini iddia ettiği kod yolunu hiç tetiklemez.",
+      "failure_scenario": "Gelecekte başka bir route'ta (ör. agents veya listings tablosunda) 23505 davranışı `fake-supabase.ts`'in normal insert+single zinciriyle test edilirse, test PGRST116 dalına düşüp 'kayıt bulunamadı' senaryosunu test eder gibi PASS döner, ama gerçek 23505 kod yolu (route'un unique-violation handling'i) hiç çalıştırılmamış olur — bir regresyon (23505 handling'in kırılması) bu test tarafından YAKALANMAZ.",
+      "short_summary": "fake-supabase.ts'deki 23505/PGRST116 bug'ı düzeltilmeden bırakıldı"
+    },
+    {
+      "severity": "low",
+      "category": "risk",
+      "file": "web/src/app/api/webhooks/payment/route.ts",
+      "issue": "Dosya artık 3. kez PM/verify incelemesinde 'sıcak dosya' olarak işaretlendi (tek POST handler'da 4 seviyeli nested try/catch + if/else, ~10+ dallanma noktası) — bu görev dosyayı değiştirmedi (kapsam dışı, doğru), ama somut refactor önerisi hâlâ aksiyon almadan bekliyor.",
+      "better_approach": "Bir sonraki görev olarak `refactor` skill'i bu dosyaya (idempotency-insert ve status-update+fallback zincirini ayrı yardımcı fonksiyonlara bölerek) özel olarak çağrılmalı — üçüncü tekrar artık 'postmortem eşiği'ni aşıyor.",
+      "reason": "Yüksek döngüsel karmaşıklığa sahip bir dosyada yeni bir hata dalı eklenmesi (gelecekte) mevcut nested fallback zincirine kolayca yanlış yerden bağlanabilir; test eklemek riski azaltır ama kodun kendisi bakım riskini taşımaya devam ediyor.",
+      "failure_scenario": "Gelecekte PAYMENT_FAILED/PAYMENT_SUCCESS dışında yeni bir event_type eklenmesi gerektiğinde, geliştirici mevcut 4 seviyeli nested yapıyı yanlış anlayıp yeni dalı var olan needs_review/processing_error fallback zincirinin yanlış seviyesine ekleyebilir.",
+      "short_summary": "payment/route.ts refactor önerisi 3. kez bekliyor, aksiyon yok"
+    }
+  ],
+  "strengths": [
+    "5/5 AC, davranış sözleşmesi tablosundaki (atdd.md) tam alan/durum kodu eşleşmesiyle (toEqual/toStrictEqual) test edildi — gevşek substring/partial assert yok.",
+    "AC-3 testi (502) sadece status kodunu değil, route'un catch bloğundaki update çağrısının GERÇEKTEN tetiklendiğini de (toHaveBeenCalledWith) doğruluyor — davranış sözleşmesinin 'yan etki' kolonunu da kapsıyor.",
+    "AC-2 testi (504) subscription'ın pending KALDIĞINI (update çağrılmadığını) açıkça assert ediyor — 'hiçbir şey yapılmadı ama hata yok' durumunu doğru test ediyor.",
+    "AC-4'ün plandan sapması (fake-supabase bug'ı nedeniyle workaround) test_diff.md ve verify_report.md'de açıkça belgelenmiş, backlog'a madde olarak eklenmiş — gizlenmemiş, şeffaf.",
+    "code_diff.md implementasyonun değişmediğini git status ile ayrıca doğrulamış (iddia + kanıt tutarlı).",
+    "Sıcak dosya (payment/route.ts) tekrar bulgusu somut olarak (satır sayısı, dallanma noktası sayısı) ölçülmüş, genel bir 'bakılsın' değil."
+  ],
+  "risks": [
+    "fake-supabase.ts'in 23505/single() bug'ı düzeltilmeden backlog'da kalıyor — bu görevin kapsamı dışı olsa da, projenin test güvenilirliğini etkileyen bir altyapı riski (yukarıdaki finding).",
+    "payment/route.ts'in refactor önerisi 3. kez tekrar ediyor, henüz aksiyon alınmadı — teknik borç birikiyor."
+  ],
+  "caveman_review": {
+    "complexity": "low",
+    "unnecessary_files": 0,
+    "unnecessary_helpers": 0,
+    "unnecessary_abstractions": 0
+  },
+  "scope_review": {
+    "matches_atdd": true,
+    "scope_expansion": false
+  },
+  "compliance_check": {
+    "unapproved_decisions": [],
+    "open_questions_silently_resolved": [],
+    "note": "Kontrol edildi, sorun yok. AC-4'ün plan.md'nin öngördüğü `uniqueColumns` mekanizması yerine doğrudan service-role client stub'ı kullanması bir kapsam/onay ihlali DEĞİL — kök neden (fake-supabase.ts'deki gerçek bug) test_diff.md'de net şekilde belgelenmiş, workaround'un route'un gerçek 23505 dalını hâlâ gerçekten tetiklediği doğrulanmış ('doğrudan tetikleme' kuralı korunmuş), ve bug backlog'a ayrı madde (24) olarak eklenmiş — kullanıcıya/sonraki adımlara gizlenmiş bir karar yok. Refactor önerisi (payment/route.ts) de atdd.md'de zaten 'bu görevde yapılmayacak, sadece öneri' olarak kapsam dışı tanımlanmıştı, bu konuda da sapma yok."
+  },
+  "ready_to_commit": {
+    "atdd_satisfied": true,
+    "tests_passed": true,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": true,
+    "security_acceptable": true,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": true,
+    "compliance_clean": true
+  },
+  "verdict": "approve"
+}

@@ -189,4 +189,94 @@ describe("POST /api/subscriptions/checkout", () => {
     expect(statuses[0]).toBe(201);
     expect(statuses).toContain(429);
   });
+
+  it("AC-1: plan_id hiç gönderilmezse 400 INVALID_INPUT döner, DB yazması ve sağlayıcı çağrısı yapılmaz", async () => {
+    const res = await POST(checkoutRequest({}));
+
+    expect(res.status).toBe(400);
+    expect(await res.json()).toEqual({
+      error: "INVALID_INPUT",
+      message: "plan_id zorunludur",
+      field: "plan_id",
+    });
+    expect(fake.insert).not.toHaveBeenCalled();
+    expect(fake.update).not.toHaveBeenCalled();
+    expect(createCheckoutSession).not.toHaveBeenCalled();
+  });
+
+  it("AC-2: sağlayıcı TimeoutError fırlatırsa 504 PAYMENT_TIMEOUT döner ve subscription pending kalır", async () => {
+    vi.mocked(createCheckoutSession).mockRejectedValue(
+      Object.assign(new Error("timeout"), { name: "TimeoutError" }),
+    );
+
+    const res = await POST(checkoutRequest({ plan_id: PRO_PLAN_ID }));
+
+    expect(res.status).toBe(504);
+    expect(await res.json()).toEqual({
+      error: "PAYMENT_TIMEOUT",
+      subscription_id: fake.tables.subscriptions[0].id,
+      status: "pending",
+    });
+    expect(fake.tables.subscriptions).toHaveLength(1);
+    expect(fake.tables.subscriptions[0]).toStrictEqual({
+      id: fake.tables.subscriptions[0].id,
+      agent_id: userId,
+      plan_id: PRO_PLAN_ID,
+      status: "pending",
+    });
+    expect(fake.update).not.toHaveBeenCalled();
+  });
+
+  it("AC-3: sağlayıcı TimeoutError dışında hata fırlatırsa 502 PAYMENT_PROVIDER_ERROR döner ve subscription failed olur", async () => {
+    vi.mocked(createCheckoutSession).mockRejectedValue(new Error("provider down"));
+
+    const res = await POST(checkoutRequest({ plan_id: PRO_PLAN_ID }));
+
+    expect(res.status).toBe(502);
+    expect(await res.json()).toEqual({ error: "PAYMENT_PROVIDER_ERROR", retryable: true });
+
+    expect(fake.update).toHaveBeenCalledTimes(1);
+    expect(fake.update).toHaveBeenCalledWith("subscriptions", { status: "failed" });
+    expect(fake.tables.subscriptions[0]).toStrictEqual({
+      id: fake.tables.subscriptions[0].id,
+      agent_id: userId,
+      plan_id: PRO_PLAN_ID,
+      status: "failed",
+    });
+  });
+
+  it("AC-4: insert 23505 unique-violation dönerse 409 ALREADY_SUBSCRIBED döner (current_plan alanı yok)", async () => {
+    // Mevcut 'cancelled' satır aktif-abonelik kontrolünü geçer (createClient tarafı fake'ten okunur).
+    fake = createFakeSupabase({
+      user: { id: userId },
+      tables: {
+        plans: [PRO_PLAN],
+        subscriptions: [{ agent_id: userId, plan_id: PRO_PLAN_ID, status: "cancelled" }],
+      },
+    });
+    vi.mocked(createClient).mockResolvedValue(fake.client);
+
+    // fake-supabase'in insert+select+single zinciri 23505'i PGRST116 ile ezdiği için
+    // (single() duplicate dalından sonra null-dalını çalıştırır), service-role insert zinciri
+    // burada doğrudan 23505 döndürecek şekilde stublanır.
+    const insertSpy = vi.fn(() => ({
+      select: () => ({
+        single: async () => ({
+          data: null,
+          error: { code: "23505", message: "duplicate key value violates unique constraint" },
+        }),
+      }),
+    }));
+    vi.mocked(createServiceRoleClient).mockReturnValue({
+      from: vi.fn(() => ({ insert: insertSpy })),
+    } as unknown as ReturnType<typeof createServiceRoleClient>);
+
+    const res = await POST(checkoutRequest({ plan_id: PRO_PLAN_ID }));
+
+    expect(res.status).toBe(409);
+    expect(await res.json()).toStrictEqual({ error: "ALREADY_SUBSCRIBED" });
+    expect(insertSpy).toHaveBeenCalledTimes(1);
+    expect(insertSpy).toHaveBeenCalledWith({ agent_id: userId, plan_id: PRO_PLAN_ID, status: "pending" });
+    expect(createCheckoutSession).not.toHaveBeenCalled();
+  });
 });
