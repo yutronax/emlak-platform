@@ -172,6 +172,13 @@ class FakeQuery implements PromiseLike<FakeResult> {
     const first = (rowsOut[0] ?? null) as Row | null;
 
     if (mode === "single" && first === null) {
+      // Gerçek bir hata zaten varsa (örn. insert'in 23505 unique-violation'ı)
+      // onu PGRST116 ile EZME — "satır bulunamadı" ile "insert reddedildi"
+      // farklı anlamlar taşır, çağıran kodun hangi dalına girdiğini yanlış
+      // simüle eder (bkz. backlog madde 24).
+      if (result.error) {
+        return result;
+      }
       return { data: null, error: { code: "PGRST116", message: "JSON object requested, multiple (or no) rows returned" } };
     }
     return { data: first, error: null };
