@@ -31,7 +31,7 @@
 | # | İş | Neden | Dosya |
 |---|---|---|---|
 | 14 | ~~`parser.py`, `quality_gate.py`, `fingerprint.py`, `orchestrator.py`, `bridge.js` için birim test yaz~~ — **tamamlandı: EML-59** (parser/quality_gate/fingerprint, 34 test); `orchestrator.py`/`bridge.js` zaten EML-54/EML-51'de kapsanmıştı | Hiç test yok | `scraper/tests/` |
-| 15 | `/admin/listings`, `/login`, `admin/layout.tsx` yetki kontrolü için test yaz | Test yok | `web/src/test/` |
+| 15 | ~~`/admin/listings`, `/login`, `admin/layout.tsx` yetki kontrolü için test yaz~~ — **tamamlandı: P2-15** (`/admin/listings`/`/login` zaten EML-36/EML-45'te test altındaydı; sadece `admin/layout.tsx` boşluğu dolduruldu, fast-track) | Test yok | `web/src/app/admin/layout.test.tsx` |
 | 16 | ~~Checkout route: 400/502/504/23505 senaryoları için test ekle~~ — **tamamlandı: EML-57** | Test yok | `web/src/app/api/subscriptions/checkout/route.test.ts` |
 | 17 | ~~Webhook route testine geçersiz imza (401) ve `PAYMENT_FAILED` senaryosu ekle~~ — **tamamlandı: EML-57** (401 zaten vardı, sadece PAYMENT_FAILED eklendi) | Şu an sadece unit (iyzico.test.ts) seviyesinde | `web/src/app/api/webhooks/payment/route.test.ts` |
 | 18 | ~~Fingerprint'i unique index yap veya insert'i atomik hale getir~~ — **tamamlandı: EML-54** | Paralel worker'lar aynı ilanı iki kez yazabiliyor | `supabase/migrations/`, `scraper/supabase_client.py` |
