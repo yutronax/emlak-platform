@@ -3,6 +3,28 @@
 Pipeline adımlarının (atdd/plan/code_diff/verify) kendi dosyalarına yazdığı
 karar/risk/varsayım kayıtlarının aktarımı — yeniden yorumlanmadan, kaynağıyla.
 
+## scraper-core-unit-testleri (2026-10-23)
+
+**Risks** (kaynak: atdd.md):
+- `parser.py`'de `google.genai` kütüphanesinin test ortamında gerçek import
+  edilebilir olması gerekiyordu — `scraper/.venv` kullanılarak doğrulandı.
+- `GeminiKeyManager`'ın gerçek implementasyonunun arayüzü (load_keys/
+  get_all_keys/get_active_key/switch_to_next_async) plan aşamasında okunup
+  mock yerine gerçek sınıf kullanımına karar verildi.
+
+**Kararlar** (kaynak: plan.md):
+- `GeminiKeyManager` testlerde MagicMock değil GERÇEK sınıf olarak kullanıldı
+  (`monkeypatch.setenv` ile key enjekte edilip `load_keys()` çağrılarak) —
+  round-robin/cooldown gerçek davranışı AC-14/15'in parçası olduğu için.
+- `genai.Client`/`.models.generate_content` tam mock'landı, patch hedefi
+  `parser.genai` (import eden modülün namespace'i, `google.genai` değil).
+
+**Coverage / Quality Notes** (kaynak: verify_report.md):
+- 16/16 AC tam eşleşme assert'leriyle (gevşek substring/`in`/`or` yok)
+  doğrulandı. Mock'un gerçekten çağrıldığı `assert_called_once()`/
+  `assert_not_called()` ile kanıtlandı, sadece sonucun geldiği değil.
+- Refactor adayı yok — implementasyon dosyalarına hiç dokunulmadı.
+
 ## checkout-webhook-test-gaps — refactor eki (2026-10-22)
 
 **Kalan sınırlamalar / gerçek zorluk** (kaynak: refactor.md):

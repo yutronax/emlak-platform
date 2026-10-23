@@ -30,7 +30,7 @@
 ### P2 — Orta (sağlamlaştırma / eksik test)
 | # | İş | Neden | Dosya |
 |---|---|---|---|
-| 14 | `parser.py`, `quality_gate.py`, `fingerprint.py`, `orchestrator.py`, `bridge.js` için birim test yaz | Hiç test yok | `scraper/tests/` |
+| 14 | ~~`parser.py`, `quality_gate.py`, `fingerprint.py`, `orchestrator.py`, `bridge.js` için birim test yaz~~ — **tamamlandı: EML-59** (parser/quality_gate/fingerprint, 34 test); `orchestrator.py`/`bridge.js` zaten EML-54/EML-51'de kapsanmıştı | Hiç test yok | `scraper/tests/` |
 | 15 | `/admin/listings`, `/login`, `admin/layout.tsx` yetki kontrolü için test yaz | Test yok | `web/src/test/` |
 | 16 | ~~Checkout route: 400/502/504/23505 senaryoları için test ekle~~ — **tamamlandı: EML-57** | Test yok | `web/src/app/api/subscriptions/checkout/route.test.ts` |
 | 17 | ~~Webhook route testine geçersiz imza (401) ve `PAYMENT_FAILED` senaryosu ekle~~ — **tamamlandı: EML-57** (401 zaten vardı, sadece PAYMENT_FAILED eklendi) | Şu an sadece unit (iyzico.test.ts) seviyesinde | `web/src/app/api/webhooks/payment/route.test.ts` |

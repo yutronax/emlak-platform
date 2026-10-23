@@ -1,0 +1,42 @@
+{
+  "task": "scraper-core-unit-testleri",
+  "reviewed_at": "2026-10-23T00:00:00+03:00",
+  "summary": "Saf test-ekleme görevi: fingerprint.py, quality_gate.py, parser.py implementasyonlarına hiç dokunulmadı, 16/16 AC'nin tamamı 34 testle doğrudan ve tam-eşleşme assert'lerle (==, is, assert_called_once/not_called) doğrulandı. Testler gerçek implementasyonla (normalize sırası, kümülatif skor düşüşleri, GeminiKeyManager'ın gerçek round-robin/cooldown davranışı) satır satır karşılaştırıldı — hepsi tutarlı. Scope ve compliance tamamen temiz, bulgu yok.",
+  "findings": [],
+  "strengths": [
+    "16/16 AC doğrudan bir testle eşleşiyor, dolaylı/vekil test yok; test_diff tablosu kod okunarak doğrulandı.",
+    "AC-9 (kümülatif skor + 0.0 clamp) tam sayısal değer elle hesaplanıp assert edilmiş (ör. price_missing(-0.1)+area_out_of_range(-0.2)+city_missing(-0.3)=0.4) — toleranslı/yaklaşık karşılaştırma yok, kod sırasına (price→rooms→area→city) birebir uyuyor.",
+    "AC-14/15/16 (parser.py'nin Gemini key rotasyonu) gerçek `GeminiKeyManager` sınıfıyla test edilmiş (MagicMock değil) — `switch_to_next_async`'in GERÇEKTEN bir kez çağrıldığı `assert_called_once()`/`assert_not_called()` ile kanıtlanmış, sadece dönen sonuca bakılmamış.",
+    "Mock-patch hedefi doğru (`parser.genai`, `google.genai` DEĞİL) — parser.py'nin import şekliyle (`from google import genai`) birebir eşleşiyor, kod okunarak teyit edildi.",
+    "Fingerprint testindeki Türkçe İ/ı normalize tuzağı (Python'un varsayılan .lower()'ının Türkçe'ye özel olmaması) test yorumunda açıkça belirtilip test verisi buna göre seçilmiş — kör bir varsayım değil, gerçek bir dil-spesifik edge case'in bilinçli ele alınışı.",
+    "code_diff/implementasyon dosyalarına hiç dokunulmadığı (sadece okunduğu) hem atdd.md/plan.md'de hem bu incelemede dosya okuma yoluyla doğrulandı — rollback riski yok."
+  ],
+  "risks": [],
+  "caveman_review": {
+    "complexity": "low",
+    "unnecessary_files": 0,
+    "unnecessary_helpers": 0,
+    "unnecessary_abstractions": 0
+  },
+  "scope_review": {
+    "matches_atdd": true,
+    "scope_expansion": false
+  },
+  "compliance_check": {
+    "unapproved_decisions": [],
+    "open_questions_silently_resolved": [],
+    "note": "Kontrol edildi, sorun yok. atdd.md'nin tüm açık noktaları (fast-track/full-pipeline tercihi, GeminiKeyManager arayüzü) kullanıcı/customer talebiyle veya kod okunarak (gizli bir ürün kararı değil, teknik keşif) kapatılmış ve kayıt altına alınmış. Threat-model 'not-applicable' işaretlenmesi gerekçeli (yeni kod yolu/güven sınırı yok) ve doğru."
+  },
+  "ready_to_commit": {
+    "atdd_satisfied": true,
+    "tests_passed": true,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": true,
+    "security_acceptable": true,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": true,
+    "compliance_clean": true
+  },
+  "verdict": "approve"
+}
