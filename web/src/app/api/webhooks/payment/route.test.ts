@@ -225,6 +225,26 @@ describe("POST /api/webhooks/payment", () => {
     expect(fake.tables.subscriptions[0]).toMatchObject({ status: "pending" });
   });
 
+  it("AC-25: gövde geçersiz JSON ise 400 INVALID_INPUT döner, mesaj 'Geçersiz istek gövdesi' olur", async () => {
+    const res = await POST(webhookRequest("{bozuk json,", VALID_SIGNATURE));
+
+    expect(res.status).toBe(400);
+    expect(await res.json()).toEqual({ error: "INVALID_INPUT", message: "Geçersiz istek gövdesi" });
+    expect(fake.update).not.toHaveBeenCalled();
+    expect(fake.insert).not.toHaveBeenCalled();
+  });
+
+  it("AC-25: gövde geçerli JSON ama zorunlu alan eksikse 400 INVALID_INPUT döner, mesaj 'Eksik olay alanı' olur (iki hata farklı mesajla ayrışır)", async () => {
+    const res = await POST(
+      webhookRequest(JSON.stringify({ event_id: "evt-1", event_type: "PAYMENT_SUCCESS" }), VALID_SIGNATURE),
+    );
+
+    expect(res.status).toBe(400);
+    expect(await res.json()).toEqual({ error: "INVALID_INPUT", message: "Eksik olay alanı" });
+    expect(fake.update).not.toHaveBeenCalled();
+    expect(fake.insert).not.toHaveBeenCalled();
+  });
+
   it("AC-5: pending aboneliğe PAYMENT_FAILED gelirse 200 received:true döner, status failed olur ve current_period_end hiç yazılmaz", async () => {
     const rawBody = JSON.stringify(PAYMENT_FAILED_EVENT);
 
