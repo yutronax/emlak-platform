@@ -46,7 +46,7 @@
 ### İnsan Eylemi Bekleyenler
 | # | İş | Durum | Not |
 |---|---|---|---|
-| 30 | `plans` tablosuna gerçek abonelik planlarını (ad + fiyat) INSERT et | **İNSAN EYLEMİ GEREKİR** — plan listesi bekleniyor | Migration/kolon sorunu değildi (kolon zaten vardı) — tablo canlıda tamamen boş. Kullanıcı plan listesini verince SQL hazırlanıp Dashboard'dan uygulanacak. |
+| 30 | ~~`plans` tablosuna plan verisi INSERT et~~ — **tamamlandı (placeholder)**: 3 plan eklendi (Temel/Pro/Kurumsal, 99/299/599 TL, isimlerde "(placeholder)" işareti var) — canlıda REST ile doğrulandı. Gerçek fiyatlandırma netleşince `UPDATE` ile değiştirilecek, yeni bir madde değil | — |
 | 31 | ~~`supabase/migrations/` numara çakışması: `0004` (2 dosya), `0006` (2 dosya) — yeniden numaralandırılmalı~~ — **tamamlandı** (commit b2b1edb, 0004/0006→0008/0009 rename) | Hijyen, düşük öncelik | — |
 
 ### Scraper Üretim-Hazırlık (maviLojistik karşılaştırması, 2026-10-23 — detay: [spesifikasyon](https://claude.ai/artifact/3hTFNLuXzSfvra23T9tapn))
