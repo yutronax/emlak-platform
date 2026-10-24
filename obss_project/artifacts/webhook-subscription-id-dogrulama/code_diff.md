@@ -1,7 +1,7 @@
 # Code Diff — webhook-subscription-id-dogrulama
 
 ## Oluşturulan dosyalar
-- `supabase/migrations/0004_payment_events_processing_error.sql` —
+- `supabase/migrations/0008_payment_events_processing_error.sql` —
   `payment_events`e `processing_error boolean not null default false`
   kolonu.
 

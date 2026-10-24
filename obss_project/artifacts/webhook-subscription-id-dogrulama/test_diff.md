@@ -29,7 +29,7 @@ ve `processing_error` kolonu henüz yok.
 onu değiştirmeden).
 
 ## Değiştirilmeyen (implementasyon bekleyen)
-- `supabase/migrations/0004_payment_events_processing_error.sql` henüz
+- `supabase/migrations/0008_payment_events_processing_error.sql` henüz
   yok — code-copilot bunu oluşturacak (plan.md'de belirtildi).
 - `web/src/app/api/webhooks/payment/route.ts` henüz değişmedi.
 

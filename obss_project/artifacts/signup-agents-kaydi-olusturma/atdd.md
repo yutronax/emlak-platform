@@ -15,7 +15,7 @@ affected_modules:
   - web/src/app/signup/actions.ts (yeni)
   - web/src/lib/auth/ensureAgentRow.ts (yeni)
   - web/src/app/login/actions.ts (değiştir)
-  - supabase/migrations/0006_agents_self_insert.sql (yeni)
+  - supabase/migrations/0009_agents_self_insert.sql (yeni)
 ---
 
 # ATDD — signup-agents-kaydi-olusturma
@@ -153,7 +153,7 @@ EML-39'daki gerekçeyle aynı, dar tutuldu).
 - `web/src/lib/auth/ensureAgentRow.ts` (yeni)
 - `web/src/lib/auth/ensureAgentRow.test.ts` (yeni)
 - `web/src/app/login/actions.ts` (değiştir — `ensureAgentRow()` çağrısı eklenir)
-- `supabase/migrations/0006_agents_self_insert.sql` (yeni)
+- `supabase/migrations/0009_agents_self_insert.sql` (yeni)
 
 ## Proje Ortamı Kısıtı (arama/grep kapsamı)
 Doğrulandı (önceki görevlerde zaten doğrulandı).

@@ -80,10 +80,10 @@ flowchart TD
 | `0002_admin_review.sql` | `approve_raw_listing()`/`reject_raw_listing()` RPC'leri (SECURITY INVOKER) |
 | `0003_subscriptions_payment.sql` | `plans`, `subscriptions`, `payment_events` tabloları |
 | `0004_fix_agents_self_update_rls.sql` | `agents` self-update RLS düzeltmesi |
-| `0004_payment_events_processing_error.sql` | `payment_events.processing_error` kolonu |
+| `0008_payment_events_processing_error.sql` | `payment_events.processing_error` kolonu |
 | `0005_agents_immutable_columns.sql` | `agents`'ta değiştirilemez kolon kısıtı |
 | `0006_plans_sort_order.sql` | `plans.sort_order` kolonu |
-| `0006_agents_self_insert.sql` | `agents` self-insert RLS |
+| `0009_agents_self_insert.sql` | `agents` self-insert RLS |
 | `0007_raw_listings_fingerprint_unique.sql` | `fingerprint` üzerinde partial unique index (dedup atomikleştirme) |
 
 Not: `0004` ve `0006` numaraları iki farklı dosyada tekrar ediyor (sıralı numaralandırma disiplini bir noktada kaymış) — uygulama sırası dosya adına göre değil gerçek `supabase/migrations/` dizin listesine göre değerlendirilmeli, bu doküman sadece içerik envanteri verir.

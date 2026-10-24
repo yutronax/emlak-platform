@@ -20,12 +20,12 @@ yeni bir estetik karar gerekmiyor.
 | web/src/app/signup/actions.ts | `signUp()` + validasyon + enumeration-güvenli mesaj | backend |
 | web/src/app/signup/page.test.tsx | Form validasyonu, mesaj render | frontend |
 | web/src/app/signup/actions.test.ts | AC-1/2/3/6/7, AC-S1/S3 | backend |
-| supabase/migrations/0006_agents_self_insert.sql | AC-S1/S2 (self-insert + is_admin kilidi) | backend |
+| supabase/migrations/0009_agents_self_insert.sql | AC-S1/S2 (self-insert + is_admin kilidi) | backend |
 
 ## Dependencies
 - **`login/page.tsx`** (mevcut, referans alınacak stil) — `signup/page.tsx`
   AYNI deseni kullanır (`"use client"`, `useActionState`, form).
-- **Migration (`0006_agents_self_insert.sql`):**
+- **Migration (`0009_agents_self_insert.sql`):**
   ```sql
   create policy agents_self_insert on agents
       for insert to authenticated
@@ -93,7 +93,7 @@ yeni bir estetik karar gerekmiyor.
   senaryosu için — bu durumda company_name YOK, bkz. Open Questions.)
 
 ## Migration Required?
-**Yes** — `0006_agents_self_insert.sql` (yukarıda).
+**Yes** — `0009_agents_self_insert.sql` (yukarıda).
 
 ## Risks
 (atdd.md'den taşındı, bu adımda bir açık bulundu — bkz. Open Questions)

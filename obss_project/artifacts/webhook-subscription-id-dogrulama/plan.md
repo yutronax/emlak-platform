@@ -15,7 +15,7 @@ kriteri atdd.md'de boş).
 ## New Files
 | File | Purpose | Alan |
 |------|---------|------|
-| supabase/migrations/0004_payment_events_processing_error.sql | `payment_events`e `processing_error boolean not null default false` kolonu (AC-5'in "ikinci update de başarısız" dalının kalıcı izi) | backend |
+| supabase/migrations/0008_payment_events_processing_error.sql | `payment_events`e `processing_error boolean not null default false` kolonu (AC-5'in "ikinci update de başarısız" dalının kalıcı izi) | backend |
 
 ## Dependencies
 - **Mevcut `do_POST` akışı** (değişmeyecek kısımlar): path kontrolü → imza
@@ -62,7 +62,7 @@ kriteri atdd.md'de boş).
   edilmeli (mevcut `failUpdatesWith`'i KIRMADAN, yanına eklenecek).
 
 ## Migration Required?
-**Yes** — `supabase/migrations/0004_payment_events_processing_error.sql`:
+**Yes** — `supabase/migrations/0008_payment_events_processing_error.sql`:
 ```sql
 alter table payment_events
     add column processing_error boolean not null default false;

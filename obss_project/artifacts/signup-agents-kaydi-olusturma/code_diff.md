@@ -4,7 +4,7 @@
 - `web/src/lib/auth/ensureAgentRow.ts` — idempotent agent satırı oluşturma (23505 yutulur, diğer hatalar throw+log).
 - `web/src/app/signup/actions.ts` — validasyon + `signUp` + user_metadata + enumeration-güvenli mesaj.
 - `web/src/app/signup/page.tsx` — kayıt formu (login/page.tsx deseniyle tutarlı).
-- `supabase/migrations/0006_agents_self_insert.sql` — `agents_self_insert` RLS policy (AC-S1/S2).
+- `supabase/migrations/0009_agents_self_insert.sql` — `agents_self_insert` RLS policy (AC-S1/S2).
 
 ## Değiştirilen dosyalar
 - `web/src/app/login/actions.ts` — başarılı girişten sonra `ensureAgentRow()`
