@@ -78,7 +78,7 @@ async def parse_listing_message(
         client = genai.Client(api_key=api_key)
         try:
             response = client.models.generate_content(
-                model="gemini-2.5-flash",
+                model="gemini-3.8-flash",
                 contents=f"{SYSTEM_PROMPT}\n\n---\nİlan metni:\n{raw_text}",
             )
         except Exception as exc:  # noqa: BLE001 - sağlayıcı hatası, rotasyon dene

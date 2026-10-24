@@ -53,8 +53,10 @@
 P3'ten ÖNCE ele alınır — scraper çekirdek gelir akışı, video galerisi sonradan.
 | # | İş | Durum | Jira |
 |---|---|---|---|
-| 27 | Faz A: test numarasıyla canlı uçtan uca doğrulama (kod değişikliği yok) — **İNSAN EYLEMİ GEREKİR** (QR tarama) | Bekliyor | EML-65 |
-| 28 | Faz B: reconnect disiplini + işlenemeyen mesaj logu + canlıya geçiş uyarısı (Faz A bulgularına göre, full ATDD) | Faz A'ya bağlı, başlanmadı | - |
+| 27 | ~~Faz A: test numarasıyla canlı uçtan uca doğrulama~~ — **tamamlandı (2026-10-24)**. QR tarama yapıldı, test grubu oluşturuldu, gerçek mesaj bridge→orchestrator→Gemini zincirinde ilerledi. 2 gerçek bulgu çıktı: (1) `parser.py`'de `gemini-2.5-flash` modeli artık yeni kullanıcılara kapalıydı (404) — `gemini-3.8-flash`'a güncellendi, düzeltme sonrası Gemini çağrısı gerçekten başlıyor; (2) `orchestrator.py::do_POST`'ta bozuk/geçersiz encoding'li body `json.loads`'ı except'siz çöküyor (bkz. madde 32); (3) Gemini çağrısında hiç timeout yok, 503 sonrası istek 1+ dakika asılı kaldı (bkz. madde 33) | Tamamlandı | EML-65 |
+| 28 | Faz B: reconnect disiplini + işlenemeyen mesaj logu + canlıya geçiş uyarısı + Gemini timeout + encoding-crash fix (full ATDD) | Faz A bulgularıyla netleşti, başlanabilir | - |
+| 32 | `orchestrator.py::do_POST`'ta `json.loads` çağrısı etrafına try/except ekle (geçersiz UTF-8/bozuk body'de except'siz çöküyor, bağlantı sessizce kesiliyor) | Faz A'da canlı tespit edildi (2026-10-24) | - |
+| 33 | `parser.py`'deki Gemini `generate_content` çağrısına timeout ekle (şu an sınırsız bekliyor, 503/yüksek talep durumunda istek asılı kalabilir) | Faz A'da canlı tespit edildi (2026-10-24) | - |
 | 29 | Faz C (opsiyonel): retry desteği, decrypt-failed log, risk log, grup adı zenginleştirme | Faz B sonrası değerlendirilir | - |
 
 ### P3 — Faz 5 (henüz başlanmamış, iskelet — Scraper Üretim-Hazırlık bitene kadar beklemede)
