@@ -10,9 +10,9 @@
 | # | İş | Neden | Dosya |
 |---|---|---|---|
 | 1 | ~~`agents_self_update` RLS policy'sine kolon kısıtı / `WITH CHECK` ekle (kullanıcı kendi `is_admin`'ini yükseltemesin)~~ — **tamamlandı: EML-18** | Yetki yükseltme açığı | `supabase/migrations/0001_init.sql`, yeni migration |
-| 2 | `plans` tablosuna `sort_order` kolonu ekle (veya sayfadan select/order kaldır) — **repoda hazır, canlıya UYGULANMADI, bkz. İnsan Eylemi Bekleyenler #30** | `/pricing` canlıda sürekli "Planlar yüklenemedi" veriyor | `web/src/app/pricing/page.tsx`, migration |
+| 2 | ~~`plans` tablosuna `sort_order` kolonu ekle~~ — **kolon canlıda ZATEN VAR** (kullanıcı migration'ı denerken `42701 already exists` aldı, doğrulandı). Gerçek kök neden farklı çıktı: **`plans` tablosu canlıda tamamen BOŞ** (REST sorgusu `[]` döndü) — sayfa hata vermiyor, sadece hiç kart göstermiyor. Gerçek plan verisi (ad+fiyat) bekleniyor, bkz. İnsan Eylemi Bekleyenler #30 (güncellendi) | `/pricing` boş görünüyor (hata mesajı değil) | `web/src/app/pricing/page.tsx`, veri (INSERT) |
 | 3 | ~~Scraper webhook'una (`:8090/baileys-webhook`) auth/secret ekle, `0.0.0.0` yerine bağlanma adresini sınırla~~ — **tamamlandı: EML-20** | Auth'suz uç, ağdan erişilip DB/Gemini kotası istismar edilebilir | `scraper/orchestrator.py` |
-| 4 | `0003_subscriptions_payment.sql` migration'ının canlıya uygulandığını doğrula/uygula — **manuel doğrulama bekliyor (İNSAN EYLEMİ)**: webhook-subscription-id-dogrulama (EML-30) verify_report'u kolonun canlıda zaten var olduğunu (`42701 already exists`) teyit etti, ama 0003'ün kendisinin ilk uygulanma anı bu oturumda ayrıca doğrulanmadı | `supabase/migrations/0003_subscriptions_payment.sql` |
+| 4 | ~~`0003_subscriptions_payment.sql` migration'ının canlıya uygulandığını doğrula~~ — **tamamlandı**: `subscriptions` ve `payment_events` tabloları canlıda REST ile sorgulanıp VAR olduğu doğrulandı (boş dönüyorlar, bu normal — henüz gerçek abonelik yok) | `supabase/migrations/0003_subscriptions_payment.sql` |
 | 5 | ~~Webhook `subscription_id` eşleşmesini doğrula (sağlayıcı olayı ↔ DB kaydı), körü körüne güvenme~~ — **tamamlandı: EML-30** (`current.status` kontrolü + `needs_review` yazımı eklendi) | İmza geçerliyse herhangi bir id `active` yapılabiliyor | `web/src/app/api/webhooks/payment/route.ts` |
 
 ### P1 — Yüksek (ana ürün değeri eksik / yarım akış)
@@ -46,8 +46,8 @@
 ### İnsan Eylemi Bekleyenler
 | # | İş | Durum | Not |
 |---|---|---|---|
-| 30 | `supabase/migrations/0006_plans_sort_order.sql`'i Supabase Dashboard > SQL Editor'den canlıya uygula | **İNSAN EYLEMİ GEREKİR** | `/pricing` "Planlar yüklenemedi" hatası veriyor — migration repoda doğru ama canlıya hiç uygulanmamış (EML-54'teki aynı kalıp). PM tespit etti (2026-10-23). |
-| 31 | `supabase/migrations/` numara çakışması: `0004` (2 dosya), `0006` (2 dosya) — yeniden numaralandırılmalı | Hijyen, düşük öncelik | PM tespit etti (2026-10-23) |
+| 30 | `plans` tablosuna gerçek abonelik planlarını (ad + fiyat) INSERT et | **İNSAN EYLEMİ GEREKİR** — plan listesi bekleniyor | Migration/kolon sorunu değildi (kolon zaten vardı) — tablo canlıda tamamen boş. Kullanıcı plan listesini verince SQL hazırlanıp Dashboard'dan uygulanacak. |
+| 31 | ~~`supabase/migrations/` numara çakışması: `0004` (2 dosya), `0006` (2 dosya) — yeniden numaralandırılmalı~~ — **tamamlandı** (commit b2b1edb, 0004/0006→0008/0009 rename) | Hijyen, düşük öncelik | — |
 
 ### Scraper Üretim-Hazırlık (maviLojistik karşılaştırması, 2026-10-23 — detay: [spesifikasyon](https://claude.ai/artifact/3hTFNLuXzSfvra23T9tapn))
 P3'ten ÖNCE ele alınır — scraper çekirdek gelir akışı, video galerisi sonradan.
