@@ -3,6 +3,24 @@
 Pipeline adımlarının (atdd/plan/code_diff/verify) kendi dosyalarına yazdığı
 karar/risk/varsayım kayıtlarının aktarımı — yeniden yorumlanmadan, kaynağıyla.
 
+## faz-b-scraper-guvenilirlik-sertlestirme (2026-10-24)
+
+**Risks** (kaynak: atdd.md):
+- `generate_content` çağrısına timeout eklemenin SDK'nın gerçek API'sini
+  (varsayım değil) doğrulaması gerekiyordu — plan aşamasında
+  `google.genai.types.HttpOptions.model_fields['timeout']` canlı kontrol
+  edilip milisaniye cinsinden olduğu teyit edildi.
+- `bridge_unhandled_messages.log`'un rotasyon sınırı bu görevde ele
+  alınmadı (maviLojistik'te de yoktu) — ileride bir hijyen görevi olabilir.
+
+**Kalan Sınırlamalar** (kaynak: code_diff.md):
+- `payload`'ın JSON olarak geçerli ama dict olmadığı durum (örn. `[1]`)
+  kapsam dışı bırakıldı — mevcut `payload.get("id")` ile aynı risk zaten
+  vardı, bu görev onu değiştirmedi.
+- Verify sırasında bulunan `test_verify_supabase.py::test_schema_required_tables_are_the_six_expected`
+  testi bu görevle ilgisiz, P2-20'den kalma pre-existing bir tutarsızlık
+  (backlog'a ayrı madde olarak eklendi).
+
 ## scraper-core-unit-testleri (2026-10-23)
 
 **Risks** (kaynak: atdd.md):

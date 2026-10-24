@@ -11,9 +11,11 @@ const { default: makeWASocket, useMultiFileAuthState, DisconnectReason } = requi
 const qrcode = require('qrcode-terminal');
 const pino = require('pino');
 const path = require('path');
+const fs = require('fs');
 
 const WEBHOOK_URL = process.env.WEBHOOK_URL || 'http://localhost:8090/baileys-webhook';
 const AUTH_DIR = process.env.WHATSAPP_SESSION_DIR || path.join(__dirname, 'session');
+const UNHANDLED_LOG = path.join(__dirname, 'bridge_unhandled_messages.log');
 
 const WEBHOOK_SECRET = process.env.BAILEYS_WEBHOOK_SECRET;
 
@@ -52,6 +54,21 @@ async function processIncomingMessage(msg) {
   } else {
     counters.skipped += 1;
     console.log(`[filter] skipped (type=no_text, total_skipped=${counters.skipped})`);
+    // PII'siz satır: ham metin/JID yazılmaz, sadece zaman, mesaj ID ve grup/DM bilgisi.
+    try {
+      fs.appendFileSync(
+        UNHANDLED_LOG,
+        JSON.stringify({
+          timestamp: new Date().toISOString(),
+          messageId: msg.key.id,
+          jidType: isGroupJid(remoteJid) ? 'group' : 'dm',
+        }) + '\n',
+        'utf-8',
+      );
+    } catch (e) {
+      // Log yazılamasa bile mesaj akışı durmaz.
+      console.error('[LOG-YAZMA HATASI]', e.message);
+    }
   }
 }
 

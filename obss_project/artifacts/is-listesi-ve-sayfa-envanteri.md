@@ -54,9 +54,10 @@ P3'ten ÖNCE ele alınır — scraper çekirdek gelir akışı, video galerisi s
 | # | İş | Durum | Jira |
 |---|---|---|---|
 | 27 | ~~Faz A: test numarasıyla canlı uçtan uca doğrulama~~ — **tamamlandı (2026-10-24)**. QR tarama yapıldı, test grubu oluşturuldu, gerçek mesaj bridge→orchestrator→Gemini zincirinde ilerledi. 2 gerçek bulgu çıktı: (1) `parser.py`'de `gemini-2.5-flash` modeli artık yeni kullanıcılara kapalıydı (404) — `gemini-3.8-flash`'a güncellendi, düzeltme sonrası Gemini çağrısı gerçekten başlıyor; (2) `orchestrator.py::do_POST`'ta bozuk/geçersiz encoding'li body `json.loads`'ı except'siz çöküyor (bkz. madde 32); (3) Gemini çağrısında hiç timeout yok, 503 sonrası istek 1+ dakika asılı kaldı (bkz. madde 33) | Tamamlandı | EML-65 |
-| 28 | Faz B: reconnect disiplini + işlenemeyen mesaj logu + canlıya geçiş uyarısı + Gemini timeout + encoding-crash fix (full ATDD) | Faz A bulgularıyla netleşti, başlanabilir | - |
-| 32 | `orchestrator.py::do_POST`'ta `json.loads` çağrısı etrafına try/except ekle (geçersiz UTF-8/bozuk body'de except'siz çöküyor, bağlantı sessizce kesiliyor) | Faz A'da canlı tespit edildi (2026-10-24) | - |
-| 33 | `parser.py`'deki Gemini `generate_content` çağrısına timeout ekle (şu an sınırsız bekliyor, 503/yüksek talep durumunda istek asılı kalabilir) | Faz A'da canlı tespit edildi (2026-10-24) | - |
+| 28 | ~~Faz B: encoding-crash fix + Gemini timeout + işlenemeyen mesaj logu~~ — **tamamlandı (2026-10-24)**, EML-66, 19/19 test yeşil, red-team: approve. Reconnect disiplini zaten mevcuttu (kapsam dışı), Faz C'ye bırakıldı | Tamamlandı | EML-66 |
+| 32 | ~~`orchestrator.py::do_POST`'ta `json.loads` çağrısı etrafına try/except ekle~~ — **tamamlandı: EML-66** | Faz A'da canlı tespit edildi (2026-10-24) | EML-66 |
+| 33 | ~~`parser.py`'deki Gemini `generate_content` çağrısına timeout ekle~~ — **tamamlandı: EML-66** (`HttpOptions(timeout=30000)`) | Faz A'da canlı tespit edildi (2026-10-24) | EML-66 |
+| 34 | `test_verify_supabase.py::test_schema_required_tables_are_the_six_expected` eski 6-tablo setini bekliyor, P2-20'de eklenen `plans`/`payment_events` için güncellenmemiş — test güncellenmeli | Faz B verify'ında tespit edildi (2026-10-24), görevle ilgisiz pre-existing | - |
 | 29 | Faz C (opsiyonel): retry desteği, decrypt-failed log, risk log, grup adı zenginleştirme | Faz B sonrası değerlendirilir | - |
 
 ### P3 — Faz 5 (henüz başlanmamış, iskelet — Scraper Üretim-Hazırlık bitene kadar beklemede)

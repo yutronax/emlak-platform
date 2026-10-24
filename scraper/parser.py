@@ -11,6 +11,7 @@ import re
 from typing import Any, Dict, Optional
 
 from google import genai
+from google.genai import types as genai_types
 
 from api_key_manager import GeminiKeyManager
 
@@ -75,7 +76,11 @@ async def parse_listing_message(
             logger.error("Kullanılabilir Gemini key yok.")
             return None
 
-        client = genai.Client(api_key=api_key)
+        # timeout milisaniye cinsinden (30000 = 30s); asılı kalan Gemini çağrısını keser.
+        client = genai.Client(
+            api_key=api_key,
+            http_options=genai_types.HttpOptions(timeout=30000),
+        )
         try:
             response = client.models.generate_content(
                 model="gemini-3.8-flash",

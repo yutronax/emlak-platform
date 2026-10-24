@@ -123,9 +123,25 @@ class WebhookHandler(BaseHTTPRequestHandler):
         body = self.rfile.read(length) if length else b""
         try:
             payload = json.loads(body or b"{}")
-        except json.JSONDecodeError:
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            # Body içeriği loglanmaz (PII riski).
+            logger.warning("Geçersiz webhook body (JSON/UTF-8 çözülemedi), 400 dönüldü.")
+            response = json.dumps({"error": "invalid_body"}).encode("utf-8")
             self.send_response(400)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(response)))
             self.end_headers()
+            self.wfile.write(response)
+            return
+
+        if not payload.get("text"):
+            # Metinsiz mesaj kuyruğa alınmaz; 200 ile "işlendi" denir (WhatsApp tekrar göndermesin).
+            response = b"{}"
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(response)))
+            self.end_headers()
+            self.wfile.write(response)
             return
 
         message_id = str(payload.get("id") or "")
