@@ -129,3 +129,69 @@ aynı gerekçeyle (tasarım gereği) elendi, eyleme dönüştürülmedi.
 2. **Henüz kalıp sayılmayan:** scraper-dm-grup-filtresi'nin "sayaç DEĞERİ
    assert edilmemiş" test-gap bulgusu tek örnek — üçüncü bir tekrar
    gelmeden `test-copilot`'a yeni bir madde EKLENMEDİ.
+
+## Koşum 3 — 2026-10-25
+Görev sayısı: 18 (Koşum 2'deki 13 + yeni: plans-rls-anon-select-izni ve
+diğer 4 — not: `aggregate.py` görev listesini isimle değil toplam sayıyla
+raporluyor, tam liste için script çıktısına bakılabilir)
+Toplam bulgu: 31 (9 medium, 22 low — hiç critical/high yok)
+
+### Kategori dağılımı
+| Kategori | Bulgu | Farklı görev |
+|---|---|---|
+| test-gap | 10 | 8 |
+| reliability | 8 | 6 |
+| other | 3 | 2 |
+| scope | 2 | 2 |
+| correctness | 2 | 2 |
+| maintainability | 2 | 2 |
+| risk | 2 | 2 |
+| readability | 1 | 1 |
+| security | 1 | 1 |
+
+### Tekrar eden kategoriler (süreç kusuru adayları)
+- **test-gap** (8 görev, Koşum 2'deki 5'ten büyüdü — yeni tekrar eden bir
+  alt-kalıp belirginleşti): `plans-rls-anon-select-izni`'de bir güvenlik AC'si
+  (AC-S2, `pg_policies` yapısal introspection) `verify` adımına kadar
+  "çalışır" sayıldı, ama gerçekte bu geliştirme ortamında teknik olarak
+  imkansızdı (IPv6-only DB host, bu ağda IPv6 çıkışı yok) — bu sadece
+  `verify`/`red-team` aşamasında fark edildi, `atdd`/`plan` aşamasında hiç
+  sorgulanmadı. Daha önceki test-gap bulguları (ikinci-seviye-hata,
+  gevşek-assert) zaten kontrol listesine girmişti; bu YENİ bir alt-sınıf:
+  **"bu AC bu ortamda gerçekten test edilebilir mi" sorusu hiç sorulmuyor.**
+- **reliability** (6 görev, Koşum 2'deki 4'ten büyüdü) — Koşum 2'nin
+  "operatör görünürlüğü" eylemi zaten `atdd` SKILL.md'ye eklenmişti (4a
+  adımı); bu koşumdaki yeni örnek (`plans-rls-anon-select-izni`'nin
+  kendi red-team bulgusu — yazma-denemesi testlerinde ortam/proje
+  koruması yoktu) farklı bir alt-kalıp, henüz 3 tekrara ulaşmadı, ayrı bir
+  madde EKLENMEDİ, izlemede tutuluyor.
+
+### Sıcak dosya
+`web/src/app/api/webhooks/payment/route.ts` — Koşum 1'den bu yana yine
+yeni bulgu almadı (toplam 3/3 sabit kaldı). Bu koşumun 31 bulgusunun
+hiçbiri bu dosyada değil. Önceki iki koşumun "refactor-aday" notu hâlâ
+yürürlükte, eyleme dönüştürülmedi (dosyaya üçüncü kez dokunulmadı).
+
+### Verify gate notu
+`AI code review` ve `İnsan onayı` 18 görevin neredeyse tamamında PENDING —
+Koşum 1/2'deki aynı gerekçeyle (tasarım gereği, bu gate'ler zaten ayrı
+adımlara/insana devredilmiş durumda) elendi, eyleme dönüştürülmedi.
+
+### Önerilen somut eylemler
+
+1. **`atdd` şablonuna madde — "ortam-gerçekleştirilebilirlik" kontrolü:**
+   Threat-model bir `AC-S<n>` kriteri DB-seviyesi introspection/doğrudan
+   bağlantı gerektiriyorsa (`pg_policies`, raw SQL, management API vb.),
+   `atdd`'nin 5b adımı (threat-model tetikleyici kontrolü) bu kriteri
+   yazarken şunu da sormalı: "bu kontrol, geliştirme/CI ortamında
+   gerçekten çalıştırılabilir mi (DB_URL/IPv6/VPN gerekiyor mu)?" — yoksa
+   bu açıkça Assumptions/Unknowns'a "ortam kısıtı" olarak yazılmalı, sessizce
+   `verify` aşamasına kadar fark edilmemeli. Gerekçe: bu koşumda
+   `plans-rls-anon-select-izni`'nin AC-S2'si tam bu yüzden `verify`'a kadar
+   "sorunsuz" göründü, gerçekte hiç çalıştırılamadı.
+   **Nereye:** `atdd` SKILL.md'nin 5b adımına (threat-model tetikleyici
+   kontrolü) bir alt-madde.
+
+2. **Henüz kalıp sayılmayan:** `plans-rls-anon-select-izni`'nin "yazma testi
+   ortam koruması yok" reliability bulgusu tek örnek — üçüncü bir tekrar
+   gelmeden yeni bir madde EKLENMEDİ, izleniyor.
