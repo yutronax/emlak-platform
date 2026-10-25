@@ -84,7 +84,7 @@ def test_schema_full_result_is_pass():
     assert evaluate_schema(full_schema_result()) is True
 
 
-def test_schema_required_tables_are_the_six_expected():
+def test_schema_required_tables_are_the_eight_expected():
     assert set(REQUIRED_TABLES) == {
         "agents",
         "subscriptions",
@@ -92,6 +92,8 @@ def test_schema_required_tables_are_the_six_expected():
         "listings",
         "properties",
         "property_videos",
+        "plans",
+        "payment_events",
     }
     assert set(REQUIRED_RPCS) == {"approve_raw_listing", "reject_raw_listing"}
 
