@@ -1,0 +1,62 @@
+{
+  "task": "plans-rls-anon-select-izni",
+  "reviewed_at": "2026-10-25",
+  "summary": "Migration is minimal, correct, and does what the threat model asked (FOR SELECT only, to anon+authenticated); the integration test suite is well-designed and two of six tests genuinely passed live against Supabase. The two skips (AC-2, AC-S2) are real test-gaps, not just environment noise — AC-S2 in particular skips the exact structural check (pg_policies introspection) that the threat model called out as the primary defense against an accidental FOR ALL grant, and it is currently only covered by static review + an indirect behavioral proxy (AC-S1), not an independent DB-level assertion.",
+  "findings": [
+    {
+      "severity": "medium",
+      "category": "test-gap",
+      "file": "scraper/tests/test_plans_rls_anon_select.py",
+      "issue": "AC-S2 (pg_policies introspection, the threat-model's structural safeguard against a policy accidentally written as FOR ALL instead of FOR SELECT) is skipped because SUPABASE_DB_URL is not set in this environment. verify_report.md calls this 'kabul edilebilir risk' but the only replacement evidence is (a) a human reading the 5-line SQL file and (b) AC-S1 proving anon writes are currently rejected. Neither of those catches a future regression where someone edits migration 0010 or adds a new policy on `plans` that re-grants anon write access — AC-S1 only tests the CURRENT state of the live DB, it does not assert anything about what policies exist.",
+      "better_approach": "Either (1) set SUPABASE_DB_URL in the environment that runs this suite before merging, so AC-S2 actually executes once, or (2) add a lightweight PostgREST-only equivalent check (e.g. attempt anon GET on an OpenAPI/schema introspection endpoint, or use the Supabase Management API to list policies) so the structural check does not require a direct Postgres connection string as a hard dependency.",
+      "reason": "atdd.md explicitly elevates this to AC-S2 under the Elevation-of-Privilege threat-model line; an assertion that only holds 'as long as nobody edits the migration' is not equivalent to the structural test the ATDD asked for.",
+      "outcome": "skipped",
+      "outcome_note": "Kullanıcı gerçek DB şifresini sağladı, doğrudan bağlantı (db.<ref>.supabase.co:5432) denendi — bu ortamda IPv6 çıkışı olmadığından host çözülemedi (getaddrinfo failed). Kullanıcı kararıyla kabul edilmiş risk olarak bırakıldı; pooler connection string sağlanırsa ileride kapatılabilir."
+    },
+    {
+      "severity": "medium",
+      "category": "test-gap",
+      "file": "scraper/tests/test_plans_rls_anon_select.py",
+      "issue": "AC-2 (authenticated regression) is also skipped automatically (no SUPABASE_TEST_USER_JWT) and was only verified once, manually, by creating and deleting a throwaway test user per verify_report.md. That one-time manual check will not re-run on the next change to RLS policies or Supabase settings, so a future regression on authenticated SELECT would go undetected by CI.",
+      "better_approach": "Add a test-fixture that creates a short-lived auth user via the service-role admin API inside the test itself (setup/teardown), instead of depending on a pre-existing SUPABASE_TEST_USER_JWT env var. This removes the manual step entirely and makes AC-2 self-contained and repeatable.",
+      "reason": "The test file's own helpers already know how to use the service client; the Supabase Admin REST API (`/auth/v1/admin/users`) can create+delete a user in a few lines, which is strictly more reliable than requiring a long-lived JWT secret to be provisioned by a human.",
+      "outcome": "fixed",
+      "outcome_note": "test_ac2_authenticated_select_returns_same_row_count artık kendi geçici kullanıcısını oluşturup siliyor, SUPABASE_TEST_USER_JWT bağımlılığı kalktı. Canlı doğrulandı: RUN_INTEGRATION=1 pytest --run-integration -> PASS."
+    },
+    {
+      "severity": "low",
+      "category": "risk",
+      "file": "obss_project/artifacts/plans-rls-anon-select-izni/atdd.md",
+      "issue": "Rollback section only describes the reverse SQL in prose ('ters bir migration yazılır') — no actual rollback migration file was produced, and code_diff.md explicitly notes this was intentionally deferred ('proaktif üretilmedi').",
+      "better_approach": "This is acceptable as-is for a low-risk, easily-reversible single-policy change, but if this pattern repeats across future RLS tasks, consider always shipping the down-migration alongside the up-migration so an incident responder doesn't have to hand-write SQL under time pressure.",
+      "reason": "atdd.md's own Rollback Beklentisi requires the emergency SQL to 'then also be recorded as a migration' — leaving that for a future step is fine for a 5-line single-statement change, but is worth flagging as a pattern to tighten before it's used on a riskier table.",
+      "outcome": "fixed",
+      "outcome_note": "supabase/rollback/0010_plans_anon_select_rollback.sql eklendi — migrations/ dışında, otomatik uygulanmayan ayrı bir dizinde."
+    },
+    {
+      "severity": "low",
+      "category": "reliability",
+      "file": "scraper/tests/test_plans_rls_anon_select.py",
+      "issue": "Write-probe tests (INSERT/UPDATE/DELETE) run directly against whatever Supabase project SUPABASE_URL points to, with no environment-tier guard (e.g. no check that the URL/project is a dev/test project rather than production). An UPDATE probe mutates a real row's `name` field (even though RLS is expected to block it) and relies on try/finally cleanup for the INSERT probe.",
+      "better_approach": "Add an explicit guard (assert project ref against an allow-list, or require an env var like SUPABASE_TEST_ENV=1) before any test is allowed to issue writes, so a misconfigured CI run can't silently mutate production `plans` rows.",
+      "reason": "authz_test.md already acknowledges these are integration tests against 'kullanıcının kendi Supabase projesi' — since there appears to be only one project, a future CI misconfiguration (wrong URL env var) has no technical barrier stopping it from running write-probes against the live/production plans table that feeds /pricing.",
+      "outcome": "fixed",
+      "outcome_note": "3 yazma-denemesi testine ortak _guard_write_probe_environment() eklendi — plans tablosunda >100 satır varsa test pytest.fail ile durur, deneme hiç gönderilmez."
+    }
+  ],
+  "strengths": [
+    "Migration correctly scopes the new policy to `for select` only (not `for all`), which directly neutralizes the Elevation-of-Privilege scenario the threat model worried about — verified both statically (code_diff.md) and empirically live (AC-S1 PASS against real Supabase).",
+    "The Davranış Sözleşmesi (behavior contract) in atdd.md explicitly distinguishes '200+[] from empty table' vs '200+[] from RLS silently blocking', and AC-1's test (`test_ac1_anon_select_returns_exact_service_row_count`) correctly operationalizes that distinction by asserting the service_role baseline count equals 3 before comparing — this is exactly the right way to avoid the classic silent-success trap called out in the task instructions.",
+    "Write-rejection tests go beyond checking HTTP status codes alone — they re-read via service_role after each UPDATE/DELETE attempt to prove the data truly didn't change, which is the right defense against a 200/204-with-zero-effect false negative.",
+    "Scope is tightly respected: only one new migration file and one new test file were added, no existing migration or application code was touched, consistent with plan.md's 'Files to Modify: none' table."
+  ],
+  "risks": [
+    "AC-S2's unresolved skip means there is currently no automated, repeatable guarantee that `plans` SELECT policy roles are exactly {anon, authenticated} with no anon-write policy — this should be closed before relying on CI alone for future regressions on this table.",
+    "No environment/project guard on the write-probe integration tests; a wrong SUPABASE_URL in some future CI config could run live INSERT/UPDATE/DELETE probes against the real `plans` table that backs the public pricing page.",
+    "Accepted, documented risk (not a blocker): `USING (true)` has no column restriction, so any future sensitive column added to `plans` would be exposed to anon automatically — already flagged in atdd.md Risks and is explicitly the correct scope boundary for this task."
+  ],
+  "caveman_review": {"complexity": "low", "unnecessary_files": 0, "unnecessary_helpers": 0, "unnecessary_abstractions": 0},
+  "scope_review": {"matches_atdd": true, "scope_expansion": false},
+  "ready_to_commit": {"atdd_satisfied": true, "tests_passed": true, "no_critical_findings": true, "scope_respected": true, "caveman_satisfied": true, "security_acceptable": true, "maintainability_acceptable": true, "no_blocking_risks": true},
+  "verdict": "approve-with-changes"
+}
