@@ -1,0 +1,72 @@
+{
+  "task": "admin-video-yukleme-paneli",
+  "reviewed_at": "2026-10-25T00:00:00Z",
+  "summary": "Mimari sapma (client path göndermiyor, tek server action) iyi bir karar ve AC-S1'i tasarım garantisine çeviriyor; davranış sözleşmesi throw-based desenle büyük ölçüde tutarlı uygulanmış. Asıl eksikler: AC-S4/AC-11 (signed URL/private erişim) hiç kapsanmamış ve kullanıcıya hiç video izleme yolu sunulmuyor (özellik yarım), storage.objects için admin'e verilen `for all` policy gereksiz yere DELETE/SELECT de içeriyor, ve inline \"use server\" düzeltmesi fonksiyonel olarak doğru ama proje genelinde tutarsız bir desen yaratıyor.",
+  "findings": [
+    {
+      "severity": "medium",
+      "category": "security",
+      "file": "supabase/migrations/0011_property_videos_admin_policies.sql",
+      "issue": "`property_videos_storage_admin_all` policy'si `for all` kullanıyor, yani admin'e SELECT/INSERT/UPDATE/DELETE'in hepsini storage.objects üzerinde açıyor. UI'da silme butonu yok ama RLS seviyesinde herhangi bir admin, herhangi bir property'nin videosunu (storage objesini) silebilir veya üzerine yazabilir (aynı path'e tekrar upload = overwrite).",
+      "better_approach": "`for all` yerine sadece gereken işlemler için ayrı policy'ler tanımlanmalı: SELECT (liste/okuma), INSERT (yeni upload). UPDATE/DELETE bu görevin kapsamında kullanılmıyorsa (page.tsx'te hiç çağrılmıyor) bu policy'lerin eklenmemesi, ileride gerekirse ayrı bir migration'la eklenmesi daha güvenli (least-privilege).",
+      "reason": "plan.md bunu zaten bilinçli bir risk olarak not etmiş ('Risks' bölümü, madde: storage.objects for all), ama kabul edilmiş risk olarak bırakmak yerine kapsamı taratmak (DELETE/UPDATE yok) ATDD'nin 'video silme kapsam dışı' kararıyla tam örtüşür ve saldırı yüzeyini küçültür. Tek-admin varsayımı bugün doğru olsa da, gelecekte ikinci bir admin eklenirse (audit log da yok — atdd.md Risks) bir admin diğerinin videosunu sessizce silebilir, repudiation riskini büyütür.",
+      "outcome": "fixed",
+      "outcome_note": "`for all` policy SELECT+INSERT'e daraltıldı (property_videos_storage_admin_select/insert), canlı Supabase'de de uygulandı ve 9/9 RLS testi tekrar PASS."
+    },
+    {
+      "severity": "medium",
+      "category": "test-gap",
+      "file": "obss_project/artifacts/admin-video-yukleme-paneli/verify_report.md",
+      "issue": "AC-S4/AC-11 (signed URL ile erişim / imzasız erişimin reddi) hiç test edilmemiş; bucket private olduğu doğrulanmış ama 'published video signed URL ile izlenebilir' pozitif akışı UI'da hiç yok.",
+      "better_approach": "Bu doğru şekilde test-gap olarak işaretlenmiş, ama bunun ötesinde: eğer AC-11/AC-S4 bu sprintte UI kapsamına girmeyecekse, ATDD'nin Acceptance Criteria listesinden bu iki madde çıkarılıp ayrı bir backlog/Jira maddesine taşınmalı (EML-12 gibi) — aksi halde 'kapsam dışı' ile 'test edilmedi AC' arasında belirsizlik kalıyor.",
+      "reason": "Mevcut durumda özellik yarım: admin video yükleyip 'yayınla' diyebiliyor ama hiçbir yerde videoyu izleyemiyor/doğrulayamıyor — bu kullanıcı değeri açısından 'tamamlanmamış' bir akış. verify_report.md bunu doğru tespit etmiş, ama ATDD'de Critical/High seviyeli AC olarak durması gate'leri yanıltıcı yapıyor (hepsi PASS görünüyor, oysa 2 AC fiilen kapsanmamış).",
+      "outcome": "skipped",
+      "outcome_note": "Jira EML-76'ya ayrı bir backlog maddesi olarak taşındı (kullanıcı kararıyla) — bu görevin kapsamı genişletilmedi."
+    },
+    {
+      "severity": "low",
+      "category": "architecture",
+      "file": "web/src/app/admin/videos/actions.ts",
+      "issue": "`\"use server\"` direktifi fonksiyon-seviyesine (inline) taşınmış, ama bu projede diğer server action dosyaları (örn. `/admin/listings/actions.ts`) muhtemelen dosya-seviyeli direktif kullanıyor. Bu, codebase içinde iki farklı 'use server' konvansiyonu yaratıyor.",
+      "better_approach": "`buildVideoStoragePath` fonksiyonunu actions.ts dosyasından ayrı bir saf-yardımcı dosyaya (örn. `web/src/app/admin/videos/path.ts`) çıkarıp, actions.ts'te dosya-seviyeli \"use server\" direktifini koruyarak projenin tek bir konvansiyonla kalmasını sağlamak daha sürdürülebilir olurdu.",
+      "reason": "Inline 'use server' Next.js'in resmi desteklediği bir çözüm olduğu için fonksiyonel olarak doğru ve build'i düzeltiyor (verify_report.md'de doğrulandı), ama CAVEMAN ilkesinin 'mevcut desenle tutarlı kal' hedefine kısmen aykırı: artık bu dosya proje genelindeki diğer server action dosyalarından yapısal olarak farklı görünüyor. Saf fonksiyonu ayırmak hem bu tutarsızlığı çözerdi hem de testi (buildVideoStoragePath) server-action modülünün import zincirinden bağımsızlaştırırdı.",
+      "outcome": "skipped",
+      "outcome_note": "Kullanıcı kararıyla düşük öncelik, bu görevde atlandı."
+    },
+    {
+      "severity": "low",
+      "category": "security",
+      "file": "web/src/app/admin/videos/actions.ts",
+      "issue": "`publishVideo` içinde `video_id` boşsa fonksiyon sessizce `return` ediyor (satır 98: `if (!videoId) return;`) — bu, ATDD'nin AC-13'teki 'sessiz başarı YASAK' ilkesiyle teknik olarak çelişmiyor (hiçbir yan etki yok) ama kullanıcıya hiçbir hata da göstermiyor; form'dan hidden input her zaman dolu geldiği için pratikte tetiklenmiyor, fakat biri formu manuel olarak boş video_id ile POST ederse sessizce hiçbir şey olmaz.",
+      "better_approach": "Boş video_id durumunda da `throw new Error(\"Geçersiz video\")` atmak, diğer validasyon hatalarıyla tutarlı olurdu.",
+      "reason": "actions.test.ts bu durumu hiç test etmiyor (video_id boş senaryosu yok), davranış sözleşmesi tablosunda da bu satır için ayrı bir kural tanımlı değil — küçük bir tutarsızlık ama kullanıcıya hiç geri bildirim vermemesi debug'ı güçleştirebilir.",
+      "outcome": "fixed",
+      "outcome_note": "`if (!videoId) return;` → `throw new Error(\"Geçersiz video\")`. 154/154 test suite regresyonsuz."
+    }
+  ],
+  "strengths": [
+    "buildVideoStoragePath path-traversal girdisini (\"../../other-property/evil.mp4\") güvenli şekilde ele alıyor: fonksiyon sadece `filename.split(\".\").pop()` ile uzantıyı alıyor, dosya adının geri kalanı asla kullanılmıyor, path her zaman sunucuda üretilen `${propertyId}/${randomUUID()}.${ext}` formatında — actions.test.ts satır 138-147'de bu açıkça test edilmiş ve PASS.",
+    "Kısmi başarı senaryosu (Storage OK, DB INSERT FAIL) doğru uygulanmış: actions.ts satır 70-81, compensating delete + removeError durumunda console.error ile path loglanıyor, ardından throw — atdd.md Davranış Sözleşmesi satır 9 ile tam örtüşüyor.",
+    "Sessiz başarı/kısmi başarı ayrımı (AC-13) doğru: upload sonucu kontrol edilmeden hiçbir zaman INSERT çağrılmıyor, revalidatePath sadece tüm adımlar başarılı olduktan sonra çalışıyor.",
+    "requireAdmin() redirect deseni page.tsx ve actions.ts'te `/admin/listings` ile birebir tutarlı (no-session→/login, not-admin→/agent/dashboard veya throw) — CAVEMAN ilkesine uygun, yeni bir konvansiyon icat edilmemiş.",
+    "Migration/rollback çifti simetrik ve idempotent (`on conflict do nothing`, `drop policy if exists`), owner policy'lerine dokunmuyor — AC-9 regresyonu doğru şekilde korunmuş."
+  ],
+  "risks": [
+    "storage.objects için `for all` policy'si, ikinci bir admin eklendiğinde (audit log olmadan) bir admin diğerinin yüklediği videoyu sessizce silebilir/üzerine yazabilir — kabul edilebilir ama izlenmesi gereken bir risk.",
+    "AC-S4/AC-11 kapsanmaması, 'published' videonun gerçek dünyada hiç izlenemediği anlamına geliyor — bir sonraki görev (video player/signed URL) acil planlanmalı, aksi halde özellik kullanıcı için fiilen işe yaramaz durumda kalır.",
+    "property_videos.storage_path üzerinde unique constraint yok (plan.md'de not edilmiş) — aynı property'ye aynı path'in teorik olarak iki kez INSERT edilebilmesi (UUID çarpışması pratikte ihmal edilebilir ama constraint yokluğu veri bütünlüğü açısından not edilmeli)."
+  ],
+  "caveman_review": {"complexity": "low", "unnecessary_files": 0, "unnecessary_helpers": 0, "unnecessary_abstractions": 0},
+  "scope_review": {"matches_atdd": true, "scope_expansion": false},
+  "ready_to_commit": {
+    "atdd_satisfied": true,
+    "tests_passed": true,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": true,
+    "security_acceptable": true,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": true
+  },
+  "verdict": "approve-with-changes"
+}
