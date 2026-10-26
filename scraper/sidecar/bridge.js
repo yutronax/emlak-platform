@@ -1,13 +1,15 @@
 // Baileys -> Python orchestrator (/baileys-webhook) köprüsü.
 // maviLojistik/sidecar/bridge.js'teki üretimde doğrulanmış bağlantı/mesaj
-// ayrıştırma mantığının MVP'ye indirgenmiş portu (grup-adı zenginleştirme,
-// risk log'u ve retry-getMessage desteği bu aşamada yok — ileride eklenebilir).
+// ayrıştırma mantığının MVP'ye indirgenmiş portu. EML-77: decrypt-failed log,
+// risk log, grup adı zenginleştirme (cache + 3s timeout) ve webhook 3x retry.
+// retry-getMessage desteği kapsam dışı (Baileys'in varsayılan recent-message
+// cache'i zaten çözüyor).
 //
 // Kullanım: node bridge.js
 // Ortam değişkenleri:
 //   WEBHOOK_URL (varsayılan: http://localhost:8090/baileys-webhook)
 
-const { default: makeWASocket, useMultiFileAuthState, DisconnectReason } = require('@whiskeysockets/baileys');
+const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, proto } = require('@whiskeysockets/baileys');
 const qrcode = require('qrcode-terminal');
 const pino = require('pino');
 const path = require('path');
@@ -16,10 +18,22 @@ const fs = require('fs');
 const WEBHOOK_URL = process.env.WEBHOOK_URL || 'http://localhost:8090/baileys-webhook';
 const AUTH_DIR = process.env.WHATSAPP_SESSION_DIR || path.join(__dirname, 'session');
 const UNHANDLED_LOG = path.join(__dirname, 'bridge_unhandled_messages.log');
+const RISK_LOG = path.join(__dirname, 'bridge_risk.log');
 
 const WEBHOOK_SECRET = process.env.BAILEYS_WEBHOOK_SECRET;
 
+// Rollback bayrakları: sadece 'false' string'i ile kapatılır (varsayılan: açık).
+const GROUP_NAME_ENABLED = process.env.BRIDGE_ENABLE_GROUP_NAME !== 'false';
+const RISK_LOG_ENABLED = process.env.BRIDGE_ENABLE_RISK_LOG !== 'false';
+
+const WEBHOOK_MAX_ATTEMPTS = 3;
+const GROUP_METADATA_TIMEOUT_MS = 3000;
+const GROUP_NAME_TTL_MS = 6 * 60 * 60 * 1000;
+
 const counters = { forwarded: 0, skipped: 0 };
+
+// JID -> {subject, expiresAt}. Süresi dolan kayıtlar bir sonraki okumada yenilenir.
+const groupNameCache = new Map();
 
 // Grup JID'leri her zaman TAM OLARAK "@g.us" sonekiyle biter (Baileys sözleşmesi).
 // Kesin sonek eşleşmesi kullanılır (`endsWith`), `.includes()` DEĞİL — JID
@@ -35,7 +49,77 @@ function classifySkipType(jid) {
   return 'other';
 }
 
-async function processIncomingMessage(msg) {
+// Decrypt edilemeyen veya sadece protokol içeren mesajları sınıflandırır; diğerleri null.
+function classifyUnhandledReason(msg) {
+  if (msg.message == null || msg.messageStubType === proto.WebMessageInfo.StubType.CIPHERTEXT) {
+    return 'decrypt_failed';
+  }
+  const keys = Object.keys(msg.message).filter((k) => k !== 'messageContextInfo');
+  if (keys.length > 0 && keys.every((k) => k === 'protocolMessage' || k === 'senderKeyDistributionMessage')) {
+    return 'protocol_only';
+  }
+  return null;
+}
+
+// PII'siz satır: ham metin/JID yazılmaz, sadece zaman, mesaj ID ve grup/DM bilgisi + sabit extra alanlar.
+function logUnhandled(msg, extra = {}) {
+  try {
+    fs.appendFileSync(
+      UNHANDLED_LOG,
+      JSON.stringify({
+        timestamp: new Date().toISOString(),
+        messageId: msg.key.id,
+        jidType: isGroupJid(msg.key.remoteJid) ? 'group' : 'dm',
+        ...extra,
+      }) + '\n',
+      'utf-8',
+    );
+  } catch (e) {
+    // Log yazılamasa bile mesaj akışı durmaz.
+    console.error('[LOG-YAZMA HATASI]', e.message);
+  }
+}
+
+// Risk log satırı: sadece sabit alanlar (category, messageId, count). Grup adı/metin/JID ASLA eklenmez (log-injection koruması).
+function appendRiskLog(category, extra = {}) {
+  if (!RISK_LOG_ENABLED) return;
+  try {
+    fs.appendFileSync(
+      RISK_LOG,
+      JSON.stringify({ timestamp: new Date().toISOString(), category, ...extra }) + '\n',
+      'utf-8',
+    );
+  } catch (e) {
+    // Log yazılamasa bile mesaj akışı durmaz.
+    console.error('[LOG-YAZMA HATASI]', e.message);
+  }
+}
+
+// Grup adını cache'ten ya da sock.groupMetadata'dan (3s timeout) alır. Başarısızsa null + risk log.
+async function resolveGroupName(jid, sock) {
+  if (!GROUP_NAME_ENABLED) return null;
+  const cached = groupNameCache.get(jid);
+  if (cached && cached.expiresAt > Date.now()) return cached.subject;
+
+  let timer;
+  try {
+    const meta = await Promise.race([
+      sock.groupMetadata(jid),
+      new Promise((_, rej) => {
+        timer = setTimeout(() => rej(new Error('timeout')), GROUP_METADATA_TIMEOUT_MS);
+      }),
+    ]);
+    groupNameCache.set(jid, { subject: meta.subject, expiresAt: Date.now() + GROUP_NAME_TTL_MS });
+    return meta.subject;
+  } catch (e) {
+    appendRiskLog('group_metadata_failed');
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function processIncomingMessage(msg, sock) {
   if (msg?.key?.fromMe) return;
 
   const remoteJid = msg?.key?.remoteJid;
@@ -47,28 +131,25 @@ async function processIncomingMessage(msg) {
     return;
   }
 
-  const payload = toWebhookPayload(msg);
-  if (payload) {
-    await postMessage(payload);
-    counters.forwarded += 1;
-  } else {
+  const unhandledReason = classifyUnhandledReason(msg);
+  if (unhandledReason) {
+    counters.skipped += 1;
+    console.log(`[filter] skipped (type=${unhandledReason}, total_skipped=${counters.skipped})`);
+    logUnhandled(msg, { reason: unhandledReason });
+    return;
+  }
+
+  if (!extractText(msg.message)) {
     counters.skipped += 1;
     console.log(`[filter] skipped (type=no_text, total_skipped=${counters.skipped})`);
-    // PII'siz satır: ham metin/JID yazılmaz, sadece zaman, mesaj ID ve grup/DM bilgisi.
-    try {
-      fs.appendFileSync(
-        UNHANDLED_LOG,
-        JSON.stringify({
-          timestamp: new Date().toISOString(),
-          messageId: msg.key.id,
-          jidType: isGroupJid(remoteJid) ? 'group' : 'dm',
-        }) + '\n',
-        'utf-8',
-      );
-    } catch (e) {
-      // Log yazılamasa bile mesaj akışı durmaz.
-      console.error('[LOG-YAZMA HATASI]', e.message);
-    }
+    logUnhandled(msg);
+    return;
+  }
+
+  const groupName = await resolveGroupName(remoteJid, sock);
+  const payload = toWebhookPayload(msg, groupName);
+  if (payload && (await postMessage(payload))) {
+    counters.forwarded += 1;
   }
 }
 
@@ -89,7 +170,7 @@ function extractText(message) {
   );
 }
 
-function toWebhookPayload(msg) {
+function toWebhookPayload(msg, groupName) {
   const from = msg.key.remoteJid;
   const text = extractText(msg.message);
   if (!text) return null; // Metin çıkarılamayan mesajları (reaction, protokol vb.) gönderme
@@ -98,28 +179,33 @@ function toWebhookPayload(msg) {
     id: msg.key.id,
     text,
     group: from,
+    groupName: groupName ?? null,
   };
 }
 
+// Başarılıysa true. WEBHOOK_MAX_ATTEMPTS kez denenir (bekleme yok); hepsi başarısızsa risk log + false.
 async function postMessage(payload) {
-  try {
-    const res = await fetch(WEBHOOK_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${WEBHOOK_SECRET}`,
-      },
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) {
+  for (let attempt = 1; attempt <= WEBHOOK_MAX_ATTEMPTS; attempt += 1) {
+    try {
+      const res = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${WEBHOOK_SECRET}`,
+        },
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) return true;
       console.error(`[WEBHOOK HATA] ${res.status} ${res.statusText}`);
       if (res.status === 401) {
         console.error('[WEBHOOK AUTH HATASI] webhook auth failed (401), BAILEYS_WEBHOOK_SECRET uyuşmuyor');
       }
+    } catch (e) {
+      console.error('[WEBHOOK BAGLANTI HATASI]', e.message, `(hedef: ${WEBHOOK_URL}, orchestrator.py çalışıyor mu?)`);
     }
-  } catch (e) {
-    console.error('[WEBHOOK BAGLANTI HATASI]', e.message, `(hedef: ${WEBHOOK_URL}, orchestrator.py çalışıyor mu?)`);
   }
+  appendRiskLog('webhook_post_failed_max_retries', { messageId: payload.id });
+  return false;
 }
 
 async function bridge() {
@@ -129,6 +215,7 @@ async function bridge() {
     auth: state,
     logger: pino({ level: 'warn' }),
     printQRInTerminal: false,
+    enableRecentMessageCache: true,
   });
 
   sock.ev.on('creds.update', saveCreds);
@@ -165,7 +252,7 @@ async function bridge() {
     if (type !== 'notify') return;
 
     for (const msg of messages) {
-      await processIncomingMessage(msg);
+      await processIncomingMessage(msg, sock);
     }
   });
 }

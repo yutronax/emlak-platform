@@ -1,0 +1,51 @@
+{
+  "task": "faz-c-scraper-ileri-dayaniklilik",
+  "reviewed_at": "2026-10-26T00:00:00Z",
+  "summary": "Implementasyon atdd.md Davranış Sözleşmesi'ni (AC-1..5, AC-S1) doğru karşılıyor; log-injection koruması (AC-S1) kod okumasıyla doğrulandı — logUnhandled/appendRiskLog hiçbir yerde groupName/text/JID'i interpolasyonla yazmıyor, sadece sabit alan adları kullanıyor. İki bilinen kapsam eksikliği (env bayrakları, cachedGroupMetadata entegrasyonu) var; biri kabul edilebilir, diğeri belgelenen taahhütle (atdd.md Rollback Beklentisi) çelişiyor ve düzeltilmeli ama blocking değil.",
+  "findings": [
+    {
+      "severity": "medium",
+      "category": "scope",
+      "file": "obss_project/artifacts/faz-c-scraper-ileri-dayaniklilik/atdd.md",
+      "issue": "atdd.md'nin 'Rollback Beklentisi' bölümü BRIDGE_ENABLE_GROUP_NAME ve BRIDGE_ENABLE_RISK_LOG env bayraklarını açıkça vaat ediyor ('Her alt-özellik ayrı bir env bayrağıyla açılıp kapatılabilir'), ama bridge.js'te bu bayraklar hiç yok — resolveGroupName ve appendRiskLog her zaman koşulsuz çalışıyor.",
+      "better_approach": "processIncomingMessage/resolveGroupName/appendRiskLog çağrılarının başına basit if (process.env.BRIDGE_ENABLE_GROUP_NAME !== 'false') / if (process.env.BRIDGE_ENABLE_RISK_LOG !== 'false') kontrolleri eklenmeli, ya da atdd.md'deki Rollback Beklentisi bölümü gerçek implementasyonu yansıtacak şekilde güncellenmeli (bayrak yok, rollback sadece git revert + nullable kolon ile yapılır).",
+      "reason": "Belgelenmiş bir davranış sözleşmesi (ATDD taahhüdü) gerçek kodda karşılanmıyor — bu bir doc/code tutarsızlığı, operatör (Yusuf) özelliği runtime'da kapatmak isterse yanlış beklentiyle karşılaşır. Düzeltme ucuz (birkaç satır) olduğundan atdd.md ile kod arasındaki tutarsızlık commit öncesi giderilmeli.",
+      "outcome": "fixed",
+      "outcome_note": "BRIDGE_ENABLE_GROUP_NAME/BRIDGE_ENABLE_RISK_LOG bayrakları eklendi (varsayılan açık, sadece 'false' ile kapatılır). 52/52 test regresyonsuz PASS."
+    },
+    {
+      "severity": "low",
+      "category": "architecture",
+      "file": "scraper/sidecar/bridge.js",
+      "issue": "Kendi groupNameCache Map'imiz var ama Baileys'in sock config'inde cachedGroupMetadata hook'una (plan.md ve atdd.md Assumptions'ta belirtildiği gibi) bağlanmadı; bu nedenle Baileys'in mesaj gönderme optimizasyonu (kendi dahili groupMetadata kullanımı) kendi cache'imizden faydalanmıyor, ayrı bir API çağrısı daha yapabilir.",
+      "better_approach": "makeWASocket çağrısına cachedGroupMetadata: async (jid) => { const c = groupNameCache.get(jid); return c && c.expiresAt > Date.now() ? {subject: c.subject} : undefined; } eklenebilir.",
+      "reason": "plan.md'nin önerdiği entegrasyon tam uygulanmadığı için WhatsApp rate-limit riskini azaltma fırsatı (atdd.md Risks bölümünde kabul edilen risk) kısmen kaçırılıyor; ancak bu salt performans/verimlilik optimizasyonu, davranış sözleşmesini (AC-2/AC-3) etkilemiyor — fonksiyonel olarak eksik değil, blocking değil.",
+      "outcome": "skipped",
+      "outcome_note": "Kullanıcı kararıyla düşük öncelik, bu görevde atlandı."
+    },
+    {
+      "severity": "low",
+      "category": "risk",
+      "file": "scraper/sidecar/bridge.js",
+      "issue": "bridge.js makeWASocket çağrısında enableRecentMessageCache'i explicit set etmiyor, Baileys'in varsayılanına (şu an true) güveniyor. atdd.md'nin kapsam-çıkarma gerekçesi bu varsayılana dayanıyor.",
+      "better_approach": "makeWASocket({ ..., enableRecentMessageCache: true }) satırı eklenerek varsayılana implicit güvenme yerine explicit sabitlenmeli; ayrıca package.json'da @whiskeysockets/baileys sürümü pin'lenmeli/majör güncellemelerde bu davranış CHANGELOG'dan kontrol edilmeli.",
+      "reason": "Baileys bir majör sürümde varsayılanı değiştirirse (örn. enableRecentMessageCache varsayılanı false yapılırsa) bridge sessizce retry/getMessage davranışını kaybeder, hiçbir test bunu yakalamaz (bu alan hiç test edilmiyor, kapsam dışı bırakıldı). Bu teorik ama gerçek bir regresyon riski; explicit set etmek maliyetsiz bir koruma.",
+      "outcome": "fixed",
+      "outcome_note": "makeWASocket çağrısına enableRecentMessageCache: true eklendi (davranış değişmedi, sadece explicit). 52/52 test regresyonsuz PASS."
+    }
+  ],
+  "strengths": [
+    "AC-S1 (log-injection) kod seviyesinde doğrulandı: logUnhandled (satır 61-77) sadece timestamp/messageId/jidType/...extra sabit alanlarını JSON.stringify ile yazıyor, appendRiskLog (satır 80-91) sadece timestamp/category/...extra yazıyor — groupName/text/JID hiçbir yerde bu iki fonksiyona extra olarak geçirilmiyor (resolveGroupName sadece appendRiskLog('group_metadata_failed') çağırıyor, subject'i hiç geçmiyor), bu AC-S1'i somut olarak karşılıyor.",
+    "AC-3 akışı (resolveGroupName -> catch -> appendRiskLog + return null -> processIncomingMessage mesajı yine gönderir) atdd.md Davranış Sözleşmesi tablosuyla tam örtüşüyor; bridge.group-name.test.js ve bridge.risk-log.test.js bu davranışı gerçek senaryolarla (timeout, reject) doğruluyor.",
+    "isGroupJid fonksiyonu endsWith kullanıyor (includes değil), JID alt-dize sahteciliğine karşı doğru korunmuş — bu kod yorumunda da açıkça belgelenmiş.",
+    "Migration minimal ve geriye uyumlu (nullable kolon), canlıya gerçek INSERT ile doğrulanmış; orchestrator.py değişikliği tek satır (payload.get('groupName')) ve KeyError riski yok (dict.get varsayılan None döner)."
+  ],
+  "risks": [
+    "Retry/getMessage kapsam-çıkarma kararı Baileys'in default davranışına implicit bağımlı; gelecekteki bir Baileys majör güncellemesi bunu sessizce kırabilir, hiçbir test bunu yakalamaz çünkü kapsam dışı bırakıldı.",
+    "Env bayrakları eksikliği: atdd.md ile kod arasında bir doc/implementasyon tutarsızlığı var, operatör rollback sırasında yanıltıcı beklentiyle karşılaşabilir."
+  ],
+  "caveman_review": {"complexity": "low", "unnecessary_files": 0, "unnecessary_helpers": 0, "unnecessary_abstractions": 0},
+  "scope_review": {"matches_atdd": true, "scope_expansion": false},
+  "ready_to_commit": {"atdd_satisfied": true, "tests_passed": true, "no_critical_findings": true, "scope_respected": true, "caveman_satisfied": true, "security_acceptable": true, "maintainability_acceptable": true, "no_blocking_risks": true},
+  "verdict": "approve-with-changes"
+}

@@ -65,6 +65,7 @@ def handle_message(payload: dict) -> None:
         record = {
             "source": "whatsapp",
             "source_group": group,
+            "source_group_name": payload.get("groupName"),
             "source_message_id": message_id or None,
             "raw_text": text,
             "parsed": parsed,
