@@ -83,10 +83,16 @@ export default async function PricingPage() {
 
   return (
     <main className="mx-auto max-w-6xl bg-fog-50 px-6 py-16 text-ink-900">
-      <h1 className="font-display text-3xl font-bold">Abonelik Planları</h1>
-      <p className="mt-2 font-body text-slate-500">
-        Kredi kartı istemeden deneyin, istediğiniz an planınızı değiştirin.
-      </p>
+      <div className="flex items-center justify-between gap-8">
+        <div>
+          <h1 className="font-display text-3xl font-bold">Abonelik Planları</h1>
+          <p className="mt-2 font-body text-slate-500">
+            Kredi kartı istemeden deneyin, istediğiniz an planınızı değiştirin.
+          </p>
+        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/illustrations/pricing.svg" alt="" aria-hidden="true" className="hidden h-36 w-auto md:block" />
+      </div>
 
       {subscriptionError && (
         <div className="mt-6">

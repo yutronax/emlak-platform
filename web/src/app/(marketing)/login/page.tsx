@@ -22,6 +22,10 @@ export default function LoginPage() {
         <p className="font-body text-sm text-white/80 md:text-base">
           Hesabınıza girin, WhatsApp&apos;a attığınız ilanlara buradan devam edin.
         </p>
+        <div className="mt-6 hidden rounded-2xl bg-fog-50 p-6 md:block">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/illustrations/secure-login.svg" alt="" aria-hidden="true" className="h-56 w-full object-contain" />
+        </div>
       </section>
 
       <section className="flex items-center justify-center bg-fog-50 px-6 py-12 text-ink-900">
