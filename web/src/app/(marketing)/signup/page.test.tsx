@@ -36,11 +36,11 @@ describe("SignupPage (/signup) — component smoke", () => {
     expect(companyName).toHaveAttribute("name", "company_name");
   });
 
-  // Submit butonu planlanan "Kayıt ol" metniyle render edilmeli
-  it("'Kayıt ol' metinli bir submit butonu render eder", () => {
+  // Submit butonu "Ücretsiz Deneyin" metniyle render edilmeli
+  it("'Ücretsiz Deneyin' metinli bir submit butonu render eder", () => {
     render(<SignupPage />);
 
-    const button = screen.getByRole("button", { name: "Kayıt ol" });
+    const button = screen.getByRole("button", { name: "Ücretsiz Deneyin" });
     expect(button).toBeInTheDocument();
     expect(button).toHaveAttribute("type", "submit");
   });
@@ -52,7 +52,7 @@ describe("SignupPage (/signup) — component smoke", () => {
     const form = container.querySelector("form");
     expect(form).not.toBeNull();
     expect(form).toContainElement(screen.getByLabelText("E-posta"));
-    expect(form).toContainElement(screen.getByRole("button", { name: "Kayıt ol" }));
+    expect(form).toContainElement(screen.getByRole("button", { name: "Ücretsiz Deneyin" }));
   });
 
   // Başlangıçta (henüz submit yokken) state boş: hata/mesaj paragrafı görünmemeli

@@ -84,7 +84,9 @@ export default async function PricingPage() {
   return (
     <main className="mx-auto max-w-6xl bg-fog-50 px-6 py-16 text-ink-900">
       <h1 className="font-display text-3xl font-bold">Abonelik Planları</h1>
-      <p className="mt-2 font-body text-slate-500">Fiyatlar TL cinsindendir.</p>
+      <p className="mt-2 font-body text-slate-500">
+        Kredi kartı istemeden deneyin, istediğiniz an planınızı değiştirin.
+      </p>
 
       {subscriptionError && (
         <div className="mt-6">
@@ -124,6 +126,11 @@ export default async function PricingPage() {
                       planId={plan.id}
                       variant={isHighlighted ? "inverse" : "primary"}
                     />
+                    <p
+                      className={`mt-2 text-xs ${isHighlighted ? "text-white/70" : "text-slate-500"}`}
+                    >
+                      Taahhüt yok, istediğiniz an iptal edin.
+                    </p>
                   </div>
                 )
               )}

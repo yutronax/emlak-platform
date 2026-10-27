@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useActionState } from "react";
 
 import { Alert } from "@/components/ui/alert";
@@ -19,7 +20,7 @@ export default function LoginPage() {
       <section className="flex flex-col justify-center gap-3 bg-ink-900 px-6 py-8 text-white md:px-12 md:py-16">
         <h1 className="font-display text-2xl font-bold md:text-4xl">Emlak Platformu</h1>
         <p className="font-body text-sm text-white/80 md:text-base">
-          İlanlarınızı WhatsApp&apos;tan vitrine taşıyın, hesabınıza giriş yapın.
+          Hesabınıza girin, WhatsApp&apos;a attığınız ilanlara buradan devam edin.
         </p>
       </section>
 
@@ -58,6 +59,12 @@ export default function LoginPage() {
               Giriş yap
             </Button>
           </form>
+          <p className="mt-4 text-center text-sm text-slate-500">
+            Hesabınız yok mu?{" "}
+            <Link href="/signup" className="font-medium text-terracotta-700 hover:underline">
+              Ücretsiz deneyin
+            </Link>
+          </p>
         </div>
       </section>
     </main>
