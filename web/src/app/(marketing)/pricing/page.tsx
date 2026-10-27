@@ -47,10 +47,12 @@ export default async function PricingPage() {
   if (plansError) {
     console.error("plans sorgusu başarısız", plansError);
     return (
-      <main className="mx-auto max-w-6xl bg-fog-50 px-6 py-16 text-ink-900">
+      <main className="flex-1 bg-fog-50 text-ink-900">
+      <div className="mx-auto max-w-6xl px-6 py-16">
         <Alert variant="error">
           Planlar yüklenemedi, lütfen daha sonra tekrar deneyin.
         </Alert>
+      </div>
       </main>
     );
   }
@@ -82,7 +84,8 @@ export default async function PricingPage() {
   const highlightIndex = findHighlightIndex(planList);
 
   return (
-    <main className="mx-auto max-w-6xl bg-fog-50 px-6 py-16 text-ink-900">
+    <main className="flex-1 bg-fog-50 text-ink-900">
+      <div className="mx-auto max-w-6xl px-6 py-16">
       <div className="flex items-center justify-between gap-8">
         <div>
           <h1 className="font-display text-3xl font-bold">Abonelik Planları</h1>
@@ -144,6 +147,7 @@ export default async function PricingPage() {
           );
         })}
       </ul>
+    </div>
     </main>
   );
 }
