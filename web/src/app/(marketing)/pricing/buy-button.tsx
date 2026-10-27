@@ -2,6 +2,18 @@
 
 import { useState } from "react";
 
+import { Alert } from "@/components/ui/alert";
+
+type BuyButtonVariant = "primary" | "inverse";
+
+const baseClass =
+  "w-full rounded-md px-4 py-2 text-sm font-medium disabled:opacity-50";
+
+const variantClass: Record<BuyButtonVariant, string> = {
+  primary: "bg-terracotta-600 text-white hover:bg-terracotta-700",
+  inverse: "bg-white text-ink-900 hover:bg-mist-200",
+};
+
 function messageForStatus(status: number): string {
   if (status === 401) return "Ödeme için önce giriş yapmanız gerekiyor.";
   if (status === 409) return "Zaten bu plandasınız.";
@@ -9,7 +21,13 @@ function messageForStatus(status: number): string {
   return "Ödeme başlatılamadı, lütfen tekrar deneyin.";
 }
 
-export function BuyButton({ planId }: { planId: string }) {
+export function BuyButton({
+  planId,
+  variant = "primary",
+}: {
+  planId: string;
+  variant?: BuyButtonVariant;
+}) {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -43,11 +61,11 @@ export function BuyButton({ planId }: { planId: string }) {
         type="button"
         onClick={handleClick}
         disabled={pending}
-        className="rounded bg-foreground px-3 py-1.5 text-sm text-background disabled:opacity-50"
+        className={`${baseClass} ${variantClass[variant]}`}
       >
         Satın Al
       </button>
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <Alert variant="error">{error}</Alert>}
     </div>
   );
 }

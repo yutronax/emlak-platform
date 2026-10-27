@@ -1,0 +1,38 @@
+{
+  "security_findings": [
+    {
+      "finding": "BuyButton (web/src/app/(marketing)/pricing/buy-button.tsx) was NOT migrated to the new design-token system: its button used `bg-foreground text-background` (legacy Geist boilerplate vars, not ink-900/terracotta-600) and its error text used hardcoded `text-red-600` instead of the Alert component. Fixed in a follow-up dispatch: BuyButton now accepts a variant prop and uses Alert.",
+      "severity": "low",
+      "scenario": "A future edit to BuyButton could silently break the Pro-card color override that relied on a `[&_button]:...` descendant-selector hack, with no compile error or test failure.",
+      "outcome": "fixed"
+    },
+    {
+      "finding": "The hero illustration's directional SVG arrow in web/src/app/(marketing)/page.tsx used `className=\"text-terracotta-600\"` directly, violating the project's own rule that terracotta-600 is only used as a button background (text-safe variant is terracotta-700). Fixed in the same follow-up dispatch.",
+      "severity": "low",
+      "scenario": "Not a WCAG failure (graphical element, 3:1 threshold met), but a project-convention violation that could be miscategorized by a future reviewer grepping for the token.",
+      "outcome": "fixed"
+    }
+  ],
+  "approved_points": [
+    "Old-location files (page.tsx, pricing/, login/, signup/) genuinely deleted, no duplicate-route risk.",
+    "(marketing)/layout.tsx only wraps the 4 public pages, root layout unaffected — admin/agent pages correctly isolated (AC-10).",
+    "login/actions.ts and signup/actions.ts byte-for-byte identical to pre-move versions — server action behavior unchanged.",
+    "Real <label htmlFor> elements present and correctly bound on all login/signup inputs with correct autoComplete values (AC-7).",
+    "Alert component correctly renders role=\"alert\"/role=\"status\" in the DOM (AC-3/AC-4/AC-5).",
+    "tsc --noEmit independently re-run clean.",
+    "Color tokens in globals.css match design-direction.md's documented hex values exactly."
+  ],
+  "overall_assessment": "The page migration (route-group isolation, deleted old routes, untouched server actions, label/role/token usage) is solid and matches atdd.md/design-direction.md closely. Both low-severity findings were fixed and independently re-verified (tsc clean, 164/164 tests pass, build passes on Next.js 16.4.3 after a stale node_modules fix, live browser confirmation of Pro-card inverse styling).",
+  "verdict": "approve",
+  "ready_to_commit": {
+    "atdd_satisfied": true,
+    "tests_passed": true,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": true,
+    "security_acceptable": true,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": true,
+    "compliance_clean": true
+  }
+}

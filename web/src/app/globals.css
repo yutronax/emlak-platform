@@ -10,6 +10,16 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-sora);
+  --font-body: var(--font-inter);
+  --color-ink-900: #10253F;
+  --color-fog-50: #F5F6F4;
+  --color-terracotta-600: #C1532B;
+  --color-terracotta-700: #9C4423;
+  --color-slate-500: #5B6B7A;
+  --color-mist-200: #DCE1E0;
+  --color-moss-700: #2F6E4F;
+  --color-brick-700: #A23B2E;
 }
 
 @media (prefers-color-scheme: dark) {

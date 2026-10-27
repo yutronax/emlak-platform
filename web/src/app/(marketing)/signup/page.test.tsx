@@ -20,9 +20,9 @@ describe("SignupPage (/signup) — component smoke", () => {
   it("e-posta, şifre ve şirket adı için birer input render eder", () => {
     render(<SignupPage />);
 
-    const email = screen.getByPlaceholderText("E-posta");
-    const password = screen.getByPlaceholderText("Şifre");
-    const companyName = screen.getByPlaceholderText("Şirket adı");
+    const email = screen.getByLabelText("E-posta");
+    const password = screen.getByLabelText("Şifre");
+    const companyName = screen.getByLabelText("Şirket adı");
 
     expect(email).toBeInTheDocument();
     expect(email).toHaveAttribute("name", "email");
@@ -51,7 +51,7 @@ describe("SignupPage (/signup) — component smoke", () => {
 
     const form = container.querySelector("form");
     expect(form).not.toBeNull();
-    expect(form).toContainElement(screen.getByPlaceholderText("E-posta"));
+    expect(form).toContainElement(screen.getByLabelText("E-posta"));
     expect(form).toContainElement(screen.getByRole("button", { name: "Kayıt ol" }));
   });
 

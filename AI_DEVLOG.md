@@ -3,6 +3,30 @@
 Pipeline adımlarının (atdd/plan/code_diff/verify) kendi dosyalarına yazdığı
 karar/risk/varsayım kayıtlarının aktarımı — yeniden yorumlanmadan, kaynağıyla.
 
+## musteri-sayfalari-tasarim-yenileme (2026-10-27)
+
+**Risks** (kaynak: atdd.md):
+- Header/footer yanlışlıkla root layout'a konursa admin/agent sayfaları da
+  etkilenir — `(marketing)` route group ile kesin izolasyon sağlandı,
+  root layout değişmedi.
+- Seçilen terracotta vurgu renginin WCAG AA kontrastını sağlaması
+  gerekiyordu — gerçek hex değerleri elle kontrast hesaplayıcıyla
+  doğrulandı (terracotta-600 buton zemini 4.63:1, terracotta-700 metin
+  5.93:1 — terracotta-600 doğrudan metin/stroke rengi olarak KULLANILMAZ).
+
+**Risks** (kaynak: plan.md):
+- Dosya taşıma (4 sayfa + actions.ts/buy-button.tsx) eski ve yeni konumda
+  aynı anda kalırsa Next.js "conflicting paths" hatası verir — tek dispatch
+  içinde taşı+sil birlikte yapıldı, ayrı adımlara bölünmedi.
+
+**Red-team bulgusu ve düzeltme** (kaynak: red_team.json, dosyada saklanmadı — bu kayıt özeti):
+- `BuyButton` ilk dispatch'te eski Geist renk sistemiyle (`bg-foreground`)
+  bırakılmış, Pro kartı `[&_button]:...` kırılgan CSS descendant-selector
+  hack'iyle dıştan override ediliyordu. Düzeltme: `BuyButton`'a
+  `variant: "primary"|"inverse"` prop'u eklendi, stil component'in kendi
+  içine taşındı — proje hafızasının zaten flag ettiği "type-based selector
+  vs element-based selector" riskiyle birebir örtüşen bir örnek.
+
 ## faz-b-scraper-guvenilirlik-sertlestirme (2026-10-24)
 
 **Risks** (kaynak: atdd.md):

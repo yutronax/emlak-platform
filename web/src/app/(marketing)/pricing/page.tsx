@@ -1,3 +1,4 @@
+import { Alert } from "@/components/ui/alert";
 import { createClient } from "@/lib/supabase/server";
 
 import { BuyButton } from "./buy-button";
@@ -28,6 +29,12 @@ function formatPrice(minorUnit: number): string {
   return `${priceFormatter.format(minorUnit / 100)} ₺`;
 }
 
+// Vurgulanan (Pro) kartı: plan adında "Pro" geçeni bul; yoksa ortadaki kart.
+function findHighlightIndex(plans: PlanRow[]): number {
+  const proIndex = plans.findIndex((plan) => /pro/i.test(plan.name));
+  return proIndex !== -1 ? proIndex : Math.floor(plans.length / 2);
+}
+
 export default async function PricingPage() {
   const supabase = await createClient();
 
@@ -40,10 +47,10 @@ export default async function PricingPage() {
   if (plansError) {
     console.error("plans sorgusu başarısız", plansError);
     return (
-      <main className="mx-auto max-w-4xl p-8">
-        <p className="text-red-600">
+      <main className="mx-auto max-w-6xl bg-fog-50 px-6 py-16 text-ink-900">
+        <Alert variant="error">
           Planlar yüklenemedi, lütfen daha sonra tekrar deneyin.
-        </p>
+        </Alert>
       </main>
     );
   }
@@ -71,37 +78,54 @@ export default async function PricingPage() {
     }
   }
 
+  const planList = plans ?? [];
+  const highlightIndex = findHighlightIndex(planList);
+
   return (
-    <main className="mx-auto max-w-4xl p-8">
-      <h1 className="text-xl font-semibold">Abonelik Planları</h1>
-      <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-        Fiyatlar TL cinsindendir.
-      </p>
+    <main className="mx-auto max-w-6xl bg-fog-50 px-6 py-16 text-ink-900">
+      <h1 className="font-display text-3xl font-bold">Abonelik Planları</h1>
+      <p className="mt-2 font-body text-slate-500">Fiyatlar TL cinsindendir.</p>
 
       {subscriptionError && (
-        <p className="mt-4 text-sm text-red-600">
-          Abonelik durumunuz yüklenemedi, plan satın alma şu an kullanılamıyor.
-        </p>
+        <div className="mt-6">
+          <Alert variant="error">
+            Abonelik durumunuz yüklenemedi, plan satın alma şu an kullanılamıyor.
+          </Alert>
+        </div>
       )}
 
-      <ul className="mt-6 grid gap-4 sm:grid-cols-3">
-        {(plans ?? []).map((plan) => {
+      <ul className="mt-10 grid gap-6 md:grid-cols-3">
+        {planList.map((plan, index) => {
           const isActive = activePlanId === plan.id;
+          const isHighlighted = index === highlightIndex;
+          const cardTone = isHighlighted
+            ? "bg-ink-900 text-white md:-translate-y-2 md:shadow-lg"
+            : "border border-mist-200 bg-fog-50 text-ink-900";
+          const priceTone = isHighlighted ? "text-white" : "text-ink-900";
           return (
             <li
               key={plan.id}
-              className="flex flex-col gap-3 rounded border p-4"
+              className={`flex flex-col gap-4 rounded-xl p-6 font-body transition-transform ${cardTone}`}
             >
-              <h2 className="text-lg font-semibold">{plan.name}</h2>
-              <p className="text-2xl font-semibold">
+              <h2 className="font-display text-xl font-semibold">{plan.name}</h2>
+              <p className={`font-display text-4xl font-bold ${priceTone}`}>
                 {formatPrice(plan.price_minor_unit)}
               </p>
               {isActive ? (
-                <p className="text-sm text-green-700 dark:text-green-400">
+                <p
+                  className={`text-sm font-medium ${isHighlighted ? "text-white" : "text-moss-700"}`}
+                >
                   Mevcut planınız
                 </p>
               ) : (
-                !subscriptionError && <BuyButton planId={plan.id} />
+                !subscriptionError && (
+                  <div className="mt-auto">
+                    <BuyButton
+                      planId={plan.id}
+                      variant={isHighlighted ? "inverse" : "primary"}
+                    />
+                  </div>
+                )
               )}
             </li>
           );

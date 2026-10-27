@@ -106,7 +106,7 @@ describe("PricingPage", () => {
 
     const errorText = screen.getByText(/yüklenemedi/i);
     expect(errorText).toBeInTheDocument();
-    expect(errorText).toHaveClass("text-red-600");
+    expect(errorText.closest('[role="alert"]')).not.toBeNull();
   });
 
   it("AC-4 / Davranış Sözleşmesi #3 — sort_order kolonu eksikse (PostgREST 42703) 'Planlar yüklenemedi' gösterir", async () => {
