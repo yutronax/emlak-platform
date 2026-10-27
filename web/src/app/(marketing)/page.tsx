@@ -1,10 +1,16 @@
 import Link from "next/link";
 
 const primaryLink =
-  "inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 bg-terracotta-600 text-white hover:bg-terracotta-700";
+  "inline-flex items-center justify-center gap-2 rounded-md px-6 py-3 font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 bg-terracotta-600 text-white hover:bg-terracotta-700";
 
 const secondaryLink =
-  "inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 border border-ink-900 text-ink-900 bg-transparent hover:bg-mist-200";
+  "inline-flex items-center justify-center gap-2 rounded-md px-6 py-3 text-base font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 border border-ink-900 text-ink-900 bg-transparent hover:bg-mist-200";
+
+// Hafif nokta-grid doku: ink-900 (#10253F) rengi, %9 opaklık, gradient yok.
+const dotGridBackground = {
+  backgroundImage:
+    "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Ccircle cx='1.5' cy='1.5' r='1.5' fill='%2310253F' fill-opacity='0.09'/%3E%3C/svg%3E\")",
+};
 
 const steps = [
   {
@@ -24,12 +30,18 @@ const steps = [
 export default function LandingPage() {
   return (
     <main className="bg-fog-50 text-ink-900">
-      <section className="mx-auto grid max-w-6xl items-center gap-12 px-6 py-16 md:grid-cols-2 md:py-24">
-        <div className="flex flex-col gap-6">
-          <h1 className="font-display text-4xl font-bold leading-tight md:text-5xl">
+      <section className="relative mx-auto grid max-w-7xl items-center gap-12 overflow-hidden px-6 py-20 md:grid-cols-2 md:py-32">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0"
+          style={dotGridBackground}
+        />
+
+        <div className="relative flex flex-col gap-6">
+          <h1 className="font-display text-5xl font-bold leading-tight md:text-6xl lg:text-7xl">
             WhatsApp&apos;tan ilana, dakikalar içinde.
           </h1>
-          <p className="font-body text-lg text-slate-500">
+          <p className="max-w-md font-body text-xl text-slate-500">
             Emlakçı ilanlarını WhatsApp grubundan alıp videolu vitrine
             dönüştürüyoruz.
           </p>
@@ -43,8 +55,11 @@ export default function LandingPage() {
           </div>
         </div>
 
-        <div aria-hidden="true" className="flex flex-col items-center gap-4">
-          <div className="max-w-xs self-start rounded-2xl rounded-bl-none bg-mist-200 px-5 py-4 font-body text-sm">
+        <div
+          aria-hidden="true"
+          className="relative flex flex-col items-center gap-4"
+        >
+          <div className="max-w-sm self-start rounded-2xl rounded-bl-none bg-mist-200 px-5 py-4 font-body text-sm">
             <p className="font-medium">3+1 satılık daire, Kadıköy</p>
             <p className="text-slate-500">2.450.000 ₺ · 120 m²</p>
           </div>
@@ -63,7 +78,7 @@ export default function LandingPage() {
               strokeLinejoin="round"
             />
           </svg>
-          <div className="w-full max-w-xs self-end overflow-hidden rounded-xl border border-mist-200 bg-white shadow-sm">
+          <div className="w-full max-w-sm self-end overflow-hidden rounded-xl border border-mist-200 bg-white shadow-sm">
             <div className="relative flex aspect-video items-center justify-center bg-ink-900">
               <span className="ml-1 h-0 w-0 border-y-[10px] border-l-[16px] border-y-transparent border-l-white" />
             </div>
@@ -76,10 +91,10 @@ export default function LandingPage() {
       </section>
 
       <section className="border-t border-mist-200">
-        <ol className="mx-auto grid max-w-6xl gap-10 px-6 py-16 md:grid-cols-3">
+        <ol className="mx-auto grid max-w-6xl gap-12 px-6 py-20 md:grid-cols-3">
           {steps.map((step, index) => (
             <li key={step.title} className="flex flex-col gap-2">
-              <span className="font-display text-4xl font-bold text-terracotta-700">
+              <span className="font-display text-5xl font-bold text-terracotta-700">
                 {index + 1}
               </span>
               <h2 className="font-display text-xl font-semibold">{step.title}</h2>
