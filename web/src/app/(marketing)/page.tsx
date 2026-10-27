@@ -14,16 +14,38 @@ const dotGridBackground = {
 
 const steps = [
   {
-    title: "WhatsApp'a ilan at",
-    body: "Emlakçı grubuna ilanını gönder, gerisini sisteme bırak.",
+    title: "WhatsApp'a ilanı atın",
+    body: "Her zamanki gibi grubunuza fotoğraf ve bilgileri gönderin, başka bir şey yapmanıza gerek yok.",
   },
   {
-    title: "Video ile hazırlanır",
-    body: "İlan bilgileri ve fotoğraflar kısa bir tanıtım videosuna dönüşür.",
+    title: "Biz hazırlarız",
+    body: "Fotoğraflardan kısa, videolu bir tanıtım sayfası oluşturuyoruz.",
   },
   {
-    title: "Vitrine çıkar",
-    body: "Hazır ilan, onayın ardından müşterilerin göreceği vitrinde yayınlanır.",
+    title: "Linki paylaşın",
+    body: "Hazır sayfanın linkini müşterinize gönderin ya da vitrinde yayınlayın.",
+  },
+];
+
+const faqs = [
+  {
+    question: "Uygulama indirmem mi gerekiyor?",
+    answer:
+      "Hayır. WhatsApp'ı zaten kullanıyorsunuz, başka bir şey kurmanıza gerek yok.",
+  },
+  {
+    question: "Ücretsiz deneyebilir miyim?",
+    answer:
+      "Evet, kredi kartı bilgisi istemeden ücretsiz deneyebilirsiniz.",
+  },
+  {
+    question: "İlanım yayınlanmadan önce kontrol ediliyor mu?",
+    answer:
+      "Evet, her ilan vitrine çıkmadan önce incelenir, hatalı bir bilgi varsa düzeltilir.",
+  },
+  {
+    question: "Bir sorun yaşarsam ne yapmalıyım?",
+    answer: "Destek ekibimize WhatsApp üzerinden ulaşabilirsiniz.",
   },
 ];
 
@@ -39,12 +61,18 @@ export default function LandingPage() {
 
         <div className="relative flex flex-col gap-6">
           <h1 className="font-display text-5xl font-bold leading-tight md:text-6xl lg:text-7xl">
-            WhatsApp&apos;tan ilana, dakikalar içinde.
+            İlanı WhatsApp grubunuza atın. Videolu sayfası hazır olsun.
           </h1>
-          <p className="max-w-md font-body text-xl text-slate-500">
-            Emlakçı ilanlarını WhatsApp grubundan alıp videolu vitrine
-            dönüştürüyoruz.
-          </p>
+          <div className="flex flex-col gap-2">
+            <p className="max-w-md font-body text-xl text-slate-500">
+              Emlakçı ilanlarını WhatsApp grubundan alıp videolu vitrine
+              dönüştürüyoruz. Siz hiçbir şey kurmuyorsunuz.
+            </p>
+            <p className="font-body text-sm font-medium text-ink-900">
+              Uygulama yok. Kurulum yok. Kredi kartı istemeden ücretsiz
+              deneyin.
+            </p>
+          </div>
           <div className="flex flex-wrap gap-3">
             <Link href="/signup" className={primaryLink}>
               Kayıt Ol
@@ -102,6 +130,25 @@ export default function LandingPage() {
             </li>
           ))}
         </ol>
+      </section>
+
+      <section className="border-t border-mist-200">
+        <div className="mx-auto max-w-3xl px-6 py-20">
+          <h2 className="font-display text-3xl font-bold">Sık Sorulan Sorular</h2>
+          <dl className="mt-10 flex flex-col gap-6">
+            {faqs.map((faq) => (
+              <div
+                key={faq.question}
+                className="flex flex-col gap-2 border-b border-mist-200 pb-6"
+              >
+                <dt className="font-display text-lg font-semibold">
+                  {faq.question}
+                </dt>
+                <dd className="font-body text-slate-500">{faq.answer}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
       </section>
     </main>
   );
