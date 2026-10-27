@@ -16,14 +16,17 @@ const steps = [
   {
     title: "WhatsApp'a ilanı atın",
     body: "Her zamanki gibi grubunuza fotoğraf ve bilgileri gönderin, başka bir şey yapmanıza gerek yok.",
+    illustration: "/illustrations/group-chat.svg",
   },
   {
     title: "Biz hazırlarız",
     body: "Fotoğraflardan kısa, videolu bir tanıtım sayfası oluşturuyoruz.",
+    illustration: "/illustrations/video-upload.svg",
   },
   {
     title: "Linki paylaşın",
     body: "Hazır sayfanın linkini müşterinize gönderin ya da vitrinde yayınlayın.",
+    illustration: "/illustrations/property-agreement.svg",
   },
 ];
 
@@ -121,7 +124,14 @@ export default function LandingPage() {
       <section className="border-t border-mist-200">
         <ol className="mx-auto grid max-w-6xl gap-12 px-6 py-20 md:grid-cols-3">
           {steps.map((step, index) => (
-            <li key={step.title} className="flex flex-col gap-2">
+            <li key={step.title} className="flex flex-col gap-4">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={step.illustration}
+                alt=""
+                aria-hidden="true"
+                className="h-40 w-full object-contain"
+              />
               <span className="font-display text-5xl font-bold text-terracotta-700">
                 {index + 1}
               </span>
