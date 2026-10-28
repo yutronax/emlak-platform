@@ -8,6 +8,9 @@ import { type OrderStatus, STATUS_LABELS } from "@/lib/video-orders/status";
 
 import { getDeliveredVideoUrl } from "../actions";
 
+import { PayButton } from "./pay-button";
+import { formatTryMinor } from "@/lib/format-price";
+
 export const instant = false;
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -27,8 +30,6 @@ const STATUS_NOTES: Partial<Record<OrderStatus, string>> = {
   draft: "Bu sipariş henüz gönderilmedi.",
   quote_pending:
     "Talebiniz alındı. Editörümüz inceleyip fiyat teklifi verecek, teklif bu sayfada görünecek.",
-  awaiting_payment: "Ödeme adımı yakında eklenecek.",
-  payment_failed: "Ödeme alınamadı. Ödeme adımı yakında eklenecek.",
   in_progress: "Videonuz hazırlanıyor.",
 };
 
@@ -54,7 +55,6 @@ type OrderDetail = {
   video_order_assets: AssetRow[];
 };
 
-const priceFormat = new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY" });
 const megabyteFormat = new Intl.NumberFormat("tr-TR", { maximumFractionDigits: 1 });
 const dateFormat = new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "long", year: "numeric" });
 
@@ -133,6 +133,11 @@ export default async function VideoOrderDetailPage({
   const deliveredAt = formatDate(order.delivered_at);
   const note = noteFor(order);
 
+  const canPay =
+    (order.status === "awaiting_payment" || order.status === "payment_failed") &&
+    order.price_minor_unit !== null &&
+    order.price_minor_unit > 0;
+
   let deliveredUrl: string | null = null;
   if (order.status === "delivered") {
     const delivered = await getDeliveredVideoUrl(order.id);
@@ -167,7 +172,7 @@ export default async function VideoOrderDetailPage({
         {order.price_minor_unit !== null && (
           <div className="flex flex-col gap-1">
             <dt className="text-sm text-slate-500">Fiyat</dt>
-            <dd className="font-medium">{priceFormat.format(order.price_minor_unit / 100)}</dd>
+            <dd className="font-medium">{formatTryMinor(order.price_minor_unit)}</dd>
           </div>
         )}
         {created && (
@@ -192,7 +197,15 @@ export default async function VideoOrderDetailPage({
         )}
       </dl>
 
+      {order.status === "payment_failed" && (
+        <Alert variant="error">Önceki ödeme alınamadı, tekrar deneyebilirsiniz.</Alert>
+      )}
+
       {note && <p className="text-base">{note}</p>}
+
+      {canPay && order.price_minor_unit !== null && (
+        <PayButton orderId={order.id} amountLabel={formatTryMinor(order.price_minor_unit)} />
+      )}
 
       {assets.length > 0 && (
         <section className="flex flex-col gap-3">

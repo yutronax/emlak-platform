@@ -20,6 +20,7 @@ import {
 import { createVideoOrder, submitVideoOrder } from "../actions";
 
 import { UploadField } from "./upload-field";
+import { formatTryMinor } from "@/lib/format-price";
 
 export type ServiceOption = {
   code: ServiceCode;
@@ -60,10 +61,9 @@ const SERVICE_DESCRIPTIONS: Record<ServiceCode, string> = {
   onsite: "Editörümüz mülke gelip çeker. Uygun gün ve saatinizi yazın, fiyat teklifi verilir.",
 };
 
-const priceFormat = new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY" });
 
 function priceText(price: number | null): string {
-  return price === null ? "Fiyat teklifi verilir" : priceFormat.format(price / 100);
+  return price === null ? "Fiyat teklifi verilir" : formatTryMinor(price);
 }
 
 const inputClass =

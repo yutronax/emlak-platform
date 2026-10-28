@@ -1,0 +1,68 @@
+{
+  "security_findings": [
+    {
+      "id": "SF-1",
+      "category": "financial-reconciliation",
+      "severity": "medium",
+      "file": "web/src/app/api/webhooks/payment/route.ts",
+      "line": 0,
+      "summary": "Ödenmiş/kapanmış siparişe farklı event_id ile gelen ikinci PAYMENT_SUCCESS (çift tahsilat) sadece console.warn ile kalıyordu.",
+      "recommendation": "Olayı işaretle, iade için sorgulanabilir yap.",
+      "outcome": "fixed — payment_events.processing_error=true + console.error; birim testi"
+    },
+    {
+      "id": "SF-2",
+      "category": "rate-limit-memory",
+      "severity": "low",
+      "file": "web/src/app/api/video-orders/[id]/checkout/route.ts",
+      "line": 7,
+      "summary": "Rate limit Map'i boşalan kullanıcı girdilerini silmiyor; abonelik route'unda da aynı kod kopyası.",
+      "recommendation": "Ortak lib/rate-limit.ts + temizlik.",
+      "outcome": "deferred — refactor adayı (abonelikte önceden var)"
+    },
+    {
+      "id": "SF-3",
+      "category": "input-validation",
+      "severity": "low",
+      "file": "web/src/app/api/webhooks/payment/route.ts",
+      "line": 57,
+      "summary": "uuid olmayan video_order_id 22P02 ile 500 → sağlayıcı sonsuz tekrar.",
+      "recommendation": "uuid kontrolü + 22P02'yi 23503 gibi ele al.",
+      "outcome": "fixed — parse'ta uuid kontrolü (400) + insert'te 22P02 → 200; birim testi"
+    },
+    {
+      "id": "SF-4",
+      "category": "open-redirect-defense",
+      "severity": "low",
+      "file": "web/src/app/agent/videos/[id]/pay-button.tsx",
+      "line": 34,
+      "summary": "checkout_url şema kontrolü olmadan window.location.assign.",
+      "recommendation": "https:// zorunlu.",
+      "outcome": "fixed — https değilse yönlendirme yok, hata; birim testi"
+    }
+  ],
+  "alternative_approach": {
+    "recommended_direction": "Abonelik/video uzlaştırma mantığı ve rate-limit yardımcıları tekrarlanıyor; ortak yardımcılara alınabilir; işaretli payment_events için admin görünümü.",
+    "outcome": "deferred — ayrı iş"
+  },
+  "approved_points": [
+    "Abonelik iyzico istek gövdesi birebir aynı",
+    "Video checkout fiyatı sadece DB'den, sahiplik .eq(agent_id) + 404",
+    "İmza DB'den önce",
+    "addBusinessDays TR gün sınırını doğru ele alıyor",
+    "Tam olarak bir sahip kuralı 400 ile"
+  ],
+  "overall_assessment": "AC-10/11/12/S2/S5 doğru; bulunan orta/düşük bulguların üçü düzeltildi, biri ertelendi.",
+  "verdict": "approve",
+  "ready_to_commit": {
+    "atdd_satisfied": true,
+    "tests_passed": true,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": true,
+    "security_acceptable": true,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": true,
+    "compliance_clean": true
+  }
+}

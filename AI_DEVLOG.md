@@ -3,6 +3,16 @@
 Pipeline adımlarının (atdd/plan/code_diff/verify) kendi dosyalarına yazdığı
 karar/risk/varsayım kayıtlarının aktarımı — yeniden yorumlanmadan, kaynağıyla.
 
+## faz1-video-siparisi / 1c (2026-10-28)
+
+**Kararlar** (kaynak: plan.md "Plan — 1c"): `createCheckoutSession` plan'a bağımlılıktan çıkarıldı (tutar/sepet parametre; fiyatı çağıran DB'den okur). Video checkout hatasında sipariş durumu değişmez (tekrar denenebilir). Webhook gövdesinde `subscription_id` / `video_order_id`'den tam olarak biri.
+
+**Verify'da bulunan gerçek hata** (kaynak: verify_report_1c.md): var olmayan abonelik/siparişe gelen imzalı bildirim FK ihlali (23503) yüzünden 500 dönüyordu → sağlayıcı sonsuz tekrar. Abonelik yolunda da önceden vardı; birim testleri sahte DB FK uygulamadığı için kaçırmıştı, ancak yerel sunucu + canlı DB uçtan uca testinde çıktı. 23503/22P02 → 200.
+
+**Review düzeltmeleri** (kaynak: red_team_1c.json): olası çift tahsilat artık `payment_events.processing_error=true` ile işaretleniyor; uuid olmayan sipariş id'si 400; ödeme butonu sadece https'e yönlendiriyor. Ertelenen: rate-limit Map temizliği ve abonelik/video kod tekrarı.
+
+**Açılış öncesi:** iyzico isteğinde `callbackUrl` yok, webhook gövdesi projeye özel — gerçek iyzico hesabına bağlanırken uyarlanmalı (abonelik dahil). İşaretli ödeme olayları için admin görünümü yok (SQL ile bakılmalı).
+
 ## faz1-video-siparisi / 1b (2026-10-28)
 
 **Kararlar** (kaynak: plan.md "Plan — 1b"):

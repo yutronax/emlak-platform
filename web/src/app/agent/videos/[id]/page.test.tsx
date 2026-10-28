@@ -215,14 +215,40 @@ describe("VideoOrderDetailPage", () => {
     expect(screen.getByText(/Bu bölgede çekim yapamıyoruz/)).toBeInTheDocument();
   });
 
-  // AC-5: ödeme adımı henüz yok.
-  it("awaiting_payment siparişte ödeme adımının yakında ekleneceğini söyler", async () => {
+  // AC-12: ödeme bekleyen siparişte fiyatlı "Öde" butonu görünür.
+  it("awaiting_payment siparişte fiyatlı 'Öde' butonunu gösterir", async () => {
     setupSupabase({ order: { data: orderRow(), error: null } });
 
     render(await Page(params()));
 
-    expect(screen.getByText(/Ödeme adımı yakında eklenecek/)).toBeInTheDocument();
     expect(screen.getByText("Ödeme bekleniyor", { exact: true })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Öde (750,00 ₺)" })).toBeInTheDocument();
+    expect(screen.queryByText(/Önceki ödeme alınamadı/)).toBeNull();
+  });
+
+  // AC-12: önceki ödeme başarısız olduysa tekrar deneme notu ve buton gösterilir.
+  it("payment_failed siparişte tekrar deneme notunu ve 'Öde' butonunu gösterir", async () => {
+    setupSupabase({ order: { data: orderRow({ status: "payment_failed" }), error: null } });
+
+    render(await Page(params()));
+
+    expect(screen.getByText("Önceki ödeme alınamadı, tekrar deneyebilirsiniz.")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Öde (750,00 ₺)" })).toBeInTheDocument();
+  });
+
+  // AC-12: teslim edilmiş veya hazırlanan siparişte ödeme butonu yoktur.
+  it.each(["in_progress", "delivered"])("%s siparişte 'Öde' butonu gösterilmez", async (status) => {
+    setupSupabase({
+      order: {
+        data: orderRow({ status, video_order_assets: [] }),
+        error: null,
+      },
+    });
+    vi.mocked(getDeliveredVideoUrl).mockResolvedValue({ ok: true, url: "https://storage.example/v.mp4" });
+
+    render(await Page(params()));
+
+    expect(screen.queryByRole("button", { name: /Öde/ })).toBeNull();
   });
 
   // AC-5: yüklenen dosyalar tür ve MB olarak listelenir.

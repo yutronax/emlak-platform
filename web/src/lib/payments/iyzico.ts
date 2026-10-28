@@ -1,8 +1,15 @@
 import { createHash, createHmac, timingSafeEqual } from "node:crypto";
-import { createClient } from "@/lib/supabase/server";
 
 const CHECKOUT_TTL_MS = 30 * 60 * 1000;
 const PROVIDER_TIMEOUT_MS = 10_000;
+
+export interface CheckoutSessionInput {
+  amountMinor: number;
+  currency: string;
+  basketId: string;
+  conversationId: string;
+  paymentGroup: "SUBSCRIPTION" | "PRODUCT";
+}
 
 export function verifyWebhookSignature(
   rawBody: string,
@@ -32,27 +39,16 @@ function authorizationHeaders(requestBody: string): Record<string, string> {
 }
 
 export async function createCheckoutSession(
-  planId: string,
-  agentId: string,
+  input: CheckoutSessionInput,
 ): Promise<{ checkout_url: string; expires_at: string }> {
-  const supabase = await createClient();
-  const { data: plan, error } = await supabase
-    .from("plans")
-    .select("*")
-    .eq("id", planId)
-    .maybeSingle();
-  if (error || !plan) {
-    throw new Error("Plan fiyatı okunamadı");
-  }
-
   const requestBody = JSON.stringify({
     locale: "tr",
-    conversationId: agentId,
-    // plans.price_minor_unit kuruş cinsinden integer; sağlayıcı API'si TL bekler.
-    price: (Number(plan.price_minor_unit) / 100).toFixed(2),
-    currency: plan.currency,
-    basketId: plan.id,
-    paymentGroup: "SUBSCRIPTION",
+    conversationId: input.conversationId,
+    // amountMinor kuruş cinsinden integer; sağlayıcı API'si TL bekler.
+    price: (input.amountMinor / 100).toFixed(2),
+    currency: input.currency,
+    basketId: input.basketId,
+    paymentGroup: input.paymentGroup,
   });
 
   const response = await fetch(

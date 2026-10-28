@@ -114,3 +114,35 @@ Hata kodları: `INVALID_INPUT`, `NOT_FOUND`, `INVALID_STATE`, `UNSUPPORTED_FILE`
 
 ## Kuyruk sorgusu (frontend, kullanıcı client'ı — admin RLS select'i var)
 `video_orders` select `id, status, service_code, price_minor_unit, onsite_preferred_time, rejection_reason, created_at, paid_at, due_at, delivered_at, agent_id, properties(title, address), agents(company_name, phone)`. Sekme `?tab=quote|todo|done|canceled` (varsayılan `todo`): quote=`quote_pending`; todo=`in_progress` (due_at asc, `due_at < now` → "Gecikti" vurgusu brick-700); done=`delivered` (delivered_at desc); canceled=`canceled`. Her sekmede sayı rozeti. `draft`/`awaiting_payment`/`payment_failed` siparişler "Ödeme bekleyen" bilgi satırında sadece sayı olarak.
+
+---
+
+# Plan — 1c (ödeme)
+
+## Kararlar
+- Migration YOK: `payment_events.video_order_id` + tek-sahip kısıtı 0013'te canlıda.
+- `createCheckoutSession` plan'a bağımlılıktan çıkarılır: `createCheckoutSession({ amountMinor, currency, basketId, conversationId, paymentGroup })`. Fiyatı ÇAĞIRAN (route) DB'den okur ve geçirir; iyzico.ts artık Supabase okumaz. Abonelik route'u planı zaten okuyor → aynı değerleri geçirir; abonelik davranışı ve HTTP sözleşmesi DEĞİŞMEZ.
+- Video siparişi: `basketId = order.id`, `conversationId = agent_id`, `paymentGroup = "PRODUCT"`.
+- Webhook gövde sözleşmesi (projeye özel, mevcut): `{ event_id, event_type, subscription_id? , video_order_id? }` — tam olarak biri dolu, yoksa 400 `INVALID_INPUT`. İmza doğrulama ve `payment_events` idempotency aynen; `payment_events` satırına ilgili sütun yazılır.
+- Video geçişleri (koşullu UPDATE, `system` aktörü):
+  - `PAYMENT_SUCCESS`: `status in (awaiting_payment, payment_failed)` → `in_progress`, `paid_at = now`, `due_at = addBusinessDays(now, DELIVERY_BUSINESS_DAYS)`.
+  - `PAYMENT_FAILED`: `awaiting_payment` → `payment_failed`.
+  - 0 satır: sipariş yoksa log + 200; zaten hedefteyse no-op 200; başka durumdaysa (ör. delivered/canceled) log + 200, state DEĞİŞMEZ (abonelikteki needs_review karşılığı yok — video siparişinde ikinci başarılı ödeme manuel iade konusu, kapsam dışı; `payment_events` kaydı iz olarak kalır).
+- Checkout `payment_failed` durumunda da açılır (tekrar deneme); durum değiştirmez.
+
+## Files — 1c
+### backend
+| File | Why |
+|---|---|
+| `web/src/lib/payments/iyzico.ts` (+test) | generic checkout |
+| `web/src/app/api/subscriptions/checkout/route.ts` (+test) | yeni imzaya çağrı; davranış aynı |
+| `web/src/app/api/video-orders/[id]/checkout/route.ts` (yeni, +test) | AC-10 |
+| `web/src/app/api/webhooks/payment/route.ts` (+test) | AC-11 |
+### frontend
+| File | Why |
+|---|---|
+| `web/src/app/agent/videos/[id]/pay-button.tsx` (yeni, client, +test) | AC-12 |
+| `web/src/app/agent/videos/[id]/page.tsx` (+test) | "Ödeme adımı yakında" yerine PayButton |
+
+## Video checkout route sözleşmesi — `POST /api/video-orders/[id]/checkout`
+Gövde yok (yok sayılır). Sıra: auth (401 `UNAUTHORIZED`) → rate limit (429, abonelikle aynı pencere) → id UUID değilse 404 → sipariş kullanıcı client'ı ile `agent_id = user` (yoksa 404 `NOT_FOUND`) → `quote_pending` ise 409 `QUOTE_PENDING` → `awaiting_payment|payment_failed` değilse 409 `INVALID_STATE` → `price_minor_unit` null/≤0 ise 409 `INVALID_STATE` → `createCheckoutSession` → 201 `{ order_id, checkout_url, expires_at }`. Sağlayıcı zaman aşımı → 504 `PAYMENT_TIMEOUT` (durum değişmez); diğer sağlayıcı hatası → 502 `PAYMENT_PROVIDER_ERROR`, `retryable: true` (durum değişmez — abonelikteki gibi `failed`'a çekilmez, emlakçı tekrar deneyebilsin).

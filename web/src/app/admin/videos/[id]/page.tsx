@@ -11,6 +11,7 @@ import { AssetDownloadButton } from "./asset-download-button";
 import { DeliveryUpload } from "./delivery-upload";
 import { QuoteForm } from "./quote-form";
 import { RejectForm } from "./reject-form";
+import { formatTryMinor } from "@/lib/format-price";
 
 export const instant = false;
 
@@ -61,7 +62,6 @@ type OrderDetail = {
   video_order_assets: AssetRow[] | null;
 };
 
-const priceFormat = new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY" });
 const megabyteFormat = new Intl.NumberFormat("tr-TR", { maximumFractionDigits: 1 });
 const dateFormat = new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "long", year: "numeric" });
 
@@ -179,7 +179,7 @@ export default async function AdminVideoDetailPage({
           <dd className="font-medium">
             {order.price_minor_unit === null
               ? "Teklif bekleniyor"
-              : priceFormat.format(order.price_minor_unit / 100)}
+              : formatTryMinor(order.price_minor_unit)}
           </dd>
         </div>
         {created && (

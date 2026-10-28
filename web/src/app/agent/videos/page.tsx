@@ -5,6 +5,7 @@ import { Alert } from "@/components/ui/alert";
 import { createClient } from "@/lib/supabase/server";
 import type { ServiceCode } from "@/lib/video-orders/limits";
 import { type OrderStatus, STATUS_LABELS } from "@/lib/video-orders/status";
+import { formatTryMinor } from "@/lib/format-price";
 
 export const instant = false;
 
@@ -25,7 +26,6 @@ type OrderRow = {
   properties: { title: string } | null;
 };
 
-const priceFormat = new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY" });
 const dateFormat = new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "long", year: "numeric" });
 
 function formatDate(value: string | null): string | null {
@@ -103,7 +103,7 @@ export default async function AgentVideosPage() {
             const serviceText =
               order.price_minor_unit === null
                 ? SERVICE_NAMES[order.service_code]
-                : `${SERVICE_NAMES[order.service_code]} · ${priceFormat.format(order.price_minor_unit / 100)}`;
+                : `${SERVICE_NAMES[order.service_code]} · ${formatTryMinor(order.price_minor_unit)}`;
 
             return (
               <li key={order.id}>

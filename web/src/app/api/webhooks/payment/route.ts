@@ -1,12 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyWebhookSignature } from "@/lib/payments/iyzico";
 import { createServiceRoleClient } from "@/lib/supabase/server";
+import { addBusinessDays, DELIVERY_BUSINESS_DAYS } from "@/lib/video-orders/limits";
 
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const PERIOD_MS = 30 * 24 * 60 * 60 * 1000;
 
 const STATUS_BY_EVENT_TYPE: Record<string, "active" | "failed"> = {
   PAYMENT_SUCCESS: "active",
   PAYMENT_FAILED: "failed",
+};
+
+type VideoOrderTarget = "in_progress" | "payment_failed";
+
+const VIDEO_TARGET_BY_EVENT_TYPE: Partial<Record<string, VideoOrderTarget>> = {
+  PAYMENT_SUCCESS: "in_progress",
+  PAYMENT_FAILED: "payment_failed",
 };
 
 interface PaymentEvent {
@@ -15,34 +24,64 @@ interface PaymentEvent {
   subscription_id: string;
 }
 
+interface VideoPaymentEvent {
+  event_id: string;
+  event_type: string;
+  video_order_id: string;
+}
+
+type AnyPaymentEvent = PaymentEvent | VideoPaymentEvent;
+
 type SupabaseServiceClient = ReturnType<typeof createServiceRoleClient>;
 
 type ParseFailure = { error: "INVALID_BODY" | "MISSING_FIELD" };
 
 // JSON gövdeyi ayrıştırır ve zorunlu alanları doğrular. Hata türünü ayırt eder:
 // JSON bozuksa INVALID_BODY, zorunlu alan eksikse MISSING_FIELD döner. Çağıran
-// taraf her biri için orijinal INVALID_INPUT mesajını üretir.
-function parsePaymentEvent(rawBody: string): PaymentEvent | ParseFailure {
-  let event: PaymentEvent;
+// taraf her biri için orijinal INVALID_INPUT mesajını üretir. subscription_id ve
+// video_order_id alanlarından tam olarak biri dolu olmalıdır.
+function parsePaymentEvent(rawBody: string): AnyPaymentEvent | ParseFailure {
+  let event: Partial<PaymentEvent & VideoPaymentEvent>;
   try {
-    event = JSON.parse(rawBody) as PaymentEvent;
+    event = JSON.parse(rawBody) as Partial<PaymentEvent & VideoPaymentEvent>;
   } catch {
     return { error: "INVALID_BODY" };
   }
-  if (!event.event_id || !event.event_type || !event.subscription_id) {
+  if (!event?.event_id || !event.event_type) {
     return { error: "MISSING_FIELD" };
   }
-  return event;
+  const hasSubscription = Boolean(event.subscription_id);
+  const hasVideoOrder = Boolean(event.video_order_id);
+  if (hasSubscription === hasVideoOrder) {
+    return { error: "MISSING_FIELD" };
+  }
+  if (hasVideoOrder && (typeof event.video_order_id !== "string" || !UUID_PATTERN.test(event.video_order_id))) {
+    return { error: "MISSING_FIELD" };
+  }
+  if (hasVideoOrder) {
+    return {
+      event_id: event.event_id,
+      event_type: event.event_type,
+      video_order_id: event.video_order_id as string,
+    };
+  }
+  return {
+    event_id: event.event_id,
+    event_type: event.event_type,
+    subscription_id: event.subscription_id as string,
+  };
 }
 
 // Idempotency: provider_event_id unique. Aynı olay ikinci kez gelirse state değişmez.
-async function insertPaymentEvent(supabase: SupabaseServiceClient, event: PaymentEvent) {
+async function insertPaymentEvent(supabase: SupabaseServiceClient, event: AnyPaymentEvent) {
   const { data: insertedEvent, error: insertError } = (await supabase
     .from("payment_events")
     .insert({
       provider_event_id: event.event_id,
       event_type: event.event_type,
-      subscription_id: event.subscription_id,
+      ...("video_order_id" in event
+        ? { video_order_id: event.video_order_id }
+        : { subscription_id: event.subscription_id }),
       raw_payload: event,
     })
     .select("id")) as { data: { id: string }[] | null; error: { code: string } | null };
@@ -50,6 +89,12 @@ async function insertPaymentEvent(supabase: SupabaseServiceClient, event: Paymen
   if (insertError) {
     if (insertError.code === "23505") {
       return { duplicate: true as const, paymentEventId: undefined };
+    }
+    // 23503: olay var olmayan bir abonelik/siparişe ait; 22P02: kimlik uuid değil.
+    // 500 dönülürse sağlayıcı aynı kalıcı hatayı sonsuza dek tekrar dener.
+    if (insertError.code === "23503" || insertError.code === "22P02") {
+      console.warn("payment webhook: olayın sahibi bulunamadı", event.event_id);
+      return { duplicate: false as const, unknownOwner: true as const, paymentEventId: undefined };
     }
     console.error("payment_events insert başarısız", insertError);
     return { duplicate: false as const, insertFailed: true as const, paymentEventId: undefined };
@@ -152,6 +197,96 @@ async function markNeedsReviewOrProcessingError(
   });
 }
 
+// Video siparişi: PAYMENT_SUCCESS → in_progress (paid_at, due_at); PAYMENT_FAILED →
+// payment_failed. Koşullu update; 0 satırda mevcut duruma göre no-op veya log.
+// Durum değişmez; needs_review yok. DB hatasında payment_events processing_error işaretlenir.
+async function reconcileVideoOrderStatus(
+  supabase: SupabaseServiceClient,
+  event: VideoPaymentEvent,
+  target: VideoOrderTarget,
+  paymentEventId: string | undefined,
+): Promise<NextResponse> {
+  try {
+    const { data, error } =
+      target === "in_progress"
+        ? await markVideoOrderPaid(supabase, event.video_order_id)
+        : await markVideoOrderPaymentFailed(supabase, event.video_order_id);
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      await handleNoVideoOrderRowsUpdated(supabase, event, target, paymentEventId);
+    }
+    return NextResponse.json({ received: true });
+  } catch (error) {
+    console.error("video sipariş durumu güncellenemedi", event.video_order_id, error);
+    if (paymentEventId) {
+      const { error: processingErrorUpdateError } = await supabase
+        .from("payment_events")
+        .update({ processing_error: true })
+        .eq("id", paymentEventId);
+      if (processingErrorUpdateError) {
+        console.error("payment_events processing_error işaretlenemedi", paymentEventId, processingErrorUpdateError);
+      }
+    }
+    return NextResponse.json({ error: "INTERNAL_ERROR" }, { status: 500 });
+  }
+}
+
+function markVideoOrderPaid(supabase: SupabaseServiceClient, orderId: string) {
+  const now = new Date();
+  return supabase
+    .from("video_orders")
+    .update({
+      status: "in_progress",
+      paid_at: now.toISOString(),
+      due_at: addBusinessDays(now, DELIVERY_BUSINESS_DAYS).toISOString(),
+    })
+    .eq("id", orderId)
+    .in("status", ["awaiting_payment", "payment_failed"])
+    .select("id");
+}
+
+function markVideoOrderPaymentFailed(supabase: SupabaseServiceClient, orderId: string) {
+  return supabase
+    .from("video_orders")
+    .update({ status: "payment_failed" })
+    .eq("id", orderId)
+    .eq("status", "awaiting_payment")
+    .select("id");
+}
+
+async function handleNoVideoOrderRowsUpdated(
+  supabase: SupabaseServiceClient,
+  event: VideoPaymentEvent,
+  target: VideoOrderTarget,
+  paymentEventId: string | undefined,
+): Promise<void> {
+  const { data: current, error: readError } = await supabase
+    .from("video_orders")
+    .select("status")
+    .eq("id", event.video_order_id)
+    .maybeSingle();
+  if (readError) throw readError;
+
+  if (!current) {
+    console.warn("payment webhook: video_order_id bulunamadı", event.video_order_id);
+    return;
+  }
+  // Ödenmiş/kapanmış siparişe farklı bir başarılı ödeme olayı: büyük olasılıkla ikinci tahsilat.
+  // Durum değişmez; olay satırı işaretlenir ki iade için sorgulanabilsin.
+  if (target === "in_progress") {
+    console.error("payment webhook: olası çift tahsilat, iade gerekebilir", event.video_order_id, current.status);
+    if (paymentEventId) {
+      const { error } = await supabase.from("payment_events").update({ processing_error: true }).eq("id", paymentEventId);
+      if (error) console.error("payment_events processing_error işaretlenemedi", paymentEventId, error);
+    }
+    return;
+  }
+  if (current.status !== target) {
+    console.warn("payment webhook: video sipariş durumu geçişe uygun değil, state değişmedi", event.video_order_id, current.status);
+  }
+}
+
 export async function POST(request: NextRequest) {
   // İmza DB'ye dokunulmadan ÖNCE doğrulanır (AC-S3).
   const rawBody = await request.text();
@@ -173,8 +308,19 @@ export async function POST(request: NextRequest) {
   if (insertResult.duplicate) {
     return NextResponse.json({ received: true, duplicate: true, event_id: event.event_id });
   }
+  if ("unknownOwner" in insertResult) {
+    return NextResponse.json({ received: true });
+  }
   if (insertResult.insertFailed) {
     return NextResponse.json({ error: "INTERNAL_ERROR" }, { status: 500 });
+  }
+
+  if ("video_order_id" in event) {
+    const target = VIDEO_TARGET_BY_EVENT_TYPE[event.event_type];
+    if (!target) {
+      return NextResponse.json({ received: true });
+    }
+    return reconcileVideoOrderStatus(supabase, event, target, insertResult.paymentEventId);
   }
 
   const status = STATUS_BY_EVENT_TYPE[event.event_type];

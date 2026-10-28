@@ -187,7 +187,7 @@ describe("AdminVideoDetailPage", () => {
     expect(screen.queryByLabelText("Reddetme gerekçesi")).toBeNull();
     expect(screen.queryByLabelText("Fiyat (TL)")).toBeNull();
     expect(screen.getByRole("button", { name: "Fotoğraf indir" })).toBeInTheDocument();
-    expect(screen.getByText("₺750,00")).toBeInTheDocument();
+    expect(screen.getByText("750,00 ₺")).toBeInTheDocument();
   });
 
   // AC-8: delivered → form yok, teslim tarihi gösterilir.

@@ -94,7 +94,13 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const session = await createCheckoutSession(plan.id, userId);
+    const session = await createCheckoutSession({
+      amountMinor: plan.price_minor_unit,
+      currency: plan.currency,
+      basketId: plan.id,
+      conversationId: userId,
+      paymentGroup: "SUBSCRIPTION",
+    });
     return NextResponse.json(
       {
         subscription_id: subscription.id,

@@ -1,13 +1,6 @@
 import { createHmac } from "node:crypto";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { createClient, createServiceRoleClient } from "@/lib/supabase/server";
-import { createFakeSupabase, type FakeSupabase } from "@/test/fake-supabase";
 import { createCheckoutSession, verifyWebhookSignature } from "./iyzico";
-
-vi.mock("@/lib/supabase/server", () => ({
-  createClient: vi.fn(),
-  createServiceRoleClient: vi.fn(),
-}));
 
 const WEBHOOK_SECRET = "test-webhook-secret";
 const PROVIDER_PAYMENT_PAGE = "https://sandbox-payment.example/checkout/tok-1";
@@ -55,23 +48,12 @@ describe("verifyWebhookSignature", () => {
 });
 
 describe("createCheckoutSession", () => {
-  let fake: FakeSupabase;
   let fetchMock: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     vi.stubEnv("IYZICO_API_KEY", "test-api-key");
     vi.stubEnv("IYZICO_SECRET_KEY", "test-secret-key");
     vi.stubEnv("IYZICO_BASE_URL", "https://sandbox-api.example");
-
-    // plans.price_minor_unit kuruş cinsinden: 499 TL = 49900 kuruş.
-    fake = createFakeSupabase({
-      user: { id: "user-1" },
-      tables: {
-        plans: [{ id: PRO_PLAN_ID, name: "Pro", price_minor_unit: 49900, currency: "TRY" }],
-      },
-    });
-    vi.mocked(createClient).mockResolvedValue(fake.client);
-    vi.mocked(createServiceRoleClient).mockReturnValue(fake.client);
 
     fetchMock = vi.fn(async () =>
       new Response(
@@ -92,22 +74,63 @@ describe("createCheckoutSession", () => {
     vi.clearAllMocks();
   });
 
-  it("sağlayıcı API'sine plan fiyatı ve para birimiyle istek atar ve ödeme sayfası URL'sini döner", async () => {
-    const result = await createCheckoutSession(PRO_PLAN_ID, "agent-1");
+  const input = {
+    amountMinor: 49900,
+    currency: "TRY",
+    basketId: PRO_PLAN_ID,
+    conversationId: "agent-1",
+    paymentGroup: "SUBSCRIPTION" as const,
+  };
 
-    expect(fake.queries).toContainEqual(
-      expect.objectContaining({ table: "plans", op: "select", filters: { id: PRO_PLAN_ID } }),
-    );
+  function sentBody(): Record<string, unknown> {
+    const [, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
+    return JSON.parse(String(init.body)) as Record<string, unknown>;
+  }
+
+  it("sağlayıcı API'sine tutar, para birimi, sepet ve grup bilgisiyle istek atar ve ödeme sayfası URL'sini döner", async () => {
+    const result = await createCheckoutSession(input);
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
-    const [, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
-    const sentBody = JSON.parse(String(init.body)) as { price: unknown; currency: unknown };
+    const [url] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
+    expect(url).toBe("https://sandbox-api.example/payment/iyzipos/checkoutform/initialize/auth/ecom");
 
-    // Sağlayıcı API'si TL bekler: price_minor_unit (49900 kuruş) -> 499 TL dönüşümü
-    // implementasyonda yapılır.
-    expect(Number(sentBody.price)).toBe(499);
-    expect(sentBody.currency).toBe("TRY");
+    const body = sentBody();
+    // Sağlayıcı API'si TL bekler: 49900 kuruş -> 499.00 TL.
+    expect(Number(body.price)).toBe(499);
+    expect(body.currency).toBe("TRY");
+    expect(body.basketId).toBe(PRO_PLAN_ID);
+    expect(body.conversationId).toBe("agent-1");
+    expect(body.paymentGroup).toBe("SUBSCRIPTION");
+    expect(body.locale).toBe("tr");
 
     expect(result.checkout_url).toBe(PROVIDER_PAYMENT_PAGE);
+    expect(Date.parse(result.expires_at)).toBeGreaterThan(Date.now());
+  });
+
+  it("PRODUCT grubu ve kuruştan TL'ye küçük tutarı doğru gönderir", async () => {
+    await createCheckoutSession({ ...input, amountMinor: 75050, paymentGroup: "PRODUCT", basketId: "order-1" });
+
+    const body = sentBody();
+    expect(body.price).toBe("750.50");
+    expect(body.paymentGroup).toBe("PRODUCT");
+    expect(body.basketId).toBe("order-1");
+  });
+
+  it("sağlayıcı HTTP hatası dönerse PAYMENT_PROVIDER_ERROR fırlatır", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    fetchMock.mockResolvedValueOnce(new Response("upstream", { status: 500 }));
+
+    await expect(createCheckoutSession(input)).rejects.toThrow("PAYMENT_PROVIDER_ERROR");
+    vi.mocked(console.error).mockRestore();
+  });
+
+  it("sağlayıcı status != success dönerse PAYMENT_PROVIDER_ERROR fırlatır", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    fetchMock.mockResolvedValueOnce(
+      new Response(JSON.stringify({ status: "failure" }), { status: 200 }),
+    );
+
+    await expect(createCheckoutSession(input)).rejects.toThrow("PAYMENT_PROVIDER_ERROR");
+    vi.mocked(console.error).mockRestore();
   });
 });

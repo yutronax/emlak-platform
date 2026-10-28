@@ -171,9 +171,15 @@ describe("POST /api/subscriptions/checkout", () => {
       }),
     );
 
-    // Checkout oluşturma çağrısına yalnızca plan_id ve agentId gider; istekteki price hiç geçmez.
+    // Checkout oluşturma çağrısına fiyat plan kaydından gider; istekteki price hiç geçmez.
     expect(createCheckoutSession).toHaveBeenCalledTimes(1);
-    expect(createCheckoutSession).toHaveBeenCalledWith(PRO_PLAN_ID, expect.any(String));
+    expect(createCheckoutSession).toHaveBeenCalledWith({
+      amountMinor: PRO_PLAN.price_minor_unit,
+      currency: PRO_PLAN.currency,
+      basketId: PRO_PLAN_ID,
+      conversationId: expect.any(String),
+      paymentGroup: "SUBSCRIPTION",
+    });
     const passedArgs = vi.mocked(createCheckoutSession).mock.calls[0];
     expect(passedArgs).not.toContain(1);
   });

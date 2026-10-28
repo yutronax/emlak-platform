@@ -52,6 +52,7 @@ class FakeQuery implements PromiseLike<FakeResult> {
   private op: QueryLog["op"] = "select";
   private payload: Row | null = null;
   private filters: Record<string, unknown> = {};
+  private inFilters: Record<string, unknown[]> = {};
   private orderBy: { column: string; ascending: boolean } | null = null;
 
   constructor(
@@ -74,6 +75,11 @@ class FakeQuery implements PromiseLike<FakeResult> {
 
   eq(column: string, value: unknown): this {
     this.filters[column] = value;
+    return this;
+  }
+
+  in(column: string, values: unknown[]): this {
+    this.inFilters[column] = values;
     return this;
   }
 
@@ -137,8 +143,10 @@ class FakeQuery implements PromiseLike<FakeResult> {
         result = { data: row, error: null };
       }
     } else {
-      const matched = rows.filter((row) =>
-        Object.entries(this.filters).every(([column, value]) => row[column] === value),
+      const matched = rows.filter(
+        (row) =>
+          Object.entries(this.filters).every(([column, value]) => row[column] === value) &&
+          Object.entries(this.inFilters).every(([column, values]) => values.includes(row[column])),
       );
       if (this.op === "update") {
         matched.forEach((row) => Object.assign(row, this.payload ?? {}));
