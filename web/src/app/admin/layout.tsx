@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { notFound, redirect } from "next/navigation";
 import type { ReactNode } from "react";
 
@@ -9,6 +10,9 @@ import { createClient } from "@/lib/supabase/server";
 export const instant = false;
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
+  // Date.now (Supabase getUser içinde) prerender sırasında çağrılmasın diye
+  // ilk await'ten önce istek-zamanlı (dinamik) işaretleme yapılır.
+  await connection();
   const supabase = await createClient();
   const { data: userData } = await supabase.auth.getUser();
 
