@@ -3,6 +3,16 @@
 Pipeline adımlarının (atdd/plan/code_diff/verify) kendi dosyalarına yazdığı
 karar/risk/varsayım kayıtlarının aktarımı — yeniden yorumlanmadan, kaynağıyla.
 
+## faz1-video-siparisi / 1b (2026-10-28)
+
+**Kararlar** (kaynak: plan.md "Plan — 1b"):
+- Admin = editör. Eski "mülk seç → video yükle → yayınla" ekranı kaldırıldı, yerini sipariş kuyruğu aldı.
+- Admin `agents` tablosunda başka emlakçıları RLS ile okuyamıyor → kuyruk/detay sorguları `requireAdmin()`'den SONRA service-role ile.
+- Sipariş başına tek teslim videosu: 0015 partial unique index (canlıda 0 çakışma ile, kullanıcı onayıyla uygulandı).
+- Fiyat girişi: "1.500" = 1.500 TL (binlik), "1,5"/"1500.5" ondalık; 1–100.000 TL.
+
+**Açık düşük notlar** (kaynak: red_team_1b.json): `.mov` boş MIME ile yanlış ret riski (gerçek tarayıcıda denenmeli); onaylanmayan teslim yüklemeleri sahipsiz dosya bırakabilir (temizlik cron'u ileride); imzalı yükleme deseni agent/admin'de tekrarlanıyor — 1c öncesi ortak yardımcıya alınabilir (refactor adayı).
+
 ## faz1-video-siparisi / 1a (2026-10-28)
 
 **Kararlar** (kaynak: atdd.md, plan.md):

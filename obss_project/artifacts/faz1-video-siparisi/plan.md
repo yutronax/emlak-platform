@@ -74,3 +74,43 @@ Evet — 0013. Kullanıcı onayıyla SQL Editor'den (veya `supabase db query`) u
 
 ## Open Questions
 Yok (atdd Unknowns: 50 MB kararıyla kapandı).
+
+---
+
+# Plan — 1b (admin kuyruğu + teslim)
+
+## Kararlar
+- Admin = editör (ayrı rol yok). Tüm admin aksiyonları `requireAdmin()` ile başlar; yazmalar service-role ile, durum geçişleri **koşullu UPDATE** (`.eq('status', <beklenen>)`) ile atomik — 0 satır etkilenirse `INVALID_STATE`.
+- Teslim videosu mevcut `property-videos` bucket'ına (private, 50 MB) gider; yol `${property_id}/${order_id}/${uuid}.${ext}` sunucuda üretilir; tarayıcıdan imzalı URL'ye XHR PUT (1a'daki desen).
+- Sipariş başına tek teslim videosu: **0015** `create unique index if not exists property_videos_order_id_unique on property_videos(order_id) where order_id is not null` (+ rollback). Canlıya orkestratör, kullanıcı onayıyla uygular.
+- Eski "mülk seç → video yükle → yayınla" ekranı ve `uploadVideo`/`publishVideo`/`buildVideoStoragePath` kaldırılır (sipariş akışı yerini alır; public galeri yok).
+- 1c gelene kadar hiçbir sipariş `in_progress`'e ödeme ile geçmez; "Hazırlanacak" sekmesi boş olabilir — bu beklenen.
+
+## Files — 1b
+### backend
+| File | Why |
+|---|---|
+| `supabase/migrations/0015_property_videos_order_unique.sql` + rollback | tek teslim videosu |
+| `web/src/app/admin/videos/actions.ts` (yeniden yazılır) | aşağıdaki sözleşme |
+| `web/src/app/admin/videos/actions.test.ts` (yeniden yazılır) | |
+### frontend
+| File | Why |
+|---|---|
+| `web/src/app/admin/videos/page.tsx` (yeniden yazılır) | AC-7 kuyruk |
+| `web/src/app/admin/videos/[id]/page.tsx` (yeni) | AC-8 detay |
+| `web/src/app/admin/videos/[id]/quote-form.tsx`, `reject-form.tsx`, `delivery-upload.tsx` (yeni, client) | aksiyon formları |
+| testler (`page.test.tsx` yeniden yazılır, `[id]/*.test.tsx`) | |
+
+## Admin Server Action sözleşmesi (`web/src/app/admin/videos/actions.ts`)
+Ortak: `requireAdmin()`; no-session → `redirect('/login')`, not-admin → `{ok:false,error:'NOT_FOUND'}`. Dönüş tipi 1a ile aynı `ActionResult` deseni (yerelde tanımla, agent/actions'tan import etme).
+| Action | Girdi | Çıktı | Kural |
+|---|---|---|---|
+| `setQuote(orderId, priceTl)` | `priceTl: string` ("1500" / "1.500,50") | `{ok:true}` | sadece onsite + `quote_pending`; 1–100000 TL arası; kuruşa çevrilir; `update price_minor_unit, status='awaiting_payment' where id and status='quote_pending'` |
+| `rejectOrder(orderId, reason)` | reason 5–500 karakter | `{ok:true}` | sadece `quote_pending` → `canceled`, `rejection_reason` |
+| `getAssetDownloadUrl(orderId, assetId)` | | `{ok:true,url}` | asset o siparişe ait olmalı; `video-order-assets`'tan 600 sn imzalı URL, `download` seçeneğiyle |
+| `requestDeliveryUploadUrl(orderId, file:{name,type,size})` | | `{ok:true,path,signedUrl,token}` | sadece `in_progress`; mp4/mov/webm, ≤ MAX_FILE_BYTES; yol sunucuda |
+| `confirmDelivery(orderId, path)` | | `{ok:true}` | sadece `in_progress`; path `${property_id}/${order_id}/` prefix'li + Storage'da var; `property_videos` insert (`order_id`, `status='published'`, `published_at=now`); sonra `update status='delivered', delivered_at=now where status='in_progress'` — 0 satırsa eklenen property_videos satırını sil, `INVALID_STATE`; unique ihlali (23505) → `INVALID_STATE` |
+Hata kodları: `INVALID_INPUT`, `NOT_FOUND`, `INVALID_STATE`, `UNSUPPORTED_FILE`, `FILE_TOO_LARGE`, `INTERNAL_ERROR` + Türkçe `message`. Her başarılı aksiyondan sonra `revalidatePath('/admin/videos')` ve detay yolu.
+
+## Kuyruk sorgusu (frontend, kullanıcı client'ı — admin RLS select'i var)
+`video_orders` select `id, status, service_code, price_minor_unit, onsite_preferred_time, rejection_reason, created_at, paid_at, due_at, delivered_at, agent_id, properties(title, address), agents(company_name, phone)`. Sekme `?tab=quote|todo|done|canceled` (varsayılan `todo`): quote=`quote_pending`; todo=`in_progress` (due_at asc, `due_at < now` → "Gecikti" vurgusu brick-700); done=`delivered` (delivered_at desc); canceled=`canceled`. Her sekmede sayı rozeti. `draft`/`awaiting_payment`/`payment_failed` siparişler "Ödeme bekleyen" bilgi satırında sadece sayı olarak.
