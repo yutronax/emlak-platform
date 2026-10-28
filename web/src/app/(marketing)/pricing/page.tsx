@@ -35,6 +35,32 @@ function findHighlightIndex(plans: PlanRow[]): number {
   return proIndex !== -1 ? proIndex : Math.floor(plans.length / 2);
 }
 
+// Sıraya göre "neler dahil" maddeleri. Plan sayısı bu listeden fazlaysa son liste kullanılır.
+const PLAN_FEATURES: string[][] = [
+  [
+    "3 WhatsApp grubu bağlayın",
+    "İlanları filtreleyerek görün",
+    "Yeni ilan gelince site bildirimi",
+    "E-posta ile destek",
+  ],
+  [
+    "10 WhatsApp grubu bağlayın",
+    "İlanları filtreleyerek görün",
+    "Yeni ilan gelince site bildirimi",
+    "WhatsApp ile destek",
+  ],
+  [
+    "Sınırsız WhatsApp grubu",
+    "İlanları filtreleyerek görün",
+    "Yeni ilan gelince site bildirimi",
+    "Öncelikli destek",
+  ],
+];
+
+function featuresFor(index: number): string[] {
+  return PLAN_FEATURES[index] ?? PLAN_FEATURES[PLAN_FEATURES.length - 1];
+}
+
 export default async function PricingPage() {
   const supabase = await createClient();
 
@@ -96,6 +122,9 @@ export default async function PricingPage() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/illustrations/pricing.svg" alt="" aria-hidden="true" className="hidden h-36 w-auto md:block" />
       </div>
+      <p className="mt-4 font-body text-sm text-slate-500">
+        Reklam videosu ayrı ücretlendirilen bir hizmettir.
+      </p>
 
       {subscriptionError && (
         <div className="mt-6">
@@ -121,7 +150,19 @@ export default async function PricingPage() {
               <h2 className="font-display text-xl font-semibold">{plan.name}</h2>
               <p className={`font-display text-4xl font-bold ${priceTone}`}>
                 {formatPrice(plan.price_minor_unit)}
+                <span className="ml-2 font-body text-base font-normal">/ ay</span>
               </p>
+              <ul className="flex flex-col gap-2 text-sm">
+                {featuresFor(index).map((feature) => (
+                  <li
+                    key={feature}
+                    className={`flex gap-2 ${isHighlighted ? "text-white/80" : "text-slate-500"}`}
+                  >
+                    <span aria-hidden="true" className={isHighlighted ? "text-white" : "text-moss-700"}>✓</span>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
               {isActive ? (
                 <p
                   className={`text-sm font-medium ${isHighlighted ? "text-white" : "text-moss-700"}`}

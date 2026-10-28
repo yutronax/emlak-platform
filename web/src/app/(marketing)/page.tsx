@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { SUPPORT_WHATSAPP_DISPLAY, SUPPORT_WHATSAPP_URL } from "@/lib/contact";
+
 const primaryLink =
   "inline-flex items-center justify-center gap-2 rounded-md px-6 py-3 font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 bg-terracotta-600 text-white hover:bg-terracotta-700";
 
@@ -14,19 +16,34 @@ const dotGridBackground = {
 
 const steps = [
   {
-    title: "WhatsApp'a ilanı atın",
-    body: "Her zamanki gibi grubunuza fotoğraf ve bilgileri gönderin, başka bir şey yapmanıza gerek yok.",
+    title: "WhatsApp'ınızı bağlayın",
+    body: "Hesabınızı siteye bağlayın. Başka bir şey kurmanıza gerek yok.",
     illustration: "/illustrations/group-chat.svg",
   },
   {
-    title: "Biz hazırlarız",
-    body: "Fotoğraflardan kısa, videolu bir tanıtım sayfası oluşturuyoruz.",
-    illustration: "/illustrations/video-upload.svg",
+    title: "Gruplarınızı seçin",
+    body: "Hangi gruplardan ilan gelsin, siz seçersiniz.",
+    illustration: "/illustrations/secure-login.svg",
   },
   {
-    title: "Linki paylaşın",
-    body: "Hazır sayfanın linkini müşterinize gönderin ya da vitrinde yayınlayın.",
+    title: "İlanları tek yerden görün",
+    body: "İlanlar düzenli bir listede durur. Yeni ilan gelince bildirim alırsınız.",
     illustration: "/illustrations/property-agreement.svg",
+  },
+];
+
+const videoOptions = [
+  {
+    title: "Fotoğraf yükleyin",
+    body: "İlanınızın fotoğraflarını gönderin, biz videoya çeviririz.",
+  },
+  {
+    title: "Kendi çektiğiniz videoyu gönderin",
+    body: "Telefonla çektiğiniz ham videoyu yükleyin.",
+  },
+  {
+    title: "Yerinde çekim",
+    body: "Uygun bölgelerde ekibimiz mülke gelip çeker.",
   },
 ];
 
@@ -34,21 +51,26 @@ const faqs = [
   {
     question: "Uygulama indirmem mi gerekiyor?",
     answer:
-      "Hayır. WhatsApp'ı zaten kullanıyorsunuz, başka bir şey kurmanıza gerek yok.",
+      "Hayır. WhatsApp'ı zaten kullanıyorsunuz. Siteye yalnızca hesabınızı bağlarsınız.",
   },
   {
     question: "Ücretsiz deneyebilir miyim?",
     answer:
-      "Evet, kredi kartı bilgisi istemeden ücretsiz deneyebilirsiniz.",
+      "Evet. Ücretsiz deneyin, kredi kartı bilgisi istemiyoruz.",
   },
   {
-    question: "İlanım yayınlanmadan önce kontrol ediliyor mu?",
+    question: "Hangi gruplardan ilan geleceğine kim karar veriyor?",
     answer:
-      "Evet, her ilan vitrine çıkmadan önce incelenir, hatalı bir bilgi varsa düzeltilir.",
+      "Siz seçersiniz. Seçmediğiniz grupların mesajlarını saklamayız.",
+  },
+  {
+    question: "Reklam videosu ücretli mi, nasıl hazırlanıyor?",
+    answer:
+      "Evet, reklam videosu ayrı ücretlendirilen bir ek hizmettir. Fotoğraflarınızı ya da kendi çektiğiniz videoyu yüklersiniz, videoyu editörlerimiz hazırlar.",
   },
   {
     question: "Bir sorun yaşarsam ne yapmalıyım?",
-    answer: "Destek ekibimize WhatsApp üzerinden ulaşabilirsiniz.",
+    answer: null,
   },
 ];
 
@@ -63,22 +85,21 @@ export default function LandingPage() {
         />
 
         <div className="relative flex flex-col gap-6">
-          <h1 className="font-display text-5xl font-bold leading-tight md:text-6xl lg:text-7xl">
-            İlanı WhatsApp grubunuza atın. Videolu sayfası hazır olsun.
+          <h1 className="font-display text-4xl font-bold leading-tight sm:text-5xl md:text-6xl lg:text-7xl">
+            WhatsApp gruplarınıza düşen ilanlar, tek sayfada düzenli.
           </h1>
           <div className="flex flex-col gap-2">
             <p className="max-w-md font-body text-xl text-slate-500">
-              Emlakçı ilanlarını WhatsApp grubundan alıp videolu vitrine
-              dönüştürüyoruz. Siz hiçbir şey kurmuyorsunuz.
+              WhatsApp&apos;ınızı bağlayın, hangi gruplardan ilan geleceğini
+              seçin. Gerisini biz düzenleriz.
             </p>
             <p className="font-body text-sm font-medium text-ink-900">
-              Uygulama yok. Kurulum yok. Kredi kartı istemeden ücretsiz
-              deneyin.
+              Uygulama yok. Kurulum yok. Kredi kartı istemeden ücretsiz deneyin.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
             <Link href="/signup" className={primaryLink}>
-              Kayıt Ol
+              Ücretsiz Deneyin
             </Link>
             <Link href="/pricing" className={secondaryLink}>
               Fiyatları Gör
@@ -109,14 +130,12 @@ export default function LandingPage() {
               strokeLinejoin="round"
             />
           </svg>
-          <div className="w-full max-w-sm self-end overflow-hidden rounded-xl border border-mist-200 bg-white shadow-sm">
-            <div className="relative flex aspect-video items-center justify-center bg-ink-900">
-              <span className="ml-1 h-0 w-0 border-y-[10px] border-l-[16px] border-y-transparent border-l-white" />
-            </div>
-            <div className="px-4 py-3 font-body">
-              <p className="font-display font-semibold">Kadıköy 3+1 Daire</p>
-              <p className="text-sm text-slate-500">2.450.000 ₺</p>
-            </div>
+          <div className="w-full max-w-sm self-end overflow-hidden rounded-xl border border-mist-200 bg-white px-4 py-3 font-body shadow-sm">
+            <p className="font-display font-semibold">Kadıköy 3+1 Daire</p>
+            <p className="text-sm text-slate-500">2.450.000 ₺ · 120 m²</p>
+            <p className="mt-2 text-xs text-terracotta-700">
+              Kadıköy Emlakçılar grubundan
+            </p>
           </div>
         </div>
       </section>
@@ -143,6 +162,38 @@ export default function LandingPage() {
       </section>
 
       <section className="border-t border-mist-200">
+        <div className="mx-auto max-w-6xl px-6 py-20">
+          <div className="grid gap-12 md:grid-cols-2 md:items-center">
+            <div className="flex flex-col gap-4">
+              <h2 className="font-display text-3xl font-bold">İlanınıza reklam videosu</h2>
+              <p className="font-body text-slate-500">
+                Reklam videosu ücretli bir ek hizmettir. Videoyu editörlerimiz
+                hazırlar.
+              </p>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/illustrations/video-upload.svg"
+                alt=""
+                aria-hidden="true"
+                className="h-40 w-full object-contain md:h-56"
+              />
+            </div>
+            <ul className="flex flex-col gap-4">
+              {videoOptions.map((option) => (
+                <li
+                  key={option.title}
+                  className="flex flex-col gap-1 rounded-xl border border-mist-200 bg-white p-5 font-body"
+                >
+                  <h3 className="font-display text-lg font-semibold">{option.title}</h3>
+                  <p className="text-sm text-slate-500">{option.body}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-mist-200">
         <div className="mx-auto max-w-3xl px-6 py-20">
           <h2 className="font-display text-3xl font-bold">Sık Sorulan Sorular</h2>
           <dl className="mt-10 flex flex-col gap-6">
@@ -154,7 +205,21 @@ export default function LandingPage() {
                 <dt className="font-display text-lg font-semibold">
                   {faq.question}
                 </dt>
-                <dd className="font-body text-slate-500">{faq.answer}</dd>
+                <dd className="font-body text-slate-500">
+                  {faq.answer ?? (
+                    <>
+                      Destek ekibimize WhatsApp üzerinden yazın:{" "}
+                      <a
+                        href={SUPPORT_WHATSAPP_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-medium text-terracotta-700 underline"
+                      >
+                        {SUPPORT_WHATSAPP_DISPLAY}
+                      </a>
+                    </>
+                  )}
+                </dd>
               </div>
             ))}
           </dl>

@@ -169,4 +169,38 @@ describe("PricingPage", () => {
     const buyButtons = screen.queryAllByRole("button", { name: /satın al/i });
     expect(buyButtons).toHaveLength(PLANS.length - 1);
   });
+
+  it("her plan kartında madde listesi ve '/ ay' dönem etiketi görünür", async () => {
+    setupSupabase({
+      plans: { data: PLANS, error: null },
+    });
+
+    const jsx = await Page();
+    render(jsx);
+
+    expect(screen.getAllByText("/ ay")).toHaveLength(PLANS.length);
+    const cards = screen.getAllByRole("heading", { level: 2 }).map((h) => h.closest("li"));
+    for (const card of cards) {
+      const items = card?.querySelectorAll("ul > li") ?? [];
+      expect(items.length).toBeGreaterThanOrEqual(3);
+      expect(items.length).toBeLessThanOrEqual(4);
+    }
+  });
+
+  it("plan sayısı 3'ten fazlaysa çökmez ve her kart madde listesi gösterir", async () => {
+    const fourPlans = [
+      ...PLANS,
+      { id: "plan-extra", name: "Kurumsal", price_minor_unit: 99900, sort_order: 4 },
+    ];
+    setupSupabase({
+      plans: { data: fourPlans, error: null },
+    });
+
+    const jsx = await Page();
+    render(jsx);
+
+    expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(4);
+    expect(screen.getAllByText("/ ay")).toHaveLength(4);
+    expect(screen.getByText("Kurumsal")).toBeInTheDocument();
+  });
 });

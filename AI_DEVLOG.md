@@ -3,6 +3,26 @@
 Pipeline adımlarının (atdd/plan/code_diff/verify) kendi dosyalarına yazdığı
 karar/risk/varsayım kayıtlarının aktarımı — yeniden yorumlanmadan, kaynağıyla.
 
+## faz0-vitrin-duzeltme (2026-10-28)
+
+**Risks** (kaynak: atdd.md):
+- Landing metni Faz 1-3'te gelecek özellikleri anlatıyor (henüz kodda yok).
+  Site henüz yayında değil; açılış kontrol listesinde "vaat edilen her özellik
+  canlı mı" maddesi gerekir.
+- Sahte numara ve placeholder plan içerikleri canlıya kaçmamalı (yol-haritasi §6).
+
+**Verify sırasında bulunan ve düzeltilen sorun:** 375px'te hero başlığı 6 satıra
+çıkıyor, "Fiyatları Gör" butonu sabit WhatsApp butonunun altında kalıyordu
+(ölçümle doğrulandı). Mobil başlık `text-4xl`'e indirildi; çakışma kalktı.
+
+**Açık düşük önemli notlar** (kaynak: red_team.json):
+- Mobil çakışma kontrolü sadece manuel tarayıcı ölçümüne dayanıyor, otomatik
+  viewport testi yok.
+- `findHighlightIndex` plan adında `/pro/i` arıyor; plan adları değişirse
+  vurgulu kart kayar.
+- Yasal sayfalardaki `[Şirket bilgileri eklenecek]` için canlıya çıkışı
+  engelleyen otomatik kontrol yok.
+
 ## musteri-sayfalari-tasarim-yenileme (2026-10-27)
 
 **Risks** (kaynak: atdd.md):

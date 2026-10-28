@@ -1,0 +1,54 @@
+{
+  "security_findings": [
+    {
+      "id": "RT-1",
+      "category": "accessibility",
+      "severity": "low",
+      "file": "web/src/components/whatsapp-button.tsx",
+      "line": 4,
+      "summary": "Sabit (fixed) WhatsApp butonu her sayfada sağ altta durur ama çevresindeki içerikle (ör. BuyButton CTA alanı, FAQ son satırı) z-index/çakışma yalnızca manuel tarayıcı testiyle doğrulanmış; otomatik bir regresyon testi (örn. Playwright/viewport snapshot) yok. İleride bir sayfa altına sabit bir CTA/banner eklenirse buton üstüne biner ve fark edilmeyebilir.",
+      "recommendation": "375px ve masaüstü için en azından bir Playwright/axe erişilebilirlik+taşma testi ekleyin; şu an kanıt yalnızca 'elle kontrol edildi' notuna dayanıyor."
+    },
+    {
+      "id": "RT-2",
+      "category": "correctness",
+      "severity": "low",
+      "file": "web/src/app/(marketing)/pricing/page.tsx",
+      "line": 33,
+      "summary": "findHighlightIndex, plan adında 'pro' geçen HERHANGİ bir planı vurgulanan (highlight) kart yapıyor (case-insensitive regex /pro/i). Eğer gerçek DB'de ör. 'Profesyonel Başlangıç' gibi bir plan adı olursa ya da iki plan adında 'pro' geçerse, ilk eşleşen vurgulanır — bu beklenen davranış olabilir ama testlerde sadece tek 'Pro' adlı senaryo var, iki-eşleşme senaryosu test edilmemiş. Küçük risk, çökme yok.",
+      "recommendation": "Mevcut davranış AC-7'yi ihlal etmiyor (madde listesinde 'Pro' kelimesi geçmiyor, sadece plan başlığında DB'den gelen ad var); yine de plan adlarının benzersizliğine güvenen bu eşleştirmeyi bir yorumla belgeleyin."
+    },
+    {
+      "id": "RT-3",
+      "category": "scope/compliance",
+      "severity": "low",
+      "file": "web/src/app/(marketing)/gizlilik/page.tsx",
+      "line": 62,
+      "summary": "Yasal taslak sayfalarda 'Veri sorumlusu: [Şirket bilgileri eklenecek]' placeholder'ı var; bu doğru şekilde taahhüt vermiyor (AC-5'e uygun), ama placeholder metnin köşeli parantez içinde kalması canlıya kaçma riskini taşıyor (AC-5/Risks'te belirtilen 'canlıya kaçmamalı' uyarısıyla aynı kategori).",
+      "recommendation": "Açılış kontrol listesine (yol-haritasi §6'da zaten var) '[Şirket bilgileri eklenecek]' dizesi için bir grep/CI kontrolü eklenmesi önerilir; şu an yalnızca manuel sürece güveniliyor."
+    }
+  ],
+  "approved_points": [
+    "AC-3: web/src/components/whatsapp-button.tsx ve site-footer.tsx'deki tüm dış wa.me linkleri target=\"_blank\" rel=\"noopener noreferrer\" ile açılıyor; tabnabbing riski kapalı. Erişilebilir ad tam olarak 'WhatsApp'tan destek alın' (aria-label) ve test bunu doğruluyor.",
+    "AC-3: Numara TEK bir sabitte (web/src/lib/contact.ts) tanımlı, açıkça sahte (905000000000) ve üstünde 'açılıştan önce değiştirilmeli' yorumu var — gereksinime tam uyum.",
+    "AC-2: Landing'deki video bölümü (page.tsx satır ~164-194) fiyat belirtmiyor, 'otomatik/yapay zekâ ile üretilir' demiyor, 'editörlerimiz hazırlar' diyor — yapay zekâ/otomasyon iması yok.",
+    "AC-5: gizlilik/kvkk/kullanim-sartlari sayfalarının hiçbirinde uydurma şirket adı, adres, vergi no veya hukuki taahhüt (örn. 'KVKK'ya tam uyumluyuz' gibi kesin ifade) yok; hepsi 'Taslak' uyarısıyla başlıyor ve veri sorumlusu alanı açıkça placeholder.",
+    "AC-7: pricing/page.tsx içindeki featuresFor(index) fonksiyonu PLAN_FEATURES[index] ?? PLAN_FEATURES[son] ile plan sayısı listeden fazla olduğunda son listeyi tekrar kullanıyor, dizi sınırı dışına çıkmıyor; page.test.tsx'teki 4 planlı test bunu doğruluyor (çökme yok).",
+    "AC-7: Madde listelerinde (PLAN_FEATURES) 'Pro', 'Free', 'Başlangıç' kelimeleri geçmiyor; yalnızca plan başlığı (DB'den gelen ad) bu kelimeleri içerebilir, bu AC'nin kapsamı dışında ve testteki getByText(/Pro/) çakışması bu şekilde çözülmüş.",
+    "AC-8: git status'a göre /agent, /admin, API route, DB migration veya login/signup form mantığı dosyaları arasında değişiklik yok; sadece (marketing) grubu ve paylaşılan bileşenler dokunulmuş.",
+    "contact.ts tek kaynak (single source of truth) olarak doğru soyutlanmış; CAVEMAN açısından gereksiz bir abstraction yok, doğrudan string sabitleri."
+  ],
+  "overall_assessment": "AC-1..AC-8 kodda karşılanmış görünüyor: landing metni yeni ürünü (WA grup bağlama + filtrelenebilir akış + bildirim) anlatıyor, eski 'videolu sayfa' vaadi kaldırılmış; video bölümü ücretli ek hizmet olarak ayrıca sunuluyor ve otomasyon/AI iması yok; WhatsApp destek butonu tüm (marketing) sayfalarında layout.tsx üzerinden tutarlı şekilde render ediliyor, tek sabitten besleniyor, dış link güvenliği (noopener noreferrer) doğru; footer ve üç yasal taslak sayfa (gizlilik/kvkk/kullanim-sartlari) gereksinimlere uygun, uydurma hukuki taahhüt yok; fiyat kartlarında 'Aylık' etiketi (/ay) ve 3-4 maddelik dinamik-güvenli (fallback'li) özellik listesi var, plan sayısı değişince çökmüyor (test ile kanıtlı); kapsam dışı modüllere dokunulmamış. Bulunan 3 düşük önemli gözlem engelleyici değil, iyileştirme önerisi niteliğinde.",
+  "verdict": "approve",
+  "ready_to_commit": {
+    "atdd_satisfied": true,
+    "tests_passed": true,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": true,
+    "security_acceptable": true,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": true,
+    "compliance_clean": true
+  }
+}
