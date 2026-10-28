@@ -1,0 +1,63 @@
+{
+  "task": "faz2-ilan-akisi-bildirim",
+  "reviewed_at": "2026-10-28T20:30:00+03:00",
+  "summary": "Migration, filtre/sorgu/format katmanı ve testler ATDD ile uyumlu; AC-S1/S3/S4/S5/S17 doğru uygulanmış. Tek orta bulgu: sayaç sorgusunda 5 sn timeout yok. Orkestratör notu: alt-ajanın 'agents.subscription_status/current_period_end PATCH ile değiştirilebilir' iddiası YANLIŞ POZİTİF — agents tablosunda bu kolonlar yok (0001_init.sql:7-12; abonelik ayrı subscriptions tablosunda), bulgu çıkarıldı.",
+  "findings": [
+    {
+      "severity": "medium",
+      "category": "reliability",
+      "file": "web/src/lib/listings-feed/unread.ts:14-31",
+      "issue": "getUnreadCount sorgusunda query.ts'deki gibi .abortSignal(AbortSignal.timeout(5000)) yok; DB yavaşlarsa server action ve sayfa render'ı asılı kalabilir.",
+      "better_approach": "query.ts'deki timeout sabitini kullanıp aynı abortSignal'i uygula; timeout → null + log.",
+      "reason": "atdd.md Davranış Sözleşmesi #6 ve AC-15 timeout'ta son değerin korunmasını, Benchmark sayaç <150ms'yi istiyor."
+    },
+    {
+      "severity": "low",
+      "category": "security",
+      "file": "supabase/migrations/0016_listings_feed_notifications.sql:78",
+      "issue": "mark_listings_seen() için 'revoke all ... from public' yok; anon çağırabiliyor (canlıda doğrulandı: 200 + 0).",
+      "better_approach": "0002 desenindeki gibi grant'ten önce revoke ekleyen küçük bir 0017 migration'ı.",
+      "reason": "auth.uid() null → 0 satır, zararsız; savunma derinliği ve proje deseniyle tutarlılık."
+    },
+    {
+      "severity": "low",
+      "category": "performance",
+      "file": "web/src/app/agent/dashboard/page.tsx:45-56",
+      "issue": "Seçenek, ilan, agent ve sayaç sorguları sırayla await ediliyor; agent+sayaç ilan sorgusuyla paralel olabilir.",
+      "better_approach": "Bağımsız sorguları Promise.all ile çalıştır.",
+      "reason": "atdd.md p95 <800ms hedefi; 4 sıralı round-trip bütçeyi zorlayabilir. Ölçülmedi."
+    },
+    {
+      "severity": "low",
+      "category": "maintainability",
+      "file": "web/src/app/agent/dashboard/actions.ts:14-35",
+      "issue": "Abonelik erişim kuralı page.tsx ve actions.ts'de iki kopya; biri değişip diğeri unutulursa AC-S3 sessizce bozulur.",
+      "better_approach": "Tek bir paylaşılan erişim kontrol fonksiyonu.",
+      "reason": "AC-S3 her iki yolda da aynı kuralı gerektiriyor."
+    }
+  ],
+  "strengths": [
+    "filters.ts: il/ilçe/grup yalnız allowlist'ten, sayılar doğrulanıyor; enjeksiyon girdileri düşüyor, .or()/.filter() hiç yok (AC-S4).",
+    "query.ts: yalnız eq/gte/lte/in, sayfa 1..1000, limit sabit 20 (AC-S5).",
+    "mark_listings_seen hedef id almıyor; 0 satır başarı sayılmıyor ve loglanıyor (AC-S1, AC-17).",
+    "down migration approve_raw_listing'i 0002 hâline birebir döndürüyor."
+  ],
+  "risks": [
+    "Sayaç sorgusunda timeout yok.",
+    "Görsel/E2E/375px doğrulanmadı (verify gate 7/8/9/12 INCONCLUSIVE).",
+    "Admin onay kopyası canlı veriyle denenmedi (listings boş)."
+  ],
+  "caveman_review": { "complexity": "low", "unnecessary_files": 0, "unnecessary_helpers": 0, "unnecessary_abstractions": 0 },
+  "scope_review": { "matches_atdd": true, "scope_expansion": false },
+  "ready_to_commit": {
+    "atdd_satisfied": true,
+    "tests_passed": true,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": true,
+    "security_acceptable": true,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": true
+  },
+  "verdict": "approve-with-changes"
+}

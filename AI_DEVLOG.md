@@ -354,3 +354,15 @@ yaratırdı): `BAILEYS_WEBHOOK_SECRET` (zorunlu, boşsa süreç başlamaz),
 scraper'ın kendi `.venv`'inde çalıştırıldı, 13/14 PASS. `security-scan`
 skill'i değişen dosyalara karşı çalıştırıldı — `secrets: PASS`,
 `python_sast: PASS`.
+
+## faz2-ilan-akisi-bildirim (EML-85) — 2026-10-28
+
+**Kararlar** (kaynak: plan.md): Kaynak grup adı join yerine `listings.source_group_name`'e kopyalandı — `raw_listings` RLS'i yalnız admine açık, abone join yapamaz. "Görüldü" için `agents.listings_seen_at` + `security invoker` `mark_listings_seen()` RPC'si; yeni yetki yüzeyi açmadan mevcut `agents_self_update` policy'sine dayanıyor.
+
+**Riskler** (kaynak: atdd.md, plan.md): Distinct il/ilçe/grup seçenekleri `limit(1000)` ile çekiliyor, havuz büyüyünce eksik seçenek kalır. "5+" oda eşleşmesi sabit listeye bağlı. Kabul edilen: seen_at için audit log yok, polling için ayrı rate limit yok.
+
+**Review'da bulunan ve düzeltilen** (kaynak: red_team.json): Sayaç sorgusunda 5 sn timeout yoktu (eklendi). `mark_listings_seen()` anon'a açıktı — `revoke ... from public` tek başına yetmedi, Supabase anon'a ayrı grant veriyor; 0017'de `from anon` da eklendi, canlıda 401 doğrulandı. Alt-ajanın "agents üzerinden abonelik alanları değiştirilebilir" bulgusu yanlış pozitifti (agents'ta bu kolonlar yok).
+
+**Migration** (kaynak: plan.md): 0016 ve 0017 canlıya `db query --linked -f` ile kullanıcı onayıyla uygulandı. Rollback: `0016_...down.sql`.
+
+**Doğrulanmayan** (kaynak: verify_report.md): Görsel/E2E/375px ve admin onay kopyası canlı veriyle denenmedi (aboneli test hesabı yok, canlıda ilan yok).

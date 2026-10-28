@@ -1,7 +1,16 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { Alert } from "@/components/ui/alert";
+import { parseFeedFilters, type SearchParams } from "@/lib/listings-feed/filters";
+import { fetchFeed, fetchFilterOptions } from "@/lib/listings-feed/query";
+import { getUnreadCount } from "@/lib/listings-feed/unread";
 import { createClient } from "@/lib/supabase/server";
+
+import { FeedFilters } from "./feed-filters";
+import { ListingCard } from "./listing-card";
+import { NotificationBell } from "./notification-bell";
 
 // Next.js 16 Cache Components: cookies() (Supabase session) her istekte
 // değişebilir, bu route segment'i prerender edilemez — statik build'i
@@ -11,17 +20,6 @@ export const instant = false;
 type SubscriptionRow = {
   status: string;
   current_period_end: string | null;
-};
-
-type ListingRow = {
-  id: string;
-  title: string;
-  price: number;
-  currency: string;
-  rooms: string | null;
-  area_m2: number | null;
-  city: string;
-  district: string | null;
 };
 
 const BADGE_LABELS: Record<string, string> = {
@@ -36,7 +34,36 @@ function badgeLabel(status: string | null): string {
   return BADGE_LABELS[status] ?? `Abonelik: ${status}`;
 }
 
-export default async function AgentDashboardPage() {
+// Yalnız hasAccess sonrası çağrılır. Seçenekler, ilanlar ve sayaç sırayla
+// awaited edilir (aynı Supabase builder'ı üzerinde çakışmasın diye).
+async function loadListings(
+  supabase: SupabaseClient,
+  params: SearchParams,
+  userId: string,
+) {
+  const rawIl = typeof params.il === "string" ? params.il : null;
+  const options = await fetchFilterOptions(supabase, rawIl);
+  const { filters, hadInvalid } = parseFeedFilters(params, options);
+  const feed = await fetchFeed(supabase, filters);
+
+  const { data: agent } = await supabase
+    .from("agents")
+    .select("listings_seen_at")
+    .eq("id", userId)
+    .maybeSingle();
+  const seenAt =
+    (agent as { listings_seen_at: string | null } | null)?.listings_seen_at ?? null;
+  const unread = await getUnreadCount(supabase, userId, seenAt);
+
+  return { options, filters, hadInvalid, feed, unread };
+}
+
+export default async function AgentDashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
+  const params = await searchParams;
   const supabase = await createClient();
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) {
@@ -90,78 +117,83 @@ export default async function AgentDashboardPage() {
     sub.current_period_end !== null &&
     new Date(sub.current_period_end) > new Date();
 
-  let listings: ListingRow[] = [];
-  let listingsError = false;
-  if (hasAccess) {
-    const { data, error } = await supabase
-      .from("listings")
-      .select("id,title,price,currency,rooms,area_m2,city,district")
-      .order("created_at", { ascending: false })
-      .limit(20);
-
-    if (error) {
-      listingsError = true;
-    } else {
-      listings = (data as ListingRow[] | null) ?? [];
-    }
-  }
+  const listings = hasAccess
+    ? await loadListings(supabase, params, auth.user.id)
+    : null;
+  const filters = listings?.filters;
+  const isFiltered =
+    filters !== undefined &&
+    (filters.grup !== null ||
+      filters.fiyatMin !== null ||
+      filters.fiyatMax !== null ||
+      filters.oda !== null ||
+      filters.il !== null ||
+      filters.ilce !== null);
+  const now = new Date();
 
   return (
-    <main className="mx-auto max-w-2xl p-8">
-      <h1 className="text-xl font-semibold">Emlakçı Paneli</h1>
-      <Link href="/agent/videos" className="mt-2 inline-block underline">
-        Video siparişlerim
-      </Link>
-      <p className="mt-2 inline-block rounded border px-2 py-1 text-sm text-zinc-700 dark:text-zinc-300">
+    <main className="mx-auto max-w-4xl bg-fog-50 p-4 md:p-8">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-xl font-semibold text-ink-900">Emlakçı Paneli</h1>
+          <Link href="/agent/videos" className="mt-2 inline-block text-terracotta-700 underline">
+            Video siparişlerim
+          </Link>
+        </div>
+        {listings && <NotificationBell initialCount={listings.unread ?? 0} />}
+      </div>
+      <p className="mt-2 inline-block rounded border border-mist-200 px-2 py-1 text-sm text-slate-500">
         {badge}
       </p>
 
       {!hasAccess && (
-        <div className="mt-6 text-zinc-600 dark:text-zinc-400">
+        <div className="mt-6 text-slate-500">
           <p>İlanları görmek için aktif abonelik gerekir.</p>
-          <Link href="/account/subscription" className="mt-2 inline-block underline">
+          <Link href="/account/subscription" className="mt-2 inline-block text-terracotta-700 underline">
             Abone olun
           </Link>
         </div>
       )}
 
-      {hasAccess && listingsError && (
-        <p className="mt-6 text-red-600">İlanlar yüklenemedi.</p>
-      )}
+      {listings && (
+        <>
+          <FeedFilters options={listings.options} filters={listings.filters} />
 
-      {hasAccess && !listingsError && listings.length === 0 && (
-        <p className="mt-6 text-zinc-600 dark:text-zinc-400">
-          Şu an gösterilecek ilan yok.
-        </p>
-      )}
+          {listings.hadInvalid && (
+            <p className="mt-3 text-sm text-slate-500">
+              Bazı filtreler geçersizdi, uygulanmadı
+            </p>
+          )}
 
-      {hasAccess && !listingsError && listings.length > 0 && (
-        <ul className="mt-6">
-          {listings.map((listing) => (
-            <li key={listing.id} className="border-b py-3">
-              <h2 className="font-medium">{listing.title}</h2>
-              <p className="text-sm">
-                {new Intl.NumberFormat("tr-TR").format(listing.price)}{" "}
-                {listing.currency}
+          {!listings.feed.ok && (
+            <div className="mt-6">
+              <Alert variant="error">İlanlar yüklenemedi.</Alert>
+            </div>
+          )}
+
+          {listings.feed.ok && listings.feed.items.length === 0 && (
+            <div className="mt-6 text-slate-500">
+              <p>
+                {isFiltered
+                  ? "Filtreye uyan ilan yok."
+                  : "Şu an gösterilecek ilan yok."}
               </p>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                {listing.district
-                  ? `${listing.city} / ${listing.district}`
-                  : listing.city}
-              </p>
-              {(listing.rooms || listing.area_m2 !== null) && (
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                  {[
-                    listing.rooms,
-                    listing.area_m2 !== null ? `${listing.area_m2} m²` : null,
-                  ]
-                    .filter(Boolean)
-                    .join(" · ")}
-                </p>
+              {isFiltered && (
+                <Link href="/agent/dashboard" className="mt-2 inline-block text-terracotta-700 underline">
+                  Filtreleri temizle
+                </Link>
               )}
-            </li>
-          ))}
-        </ul>
+            </div>
+          )}
+
+          {listings.feed.ok && listings.feed.items.length > 0 && (
+            <ul className="mt-6 grid gap-3 md:grid-cols-2">
+              {listings.feed.items.map((listing) => (
+                <ListingCard key={listing.id} listing={listing} now={now} />
+              ))}
+            </ul>
+          )}
+        </>
       )}
     </main>
   );
