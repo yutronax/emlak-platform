@@ -195,3 +195,30 @@ adımlara/insana devredilmiş durumda) elendi, eyleme dönüştürülmedi.
 2. **Henüz kalıp sayılmayan:** `plans-rls-anon-select-izni`'nin "yazma testi
    ortam koruması yok" reliability bulgusu tek örnek — üçüncü bir tekrar
    gelmeden yeni bir madde EKLENMEDİ, izleniyor.
+
+## Koşum 4 — 2026-10-28
+Görev sayısı: 23 (Koşum 3'teki 18 + yeni 5; pencere `--since-tasks 6`: admin-video-yukleme-paneli, faz-b-scraper-guvenilirlik-sertlestirme, faz-c-scraper-ileri-dayaniklilik, plans-rls-anon-select-izni, faz2-ilan-akisi-bildirim + 1 önceki)
+Bulgu: 16 (6 medium, 10 low; high/critical yok)
+
+| Kategori | Bulgu | Görev |
+|---|---|---|
+| security | 4 | 3 |
+| test-gap | 3 | 2 |
+| risk | 2 | 2 |
+| reliability | 2 | 2 |
+| architecture | 2 | 2 |
+| scope / performance / maintainability | 1'er | 1 |
+
+### Tekrar eden
+- **security (3 görev)** — en tekrar eden. faz2'de somut kök neden bulundu: Supabase'de `revoke ... from public` bir fonksiyonu anon'a kapatmıyor, çünkü Supabase `anon`/`authenticated` rollerine ayrıca doğrudan grant veriyor. Canlı kontrol (2026-10-28, `has_function_privilege('anon', ...)`): `approve_raw_listing` ve `reject_raw_listing` 0002'deki `revoke from public`'e rağmen anon'a **açık**. `security invoker` + admin RLS yüzünden etki düşük (anon'un raw_listings'te satırı görmemesi → "bulunamadı" hatası), ama 0002'nin niyeti sağlanmamış.
+- test-gap / risk / reliability / architecture: her biri 2 görev, farklı kök nedenler — henüz kalıp değil.
+
+### Sıcak dosya
+Yok — en çok bulgu alan dosyalar hep tek görevden.
+
+### Verify gate notu
+`AI code review` / `İnsan onayı` PENDING — tasarım gereği, elendi (Koşum 1-3 ile aynı).
+
+### Önerilen somut eylemler
+1. **`supabase-check` skill'ine madde:** Migration yeni bir SQL fonksiyonu tanımlıyorsa, canlıda `has_function_privilege('anon', '<fn>()', 'execute')` sorgulanır; fonksiyon anon'a kapalı olmalıysa sonuç `false` değilse gate FAIL. `revoke ... from public` tek başına kanıt sayılmaz, `from anon` (gerekirse `from authenticated`) açıkça yazılmalı. Gerekçe: faz2'de ve 0002'de aynı varsayım, ikisi de canlıda yanlış çıktı.
+2. **Takip görevi (ayrı iş):** `approve_raw_listing` / `reject_raw_listing` için `revoke execute ... from anon` migration'ı (0018). Düşük öncelik — RLS zaten koruyor.
