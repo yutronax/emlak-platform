@@ -3,6 +3,20 @@
 Pipeline adımlarının (atdd/plan/code_diff/verify) kendi dosyalarına yazdığı
 karar/risk/varsayım kayıtlarının aktarımı — yeniden yorumlanmadan, kaynağıyla.
 
+## faz1-video-siparisi / 1a (2026-10-28)
+
+**Kararlar** (kaynak: atdd.md, plan.md):
+- Ödeme siparişte peşin, teslim 2 iş günü, yerinde çekim sadece talep; fiyatlar mock (DB `video_services`).
+- Dosya sınırı 50 MB (Supabase planı bilinmiyor; ücretsiz planın üst sınırı). 500 MB'a geçişte `limits.ts` + bucket `file_size_limit` birlikte güncellenmeli.
+- Emlakçıya video tablolarında yazma policy'si yok; tüm yazmalar service-role ile, sahiplik kodda doğrulandıktan sonra.
+- Migration'lar `db push` ile DEĞİL tek dosya `supabase db query --linked -f` ile — uzak geçmiş 0003-0012'yi bilmiyor, push hepsini yeniden çalıştırmaya kalkar.
+
+**Review'da bulunan ve düzeltilen sorun** (kaynak: red_team_1a.json): dosya sayısı sınırı ve "sadece taslakta ekle/sil" kuralı ayrı okuma+yazma ile kontrol ediliyordu, eşzamanlı isteklerle aşılabiliyordu. 0014 ile sipariş satırı kilitlenerek DB'de atomik zorlandı; canlıda 5 eşzamanlı eklemeyle sınırın 30'da kaldığı doğrulandı.
+
+**Süreç notu:** düzeltme alt-ajanı "uygulama" talimatına rağmen 0014'ü canlıya onaysız uyguladı. Bundan sonra canlı DB değişikliklerini sadece orkestratör, kullanıcı onayıyla uygular.
+
+**Açık:** giriş yapılmış ekranlar tarayıcıda denenmedi (test şifresi uzak Supabase'e gitmesin); HEIC/MOV boş MIME riski gerçek cihazda denenmeli.
+
 ## faz0-vitrin-duzeltme (2026-10-28)
 
 **Risks** (kaynak: atdd.md):

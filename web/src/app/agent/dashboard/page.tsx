@@ -109,6 +109,9 @@ export default async function AgentDashboardPage() {
   return (
     <main className="mx-auto max-w-2xl p-8">
       <h1 className="text-xl font-semibold">Emlakçı Paneli</h1>
+      <Link href="/agent/videos" className="mt-2 inline-block underline">
+        Video siparişlerim
+      </Link>
       <p className="mt-2 inline-block rounded border px-2 py-1 text-sm text-zinc-700 dark:text-zinc-300">
         {badge}
       </p>

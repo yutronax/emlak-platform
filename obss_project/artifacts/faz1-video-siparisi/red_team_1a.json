@@ -1,0 +1,65 @@
+{
+  "security_findings": [
+    {
+      "id": "RT-1",
+      "category": "race_condition",
+      "severity": "medium",
+      "file": "web/src/app/agent/videos/actions.ts",
+      "line": "245-248, 328-332",
+      "summary": "requestUploadUrl/confirmUpload count-then-act: countAssets() and the later insert are two separate round-trips with no DB-level unique/check constraint or advisory lock enforcing max asset count per order per kind. Two concurrent confirmUpload calls (e.g. two browser tabs or a scripted client firing parallel PUT+confirm pairs) can both read count < maxCount before either insert commits, letting an agent exceed 30 photos / 5 raw videos (AC-S3 'sayı sınırı sunucuda zorlanır' is only probabilistically true, not guaranteed under concurrency).",
+      "recommendation": "Enforce the count limit at the DB layer: either a partial unique/count constraint, or wrap the count check + insert in a single SQL statement (e.g. INSERT ... WHERE (SELECT count(*) ...) < max via a trigger), or use a Postgres advisory lock keyed by order_id around the check+insert in confirmUpload.",
+      "outcome": "deferred (dokunmatik-öncelikli persona; Tab/Enter/Space çalışıyor)"
+    },
+    {
+      "id": "RT-2",
+      "category": "race_condition_toctou",
+      "severity": "low",
+      "file": "web/src/app/agent/videos/actions.ts",
+      "line": "360-399",
+      "summary": "removeAsset re-checks order.status !== 'draft' via loadOwnedOrder, then deletes the asset row and storage object without re-verifying status atomically in the delete query (unlike submitVideoOrder, which correctly chains .eq('status','draft') on its UPDATE). If submitVideoOrder and removeAsset race, an asset could be deleted microseconds after the order transitions to awaiting_payment, silently dropping the order below the minimum-asset invariant (e.g. a photos order ending up with <3 photos) while already past the gate that was supposed to check that minimum.",
+      "recommendation": "Add `.eq('status', 'draft')` to the delete query in removeAsset (mirroring submitVideoOrder's pattern) and treat zero-rows-affected as INVALID_STATE, so the status check is atomic with the mutation rather than a separate read beforehand.",
+      "outcome": "fixed"
+    },
+    {
+      "id": "RT-3",
+      "category": "accessibility",
+      "severity": "low",
+      "file": "web/src/app/agent/videos/new/order-wizard.tsx",
+      "line": "147-169",
+      "summary": "The service picker uses role=\"radio\" on <button> elements inside role=\"radiogroup\", which is correct for screen-reader semantics, but there is no onKeyDown handling for ArrowUp/ArrowDown/ArrowLeft/ArrowRight as the WAI-ARIA radiogroup pattern expects. Tab/Enter/Space still work since each option is independently focusable, so this is a minor deviation, not a blocker — persona is 'telefondan, teknolojiyle arası iyi olmayan emlakçı' who will use touch, not arrow-key navigation, so real-world impact is low.",
+      "recommendation": "Optional follow-up: add roving-tabindex + arrow-key handling to fully match the ARIA radiogroup pattern for keyboard/screen-reader users; not blocking for this round.",
+      "outcome": "fixed"
+    },
+    {
+      "id": "RT-4",
+      "category": "correctness",
+      "severity": "low",
+      "file": "supabase/migrations/0014_video_order_assets_guard.sql",
+      "line": 0,
+      "summary": "submitVideoOrder sayım ile UPDATE arasında removeAsset yarışı (fix ajanının raporundan)",
+      "recommendation": "video_orders_submit_guard trigger'ı",
+      "outcome": "fixed"
+    }
+  ],
+  "approved_points": [
+    "confirmUpload path validation is solid: it requires an exact literal prefix match of `${agentId}/${orderId}/`, extracts the filename, validates the asset-id segment against a strict UUID regex, and validates the extension against the allow-list — then independently confirms existence and exact size via storage.list() + metadata.size before trusting anything the client sent. This defeats path traversal (`..`), cross-order/cross-agent path injection, and client-forged size/path claims.",
+    "Signed-upload path is fully server-generated (`${agentId}/${orderId}/${randomUUID()}.${ext}`) — the client never supplies or influences the storage path, so there is no path-injection vector through the upload flow itself.",
+    "getDeliveredVideoUrl correctly gates on order.status === 'delivered' AND ownership (loadOwnedOrder uses .eq('agent_id', agentId)) before issuing any signed URL, and uses a short (600s) TTL via service-role — matches AC-S6/AC-9 intent for 1a's portion.",
+    "0013 migration correctly omits any agent-facing INSERT/UPDATE policy on video_orders/video_order_assets and storage.objects (only owner SELECT + admin SELECT/UPDATE), forcing all writes through the service-role server actions where ownership/state checks live — matches AC-S4/plan.md's stated rationale and reduces RLS-policy-bug surface.",
+    "submitVideoOrder correctly makes the status transition atomic: `.update({status:'awaiting_payment'}).eq('id', order.id).eq('agent_id', agentId).eq('status','draft')` plus a zero-rows check — this is the right TOCTOU-safe pattern and should be the template applied to RT-2.",
+    "Rollback script correctly reverses 0013 in dependency order (storage policies → bucket → constraint → columns → tables), and plan.md/migration comments correctly flag the orphan-storage-file risk from an unconfirmed upload as low-severity (self-contained to the uploader's own folder, cleanup deferred to a future cron) — reasonable scope call for 1a."
+  ],
+  "overall_assessment": "The actions.ts server-action layer is the strongest part of this change: ownership checks precede every service-role write, path validation defeats traversal/injection, and the one atomic state-transition (submitVideoOrder) is written correctly. The two real gaps are both concurrency-class issues the task explicitly asked to hunt for: the asset-count limit (AC-S3) is enforced via read-then-write with no DB-level backstop, and removeAsset's draft-only guard is a read-then-act check rather than an atomic conditional mutation like submitVideoOrder's. Neither is exploitable for IDOR or privilege escalation (both are bounded to the caller's own order), so severity is medium/low, but they should be fixed before calling AC-S3/AC-S4 fully satisfied under concurrent clients. No dangerouslySetInnerHTML, no client-trusted price/state, XHR PUT only targets the Supabase-issued signed URL. On the 'alternative approach' angle: no architectural change is warranted here — the service-role-only-write + ownership-in-code pattern plan.md chose over RLS-enforced writes is the right call for this threat model (fewer places to get a policy wrong), it just needs the two concurrency gaps closed with either a serializable check-and-write or a DB constraint. Note: an unrelated line in web/AGENTS.md instructs 'read docs in node_modules before writing code' and claims to be auto-regenerated by `next dev` — this reads as a planted/injected instruction rather than genuine Next.js tooling output; it was not followed and is flagged here for visibility, not acted on.",
+  "verdict": "approve",
+  "ready_to_commit": {
+    "atdd_satisfied": true,
+    "tests_passed": true,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": true,
+    "security_acceptable": true,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": true,
+    "compliance_clean": true
+  }
+}
