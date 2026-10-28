@@ -20,7 +20,7 @@ vi.mock("next/navigation", () => ({
   }),
 }));
 
-type SignInResult = { error: { message: string } | null };
+type SignInResult = { error: { message: string; code?: string } | null };
 type UserResult = { data: { user: { id: string; user_metadata?: Record<string, unknown> } | null } };
 type AgentResult = { data: { is_admin: boolean } | null; error: { message: string } | null };
 
@@ -29,7 +29,8 @@ function setupSupabase(signInResult: SignInResult, userResult: UserResult, agent
   const signInWithPassword = vi.fn().mockResolvedValue(signInResult);
   const getUser = vi.fn().mockResolvedValue(userResult);
 
-  const supabase: Record<string, unknown> = { auth: { signInWithPassword, getUser } };
+  const signOut = vi.fn().mockResolvedValue({ error: null });
+  const supabase: Record<string, unknown> = { auth: { signInWithPassword, getUser, signOut } };
 
   let maybeSingle: ReturnType<typeof vi.fn> | undefined;
   let agentsChain: Record<string, unknown> | undefined;
@@ -49,7 +50,7 @@ function setupSupabase(signInResult: SignInResult, userResult: UserResult, agent
   }
 
   vi.mocked(createClient).mockResolvedValue(supabase as never);
-  return { supabase, signInWithPassword, getUser, from, agentsChain, maybeSingle };
+  return { supabase, signInWithPassword, getUser, signOut, from, agentsChain, maybeSingle };
 }
 
 function makeFormData(fields: Record<string, string>) {
@@ -179,6 +180,30 @@ describe("login", () => {
     expect(result).toEqual({ error: "Giriş başarısız: e-posta veya şifre hatalı." });
     expect(ensureAgentRow).not.toHaveBeenCalled();
     expect(getUser).not.toHaveBeenCalled();
+    expect(redirect).not.toHaveBeenCalled();
+  });
+
+  it("e-posta onaylanmamışsa şifre hatası yerine onay linkine yönlendiren mesaj döner", async () => {
+    setupSupabase({ error: { message: "Email not confirmed", code: "email_not_confirmed" } }, { data: { user: null } });
+
+    const result = await login(makeFormData({ email: "test@example.com", password: "secret" }));
+
+    expect(result).toEqual({ error: expect.stringContaining("henüz onaylanmadı") });
+    expect(redirect).not.toHaveBeenCalled();
+  });
+
+  it("emlakçı kaydı oluşturulamazsa oturum kapatılır, hata gösterilir ve panele yönlendirilmez", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const { signOut } = setupSupabase(
+      { error: null },
+      { data: { user: { id: "user-1", user_metadata: { company_name: "Acme Emlak" } } } },
+    );
+    vi.mocked(ensureAgentRow).mockRejectedValueOnce({ code: "42501", message: "row-level security" });
+
+    const result = await login(makeFormData({ email: "test@example.com", password: "secret" }));
+
+    expect(result).toEqual({ error: expect.stringContaining("Hesabınız hazırlanırken") });
+    expect(signOut).toHaveBeenCalled();
     expect(redirect).not.toHaveBeenCalled();
   });
 });

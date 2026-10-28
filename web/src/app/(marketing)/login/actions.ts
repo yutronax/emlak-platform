@@ -17,6 +17,12 @@ export async function login(formData: FormData): Promise<{ error: string } | nev
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
+    if ((error as { code?: string }).code === "email_not_confirmed") {
+      return {
+        error:
+          "E-posta adresiniz henüz onaylanmadı. Kayıt olurken gelen e-postadaki onay linkine tıklayın (spam klasörüne de bakın).",
+      };
+    }
     return { error: "Giriş başarısız: e-posta veya şifre hatalı." };
   }
 
@@ -28,7 +34,12 @@ export async function login(formData: FormData): Promise<{ error: string } | nev
       try {
         await ensureAgentRow(supabase, userData.user.id, companyName);
       } catch (err) {
+        // Emlakçı kaydı olmadan panel ve siparişler çalışmaz; yarım hesapla içeri alma.
         console.error("login: ensureAgentRow başarısız", err);
+        await supabase.auth.signOut();
+        return {
+          error: "Hesabınız hazırlanırken bir sorun oluştu. Lütfen tekrar deneyin; sorun sürerse WhatsApp'tan bize yazın.",
+        };
       }
     }
 
