@@ -105,6 +105,48 @@ export default async function AgentDashboardPage({
     }
   }
 
+  // AC-6: abonelik hiç yoksa ve deneme daha önce açılmadıysa start_trial() bir kez dener.
+  let trialFailed = false;
+  if (!subError && sub === null) {
+    const { data: agent, error: agentError } = await supabase
+      .from("agents")
+      .select("trial_started_at")
+      .eq("id", auth.user.id)
+      .maybeSingle();
+    const trialStartedAt =
+      (agent as { trial_started_at: string | null } | null)?.trial_started_at ?? null;
+
+    if (agentError) {
+      trialFailed = true;
+      console.error("trial_create_failed", { agent_id: auth.user.id, reason: "agent_read_failed" });
+    } else if (trialStartedAt === null) {
+      const { data: started, error: rpcError } = await supabase.rpc("start_trial");
+      if (rpcError) {
+        trialFailed = true;
+        console.error("trial_create_failed", {
+          agent_id: auth.user.id,
+          error_code: rpcError.code ?? "unknown",
+        });
+      } else if (started === true) {
+        const created = await supabase
+          .from("subscriptions")
+          .select("status, current_period_end")
+          .eq("agent_id", auth.user.id)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        if (created.error) {
+          subError = true;
+        } else {
+          sub = (created.data as SubscriptionRow | null) ?? null;
+        }
+      } else {
+        trialFailed = true;
+        console.error("trial_create_failed", { agent_id: auth.user.id, reason: "no_row" });
+      }
+    }
+  }
+
   const badge = subError
     ? "Abonelik durumu yüklenemedi"
     : badgeLabel(sub?.status ?? null);
@@ -130,6 +172,8 @@ export default async function AgentDashboardPage({
       filters.il !== null ||
       filters.ilce !== null);
   const now = new Date();
+  // Şifre yenileme sonrası yönlendirme işareti (/sifre-yenile).
+  const passwordUpdated = params.password_updated === "1";
 
   return (
     <main className="mx-auto max-w-4xl bg-fog-50 p-4 md:p-8">
@@ -145,6 +189,23 @@ export default async function AgentDashboardPage({
       <p className="mt-2 inline-block rounded border border-mist-200 px-2 py-1 text-sm text-slate-500">
         {badge}
       </p>
+
+      {passwordUpdated && (
+        <div className="mt-6">
+          <Alert variant="success">Şifreniz güncellendi.</Alert>
+        </div>
+      )}
+
+      {trialFailed && (
+        <>
+          <div className="mt-6">
+            <Alert variant="error">Denemeniz başlatılamadı, destekle iletişime geçin</Alert>
+          </div>
+          <Link href="/pricing" className="mt-2 inline-block text-terracotta-700 underline">
+            Fiyatları gör
+          </Link>
+        </>
+      )}
 
       {!hasAccess && (
         <div className="mt-6 text-slate-500">

@@ -4,13 +4,14 @@ import { useState } from "react";
 
 import { Alert } from "@/components/ui/alert";
 
-type BuyButtonVariant = "primary" | "inverse";
+type BuyButtonVariant = "primary" | "secondary" | "inverse";
 
 const baseClass =
   "w-full rounded-md px-4 py-2 text-sm font-medium disabled:opacity-50";
 
 const variantClass: Record<BuyButtonVariant, string> = {
   primary: "bg-terracotta-600 text-white hover:bg-terracotta-700",
+  secondary: "border border-ink-900 bg-transparent text-ink-900 hover:bg-mist-200",
   inverse: "bg-white text-ink-900 hover:bg-mist-200",
 };
 
@@ -23,9 +24,11 @@ function messageForStatus(status: number): string {
 
 export function BuyButton({
   planId,
+  label,
   variant = "primary",
 }: {
   planId: string;
+  label: string;
   variant?: BuyButtonVariant;
 }) {
   const [pending, setPending] = useState(false);
@@ -63,7 +66,7 @@ export function BuyButton({
         disabled={pending}
         className={`${baseClass} ${variantClass[variant]}`}
       >
-        Satın Al
+        {label}
       </button>
       {error && <Alert variant="error">{error}</Alert>}
     </div>

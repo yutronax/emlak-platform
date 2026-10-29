@@ -1,0 +1,76 @@
+{
+  "task": "p0-vitrin-guven",
+  "reviewed_at": "2026-10-29T10:30:00+03:00",
+  "summary": "start_trial RPC, grant/revoke, callback next allowlist, reset redirectTo ve şifre akışları AC-S1..S8'i karşılıyor. Üç doğruluk açığı kaldı: iptal/past_due aboneliğe 'Denemeniz bitti' gösterimi, kullanılmayan ?plan= parametresi, AC-12 'Şifreniz güncellendi' mesajının yokluğu. Signup'taki try/catch login'den zayıf. 2026-10-29: dört bulgu düzeltildi (password_updated bildirimi, cta 'lapsed' durumu, ?plan= kaldırıldı, signup signOut+hata); vitest 645/645, tsc 0.",
+  "findings": [
+    {
+      "severity": "medium",
+      "category": "correctness",
+      "file": "web/src/app/(marketing)/sifre-yenile/actions.ts",
+      "issue": "updatePassword başarıda doğrudan redirect('/agent/dashboard') yapıyor; 'Şifreniz güncellendi' mesajı hiçbir yerde gösterilmiyor.",
+      "better_approach": "redirect('/agent/dashboard?password_updated=1') ve dashboard'da bildirim göster.",
+      "reason": "atdd.md AC-12 ve Davranış Sözleşmesi 7a mesajı açıkça istiyor.",
+      "status": "fixed"
+    },
+    {
+      "severity": "medium",
+      "category": "correctness",
+      "file": "web/src/lib/pricing/cta-state.ts",
+      "issue": "canceled/past_due abonelik 'expired' durumuna düşüyor, fiyat sayfası ücretli eski aboneye 'Denemeniz bitti' diyor.",
+      "better_approach": "trialing dışı bitmiş durumlar için ayrı metin ('Aboneliğiniz sona erdi').",
+      "reason": "AC-7 yalnız dört durum tanımlıyor; iptal edilmiş ücretli abone deneme kullanıcısı değil, metin yanıltıcı.",
+      "status": "fixed"
+    },
+    {
+      "severity": "low",
+      "category": "correctness",
+      "file": "web/src/app/(marketing)/pricing/page.tsx",
+      "issue": "Misafir CTA'sı /signup?plan=<id> gönderiyor ama signup bu parametreyi okumuyor; start_trial her zaman en ucuz planı seçiyor.",
+      "better_approach": "Parametreyi linkten kaldır ya da sunucu tarafında doğrulanan bir plan ipucu olarak taşı.",
+      "reason": "Kullanıcıya olmayan bir plan seçimi vaat ediyor (0019_trial_terms.sql en ucuz plan).",
+      "status": "fixed"
+    },
+    {
+      "severity": "low",
+      "category": "maintainability",
+      "file": "web/src/app/(marketing)/signup/actions.ts",
+      "issue": "ensureAgentRow etrafındaki try/catch hatayı yutup dashboard'a yönlendiriyor; login/actions.ts aynı durumda oturumu kapatıp hata gösteriyor.",
+      "better_approach": "login ile aynı davranış (signOut + açık hata) ya da try/catch'i kaldırıp tek yolda topla.",
+      "reason": "Aynı hata iki yolda farklı ele alınıyor; ölü kod değil ama tutarsız.",
+      "status": "fixed"
+    }
+  ],
+  "strengths": [
+    "start_trial argümansız, auth.uid()'e bağlı, security definer + search_path; plan yoksa exception aynı tx'te trial_started_at yazımını da geri alıyor.",
+    "0019 public ve anon'dan ayrı ayrı revoke edip authenticated'a grant veriyor (AC-S2).",
+    "auth/callback safeNext '/', '//' ve '/\\' kontrolleriyle open-redirect'i kapatıyor (AC-S5).",
+    "sifremi-unuttum her durumda {ok:true} dönüyor, log'da e-posta/token yok (AC-S6, AC-S8).",
+    "sifre-yenile oturum yoksa updateUser çağırmadan süresi doldu mesajı veriyor, şifre uzunluğunu sunucuda doğruluyor (AC-S7)."
+  ],
+  "risks": [
+    "Hero 'WhatsApp'ınızı bağlayın' metni güven bölümüyle çelişiyor; atdd'de kapsam dışı, kullanıcı kararı bekliyor.",
+    "Backfill edilen mevcut kullanıcılar dashboard'da AC-6 uyarısı yerine genel 'aktif abonelik gerekir' mesajı görüyor; kullanıcı kararı gereği kabul edilmiş risk.",
+    "Form sayfalarında mobilde yüzen destek butonu gizli; destek erişimi sayfa içi linkle sağlanıyor (verify iterate 3)."
+  ],
+  "caveman_review": {
+    "complexity": "medium",
+    "unnecessary_files": 0,
+    "unnecessary_helpers": 0,
+    "unnecessary_abstractions": 0
+  },
+  "scope_review": {
+    "matches_atdd": true,
+    "scope_expansion": false
+  },
+  "ready_to_commit": {
+    "atdd_satisfied": true,
+    "tests_passed": true,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": true,
+    "security_acceptable": true,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": true
+  },
+  "verdict": "approve"
+}

@@ -158,6 +158,10 @@ type SetupOptions = {
   unreadCount?: CountResult;
   // agents.listings_seen_at
   seenAt?: string | null;
+  // agents.trial_started_at (null = deneme hiç başlatılmadı)
+  trialStartedAt?: string | null;
+  // start_trial() RPC sonucu
+  rpcResult?: { data: unknown; error: QueryError };
   userId?: string | null;
 };
 
@@ -167,6 +171,8 @@ function setupSupabase({
   listings = { data: [], error: null },
   unreadCount = { count: 0, error: null },
   seenAt = null,
+  trialStartedAt = null,
+  rpcResult = { data: true, error: null },
   userId = "user-1",
 }: SetupOptions = {}) {
   const openSubQuery = makeSubQuery(openSub);
@@ -174,7 +180,7 @@ function setupSupabase({
   const listingsFactory = makeListingsQueries(listings, unreadCount);
   const listingsQuery = listingsFactory.listingsQuery;
   const agentsQuery = makeSubQuery({
-    data: { listings_seen_at: seenAt },
+    data: { listings_seen_at: seenAt, trial_started_at: trialStartedAt },
     error: null,
   });
 
@@ -189,8 +195,10 @@ function setupSupabase({
     throw new Error(`Beklenmeyen tablo: ${table}`);
   });
 
+  const rpc = vi.fn().mockResolvedValue(rpcResult);
   const supabase = {
     from,
+    rpc,
     auth: {
       getUser: vi.fn().mockResolvedValue({
         data: { user: userId ? { id: userId } : null },
@@ -199,7 +207,7 @@ function setupSupabase({
     },
   };
   vi.mocked(createClient).mockResolvedValue(supabase as never);
-  return { from, openSubQuery, latestSubQuery, listingsQuery, agentsQuery };
+  return { from, rpc, openSubQuery, latestSubQuery, listingsQuery, agentsQuery };
 }
 
 // Sayfa, Next 16 kuralıyla searchParams'ı Promise olarak alır.
@@ -385,6 +393,32 @@ describe("AgentDashboardPage", () => {
   );
 
   // AC-3 (Critical): abonelik yokken zil ve filtreler görünmez (AC-S3 ile birlikte).
+  // Şifre yenileme sonrası (/sifre-yenile -> ?password_updated=1) bilgi kutusu.
+  it("password_updated=1 ile role=status 'Şifreniz güncellendi.' kutusu görünür", async () => {
+    setupSupabase({
+      openSub: ACTIVE_SUB,
+      listings: { data: [], error: null },
+    });
+
+    const jsx = await loadPage({ password_updated: "1" });
+    render(jsx);
+
+    const status = screen.getByRole("status");
+    expect(status).toHaveTextContent("Şifreniz güncellendi.");
+  });
+
+  it("password_updated parametresi yoksa 'Şifreniz güncellendi.' kutusu görünmez", async () => {
+    setupSupabase({
+      openSub: ACTIVE_SUB,
+      listings: { data: [], error: null },
+    });
+
+    const jsx = await loadPage();
+    render(jsx);
+
+    expect(screen.queryByText("Şifreniz güncellendi.")).toBeNull();
+  });
+
   it("abonelik yoksa zil ve filtre formu görünmez", async () => {
     setupSupabase({
       openSub: { data: null, error: null },
@@ -792,5 +826,86 @@ describe("AgentDashboardPage", () => {
       code: "X",
     });
     expect(container.textContent).not.toContain("secret count detail");
+  });
+
+  // AC-6 (High): kısmi başarı sonrası dashboard ilk yüklemede start_trial()'ı tekrar dener.
+  it("abonelik yok ve trial_started_at null ise rpc('start_trial') argümansız çağrılır", async () => {
+    const { rpc } = setupSupabase({
+      openSub: { data: null, error: null },
+      latestSub: { data: null, error: null },
+      trialStartedAt: null,
+      rpcResult: { data: true, error: null },
+    });
+
+    const jsx = await loadPage();
+    render(jsx);
+
+    expect(rpc).toHaveBeenCalledTimes(1);
+    expect(rpc).toHaveBeenCalledWith("start_trial");
+  });
+
+  // AC-6 (High): RPC hatası -> uyarı + fiyat sayfası linki; hata detayı UI'a sızmaz.
+  it("start_trial() hata dönerse 'Denemeniz başlatılamadı, destekle iletişime geçin' uyarısı ve /pricing linki gösterir", async () => {
+    setupSupabase({
+      openSub: { data: null, error: null },
+      latestSub: { data: null, error: null },
+      trialStartedAt: null,
+      rpcResult: { data: null, error: { code: "P0001", message: "plan secret detail" } },
+    });
+
+    const jsx = await loadPage();
+    const { container } = render(jsx);
+
+    expect(
+      screen.getByText("Denemeniz başlatılamadı, destekle iletişime geçin"),
+    ).toBeInTheDocument();
+    expect(container.querySelector('a[href="/pricing"]')).not.toBeNull();
+    expect(errorSpy).toHaveBeenCalledWith(
+      "trial_create_failed",
+      expect.objectContaining({ agent_id: "user-1" }),
+    );
+    expect(container.textContent).not.toContain("plan secret detail");
+  });
+
+  // AC-6: RPC başarılıysa uyarı gösterilmez.
+  it("start_trial() true dönerse 'Denemeniz başlatılamadı' uyarısı gösterilmez", async () => {
+    setupSupabase({
+      openSub: { data: null, error: null },
+      latestSub: { data: null, error: null },
+      trialStartedAt: null,
+      rpcResult: { data: true, error: null },
+    });
+
+    const jsx = await loadPage();
+    render(jsx);
+
+    expect(screen.queryByText(/Denemeniz başlatılamadı/)).toBeNull();
+  });
+
+  // AC-5 (High): deneme zaten kullanılmış (trial_started_at dolu) -> RPC çağrılmaz.
+  it("trial_started_at dolu ise start_trial() çağrılmaz", async () => {
+    const { rpc } = setupSupabase({
+      openSub: { data: null, error: null },
+      latestSub: { data: null, error: null },
+      trialStartedAt: "2026-10-01T00:00:00.000Z",
+    });
+
+    const jsx = await loadPage();
+    render(jsx);
+
+    expect(rpc).not.toHaveBeenCalled();
+  });
+
+  // AC-5: açık abonelik varsa start_trial() çağrılmaz.
+  it("açık abonelik varsa start_trial() çağrılmaz", async () => {
+    const { rpc } = setupSupabase({
+      openSub: ACTIVE_SUB,
+      trialStartedAt: null,
+    });
+
+    const jsx = await loadPage();
+    render(jsx);
+
+    expect(rpc).not.toHaveBeenCalled();
   });
 });

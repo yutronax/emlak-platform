@@ -12,20 +12,32 @@ type SignupState = { error: string } | { message: string } | null;
 
 const initialState: SignupState = null;
 
+// Sunucu aynı metni döner (actions.ts); istemci de işaretsiz gönderimi ağa çıkmadan reddeder.
+const TERMS_ERROR = "Devam etmek için şartları kabul etmeniz gerekiyor.";
+
 const inputClass =
   "rounded-md border border-mist-200 bg-white px-3 py-2 focus-visible:outline-2 focus-visible:outline-ink-900";
 
+const linkClass = "font-medium text-terracotta-700 underline";
+
 export default function SignupPage() {
   const [state, formAction, isPending] = useActionState(
-    async (_prev: SignupState, formData: FormData) => signup(formData),
+    async (_prev: SignupState, formData: FormData) => {
+      if (formData.get("terms") !== "on") return { error: TERMS_ERROR };
+      return signup(formData);
+    },
     initialState,
   );
 
+  const hasError = state !== null && "error" in state && state.error !== "";
+  const termsError = hasError && state.error === TERMS_ERROR;
+
   return (
     <main className="grid min-h-[calc(100vh-4rem)] md:grid-cols-2">
-      <section className="flex flex-col justify-center gap-3 bg-ink-900 px-6 py-8 text-white md:px-12 md:py-16">
+      <section className="flex flex-col justify-center gap-3 bg-ink-900 px-6 py-6 text-white md:px-12 md:py-16">
         <h1 className="font-display text-2xl font-bold md:text-4xl">Emlak Platformu</h1>
-        <p className="font-body text-sm text-white/80 md:text-base">
+        {/* Mobilde tanıtım metni gizli: form gönder butonu sabit destek butonunun (320x700'de sağ alt) altında kalmasın. */}
+        <p className="hidden font-body text-sm text-white/80 md:block md:text-base">
           Yeni bir şey öğrenmenize gerek yok. WhatsApp&apos;ı zaten kullanıyorsunuz, o kadarı yeterli.
         </p>
         <div className="mt-6 hidden rounded-2xl bg-fog-50 p-6 md:block">
@@ -76,9 +88,32 @@ export default function SignupPage() {
                 className={inputClass}
               />
             </div>
-            {state && "error" in state && state.error && (
-              <Alert variant="error">{state.error}</Alert>
-            )}
+            <div className="flex flex-col gap-2">
+              <label className="flex items-start gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  name="terms"
+                  aria-describedby={termsError ? "terms-error" : undefined}
+                  className="mt-1 h-4 w-4 accent-terracotta-600"
+                />
+                <span>
+                  <Link href="/kullanim-sartlari" target="_blank" rel="noopener noreferrer" className={linkClass}>
+                    Kullanım Şartları
+                  </Link>
+                  &apos;nı ve{" "}
+                  <Link href="/kvkk" target="_blank" rel="noopener noreferrer" className={linkClass}>
+                    KVKK Aydınlatma Metni
+                  </Link>
+                  &apos;ni okudum, kabul ediyorum.
+                </span>
+              </label>
+              {termsError && (
+                <div id="terms-error">
+                  <Alert variant="error">{TERMS_ERROR}</Alert>
+                </div>
+              )}
+            </div>
+            {hasError && !termsError && <Alert variant="error">{state.error}</Alert>}
             {state && "message" in state && state.message && (
               <Alert variant="success">{state.message}</Alert>
             )}

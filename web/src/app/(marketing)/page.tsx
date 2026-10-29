@@ -32,6 +32,26 @@ const steps = [
   },
 ];
 
+const trustItems: { title: string; tag?: string; body: string }[] = [
+  {
+    title: "Bugün ortak hesap",
+    body: "Bugün ilanlar ortak bir hesap üzerinden toplanır. Telefonunuza bağlanmıyoruz.",
+  },
+  {
+    title: "Hesabınız bağlandığında",
+    tag: "planlanan",
+    body: "Kendi WhatsApp hesabınızı bağlama özelliği henüz hazır değil. Hazır olduğunda size haber vereceğiz.",
+  },
+  {
+    title: "Ban riski",
+    body: "WhatsApp hesapları, platform kurallarına aykırı kullanımda kısıtlanabilir. Bu riski bilerek karar verin.",
+  },
+  {
+    title: "Veri ve gizlilik",
+    body: "Hangi verileri neden işlediğimizi KVKK Aydınlatma Metni'nde yazıyoruz.",
+  },
+];
+
 const videoOptions = [
   {
     title: "Fotoğraf yükleyin",
@@ -159,6 +179,33 @@ export default function LandingPage() {
             </li>
           ))}
         </ol>
+      </section>
+
+      <section className="border-t border-mist-200">
+        <div className="mx-auto max-w-6xl px-6 py-20">
+          <h2 className="font-display text-3xl font-bold">WhatsApp&apos;ım güvende mi?</h2>
+          <p className="mt-3 max-w-2xl font-body text-slate-500">
+            Ne yaptığımızı ve henüz yapmadıklarımızı açıkça yazıyoruz.
+          </p>
+          <ul className="mt-10 grid gap-6 md:grid-cols-2">
+            {trustItems.map((item) => (
+              <li
+                key={item.title}
+                className="flex flex-col gap-2 rounded-xl border border-mist-200 bg-white p-5 font-body"
+              >
+                <h3 className="font-display text-lg font-semibold">
+                  {item.title}
+                  {item.tag && (
+                    <span className="ml-2 align-middle text-xs font-medium text-terracotta-700">
+                      {item.tag}
+                    </span>
+                  )}
+                </h3>
+                <p className="text-sm text-slate-500">{item.body}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
 
       <section className="border-t border-mist-200">

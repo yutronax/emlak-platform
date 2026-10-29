@@ -366,3 +366,15 @@ skill'i değişen dosyalara karşı çalıştırıldı — `secrets: PASS`,
 **Migration** (kaynak: plan.md): 0016 ve 0017 canlıya `db query --linked -f` ile kullanıcı onayıyla uygulandı. Rollback: `0016_...down.sql`.
 
 **Doğrulanmayan** (kaynak: verify_report.md): Görsel/E2E/375px ve admin onay kopyası canlı veriyle denenmedi (aboneli test hesabı yok, canlıda ilan yok).
+
+## p0-vitrin-guven (EML-90) — 2026-10-29
+
+**Kararlar** (kaynak: plan.md): Tek seferlik deneme `agents.trial_started_at` + argümansız `security definer` `start_trial()` (14 gün, en ucuz plan); doğrudan `subscriptions` INSERT/PATCH policy olmadığı için zaten reddediliyor. KVKK onayı `terms_accepted_at`/`terms_version` sunucu değerleriyle yazılıyor. Mevcut kullanıcıların deneme hakkı backfill ile kapatıldı (kullanıcı kararı: "Evet, kapat").
+
+**Riskler** (kaynak: atdd.md, red_team.json): Hero "WhatsApp'ınızı bağlayın" metni güven bölümüyle çelişiyor (kapsam dışı, karar bekliyor). Backfill edilen kullanıcılar AC-6 uyarısı yerine genel abonelik mesajı görüyor. E-posta onaylı yolda terms_accepted_at ilk giriş zamanı.
+
+**Review'da bulunan ve düzeltilen** (kaynak: verify_report.md, red_team.json): Header ≥768px'te 69px'ti (md:py-3 ile 61px). Mobil destek butonu form öğelerini örtüyordu; yukarı almak çakışmayı yalnız taşıdı, form sayfalarında mobilde gizlenip sayfa içi linkle değiştirildi. Red-team: AC-12 "Şifreniz güncellendi" eksikti; iptal/past_due aboneliklere "Denemeniz bitti" yazılıyordu (yeni `lapsed` durumu); kullanılmayan `?plan=` kaldırıldı; signup'ta ensureAgentRow hatası login gibi signOut + hata dönüyor.
+
+**Migration** (kaynak: plan.md): 0019 canlıya `db query --linked -f` ile kullanıcı onayıyla uygulandı; anon 401, doğrudan insert 42501 doğrulandı. Rollback: `0019_trial_terms.down.sql`. Yeni env: `NEXT_PUBLIC_SITE_URL` (.env.example).
+
+**Doğrulanmayan** (kaynak: verify_report.md): axe/Lighthouse/ZAP yok; kayıt/şifre sıfırlama akışları gerçek e-postayla denenmedi.

@@ -30,9 +30,15 @@ export async function login(formData: FormData): Promise<{ error: string } | nev
   let isAdmin = false;
   if (userData.user) {
     const companyName = String(userData.user.user_metadata?.company_name ?? "");
+    // Onay e-postalı kayıtta şartlar kayıt anında değil, ilk girişte kaydedilir (AC-3).
+    const termsVersion = userData.user.user_metadata?.terms_version;
     if (companyName) {
       try {
-        await ensureAgentRow(supabase, userData.user.id, companyName);
+        if (termsVersion) {
+          await ensureAgentRow(supabase, userData.user.id, companyName, { accepted: true });
+        } else {
+          await ensureAgentRow(supabase, userData.user.id, companyName);
+        }
       } catch (err) {
         // Emlakçı kaydı olmadan panel ve siparişler çalışmaz; yarım hesapla içeri alma.
         console.error("login: ensureAgentRow başarısız", err);

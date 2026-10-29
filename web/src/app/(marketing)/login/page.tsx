@@ -20,7 +20,7 @@ export default function LoginPage() {
       <section className="flex flex-col justify-center gap-3 bg-ink-900 px-6 py-8 text-white md:px-12 md:py-16">
         <h1 className="font-display text-2xl font-bold md:text-4xl">Emlak Platformu</h1>
         <p className="font-body text-sm text-white/80 md:text-base">
-          Hesabınıza girin, WhatsApp&apos;a attığınız ilanlara buradan devam edin.
+          Hesabınıza girin, takip ettiğiniz WhatsApp gruplarındaki ilanlara buradan devam edin.
         </p>
         <div className="mt-6 hidden rounded-2xl bg-fog-50 p-6 md:block">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -58,6 +58,9 @@ export default function LoginPage() {
                 className="rounded-md border border-mist-200 bg-white px-3 py-2 focus-visible:outline-2 focus-visible:outline-ink-900"
               />
             </div>
+            <Link href="/sifremi-unuttum" className="self-end text-sm font-medium text-terracotta-700 hover:underline">
+              Şifremi unuttum
+            </Link>
             {state?.error && <Alert variant="error">{state.error}</Alert>}
             <Button type="submit" isPending={isPending}>
               Giriş yap

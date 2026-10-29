@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { signup } from "./actions";
@@ -9,6 +9,10 @@ import SignupPage from "./page";
 vi.mock("./actions", () => ({
   signup: vi.fn(),
 }));
+
+const TERMS_LABEL =
+  "Kullanım Şartları'nı ve KVKK Aydınlatma Metni'ni okudum, kabul ediyorum.";
+const TERMS_ERROR = "Devam etmek için şartları kabul etmeniz gerekiyor.";
 
 afterEach(() => {
   cleanup();
@@ -68,5 +72,58 @@ describe("SignupPage (/signup) — component smoke", () => {
     render(<SignupPage />);
 
     expect(signup).not.toHaveBeenCalled();
+  });
+});
+
+describe("SignupPage — KVKK/Şartlar onay kutusu (AC-2)", () => {
+  // AC-2 (Critical): tek onay kutusu, varsayılan işaretsiz, name="terms".
+  it("onay kutusu varsayılan olarak işaretsiz ve name='terms' taşır", () => {
+    render(<SignupPage />);
+
+    const checkbox = screen.getByRole("checkbox", { name: TERMS_LABEL });
+    expect(checkbox).not.toBeChecked();
+    expect(checkbox).toHaveAttribute("name", "terms");
+  });
+
+  // AC-2: iki metin yeni sekmede açılan link olarak verilir.
+  it("'Kullanım Şartları' ve 'KVKK Aydınlatma Metni' linkleri yeni sekmede (target=_blank) açılır", () => {
+    render(<SignupPage />);
+
+    const terms = screen.getByRole("link", { name: "Kullanım Şartları" });
+    expect(terms).toHaveAttribute("href", "/kullanim-sartlari");
+    expect(terms).toHaveAttribute("target", "_blank");
+
+    const kvkk = screen.getByRole("link", { name: "KVKK Aydınlatma Metni" });
+    expect(kvkk).toHaveAttribute("href", "/kvkk");
+    expect(kvkk).toHaveAttribute("target", "_blank");
+  });
+
+  // AC-2 (Critical): işaretsizken sunucu/istemci reddeder; hata kutunun altında,
+  // checkbox'a aria-describedby ile bağlı olarak görünür.
+  it("şartlar işaretsizken gönderim reddedilir ve hata checkbox'a aria-describedby ile bağlı gösterilir", async () => {
+    vi.mocked(signup).mockResolvedValue({ error: TERMS_ERROR });
+    render(<SignupPage />);
+
+    fireEvent.change(screen.getByLabelText("E-posta"), {
+      target: { value: "test@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText("Şifre"), {
+      target: { value: "sifre123" },
+    });
+    fireEvent.change(screen.getByLabelText("Şirket adı"), {
+      target: { value: "Acme Emlak" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Ücretsiz Deneyin" }));
+
+    expect(await screen.findByText(TERMS_ERROR)).toBeInTheDocument();
+
+    const checkbox = screen.getByRole("checkbox", { name: TERMS_LABEL });
+    const describedBy = checkbox.getAttribute("aria-describedby") ?? "";
+    expect(describedBy).not.toBe("");
+    const describedText = describedBy
+      .split(/\s+/)
+      .map((id) => document.getElementById(id)?.textContent ?? "")
+      .join(" ");
+    expect(describedText).toContain(TERMS_ERROR);
   });
 });
