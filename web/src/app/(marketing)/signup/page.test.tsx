@@ -127,3 +127,38 @@ describe("SignupPage — KVKK/Şartlar onay kutusu (AC-2)", () => {
     expect(describedText).toContain(TERMS_ERROR);
   });
 });
+
+describe("SignupPage (/signup) — tanıtım paragrafı", () => {
+  // Paragraf form başlığının altında, mobilde de gizlenmeden görünür olmalı.
+  it("'Yeni bir şey öğrenmenize gerek yok...' paragrafı görünür (hidden sınıfı yok)", () => {
+    render(<SignupPage />);
+
+    const paragraph = screen.getByText(/Yeni bir şey öğrenmenize gerek yok/);
+    expect(paragraph).toBeInTheDocument();
+    expect(paragraph.className).not.toMatch(/\bhidden\b/);
+  });
+});
+
+describe("SignupPage (/signup) — form üstte, dekoratif panel yok (AC-5)", () => {
+  // AC-5 (High): dekoratif çizim (img) kaldırıldı.
+  it("sayfada img elementi yok", () => {
+    const { container } = render(<SignupPage />);
+
+    expect(container.querySelector("img")).toBeNull();
+  });
+
+  // AC-5 (High): koyu sol panel (bg-ink-900) kaldırıldı.
+  it("koyu sol panel (bg-ink-900) yok", () => {
+    const { container } = render(<SignupPage />);
+
+    expect(container.querySelector(".bg-ink-900")).toBeNull();
+  });
+
+  // AC-5 (High): "Emlak Platformu" sol panel başlığı yok; form başlığı görünür.
+  it("'Emlak Platformu' başlığı sayfada yok, 'Ücretsiz Deneyin' başlığı form üstünde var", () => {
+    render(<SignupPage />);
+
+    expect(screen.queryByRole("heading", { name: "Emlak Platformu" })).toBeNull();
+    expect(screen.getByRole("heading", { name: "Ücretsiz Deneyin" })).toBeInTheDocument();
+  });
+});

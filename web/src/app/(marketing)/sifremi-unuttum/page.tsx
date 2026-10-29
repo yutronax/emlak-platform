@@ -43,7 +43,9 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <main className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-sm flex-col justify-center gap-4 bg-fog-50 px-6 py-12 font-body text-ink-900">
+    <main className="bg-fog-50 font-body text-ink-900">
+      <div className="mx-auto w-full max-w-6xl px-4 pt-10 pb-12 md:px-6 md:pt-16">
+      <div className="mx-auto flex w-full max-w-sm flex-col gap-4">
       <h1 className="font-display text-2xl font-bold">Şifremi unuttum</h1>
       <p className="text-sm text-slate-500">
         Kayıtlı e-posta adresinizi girin, şifre sıfırlama bağlantısı gönderelim.
@@ -80,6 +82,8 @@ export default function ForgotPasswordPage() {
       <Link href="/login" className="text-center text-sm font-medium text-terracotta-700 hover:underline">
         Girişe dön
       </Link>
+      </div>
+      </div>
     </main>
   );
 }

@@ -38,3 +38,31 @@ describe("LoginPage (/login)", () => {
     expect(link).toHaveAttribute("href", "/sifremi-unuttum");
   });
 });
+
+describe("LoginPage (/login) — form üstte, dekoratif panel yok (AC-5)", () => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  // AC-5 (High): dekoratif çizim (img) kaldırıldı.
+  it("sayfada img elementi yok", () => {
+    const { container } = render(<LoginPage />);
+
+    expect(container.querySelector("img")).toBeNull();
+  });
+
+  // AC-5 (High): koyu sol panel (bg-ink-900) kaldırıldı.
+  it("koyu sol panel (bg-ink-900) yok", () => {
+    const { container } = render(<LoginPage />);
+
+    expect(container.querySelector(".bg-ink-900")).toBeNull();
+  });
+
+  // AC-5 (High): "Emlak Platformu" sol panel başlığı yok; form başlığı görünür.
+  it("'Emlak Platformu' başlığı sayfada yok, 'Giriş yap' başlığı form üstünde var", () => {
+    render(<LoginPage />);
+
+    expect(screen.queryByRole("heading", { name: "Emlak Platformu" })).toBeNull();
+    expect(screen.getByRole("heading", { name: "Giriş yap" })).toBeInTheDocument();
+  });
+});

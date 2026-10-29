@@ -97,7 +97,7 @@ const faqs = [
 export default function LandingPage() {
   return (
     <main className="bg-fog-50 text-ink-900">
-      <section className="relative mx-auto grid max-w-7xl items-center gap-12 overflow-hidden px-6 py-20 md:grid-cols-2 md:py-32">
+      <section className="relative mx-auto grid max-w-6xl items-center gap-12 overflow-hidden px-4 py-20 md:px-6 md:grid-cols-2 md:py-32">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0"
@@ -161,7 +161,7 @@ export default function LandingPage() {
       </section>
 
       <section className="border-t border-mist-200">
-        <ol className="mx-auto grid max-w-6xl gap-12 px-6 py-20 md:grid-cols-3">
+        <ol className="mx-auto grid max-w-6xl gap-12 px-4 py-20 md:grid-cols-3 md:px-6">
           {steps.map((step, index) => (
             <li key={step.title} className="flex flex-col gap-4">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -182,7 +182,7 @@ export default function LandingPage() {
       </section>
 
       <section className="border-t border-mist-200">
-        <div className="mx-auto max-w-6xl px-6 py-20">
+        <div className="mx-auto max-w-6xl px-4 py-20 md:px-6">
           <h2 className="font-display text-3xl font-bold">WhatsApp&apos;ım güvende mi?</h2>
           <p className="mt-3 max-w-2xl font-body text-slate-500">
             Ne yaptığımızı ve henüz yapmadıklarımızı açıkça yazıyoruz.
@@ -209,7 +209,7 @@ export default function LandingPage() {
       </section>
 
       <section className="border-t border-mist-200">
-        <div className="mx-auto max-w-6xl px-6 py-20">
+        <div className="mx-auto max-w-6xl px-4 py-20 md:px-6">
           <div className="grid gap-12 md:grid-cols-2 md:items-center">
             <div className="flex flex-col gap-4">
               <h2 className="font-display text-3xl font-bold">İlanınıza reklam videosu</h2>
@@ -241,7 +241,7 @@ export default function LandingPage() {
       </section>
 
       <section className="border-t border-mist-200">
-        <div className="mx-auto max-w-3xl px-6 py-20">
+        <div className="mx-auto max-w-3xl px-4 py-20 md:px-6">
           <h2 className="font-display text-3xl font-bold">Sık Sorulan Sorular</h2>
           <dl className="mt-10 flex flex-col gap-6">
             {faqs.map((faq) => (

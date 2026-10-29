@@ -1,0 +1,66 @@
+{
+  "task": "p1-hizli-kazanimlar",
+  "reviewed_at": "2026-10-29T15:30:00+03:00",
+  "summary": "AC-1..5 ve AC-7 doğru uygulanmış, test ve tarayıcı ölçümüyle destekli. AC-6 global --color-slate-500 token değeriyle yapılmış; etki admin/agent/yasal sayfalara da yayılıyor ve bu sayfalar göz kontrolünden geçmedi. Signup'taki masaüstü tanıtım paragrafı AC-5 kapsamı belirtilmeden kaldırıldı. 2026-10-29: signup paragrafı geri kondu, isActivePath boş pathname düzeltildi + 3 test; vitest 671/671, tsc 0.",
+  "findings": [
+    {
+      "severity": "medium",
+      "category": "scope",
+      "file": "web/src/app/globals.css",
+      "issue": "--color-slate-500 #5B6B7A → #475569 global değişiklik; admin/videos, agent/*, kvkk, kullanim-sartlari, gizlilik sayfaları da etkileniyor ama verify'da göz kontrolü yapılmadı.",
+      "better_approach": "Ya marketing kullanımlarını yeni bir slate-600 token'ına taşı, ya da global kararı koru ve panel sayfalarını görsel kontrolden geçir.",
+      "reason": "atdd.md Risks bu yayılımı kabul ediyor ama 'verify'da göz kontrolü' şartı yerine getirilmedi (panel sayfaları oturum gerektiriyor).",
+      "status": "accepted-risk (kullanıcı kararı: global token korunur; panel göz kontrolü oturumla yapılacak)"
+    },
+    {
+      "severity": "low",
+      "category": "scope",
+      "file": "web/src/app/(marketing)/signup/page.tsx",
+      "issue": "Sol panelle birlikte md+ ekrandaki tanıtım paragrafı ('Yeni bir şey öğrenmenize gerek yok...') da silindi; AC-5 yalnız dekoratif panel ve çizimi kapsıyordu.",
+      "better_approach": "Metni form başlığının altına taşı (login'de yapıldığı gibi) ya da kaldırmayı bilinçli karar olarak kaydet.",
+      "reason": "Login'de eşdeğer paragraf korundu, signup'ta kayboldu — iki sayfa tutarsız.",
+      "status": "fixed"
+    },
+    {
+      "severity": "low",
+      "category": "test-gap",
+      "file": "web/src/lib/nav/is-active-path.test.ts",
+      "issue": "Boş pathname ve çok segmentli alt yol ('/signup/a/b') test edilmemiş.",
+      "better_approach": "it.each listesine iki satır ekle.",
+      "reason": "AC-3 'hata yok' garantisini genişletir; fonksiyon saf, risk düşük.",
+      "status": "fixed"
+    }
+  ],
+  "strengths": [
+    "isActivePath saf, query/trailing slash normalize ediyor, '/' yalnız tam eşleşme (AC-3).",
+    "HeaderNav client olsa da aria-current SSR HTML'inde var (verify'da doğrulandı, AC-2).",
+    "AC-4 pasif buton yerine render etmeme ile uygulandı.",
+    "Form alanları, KVKK kutusu ve action'lar değişmedi; threat_model not-applicable tutarlı.",
+    "Logo↔içerik hizası 320-1280'de 0px; header ≤64px ve mobilde tek satır."
+  ],
+  "risks": [
+    "Global token değişimi panel sayfalarında kasıtlı 'sessiz' metin tonunu koyulaştırmış olabilir.",
+    "public/illustrations/{welcome,secure-login}.svg artık kullanılmıyor (silinmedi)."
+  ],
+  "caveman_review": {
+    "complexity": "low",
+    "unnecessary_files": 0,
+    "unnecessary_helpers": 0,
+    "unnecessary_abstractions": 0
+  },
+  "scope_review": {
+    "matches_atdd": true,
+    "scope_expansion": false
+  },
+  "ready_to_commit": {
+    "atdd_satisfied": true,
+    "tests_passed": true,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": true,
+    "security_acceptable": true,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": true
+  },
+  "verdict": "approve"
+}

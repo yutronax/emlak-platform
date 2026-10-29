@@ -24,46 +24,50 @@ export default function ResetPasswordPage() {
   const expired = state?.error === EXPIRED_MESSAGE;
 
   return (
-    <main className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-sm flex-col justify-center gap-4 bg-fog-50 px-6 py-12 font-body text-ink-900">
-      <h1 className="font-display text-2xl font-bold">Yeni şifre belirleyin</h1>
+    <main className="bg-fog-50 font-body text-ink-900">
+      <div className="mx-auto w-full max-w-6xl px-4 pt-10 pb-12 md:px-6 md:pt-16">
+        <div className="mx-auto flex w-full max-w-sm flex-col gap-4">
+          <h1 className="font-display text-2xl font-bold">Yeni şifre belirleyin</h1>
 
-      <form action={formAction} className="flex flex-col gap-4">
-        <div className="flex flex-col gap-1">
-          <label htmlFor="password" className="text-sm font-medium">
-            Yeni şifre
-          </label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            autoComplete="new-password"
-            className={inputClass}
-          />
+          <form action={formAction} className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
+              <label htmlFor="password" className="text-sm font-medium">
+                Yeni şifre
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="new-password"
+                className={inputClass}
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label htmlFor="password_confirm" className="text-sm font-medium">
+                Yeni şifre (tekrar)
+              </label>
+              <input
+                id="password_confirm"
+                name="password_confirm"
+                type="password"
+                autoComplete="new-password"
+                className={inputClass}
+              />
+            </div>
+
+            {state?.error && <Alert variant="error">{state.error}</Alert>}
+            {expired && (
+              <Link href="/sifremi-unuttum" className="text-sm font-medium text-terracotta-700 underline">
+                Yeni bağlantı iste
+              </Link>
+            )}
+
+            <Button type="submit" isPending={isPending}>
+              Şifreyi güncelle
+            </Button>
+          </form>
         </div>
-        <div className="flex flex-col gap-1">
-          <label htmlFor="password_confirm" className="text-sm font-medium">
-            Yeni şifre (tekrar)
-          </label>
-          <input
-            id="password_confirm"
-            name="password_confirm"
-            type="password"
-            autoComplete="new-password"
-            className={inputClass}
-          />
-        </div>
-
-        {state?.error && <Alert variant="error">{state.error}</Alert>}
-        {expired && (
-          <Link href="/sifremi-unuttum" className="text-sm font-medium text-terracotta-700 underline">
-            Yeni bağlantı iste
-          </Link>
-        )}
-
-        <Button type="submit" isPending={isPending}>
-          Şifreyi güncelle
-        </Button>
-      </form>
+      </div>
     </main>
   );
 }

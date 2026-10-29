@@ -378,3 +378,11 @@ skill'i değişen dosyalara karşı çalıştırıldı — `secrets: PASS`,
 **Migration** (kaynak: plan.md): 0019 canlıya `db query --linked -f` ile kullanıcı onayıyla uygulandı; anon 401, doğrudan insert 42501 doğrulandı. Rollback: `0019_trial_terms.down.sql`. Yeni env: `NEXT_PUBLIC_SITE_URL` (.env.example).
 
 **Doğrulanmayan** (kaynak: verify_report.md): axe/Lighthouse/ZAP yok; kayıt/şifre sıfırlama akışları gerçek e-postayla denenmedi.
+
+## p1-hizli-kazanimlar (EML-95) — 2026-10-29
+
+**Kararlar** (kaynak: plan.md): Kontrast için `--color-slate-500` token değeri #475569'a çekildi (81 kullanıma dokunmadan, global). Aktif sayfa için saf `isActivePath` + client `HeaderNav` (usePathname; aria-current SSR'da üretiliyor). Header/bölümler tek sarmalayıcı `max-w-6xl px-4 md:px-6`, hero 7xl→6xl.
+
+**Riskler** (kaynak: atdd.md, red_team.json): Global token admin/agent/yasal sayfalardaki gri metni de koyulaştırdı — panel sayfaları oturum gerektirdiği için göz kontrolü yapılmadı (kabul edilen risk). Kullanılmayan `illustrations/{welcome,secure-login}.svg` silinmedi.
+
+**Review'da bulunan ve düzeltilen** (kaynak: verify_report.md, red_team.json): Form sayfalarında fog-50 arka planı yalnız 6xl şeritte kalıyordu (tam genişliğe alındı). Takılan bir alt-ajan sifre-yenile JSX'ini yarım bıraktı; testler geçerken tsc yakaladı. Signup tanıtım paragrafı yanlışlıkla silinmişti (geri kondu). `isActivePath("")` ana sayfayı aktif sayıyordu (düzeltildi).

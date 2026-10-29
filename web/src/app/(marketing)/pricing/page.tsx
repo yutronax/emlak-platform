@@ -79,7 +79,7 @@ export default async function PricingPage() {
     console.error("plans sorgusu başarısız", plansError);
     return (
       <main className="flex-1 bg-fog-50 text-ink-900">
-        <div className="mx-auto max-w-6xl px-6 py-16">
+        <div className="mx-auto max-w-6xl px-4 py-16 md:px-6">
           <Alert variant="error">
             Planlar yüklenemedi, lütfen daha sonra tekrar deneyin.
           </Alert>
@@ -121,7 +121,7 @@ export default async function PricingPage() {
 
   return (
     <main className="flex-1 bg-fog-50 text-ink-900">
-      <div className="mx-auto max-w-6xl px-6 py-16">
+      <div className="mx-auto max-w-6xl px-4 py-16 md:px-6">
         <div className="flex items-center justify-between gap-8">
           <div>
             <h1 className="font-display text-3xl font-bold">Abonelik Planları</h1>

@@ -7,7 +7,7 @@ const linkClass = "text-white/80 hover:text-white";
 export function SiteFooter() {
   return (
     <footer className="bg-ink-900 text-white">
-      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-6 font-body text-sm">
+      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-6 font-body md:px-6 text-sm">
         <p>
           İletişim WhatsApp:{" "}
           <a

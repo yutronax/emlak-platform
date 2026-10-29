@@ -1,7 +1,12 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
 import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
+
+// SiteHeader, client HeaderNav'ı içerdiği için usePathname gerekir.
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/",
+}));
 
 import { SiteHeader } from "./site-header";
 
@@ -38,5 +43,21 @@ describe("SiteHeader", () => {
     expect(screen.getByRole("link", { name: "Kayıt Ol" })).toHaveAttribute("href", "/signup");
     expect(screen.getByRole("link", { name: "Emlak Platformu" })).toHaveAttribute("href", "/");
     expect(screen.queryByRole("button")).toBeNull();
+  });
+
+  // AC-1 (Critical): header iç sarmalayıcısı marketing container'ı ile aynı (max-w-6xl px-4 md:px-6).
+  it("AC-1: header iç sarmalayıcısı max-w-6xl, px-4 ve md:px-6 taşır", () => {
+    const { container } = render(<SiteHeader />);
+
+    const wrapper = container.querySelector("header > div");
+    expect(wrapper).not.toBeNull();
+    expect(wrapper).toHaveClass("max-w-6xl", "px-4", "md:px-6");
+  });
+
+  // AC-7 (Medium): logo md ve üstünde text-xl.
+  it("AC-7: logo md:text-xl sınıfını taşır", () => {
+    render(<SiteHeader />);
+
+    expect(screen.getByRole("link", { name: "Emlak Platformu" })).toHaveClass("md:text-xl");
   });
 });
