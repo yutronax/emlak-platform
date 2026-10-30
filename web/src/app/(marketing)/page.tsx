@@ -56,14 +56,17 @@ const videoOptions = [
   {
     title: "Fotoğraf yükleyin",
     body: "İlanınızın fotoğraflarını gönderin, biz videoya çeviririz.",
+    price: "750 TL",
   },
   {
     title: "Kendi çektiğiniz videoyu gönderin",
     body: "Telefonla çektiğiniz ham videoyu yükleyin.",
+    price: "750 TL",
   },
   {
     title: "Yerinde çekim",
     body: "Uygun bölgelerde ekibimiz mülke gelip çeker.",
+    price: "Fiyat teklifi verilir",
   },
 ];
 
@@ -231,10 +234,23 @@ export default function LandingPage() {
                   key={option.title}
                   className="flex flex-col gap-1 rounded-xl border border-mist-200 bg-white p-5 font-body"
                 >
-                  <h3 className="font-display text-lg font-semibold">{option.title}</h3>
+                  <div className="flex items-baseline justify-between gap-3">
+                    <h3 className="font-display text-lg font-semibold">{option.title}</h3>
+                    <span className="whitespace-nowrap text-sm font-semibold text-ink-900">
+                      {option.price}
+                    </span>
+                  </div>
                   <p className="text-sm text-slate-500">{option.body}</p>
                 </li>
               ))}
+              <li>
+                <Link
+                  href="/agent/videos/new"
+                  className="inline-flex items-center rounded-md bg-terracotta-600 px-4 py-2 font-body text-sm font-medium text-white hover:bg-terracotta-700"
+                >
+                  Video siparişi ver
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
