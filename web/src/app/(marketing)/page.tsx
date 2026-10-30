@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { HeroPhoneMockup } from "@/components/hero-phone-mockup";
 import { SUPPORT_WHATSAPP_DISPLAY, SUPPORT_WHATSAPP_URL } from "@/lib/contact";
 
 const primaryLink =
@@ -130,36 +131,8 @@ export default function LandingPage() {
           </div>
         </div>
 
-        <div
-          aria-hidden="true"
-          className="relative flex flex-col items-center gap-4"
-        >
-          <div className="max-w-sm self-start rounded-2xl rounded-bl-none bg-mist-200 px-5 py-4 font-body text-sm">
-            <p className="font-medium">3+1 satılık daire, Kadıköy</p>
-            <p className="text-slate-500">2.450.000 ₺ · 120 m²</p>
-          </div>
-          <svg
-            width="32"
-            height="48"
-            viewBox="0 0 32 48"
-            fill="none"
-            className="text-terracotta-700"
-          >
-            <path
-              d="M16 0 V40 M6 32 L16 44 L26 32"
-              stroke="currentColor"
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          <div className="w-full max-w-sm self-end overflow-hidden rounded-xl border border-mist-200 bg-white px-4 py-3 font-body shadow-sm">
-            <p className="font-display font-semibold">Kadıköy 3+1 Daire</p>
-            <p className="text-sm text-slate-500">2.450.000 ₺ · 120 m²</p>
-            <p className="mt-2 text-xs text-terracotta-700">
-              Kadıköy Emlakçılar grubundan
-            </p>
-          </div>
+        <div className="relative flex justify-center">
+          <HeroPhoneMockup />
         </div>
       </section>
 
