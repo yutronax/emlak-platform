@@ -386,3 +386,13 @@ skill'i değişen dosyalara karşı çalıştırıldı — `secrets: PASS`,
 **Riskler** (kaynak: atdd.md, red_team.json): Global token admin/agent/yasal sayfalardaki gri metni de koyulaştırdı — panel sayfaları oturum gerektirdiği için göz kontrolü yapılmadı (kabul edilen risk). Kullanılmayan `illustrations/{welcome,secure-login}.svg` silinmedi.
 
 **Review'da bulunan ve düzeltilen** (kaynak: verify_report.md, red_team.json): Form sayfalarında fog-50 arka planı yalnız 6xl şeritte kalıyordu (tam genişliğe alındı). Takılan bir alt-ajan sifre-yenile JSX'ini yarım bıraktı; testler geçerken tsc yakaladı. Signup tanıtım paragrafı yanlışlıkla silinmişti (geri kondu). `isActivePath("")` ana sayfayı aktif sayıyordu (düzeltildi).
+
+## faz2b-plan-limitleri (EML-98) — 2026-10-30
+
+**Kararlar** (kaynak: plan.md): Plan farkı = günlük ilan görüntüleme (Temel 10 / Pro 50 / Kurumsal sınırsız), İstanbul günü başına en yeni N açık, filtreden önce hesaplanır. Limitin aşılamaması için `listings_subscriber_select` kaldırıldı; akış, filtre seçenekleri ve zil sayacı security definer RPC'lere taşındı (`feed_listings`, `feed_filter_options`, `feed_unread_count`; internal `feed_access`). Kilitli satır yalnız id/il/ilçe/zaman taşır. past_due kendi planıyla görmeye devam eder (kullanıcı kararı).
+
+**Riskler** (kaynak: atdd.md, red_team.json): row_number() her çağrıda tüm listings'i sıralar; 16 satırda 5 ms, büyük havuzda ölçülmeli. 0020 canlıya frontend'den önce uygulandı → yayın gecikirse eski site akışı boş.
+
+**Review'da bulunan ve düzeltilen** (kaynak: red_team.json, verify_report.md): past_due ilk planda erişimsiz bırakılmıştı (AC-6 ile çelişki) → düzeltildi, erişim kuralı yalnız RPC'de (dashboard `reason`'a dayanıyor). İlk canlı probe yanlışlıkla admin hesapla koşulup doğrudan okuma 16 gösterdi; admin olmayanla 0. AC-10 (limit 0) canlı probe ile doğrulandı.
+
+**Migration** (kaynak: plan.md): 0020 `db query --linked -f` ile kullanıcı onayıyla iki kez uygulandı (idempotent). Rollback: `0020_feed_daily_limit.down.sql`.

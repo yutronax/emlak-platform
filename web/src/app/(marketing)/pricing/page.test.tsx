@@ -347,3 +347,68 @@ describe("PricingPage", () => {
     expect(screen.getByText(AC8_TEXT)).toBeInTheDocument();
   });
 });
+
+// EML-98 AC-8: her plan kartında max_listings'ten okunan günlük ilan satırı.
+// 10 -> "Günde 10 ilan", 50 -> "Günde 50 ilan", null -> "Sınırsız ilan".
+const LIMIT_PLANS = [
+  { id: "plan-temel", name: "Temel", price_minor_unit: 29900, sort_order: 1, max_listings: 10 },
+  { id: "plan-pro", name: "Pro", price_minor_unit: 59900, sort_order: 2, max_listings: 50 },
+  { id: "plan-kurumsal", name: "Kurumsal", price_minor_unit: 99900, sort_order: 3, max_listings: null },
+];
+
+describe("PricingPage — günlük ilan limiti (EML-98 AC-8)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  // AC-8 (Medium): üç limit metni birebir render edilir.
+  it("max_listings 10 / 50 / null için 'Günde 10 ilan', 'Günde 50 ilan', 'Sınırsız ilan' gösterir", async () => {
+    setupSupabase({
+      plans: { data: LIMIT_PLANS, error: null },
+    });
+
+    const jsx = await Page();
+    render(jsx);
+
+    expect(screen.getByText("Günde 10 ilan")).toBeInTheDocument();
+    expect(screen.getByText("Günde 50 ilan")).toBeInTheDocument();
+    expect(screen.getByText("Sınırsız ilan")).toBeInTheDocument();
+  });
+
+  // AC-8 (Medium): satır kendi planının kartında (Temel 10, Pro 50, Kurumsal sınırsız).
+  it("her satır kendi plan kartının içinde yer alır", async () => {
+    setupSupabase({
+      plans: { data: LIMIT_PLANS, error: null },
+    });
+
+    const jsx = await Page();
+    render(jsx);
+
+    const cardFor = (name: string) =>
+      screen.getByRole("heading", { level: 2, name }).closest("li");
+    expect(cardFor("Temel")).toHaveTextContent("Günde 10 ilan");
+    expect(cardFor("Pro")).toHaveTextContent("Günde 50 ilan");
+    expect(cardFor("Kurumsal")).toHaveTextContent("Sınırsız ilan");
+  });
+
+  // AC-8 (Medium): plans sorgusu max_listings kolonunu seçer.
+  it("plans sorgusu select'e max_listings ekler", async () => {
+    const { from } = setupSupabase({
+      plans: { data: LIMIT_PLANS, error: null },
+    });
+
+    const jsx = await Page();
+    render(jsx);
+
+    const plansBuilder = from.mock.results[0]?.value as {
+      select: ReturnType<typeof vi.fn>;
+    };
+    expect(plansBuilder.select).toHaveBeenCalledWith(
+      expect.stringContaining("max_listings"),
+    );
+  });
+});

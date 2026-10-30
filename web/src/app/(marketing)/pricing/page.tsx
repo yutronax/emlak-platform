@@ -17,7 +17,13 @@ type PlanRow = {
   name: string;
   price_minor_unit: number;
   sort_order: number;
+  // Günlük ilan görüntüleme limiti; null = sınırsız (EML-98 AC-8).
+  max_listings: number | null;
 };
+
+function listingLimitLabel(maxListings: number | null): string {
+  return maxListings === null ? "Sınırsız ilan" : `Günde ${maxListings} ilan`;
+}
 
 const AC8_TEXT =
   "14 gün ücretsiz. Kredi kartı istemiyoruz. Deneme bitince hesabınız kendiliğinden ücretlendirilmez. Devam etmek isterseniz bir plan seçip ödeme yaparsınız. Ödeme yapmazsanız erişiminiz duraklar, verileriniz silinmez.";
@@ -71,7 +77,7 @@ export default async function PricingPage() {
 
   const { data: plans, error: plansError } = await supabase
     .from("plans")
-    .select("id, name, price_minor_unit, sort_order")
+    .select("id, name, price_minor_unit, sort_order, max_listings")
     .order("sort_order", { ascending: true })
     .returns<PlanRow[]>();
 
@@ -172,6 +178,10 @@ export default async function PricingPage() {
                 <p className={`font-display text-4xl font-bold ${priceTone}`}>
                   {formatPrice(plan.price_minor_unit)}
                   <span className="ml-2 font-body text-base font-normal">/ ay</span>
+                </p>
+                {/* Ayrı satır: madde listesindeki li sayısı değişmesin (plan testleri 3-4 madde bekler). */}
+                <p className={`text-sm font-medium ${isHighlighted ? "text-white" : "text-ink-900"}`}>
+                  {listingLimitLabel(plan.max_listings)}
                 </p>
                 <ul className="flex flex-col gap-2 text-sm">
                   {featuresFor(index).map((feature) => (

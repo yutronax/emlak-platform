@@ -2,27 +2,53 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { getUnreadCount } from "./unread";
 
-const CHAIN_METHODS = ["select", "gt", "eq", "limit", "or", "filter", "abortSignal"] as const;
+/**
+ * EML-98 / EML-99 — okunmamış sayısı artık feed_unread_count RPC'sinden gelir.
+ * Doğrudan from('listings') çağrısı YOK (AC-7, AC-S1). Zil kilitli ilanları da sayar.
+ *
+ * Bu testler KIRMIZI olmalı: unread.ts henüz rpc çağırmıyor.
+ */
 
-function makeBuilder(result: { count: number | null; error: unknown }) {
+type RpcResult = { data: unknown; error: unknown };
+
+function makeRpcBuilder(result: RpcResult | Error) {
   const builder: Record<string, unknown> = {};
-  for (const method of CHAIN_METHODS) {
-    builder[method] = vi.fn(() => builder);
-  }
-  builder.then = (
-    resolve: (value: unknown) => unknown,
-    reject: (reason: unknown) => unknown,
-  ) => Promise.resolve(result).then(resolve, reject);
-  return builder as Record<string, ReturnType<typeof vi.fn>>;
+  builder.abortSignal = vi.fn(() => builder);
+  builder.then = (resolve: (value: RpcResult) => unknown, reject: (reason: unknown) => unknown) => {
+    if (result instanceof Error) {
+      return Promise.reject(result).then(resolve, reject);
+    }
+    return Promise.resolve(result).then(resolve, reject);
+  };
+  return builder as { abortSignal: ReturnType<typeof vi.fn> } & Record<string, unknown>;
 }
 
-function setup(result: { count: number | null; error: unknown }) {
-  const builder = makeBuilder(result);
-  const from = vi.fn(() => builder);
-  return { supabase: { from } as never, from, builder };
+// Eski yola düşülürse (from('listings')) boş sonuç döner; başarısızlık anlamlı kalır.
+function makeLegacyChain(): unknown {
+  const chain: unknown = new Proxy(function () {}, {
+    get: (_t, prop) => {
+      if (prop === "then") {
+        return (resolve: (v: unknown) => unknown, reject: (r: unknown) => unknown) =>
+          Promise.resolve({ count: 0, error: null }).then(resolve, reject);
+      }
+      return () => chain;
+    },
+    apply: () => chain,
+  });
+  return chain;
 }
 
-describe("getUnreadCount (AC-13)", () => {
+function setup(result: RpcResult | Error) {
+  const builder = makeRpcBuilder(result);
+  const rpc = vi.fn((...args: unknown[]) => {
+    void args;
+    return builder;
+  });
+  const from = vi.fn(() => makeLegacyChain());
+  return { supabase: { rpc, from } as never, rpc, from, builder };
+}
+
+describe("getUnreadCount (AC-7)", () => {
   const NOW = new Date("2026-10-28T12:00:00.000Z");
   let consoleError: ReturnType<typeof vi.spyOn>;
 
@@ -37,122 +63,96 @@ describe("getUnreadCount (AC-13)", () => {
     vi.restoreAllMocks();
   });
 
-  it("listings tablosunu count:'exact', head:true ile sayar", async () => {
-    const { supabase, from, builder } = setup({ count: 3, error: null });
-
-    await getUnreadCount(supabase, "agent-1", new Date("2026-10-27T00:00:00.000Z").toISOString());
-
-    expect(from).toHaveBeenCalledWith("listings");
-    expect(builder.select).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.objectContaining({ count: "exact", head: true }),
-    );
-  });
-
-  it("seenAt verilmişse created_at > seenAt koşulu uygulanır", async () => {
+  it("feed_unread_count RPC'sini p_since ile çağırır", async () => {
+    const { supabase, rpc } = setup({ data: 3, error: null });
     const seenAt = "2026-10-27T10:00:00.000Z";
-    const { supabase, builder } = setup({ count: 3, error: null });
 
     await getUnreadCount(supabase, "agent-1", seenAt);
 
-    expect(builder.gt).toHaveBeenCalledTimes(1);
-    const [column, value] = builder.gt.mock.calls[0];
-    expect(column).toBe("created_at");
-    expect(new Date(value as string).getTime()).toBe(new Date(seenAt).getTime());
+    expect(rpc).toHaveBeenCalledWith("feed_unread_count", {
+      p_since: expect.any(String),
+    });
   });
 
-  it("seenAt null ise created_at > şimdi - 7 gün koşulu uygulanır (coalesce)", async () => {
-    const { supabase, builder } = setup({ count: 0, error: null });
+  it("listings tablosu doğrudan okunmaz: from('listings') hiç çağrılmaz (AC-S1)", async () => {
+    const { supabase, from } = setup({ data: 3, error: null });
 
     await getUnreadCount(supabase, "agent-1", null);
 
-    expect(builder.gt).toHaveBeenCalledTimes(1);
-    const [column, value] = builder.gt.mock.calls[0];
+    expect(from).not.toHaveBeenCalled();
+  });
+
+  it("seenAt verilmişse p_since = seenAt (zaman olarak eşit)", async () => {
+    const seenAt = "2026-10-27T10:00:00.000Z";
+    const { supabase, rpc } = setup({ data: 3, error: null });
+
+    await getUnreadCount(supabase, "agent-1", seenAt);
+
+    const args = rpc.mock.calls[0][1] as { p_since: string };
+    expect(new Date(args.p_since).getTime()).toBe(new Date(seenAt).getTime());
+  });
+
+  it("seenAt null ise p_since = şimdi - 7 gün (coalesce)", async () => {
+    const { supabase, rpc } = setup({ data: 0, error: null });
+
+    await getUnreadCount(supabase, "agent-1", null);
+
+    const args = rpc.mock.calls[0][1] as { p_since: string };
     const sevenDaysAgo = NOW.getTime() - 7 * 24 * 60 * 60 * 1000;
-    expect(column).toBe("created_at");
-    expect(new Date(value as string).getTime()).toBe(sevenDaysAgo);
+    expect(new Date(args.p_since).getTime()).toBe(sevenDaysAgo);
   });
 
-  it("sayım en fazla 100 ile sınırlanır (limit 100)", async () => {
-    const { supabase, builder } = setup({ count: 100, error: null });
-
-    await getUnreadCount(supabase, "agent-1", null);
-
-    expect(builder.limit).toHaveBeenCalledWith(100);
-  });
-
-  it("başarılı sayımı sayı olarak döner", async () => {
-    const { supabase } = setup({ count: 7, error: null });
+  it("başarılı RPC sonucunu sayı olarak döner", async () => {
+    const { supabase } = setup({ data: 7, error: null });
 
     const count = await getUnreadCount(supabase, "agent-1", null);
 
     expect(count).toBe(7);
   });
 
-  it("sorgu hata dönerse null döner ve tam olarak bu log yazılır", async () => {
+  it("sorguda 5 sn zaman aşımı sinyali (abortSignal) uygulanır", async () => {
+    const { supabase, builder } = setup({ data: 1, error: null });
+
+    await getUnreadCount(supabase, "agent-1", null);
+
+    expect(builder.abortSignal).toHaveBeenCalledWith(expect.any(AbortSignal));
+  });
+
+  it("RPC hata dönerse null döner ve '[dashboard] unread count failed' loglanır", async () => {
     const { supabase } = setup({
-      count: null,
+      data: null,
       error: { code: "X", message: "secret db detail" },
     });
 
     const result = await getUnreadCount(supabase, "agent-1", null);
 
     expect(result).toBeNull();
-    expect(consoleError).toHaveBeenCalledWith(
-      "[dashboard] unread count failed",
-      { code: "X" },
-    );
+    expect(consoleError).toHaveBeenCalledWith("[dashboard] unread count failed", {
+      code: "X",
+    });
   });
 
   it("hata logu DB mesajını içermez (AC-S6)", async () => {
     const { supabase } = setup({
-      count: null,
+      data: null,
       error: { code: "X", message: "secret db detail" },
     });
 
     await getUnreadCount(supabase, "agent-1", null);
 
-    expect(JSON.stringify(consoleError.mock.calls)).not.toContain(
-      "secret db detail",
-    );
+    expect(consoleError).toHaveBeenCalled();
+    expect(JSON.stringify(consoleError.mock.calls)).not.toContain("secret db detail");
   });
 
-  it("OR/filter ile metin birleştirme yapılmaz", async () => {
-    const { supabase, builder } = setup({ count: 1, error: null });
-
-    await getUnreadCount(supabase, "agent-1", null);
-
-    expect(builder.or).not.toHaveBeenCalled();
-    expect(builder.filter).not.toHaveBeenCalled();
-  });
-
-  it("sorgu zincirinde abortSignal (timeout) uygulanır", async () => {
-    const { supabase, builder } = setup({ count: 1, error: null });
-
-    await getUnreadCount(supabase, "agent-1", null);
-
-    expect(builder.abortSignal).toHaveBeenCalledTimes(1);
-    expect(builder.abortSignal).toHaveBeenCalledWith(expect.any(AbortSignal));
-  });
-
-  it("sorgu AbortError ile reddedilirse null döner ve code 'timeout' ile loglanır", async () => {
+  it("RPC AbortError ile reddedilirse null döner ve code 'timeout' ile loglanır", async () => {
     const abortError = Object.assign(new Error("aborted"), { name: "AbortError" });
-    const builder: Record<string, unknown> = {};
-    for (const method of CHAIN_METHODS) {
-      builder[method] = vi.fn(() => builder);
-    }
-    builder.then = (
-      _resolve: (value: unknown) => unknown,
-      reject: (reason: unknown) => unknown,
-    ) => Promise.reject(abortError).then(undefined, reject);
-    const supabase = { from: vi.fn(() => builder) } as never;
+    const { supabase } = setup(abortError);
 
     const result = await getUnreadCount(supabase, "agent-1", null);
 
     expect(result).toBeNull();
-    expect(consoleError).toHaveBeenCalledWith(
-      "[dashboard] unread count failed",
-      { code: "timeout" },
-    );
+    expect(consoleError).toHaveBeenCalledWith("[dashboard] unread count failed", {
+      code: "timeout",
+    });
   });
 });

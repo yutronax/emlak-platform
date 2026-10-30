@@ -11,7 +11,7 @@ vi.mock("@/lib/supabase/server", () => ({
 const FUTURE = "2099-01-01T00:00:00.000Z";
 const PAST = "2020-01-01T00:00:00.000Z";
 
-type Result = { data?: unknown; count?: number | null; error: unknown };
+type Result = { data?: unknown; error: unknown };
 
 const CHAIN_METHODS = [
   "select",
@@ -42,13 +42,17 @@ function makeBuilder(result: Result) {
 type Setup = {
   user?: { id: string } | null;
   tables?: Record<string, Result>;
+  // mark_listings_seen ve diğer (argümansız) RPC'ler için sonuç
   rpc?: Result;
+  // feed_unread_count RPC'si için sonuç (sayaç)
+  unread?: Result;
 };
 
 function setupSupabase({
   user = { id: "agent-A" },
   tables = {},
   rpc = { data: 1, error: null },
+  unread = { data: 1, error: null },
 }: Setup = {}) {
   const builders: Record<string, ReturnType<typeof makeBuilder>> = {};
   const from = vi.fn((table: string) => {
@@ -59,7 +63,10 @@ function setupSupabase({
     }
     return builders[table];
   });
-  const rpcFn = vi.fn().mockResolvedValue(rpc);
+  // RPC'ler ada göre yönlendirilir: feed_unread_count -> unread, diğerleri -> rpc.
+  const rpcFn = vi.fn((name: string) =>
+    name === "feed_unread_count" ? makeBuilder(unread) : makeBuilder(rpc),
+  );
   const supabase = {
     from,
     rpc: rpcFn,
@@ -69,6 +76,12 @@ function setupSupabase({
   };
   vi.mocked(createClient).mockResolvedValue(supabase as never);
   return { from, rpc: rpcFn, builders, supabase };
+}
+
+// Belirli bir RPC'nin ilk çağrısının argümanları (yoksa undefined).
+function rpcArgs(rpc: ReturnType<typeof vi.fn>, name: string) {
+  const call = rpc.mock.calls.find((c) => c[0] === name);
+  return call?.[1] as Record<string, unknown> | undefined;
 }
 
 describe("markListingsSeen (AC-14, AC-17, AC-S1)", () => {
@@ -171,8 +184,9 @@ describe("refreshUnreadCount (AC-15, AC-S3)", () => {
     vi.restoreAllMocks();
   });
 
-  it("abonelik yoksa listings sorgusu hiç yapılmaz (AC-S3)", async () => {
-    const { from } = setupSupabase({
+  // Eski: from('listings') sayımı. Yeni: feed_unread_count RPC'si (sunucu tarafı yetki).
+  it("abonelik yoksa feed_unread_count RPC'si hiç çağrılmaz (AC-S3)", async () => {
+    const { from, rpc } = setupSupabase({
       tables: { subscriptions: { data: null, error: null } },
     });
 
@@ -180,11 +194,12 @@ describe("refreshUnreadCount (AC-15, AC-S3)", () => {
 
     const tables = from.mock.calls.map((call) => call[0]);
     expect(tables).not.toContain("listings");
+    expect(rpc).not.toHaveBeenCalledWith("feed_unread_count", expect.anything());
     expect(result).toMatchObject({ ok: false });
   });
 
-  it("abonelik süresi dolmuşsa listings sorgusu hiç yapılmaz (AC-S3)", async () => {
-    const { from } = setupSupabase({
+  it("abonelik süresi dolmuşsa feed_unread_count RPC'si hiç çağrılmaz (AC-S3)", async () => {
+    const { from, rpc } = setupSupabase({
       tables: {
         subscriptions: {
           data: { status: "active", current_period_end: PAST },
@@ -197,31 +212,56 @@ describe("refreshUnreadCount (AC-15, AC-S3)", () => {
 
     const tables = from.mock.calls.map((call) => call[0]);
     expect(tables).not.toContain("listings");
+    expect(rpc).not.toHaveBeenCalledWith("feed_unread_count", expect.anything());
     expect(result).toMatchObject({ ok: false });
   });
 
-  it("aktif abonelikte sayaç hesaplanır ve {ok:true, count} döner", async () => {
-    const { from } = setupSupabase({
+  // Eski: listings head:true count. Yeni: feed_unread_count({p_since: listings_seen_at}).
+  it("aktif abonelikte feed_unread_count p_since=listings_seen_at ile çağrılır ve {ok:true, count} döner", async () => {
+    const SEEN = "2026-10-27T10:00:00.000Z";
+    const { from, rpc } = setupSupabase({
       tables: {
         subscriptions: {
           data: { status: "active", current_period_end: FUTURE },
           error: null,
         },
         agents: {
-          data: { listings_seen_at: "2026-10-27T10:00:00.000Z" },
+          data: { listings_seen_at: SEEN },
           error: null,
         },
-        listings: { data: null, count: 4, error: null },
       },
+      unread: { data: 4, error: null },
     });
 
     const result = await refreshUnreadCount();
 
-    expect(from.mock.calls.map((call) => call[0])).toContain("listings");
+    expect(from.mock.calls.map((call) => call[0])).not.toContain("listings");
+    expect(rpc).toHaveBeenCalledWith("feed_unread_count", { p_since: SEEN });
     expect(result).toEqual({ ok: true, count: 4 });
   });
 
-  it("sayaç sorgusu hata verirse {ok:false} döner, DB mesajı sızmaz", async () => {
+  // Eski: seenAt null -> coalesce. Yeni: p_since = şimdi - 7 gün.
+  it("listings_seen_at null ise p_since = şimdi - 7 gün (coalesce)", async () => {
+    const { rpc } = setupSupabase({
+      tables: {
+        subscriptions: {
+          data: { status: "trialing", current_period_end: FUTURE },
+          error: null,
+        },
+        agents: { data: { listings_seen_at: null }, error: null },
+      },
+      unread: { data: 0, error: null },
+    });
+
+    await refreshUnreadCount();
+
+    const args = rpcArgs(rpc, "feed_unread_count") as { p_since: string };
+    const sevenDaysAgo = NOW.getTime() - 7 * 24 * 60 * 60 * 1000;
+    expect(new Date(args.p_since).getTime()).toBe(sevenDaysAgo);
+  });
+
+  // Eski: sayım hatası. Yeni: feed_unread_count RPC hatası -> {ok:false}, DB mesajı sızmaz.
+  it("feed_unread_count RPC hata verirse {ok:false} döner, DB mesajı sızmaz", async () => {
     setupSupabase({
       tables: {
         subscriptions: {
@@ -229,11 +269,10 @@ describe("refreshUnreadCount (AC-15, AC-S3)", () => {
           error: null,
         },
         agents: { data: { listings_seen_at: null }, error: null },
-        listings: {
-          data: null,
-          count: null,
-          error: { code: "X", message: "secret db detail" },
-        },
+      },
+      unread: {
+        data: null,
+        error: { code: "X", message: "secret db detail" },
       },
     });
 

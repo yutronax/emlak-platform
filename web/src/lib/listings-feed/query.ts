@@ -2,13 +2,9 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type { FeedFilterOptions, ParsedFilters } from "./filters";
 
-const PAGE_SIZE = 20;
 export const QUERY_TIMEOUT_MS = 5_000;
-const OPTIONS_LIMIT = 1000;
-const FIVE_PLUS_ROOMS = ["5+1", "5+2", "6+1", "6+2", "7+1", "8+1"];
-const LISTING_COLUMNS =
-  "id,title,price,currency,rooms,area_m2,city,district,source_group_name,created_at";
 
+// Açık satır: sunucu tüm ilan alanlarını döner (EML-98 AC-1).
 export type FeedRow = {
   id: string;
   title: string;
@@ -22,52 +18,75 @@ export type FeedRow = {
   created_at: string;
 };
 
-export type FeedResult =
-  | { ok: true; items: FeedRow[] }
-  | { ok: false; code: string };
+export type OpenFeedRow = FeedRow & { locked: false };
 
-type OptionRow = {
+// Kilitli satır: yalnız bu 5 anahtar (AC-4 / AC-S2). Başka alan gelmez.
+export type LockedFeedRow = {
+  id: string;
   city: string | null;
   district: string | null;
-  source_group_name: string | null;
+  created_at: string;
+  locked: true;
 };
 
-function distinct(values: (string | null)[]): string[] {
-  return [...new Set(values.filter((v): v is string => v !== null))];
-}
+export type FeedItem = OpenFeedRow | LockedFeedRow;
+
+export type FeedResult =
+  | {
+      ok: true;
+      items: FeedItem[];
+      lockedCount: number | null;
+      limit: number | null;
+      openToday: number;
+      reason?: string;
+    }
+  | { ok: false; code: string };
+
+type FeedRpcBody = {
+  items?: FeedItem[];
+  locked_count?: number;
+  limit?: number | null;
+  open_today?: number;
+  reason?: string;
+};
 
 export async function fetchFeed(
   supabase: SupabaseClient,
   filters: ParsedFilters,
 ): Promise<FeedResult> {
-  const from = (filters.sayfa - 1) * PAGE_SIZE;
-
   try {
-    let query = supabase.from("listings").select(LISTING_COLUMNS);
-    if (filters.il) query = query.eq("city", filters.il);
-    if (filters.ilce) query = query.eq("district", filters.ilce);
-    if (filters.grup) query = query.eq("source_group_name", filters.grup);
-    if (filters.fiyatMin !== null || filters.fiyatMax !== null) {
-      query = query.eq("currency", "TRY").not("price", "is", null);
-    }
-    if (filters.fiyatMin !== null) query = query.gte("price", filters.fiyatMin);
-    if (filters.fiyatMax !== null) query = query.lte("price", filters.fiyatMax);
-    if (filters.oda === "5+") query = query.in("rooms", FIVE_PLUS_ROOMS);
-    else if (filters.oda) query = query.eq("rooms", filters.oda);
-
-    const { data, error } = await query
-      .order("created_at", { ascending: false })
-      .range(from, from + PAGE_SIZE - 1)
+    const { data, error } = await supabase
+      .rpc("feed_listings", {
+        p_filters: {
+          il: filters.il,
+          ilce: filters.ilce,
+          grup: filters.grup,
+          fiyatMin: filters.fiyatMin,
+          fiyatMax: filters.fiyatMax,
+          oda: filters.oda,
+        },
+        p_page: filters.sayfa,
+      })
       .abortSignal(AbortSignal.timeout(QUERY_TIMEOUT_MS));
 
     if (error) {
-      console.error("[dashboard] listings query failed", { code: error.code });
+      console.error("[dashboard] feed rpc failed", { code: error.code });
       return { ok: false, code: error.code ?? "unknown" };
     }
-    return { ok: true, items: (data ?? []) as FeedRow[] };
+
+    const body = (data ?? {}) as FeedRpcBody;
+    const result: FeedResult = {
+      ok: true,
+      items: body.items ?? [],
+      lockedCount: body.locked_count ?? null,
+      limit: body.limit ?? null,
+      openToday: body.open_today ?? 0,
+    };
+    if (body.reason !== undefined) result.reason = body.reason;
+    return result;
   } catch (err) {
     const code = err instanceof Error ? err.name : "unknown";
-    console.error("[dashboard] listings query failed", { code });
+    console.error("[dashboard] feed rpc failed", { code });
     return { ok: false, code };
   }
 }
@@ -80,26 +99,23 @@ export async function fetchFilterOptions(
 
   try {
     const { data, error } = await supabase
-      .from("listings")
-      .select("city,district,source_group_name")
-      .limit(OPTIONS_LIMIT)
+      .rpc("feed_filter_options", { p_il: il ?? null })
       .abortSignal(AbortSignal.timeout(QUERY_TIMEOUT_MS));
 
     if (error) {
-      console.error("[dashboard] listings query failed", { code: error.code });
+      console.error("[dashboard] feed options rpc failed", { code: error.code });
       return empty;
     }
 
-    const rows = (data ?? []) as OptionRow[];
-    const districtRows = il ? rows.filter((r) => r.city === il) : rows;
+    const body = (data ?? {}) as Partial<FeedFilterOptions>;
     return {
-      cities: distinct(rows.map((r) => r.city)),
-      districts: distinct(districtRows.map((r) => r.district)),
-      groups: distinct(rows.map((r) => r.source_group_name)),
+      cities: body.cities ?? [],
+      districts: body.districts ?? [],
+      groups: body.groups ?? [],
     };
   } catch (err) {
     const code = err instanceof Error ? err.name : "unknown";
-    console.error("[dashboard] listings query failed", { code });
+    console.error("[dashboard] feed options rpc failed", { code });
     return empty;
   }
 }

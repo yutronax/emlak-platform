@@ -158,5 +158,14 @@ Amaç: Her emlakçı kendi gruplarından kendi ilanlarını görür.
 
 ---
 
+## 6b. Yedek (kullanıcı kararı 2026-10-30: şimdilik bekliyor)
+Tasarım eleştirisi (`tasarim-elestirisi-2026-10-28/rapor.md`) P1 kalanları:
+- [ ] Logo, sosyal kanıt, şirket bilgisi (içerik kullanıcıdan)
+- [ ] Telefon + kodla kayıt/giriş (SMS sağlayıcısı gerekli)
+- [ ] p1-hizli-kazanimlar sonrası panel/admin sayfalarında koyulaşan gri metnin göz kontrolü (oturum gerekli)
+P2 maddeleri raporun §5'inde.
+
+Durum (2026-10-30): Faz 0, 1a, 1b, 1c, 2 (ilan akışı + site içi bildirim) tamamlandı; P0 vitrin/güven ve P1 hızlı kazanımlar commit'li.
+
 ## 7. Önerilen başlangıç
 **Faz 0** ile başla: küçük, hızlı, yanlış vaadi kaldırır ve siteyi bugünkü ürüne dürüst hale getirir. Ardından **Faz 1** (video siparişi) — WhatsApp riskinden bağımsız ve ilk geliri getirecek parça.

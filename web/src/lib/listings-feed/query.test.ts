@@ -3,54 +3,50 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ParsedFilters } from "./filters";
 import { fetchFeed, fetchFilterOptions } from "./query";
 
-type QueryResult = {
-  data: unknown;
-  error: { code?: string; message?: string } | null;
-};
+/**
+ * EML-98 / EML-99 — akış ve seçenekler artık RPC üzerinden (feed_listings,
+ * feed_filter_options). Doğrudan `from('listings')` çağrısı YOK (AC-S1, AC-9).
+ *
+ * Bu testler KIRMIZI olmalı: query.ts henüz rpc çağırmıyor.
+ */
 
-// Zincirlenebilir Supabase query builder taklidi. Her metot çağrısı kaydedilir;
-// await edildiğinde sabit sonucu döner (veya reject eder).
-const CHAIN_METHODS = [
-  "select",
-  "eq",
-  "gte",
-  "lte",
-  "in",
-  "not",
-  "order",
-  "range",
-  "limit",
-  "abortSignal",
-  // Yasaklı ama izlenen metotlar: çağrılmamalı.
-  "or",
-  "filter",
-  "ilike",
-  "like",
-  "textSearch",
-] as const;
+type RpcResult = { data: unknown; error: { code?: string; message?: string } | null };
 
-function makeBuilder(result: QueryResult | Error) {
+// PostgREST rpc builder taklidi: abortSignal zincirlenir, await edilince sonuç döner.
+function makeRpcBuilder(result: RpcResult | Error) {
   const builder: Record<string, unknown> = {};
-  for (const method of CHAIN_METHODS) {
-    builder[method] = vi.fn(() => builder);
-  }
-  builder.then = (
-    resolve: (value: QueryResult) => unknown,
-    reject: (reason: unknown) => unknown,
-  ) => {
+  builder.abortSignal = vi.fn(() => builder);
+  builder.then = (resolve: (value: RpcResult) => unknown, reject: (reason: unknown) => unknown) => {
     if (result instanceof Error) {
       return Promise.reject(result).then(resolve, reject);
     }
     return Promise.resolve(result).then(resolve, reject);
   };
-  return builder as typeof builder & Record<(typeof CHAIN_METHODS)[number], ReturnType<typeof vi.fn>>;
+  return builder as { abortSignal: ReturnType<typeof vi.fn> } & Record<string, unknown>;
 }
 
-function setupSupabase(result: QueryResult | Error) {
-  const builder = makeBuilder(result);
-  const from = vi.fn(() => builder);
-  const supabase = { from };
-  return { supabase, from, builder };
+// Eski yola düşülürse (from('listings')) bu zincir boş sonuç döner; böylece
+// başarısızlık TypeError yerine anlamlı bir assertion farkı olarak görünür.
+function makeLegacyChain(): unknown {
+  const chain: unknown = new Proxy(function () {}, {
+    get: (_t, prop) => {
+      if (prop === "then") {
+        return (resolve: (v: unknown) => unknown, reject: (r: unknown) => unknown) =>
+          Promise.resolve({ data: [], error: null }).then(resolve, reject);
+      }
+      return () => chain;
+    },
+    apply: () => chain,
+  });
+  return chain;
+}
+
+function setupSupabase(result: RpcResult | Error) {
+  const builder = makeRpcBuilder(result);
+  const rpc = vi.fn(() => builder);
+  const from = vi.fn(() => makeLegacyChain());
+  const supabase = { rpc, from };
+  return { supabase, rpc, from, builder };
 }
 
 function emptyFilters(overrides: Partial<ParsedFilters> = {}): ParsedFilters {
@@ -66,21 +62,8 @@ function emptyFilters(overrides: Partial<ParsedFilters> = {}): ParsedFilters {
   } as ParsedFilters;
 }
 
-const ALLOWED_CHAIN_METHODS = new Set([
-  "select",
-  "eq",
-  "gte",
-  "lte",
-  "in",
-  "not",
-  "order",
-  "range",
-  "limit",
-  "abortSignal",
-]);
-
-// Sayfa çıktısının beklenen satır şekli (AC-1 alanları).
-const ROW = {
+// Sunucunun açık satır şekli (AC-1 alanları + locked:false).
+const OPEN_ROW = {
   id: "l-1",
   title: "Merkezde Daire",
   price: 2500000,
@@ -91,122 +74,81 @@ const ROW = {
   district: "Kadıköy",
   source_group_name: "Grup A",
   created_at: "2026-10-28T09:00:00.000Z",
+  locked: false,
 };
 
-describe("fetchFeed — sorgu oluşturma (AC-2, AC-S4)", () => {
-  let consoleError: ReturnType<typeof vi.spyOn>;
+// Sunucunun kilitli satır şekli (AC-4 / AC-S2): yalnız bu 5 anahtar.
+const LOCKED_ROW = {
+  id: "l-9",
+  city: "İstanbul",
+  district: "Ataşehir",
+  created_at: "2026-10-28T08:00:00.000Z",
+  locked: true,
+};
 
+const LOCKED_FORBIDDEN_KEYS = [
+  "title",
+  "price",
+  "currency",
+  "rooms",
+  "area_m2",
+  "source_group_name",
+];
+
+describe("fetchFeed — RPC çağrısı (AC-1, AC-2, AC-S1, AC-S3)", () => {
   beforeEach(() => {
-    consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+    vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  it("yalnız izinli metotları kullanır; or() ve filter() hiç çağrılmaz", async () => {
-    const { supabase, builder } = setupSupabase({ data: [ROW], error: null });
+  it("feed_listings RPC'si p_filters ve p_page ile çağrılır", async () => {
+    const { supabase, rpc } = setupSupabase({
+      data: { items: [], locked_count: 0, limit: 10, open_today: 0 },
+      error: null,
+    });
 
     await fetchFeed(
       supabase as never,
-      emptyFilters({ il: "İstanbul", fiyatMin: 1000, oda: "3+1" }),
+      emptyFilters({ il: "İstanbul", fiyatMin: 1000, oda: "3+1", sayfa: 2 }),
     );
 
-    expect(builder.or).not.toHaveBeenCalled();
-    expect(builder.filter).not.toHaveBeenCalled();
-    expect(builder.ilike).not.toHaveBeenCalled();
-    expect(builder.like).not.toHaveBeenCalled();
-    expect(builder.textSearch).not.toHaveBeenCalled();
-    expect(builder.eq).toHaveBeenCalled();
+    expect(rpc).toHaveBeenCalledWith("feed_listings", {
+      p_filters: expect.objectContaining({
+        il: "İstanbul",
+        fiyatMin: 1000,
+        oda: "3+1",
+      }),
+      p_page: 2,
+    });
   });
 
-  it("created_at desc sıralar ve yalnız izinli metotlardan oluşan zincir kurar", async () => {
-    const { supabase, builder } = setupSupabase({ data: [], error: null });
+  it("listings tablosu doğrudan okunmaz: from('listings') hiç çağrılmaz (AC-S1)", async () => {
+    const { supabase, from } = setupSupabase({
+      data: { items: [], locked_count: 0, limit: 10, open_today: 0 },
+      error: null,
+    });
 
     await fetchFeed(supabase as never, emptyFilters());
 
-    expect(builder.order).toHaveBeenCalledWith("created_at", {
-      ascending: false,
+    expect(from).not.toHaveBeenCalled();
+  });
+
+  it("RPC çağrısı 5 sn zaman aşımı sinyali taşır (abortSignal)", async () => {
+    const { supabase, builder } = setupSupabase({
+      data: { items: [], locked_count: 0, limit: 10, open_today: 0 },
+      error: null,
     });
-    const usedMethods = CHAIN_METHODS.filter(
-      (m) => (builder[m] as ReturnType<typeof vi.fn>).mock.calls.length > 0,
-    );
-    for (const m of usedMethods) {
-      expect(ALLOWED_CHAIN_METHODS.has(m)).toBe(true);
-    }
-  });
-
-  it("sayfa 1 için range(0,19) (sayfa başına 20, offset sayfalama)", async () => {
-    const { supabase, builder } = setupSupabase({ data: [], error: null });
-
-    await fetchFeed(supabase as never, emptyFilters({ sayfa: 1 }));
-
-    expect(builder.range).toHaveBeenCalledWith(0, 19);
-  });
-
-  it("sayfa 2 için range(20,39)", async () => {
-    const { supabase, builder } = setupSupabase({ data: [], error: null });
-
-    await fetchFeed(supabase as never, emptyFilters({ sayfa: 2 }));
-
-    expect(builder.range).toHaveBeenCalledWith(20, 39);
-  });
-
-  it("istemciden gelen limit kullanılmaz; sabit 20 kayıt (range ile)", async () => {
-    const { supabase, builder } = setupSupabase({ data: [], error: null });
-
-    await fetchFeed(supabase as never, emptyFilters({ sayfa: 1 }));
-
-    expect(builder.limit).not.toHaveBeenCalledWith(5);
-    expect(builder.range).toHaveBeenCalledWith(0, 19);
-  });
-
-  it("her ilan sorgusu 5 sn zaman aşımı sinyali taşır", async () => {
-    const { supabase, builder } = setupSupabase({ data: [], error: null });
 
     await fetchFeed(supabase as never, emptyFilters());
 
     expect(builder.abortSignal).toHaveBeenCalledWith(expect.any(AbortSignal));
   });
-
-  it("filtre yoksa eq/gte/lte/in çağrılmaz", async () => {
-    const { supabase, builder } = setupSupabase({ data: [], error: null });
-
-    await fetchFeed(supabase as never, emptyFilters());
-
-    expect(builder.eq).not.toHaveBeenCalled();
-    expect(builder.gte).not.toHaveBeenCalled();
-    expect(builder.lte).not.toHaveBeenCalled();
-    expect(builder.in).not.toHaveBeenCalled();
-  });
-
-  it("il, ilçe ve grup değerleri eq() ile eşitlik filtresi olarak uygulanır", async () => {
-    const { supabase, builder } = setupSupabase({ data: [], error: null });
-
-    await fetchFeed(
-      supabase as never,
-      emptyFilters({ il: "İstanbul", ilce: "Kadıköy", grup: "Grup A" }),
-    );
-
-    expect(builder.eq).toHaveBeenCalledWith("city", "İstanbul");
-    expect(builder.eq).toHaveBeenCalledWith("district", "Kadıköy");
-    expect(builder.eq).toHaveBeenCalledWith("source_group_name", "Grup A");
-  });
-
-  it("fiyat min/max gte()/lte() ile uygulanır", async () => {
-    const { supabase, builder } = setupSupabase({ data: [], error: null });
-
-    await fetchFeed(
-      supabase as never,
-      emptyFilters({ fiyatMin: 1000, fiyatMax: 5000 }),
-    );
-
-    expect(builder.gte).toHaveBeenCalledWith("price", 1000);
-    expect(builder.lte).toHaveBeenCalledWith("price", 5000);
-  });
 });
 
-describe("fetchFeed — fiyat filtresi TRY ve null kuralı (AC-7)", () => {
+describe("fetchFeed — yanıt eşleme (AC-1, AC-3, AC-4, AC-5, AC-10)", () => {
   beforeEach(() => {
     vi.spyOn(console, "error").mockImplementation(() => {});
   });
@@ -215,70 +157,152 @@ describe("fetchFeed — fiyat filtresi TRY ve null kuralı (AC-7)", () => {
     vi.restoreAllMocks();
   });
 
-  it("fiyat min aktifken currency='TRY' ve price is not null uygulanır", async () => {
-    const { supabase, builder } = setupSupabase({ data: [], error: null });
+  it("limit altında: açık satırlar ve openToday döner, lockedCount 0 (durum 1)", async () => {
+    const { supabase } = setupSupabase({
+      data: { items: [OPEN_ROW], locked_count: 0, limit: 10, open_today: 7 },
+      error: null,
+    });
 
-    await fetchFeed(supabase as never, emptyFilters({ fiyatMin: 1000 }));
+    const result = await fetchFeed(supabase as never, emptyFilters());
 
-    expect(builder.eq).toHaveBeenCalledWith("currency", "TRY");
-    expect(builder.not).toHaveBeenCalledWith("price", "is", null);
+    expect(result).toEqual({
+      ok: true,
+      items: [OPEN_ROW],
+      lockedCount: 0,
+      limit: 10,
+      openToday: 7,
+    });
   });
 
-  it("fiyat max aktifken de currency='TRY' ve price is not null uygulanır", async () => {
-    const { supabase, builder } = setupSupabase({ data: [], error: null });
+  it("limit aşıldı: kilitli satırlar korunur ve lockedCount doğru döner (durum 2)", async () => {
+    const { supabase } = setupSupabase({
+      data: {
+        items: [OPEN_ROW, LOCKED_ROW],
+        locked_count: 4,
+        limit: 10,
+        open_today: 10,
+      },
+      error: null,
+    });
 
-    await fetchFeed(supabase as never, emptyFilters({ fiyatMax: 5000 }));
+    const result = await fetchFeed(supabase as never, emptyFilters());
 
-    expect(builder.eq).toHaveBeenCalledWith("currency", "TRY");
-    expect(builder.not).toHaveBeenCalledWith("price", "is", null);
+    expect(result).toMatchObject({
+      ok: true,
+      lockedCount: 4,
+      limit: 10,
+      openToday: 10,
+    });
+    if (!result.ok) throw new Error("beklenmeyen hata");
+    expect(result.items).toHaveLength(2);
+    expect(result.items[1]).toEqual(LOCKED_ROW);
   });
 
-  it("fiyat filtresi yokken currency/price-null koşulu eklenmez", async () => {
-    const { supabase, builder } = setupSupabase({ data: [], error: null });
+  it("kilitli satır sunucudan geldiği gibi kalır: başlık/fiyat/oda alanları eklenmez (AC-S2)", async () => {
+    const { supabase } = setupSupabase({
+      data: { items: [LOCKED_ROW], locked_count: 1, limit: 0, open_today: 0 },
+      error: null,
+    });
 
-    await fetchFeed(supabase as never, emptyFilters({ il: "İstanbul" }));
+    const result = await fetchFeed(supabase as never, emptyFilters());
 
-    expect(builder.eq).not.toHaveBeenCalledWith("currency", "TRY");
-    expect(builder.not).not.toHaveBeenCalledWith("price", "is", null);
+    expect(result).toMatchObject({ ok: true });
+    if (!result.ok) throw new Error("beklenmeyen hata");
+    expect(result.items).toHaveLength(1);
+    const locked = result.items[0] as unknown as Record<string, unknown>;
+    expect(Object.keys(locked).sort()).toEqual(
+      ["city", "created_at", "district", "id", "locked"].sort(),
+    );
+    for (const key of LOCKED_FORBIDDEN_KEYS) {
+      expect(locked).not.toHaveProperty(key);
+    }
+  });
+
+  it("sınırsız plan (limit null): limit null döner, hiçbir satır kilitli değil (AC-3)", async () => {
+    const { supabase } = setupSupabase({
+      data: { items: [OPEN_ROW], locked_count: 0, limit: null, open_today: 23 },
+      error: null,
+    });
+
+    const result = await fetchFeed(supabase as never, emptyFilters());
+
+    expect(result).toMatchObject({ ok: true, limit: null, lockedCount: 0 });
+  });
+
+  it("geçersiz limit (0): tüm satırlar kilitli, hata değil, consoleError yok (AC-10)", async () => {
+    const { supabase } = setupSupabase({
+      data: {
+        items: [LOCKED_ROW],
+        locked_count: 1,
+        limit: 0,
+        open_today: 0,
+      },
+      error: null,
+    });
+
+    const result = await fetchFeed(supabase as never, emptyFilters());
+
+    expect(result).toMatchObject({
+      ok: true,
+      limit: 0,
+      lockedCount: 1,
+      openToday: 0,
+    });
+    expect(console.error).not.toHaveBeenCalled();
+  });
+
+  it("aboneliksiz: reason 'no_subscription' ile boş döner, ilan alanı yok (AC-S5)", async () => {
+    const { supabase } = setupSupabase({
+      data: {
+        items: [],
+        locked_count: 0,
+        limit: 0,
+        reason: "no_subscription",
+      },
+      error: null,
+    });
+
+    const result = await fetchFeed(supabase as never, emptyFilters());
+
+    expect(result).toMatchObject({
+      ok: true,
+      items: [],
+      lockedCount: 0,
+      limit: 0,
+      reason: "no_subscription",
+    });
+  });
+
+  it("filtre sonucu boşsa reason alanı yok (boş durum ↔ abonelik ayrımı)", async () => {
+    const { supabase } = setupSupabase({
+      data: { items: [], locked_count: 0, limit: 10, open_today: 3 },
+      error: null,
+    });
+
+    const result = await fetchFeed(
+      supabase as never,
+      emptyFilters({ il: "İzmir" }),
+    );
+
+    expect(result).toMatchObject({ ok: true, items: [] });
+    expect(result).not.toHaveProperty("reason");
+  });
+
+  it("RPC gövdesinde snake_case alanlar camelCase'e çevrilir (lockedCount, openToday)", async () => {
+    const { supabase } = setupSupabase({
+      data: { items: [], locked_count: 2, limit: 10, open_today: 8 },
+      error: null,
+    });
+
+    const result = await fetchFeed(supabase as never, emptyFilters());
+
+    expect(result).toMatchObject({ lockedCount: 2, openToday: 8 });
+    expect(result).not.toHaveProperty("locked_count");
+    expect(result).not.toHaveProperty("open_today");
   });
 });
 
-describe("fetchFeed — oda filtresi (AC-8)", () => {
-  beforeEach(() => {
-    vi.spyOn(console, "error").mockImplementation(() => {});
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
-  it("'3+1' tam eşitlik ile eq('rooms','3+1') olarak uygulanır", async () => {
-    const { supabase, builder } = setupSupabase({ data: [], error: null });
-
-    await fetchFeed(supabase as never, emptyFilters({ oda: "3+1" }));
-
-    expect(builder.eq).toHaveBeenCalledWith("rooms", "3+1");
-    expect(builder.in).not.toHaveBeenCalled();
-  });
-
-  it("'5+' sabit liste ile in('rooms', [...]) olarak uygulanır (5 ve üstü)", async () => {
-    const { supabase, builder } = setupSupabase({ data: [], error: null });
-
-    await fetchFeed(supabase as never, emptyFilters({ oda: "5+" }));
-
-    expect(builder.in).toHaveBeenCalledWith("rooms", [
-      "5+1",
-      "5+2",
-      "6+1",
-      "6+2",
-      "7+1",
-      "8+1",
-    ]);
-    expect(builder.eq).not.toHaveBeenCalledWith("rooms", "5+");
-  });
-});
-
-describe("fetchFeed — sonuç ve hata (AC-4, AC-5, AC-S6)", () => {
+describe("fetchFeed — hata ve zaman aşımı (AC-9)", () => {
   let consoleError: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
@@ -289,36 +313,29 @@ describe("fetchFeed — sonuç ve hata (AC-4, AC-5, AC-S6)", () => {
     vi.restoreAllMocks();
   });
 
-  it("başarılı sorgu satırları {ok:true, items} olarak döner", async () => {
-    const { supabase } = setupSupabase({ data: [ROW], error: null });
-
-    const result = await fetchFeed(supabase as never, emptyFilters());
-
-    expect(result).toEqual({ ok: true, items: [ROW] });
-  });
-
-  it("data=[] ve error=null → {ok:true, items:[]} (hata ile boş ayırt edilir)", async () => {
-    const { supabase } = setupSupabase({ data: [], error: null });
-
-    const result = await fetchFeed(supabase as never, emptyFilters());
-
-    expect(result).toEqual({ ok: true, items: [] });
-    expect(consoleError).not.toHaveBeenCalled();
-  });
-
-  it("error dönerse {ok:false, code} döner ve tam olarak bu log yazılır", async () => {
+  it("RPC error → {ok:false, code} döner ve '[dashboard] feed rpc failed' loglanır", async () => {
     const { supabase } = setupSupabase({
       data: null,
-      error: { code: "X", message: "db internals secret detail" },
+      error: { code: "42501", message: "db internals secret detail" },
     });
 
     const result = await fetchFeed(supabase as never, emptyFilters());
 
-    expect(result).toEqual({ ok: false, code: "X" });
-    expect(consoleError).toHaveBeenCalledWith(
-      "[dashboard] listings query failed",
-      { code: "X" },
-    );
+    expect(result).toEqual({ ok: false, code: "42501" });
+    expect(consoleError).toHaveBeenCalledWith("[dashboard] feed rpc failed", {
+      code: "42501",
+    });
+  });
+
+  it("RPC hatasında doğrudan listings select'ine fallback yok (AC-9)", async () => {
+    const { supabase, from } = setupSupabase({
+      data: null,
+      error: { code: "X", message: "boom" },
+    });
+
+    await fetchFeed(supabase as never, emptyFilters());
+
+    expect(from).not.toHaveBeenCalled();
   });
 
   it("hata logu ve dönüş değeri DB mesajını içermez (AC-S6)", async () => {
@@ -329,33 +346,29 @@ describe("fetchFeed — sonuç ve hata (AC-4, AC-5, AC-S6)", () => {
 
     const result = await fetchFeed(supabase as never, emptyFilters());
 
+    expect(consoleError).toHaveBeenCalled();
     expect(JSON.stringify(result)).not.toContain("secret detail");
-    expect(JSON.stringify(consoleError.mock.calls)).not.toContain(
-      "secret detail",
-    );
+    expect(JSON.stringify(consoleError.mock.calls)).not.toContain("secret detail");
   });
 
-  it("timeout/istisna fırlatılırsa exception dışarı sızmaz, {ok:false} döner ve loglanır", async () => {
-    const { supabase } = setupSupabase(
-      Object.assign(new Error("The operation was aborted due to timeout"), {
-        name: "TimeoutError",
-      }),
+  it("zaman aşımı (TimeoutError) → {ok:false, code:'TimeoutError'} döner ve loglanır", async () => {
+    const timeoutError = Object.assign(
+      new Error("The operation was aborted due to timeout"),
+      { name: "TimeoutError" },
     );
+    const { supabase } = setupSupabase(timeoutError);
 
     const result = await fetchFeed(supabase as never, emptyFilters());
 
-    expect(result).toMatchObject({ ok: false });
-    expect(consoleError).toHaveBeenCalledWith(
-      "[dashboard] listings query failed",
-      expect.objectContaining({ code: expect.any(String) }),
-    );
-    expect(JSON.stringify(consoleError.mock.calls)).not.toContain(
-      "due to timeout",
-    );
+    expect(result).toEqual({ ok: false, code: "TimeoutError" });
+    expect(consoleError).toHaveBeenCalledWith("[dashboard] feed rpc failed", {
+      code: "TimeoutError",
+    });
+    expect(JSON.stringify(consoleError.mock.calls)).not.toContain("due to timeout");
   });
 });
 
-describe("fetchFilterOptions — distinct seçenekler (AC-9)", () => {
+describe("fetchFilterOptions — RPC seçenekleri (AC-7, AC-S7)", () => {
   beforeEach(() => {
     vi.spyOn(console, "error").mockImplementation(() => {});
   });
@@ -364,50 +377,68 @@ describe("fetchFilterOptions — distinct seçenekler (AC-9)", () => {
     vi.restoreAllMocks();
   });
 
-  const ROWS = [
-    { city: "İstanbul", district: "Kadıköy", source_group_name: "Grup A" },
-    { city: "İstanbul", district: "Kadıköy", source_group_name: "Grup A" },
-    { city: "İstanbul", district: "Beşiktaş", source_group_name: "Grup B" },
-    { city: "İzmir", district: "Çeşme", source_group_name: null },
-    { city: "İzmir", district: null, source_group_name: null },
-  ];
+  const PAYLOAD = {
+    cities: ["İstanbul", "İzmir"],
+    districts: ["Kadıköy", "Beşiktaş"],
+    groups: ["Grup A", "Grup B"],
+  };
 
-  it("il, ilçe ve grup değerlerini distinct olarak döner, null değerleri dışarıda bırakır", async () => {
-    const { supabase } = setupSupabase({ data: ROWS, error: null });
+  it("feed_filter_options RPC'sini p_il ile çağırır; listings'e dokunmaz", async () => {
+    const { supabase, rpc, from } = setupSupabase({ data: PAYLOAD, error: null });
 
-    const options = await fetchFilterOptions(supabase as never, null);
+    await fetchFilterOptions(supabase as never, "İstanbul");
 
-    expect(options.cities).toHaveLength(2);
-    expect(options.cities).toEqual(expect.arrayContaining(["İstanbul", "İzmir"]));
-    expect(options.groups).toEqual(expect.arrayContaining(["Grup A", "Grup B"]));
-    expect(options.groups).toHaveLength(2);
-    expect(options.districts).toEqual(
-      expect.arrayContaining(["Kadıköy", "Beşiktaş", "Çeşme"]),
-    );
-    expect(options.districts).toHaveLength(3);
-    expect(options.districts).not.toContain(null);
-    expect(options.groups).not.toContain(null);
+    expect(rpc).toHaveBeenCalledWith("feed_filter_options", { p_il: "İstanbul" });
+    expect(from).not.toHaveBeenCalled();
   });
 
-  it("seçili il varken ilçe listesi yalnız o ile ait ilçelerle daralır", async () => {
-    const { supabase } = setupSupabase({ data: ROWS, error: null });
-
-    const options = await fetchFilterOptions(supabase as never, "İstanbul");
-
-    expect(options.districts).toEqual(
-      expect.arrayContaining(["Kadıköy", "Beşiktaş"]),
-    );
-    expect(options.districts).toHaveLength(2);
-    expect(options.districts).not.toContain("Çeşme");
-  });
-
-  it("seçenek sorgusu limit(1000) ile sınırlanır", async () => {
-    const { supabase, builder } = setupSupabase({ data: ROWS, error: null });
+  it("il null iken p_il: null gönderilir", async () => {
+    const { supabase, rpc } = setupSupabase({ data: PAYLOAD, error: null });
 
     await fetchFilterOptions(supabase as never, null);
 
-    expect(builder.limit).toHaveBeenCalledWith(1000);
-    expect(builder.or).not.toHaveBeenCalled();
-    expect(builder.filter).not.toHaveBeenCalled();
+    expect(rpc).toHaveBeenCalledWith("feed_filter_options", { p_il: null });
+  });
+
+  it("RPC payload'ı (cities/districts/groups) olduğu gibi döner", async () => {
+    const { supabase } = setupSupabase({ data: PAYLOAD, error: null });
+
+    const options = await fetchFilterOptions(supabase as never, null);
+
+    expect(options).toEqual(PAYLOAD);
+  });
+
+  it("zaman aşımı sinyali taşır (abortSignal)", async () => {
+    const { supabase, builder } = setupSupabase({ data: PAYLOAD, error: null });
+
+    await fetchFilterOptions(supabase as never, null);
+
+    expect(builder.abortSignal).toHaveBeenCalledWith(expect.any(AbortSignal));
+  });
+
+  it("RPC hatası → boş seçenekler döner ve loglanır", async () => {
+    const { supabase, from } = setupSupabase({
+      data: null,
+      error: { code: "X", message: "secret db detail" },
+    });
+
+    const options = await fetchFilterOptions(supabase as never, null);
+
+    expect(options).toEqual({ cities: [], districts: [], groups: [] });
+    expect(from).not.toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalled();
+    expect(JSON.stringify(vi.mocked(console.error).mock.calls)).not.toContain(
+      "secret db detail",
+    );
+  });
+
+  it("RPC istisna fırlatırsa boş seçenekler döner (exception dışarı sızmaz)", async () => {
+    const { supabase } = setupSupabase(
+      Object.assign(new Error("aborted"), { name: "TimeoutError" }),
+    );
+
+    const options = await fetchFilterOptions(supabase as never, null);
+
+    expect(options).toEqual({ cities: [], districts: [], groups: [] });
   });
 });

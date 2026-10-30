@@ -1,0 +1,75 @@
+{
+  "task": "faz2b-plan-limitleri",
+  "reviewed_at": "2026-10-30T18:00:00+03:00",
+  "summary": "RLS'ten security definer RPC'lere geçiş sağlam: anon kapalı, kilitli satır sızıntısı yok, istemci limit/agent_id gönderemiyor. AC-6 'past_due → kendi planı' maddesi koddan (SQL + dashboard) sapıyor: past_due erişimsiz. Pencere fonksiyonu her çağrıda tüm tabloyu sıralıyor; büyük veride ölçülmedi. 2026-10-30: past_due düzeltildi, erişim kuralı tek yerde, AC-10 canlıda doğrulandı; vitest 732/732.",
+  "findings": [
+    {
+      "severity": "high",
+      "category": "correctness",
+      "file": "supabase/migrations/0020_feed_daily_limit.sql",
+      "issue": "feed_access() yalnız active/trialing kabul ediyor; past_due no_subscription alır. atdd AC-6 'active/past_due → kendi planı' diyor.",
+      "better_approach": "Ya feed_access() ve dashboard koşuluna past_due eklenir ya da AC-6 güncellenip past_due'nun erişimsiz kalması bilinçli karar olarak yazılır.",
+      "reason": "Kod ile kabul kriteri çelişiyor; ödeme bir gün gecikince kullanıcı tüm akışı kaybeder. Ürün kararı gerekiyor.",
+      "status": "fixed (kullanıcı kararı: past_due kendi planıyla görür; 0020 güncellendi ve canlıya uygulandı, probe geçti)"
+    },
+    {
+      "severity": "medium",
+      "category": "performance",
+      "file": "supabase/migrations/0020_feed_daily_limit.sql",
+      "issue": "row_number() tüm listings üzerinde tarih kısıtı olmadan hesaplanıyor; p95<300ms yalnız 16 satırda (5.3 ms) ölçüldü.",
+      "better_approach": "Pencereyi son N günle sınırlamak veya (İstanbul günü, created_at desc) ifade indeksi eklemek.",
+      "reason": "Havuz binlerce satıra çıkınca her istek tüm tabloyu sıralar.",
+      "status": "accepted-risk (veri küçük; havuz büyüyünce ölçülecek)"
+    },
+    {
+      "severity": "low",
+      "category": "maintainability",
+      "file": "web/src/app/agent/dashboard/page.tsx",
+      "issue": "Erişim kuralı (status + dönem) hem feed_access() hem dashboard hasAccess'te kopyalanmış.",
+      "better_approach": "Dashboard erişim kararını RPC'nin reason alanından türetmek veya tek yardımcıya taşımak.",
+      "reason": "Biri güncellenip diğeri unutulursa UI ve RPC ayrışır.",
+      "status": "fixed (dashboard erişim kararı RPC reason alanına dayanıyor)"
+    },
+    {
+      "severity": "low",
+      "category": "test-gap",
+      "file": "obss_project/artifacts/faz2b-plan-limitleri/verify_report.md",
+      "issue": "AC-10 (limit ≤ 0) canlıda denenmemişti; E2E/görsel kontrol yapılmadı.",
+      "better_approach": "Rolled-back tx'te max_listings=0 probe.",
+      "reason": "Çalışma zamanı davranışı statik testle kanıtlanmaz.",
+      "status": "fixed (2026-10-30 canlı probe: limit 0, open_today 0, açık 0, tümü kilitli, hata yok). E2E/görsel hâlâ yapılmadı (oturum gerekli)."
+    }
+  ],
+  "strengths": [
+    "Üç RPC anon'dan revoke; canlı REST 401 ile doğrulandı (AC-S4).",
+    "Kilitli satır yalnız id/city/district/created_at/locked taşıyor (AC-S2), canlı anahtar kümesiyle doğrulandı.",
+    "p_filters'ta limit/agent_id okunmuyor (AC-S3).",
+    "p_page 1–500 ve sabit sayfa boyutu 20 (AC-S6)."
+  ],
+  "risks": [
+    "past_due kararı verilmeden commit edilirse ödeme gecikmesinde ani erişim kaybı.",
+    "Pencere fonksiyonu performansı büyük havuzda ölçülmedi.",
+    "0020 canlıda uygulandı; frontend yayınlanana kadar canlı site akışı boş."
+  ],
+  "caveman_review": {
+    "complexity": "medium",
+    "unnecessary_files": 0,
+    "unnecessary_helpers": 0,
+    "unnecessary_abstractions": 0
+  },
+  "scope_review": {
+    "matches_atdd": true,
+    "scope_expansion": false
+  },
+  "ready_to_commit": {
+    "atdd_satisfied": true,
+    "tests_passed": true,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": true,
+    "security_acceptable": true,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": true
+  },
+  "verdict": "approve"
+}

@@ -22,6 +22,20 @@ type SubscriptionRow = {
   current_period_end: string | null;
 };
 
+// Hata ekranındaki "Tekrar dene" — mevcut filtre/sayfa parametreleri korunur.
+function buildRetryHref(params: SearchParams): string {
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (Array.isArray(value)) {
+      for (const item of value) query.append(key, item);
+    } else if (value !== undefined) {
+      query.append(key, value);
+    }
+  }
+  const qs = query.toString();
+  return qs ? `/agent/dashboard?${qs}` : "/agent/dashboard";
+}
+
 const BADGE_LABELS: Record<string, string> = {
   trialing: "Deneme sürümü",
   active: "Aktif",
@@ -151,11 +165,12 @@ export default async function AgentDashboardPage({
     ? "Abonelik durumu yüklenemedi"
     : badgeLabel(sub?.status ?? null);
 
-  // Erişim kararı (UX için; gerçek veri erişimi RLS'te kalır).
+  // Ön kontrol (UX): satır var ve dönem süresi dolmamış. Durum kuralı (active /
+  // trialing / past_due) feed_access() içinde tek yerde tutulur; sunucu
+  // aboneliksiz derse feedNoSubscription ile erişim ekranına düşülür.
   const hasAccess =
     !subError &&
     sub !== null &&
-    (sub.status === "active" || sub.status === "trialing") &&
     sub.current_period_end !== null &&
     new Date(sub.current_period_end) > new Date();
 
@@ -172,6 +187,10 @@ export default async function AgentDashboardPage({
       filters.il !== null ||
       filters.ilce !== null);
   const now = new Date();
+  // Sunucu aboneliksiz derse (reason) erişim ekranı gösterilir, liste gizlenir.
+  const feedNoSubscription =
+    listings?.feed.ok === true && listings.feed.reason === "no_subscription";
+  const showNoAccess = !hasAccess || feedNoSubscription;
   // Şifre yenileme sonrası yönlendirme işareti (/sifre-yenile).
   const passwordUpdated = params.password_updated === "1";
 
@@ -184,7 +203,9 @@ export default async function AgentDashboardPage({
             Video siparişlerim
           </Link>
         </div>
-        {listings && <NotificationBell initialCount={listings.unread ?? 0} />}
+        {listings && !feedNoSubscription && (
+          <NotificationBell initialCount={listings.unread ?? 0} />
+        )}
       </div>
       <p className="mt-2 inline-block rounded border border-mist-200 px-2 py-1 text-sm text-slate-500">
         {badge}
@@ -207,7 +228,7 @@ export default async function AgentDashboardPage({
         </>
       )}
 
-      {!hasAccess && (
+      {showNoAccess && (
         <div className="mt-6 text-slate-500">
           <p>İlanları görmek için aktif abonelik gerekir.</p>
           <Link href="/account/subscription" className="mt-2 inline-block text-terracotta-700 underline">
@@ -216,7 +237,7 @@ export default async function AgentDashboardPage({
         </div>
       )}
 
-      {listings && (
+      {listings && !feedNoSubscription && (
         <>
           <FeedFilters options={listings.options} filters={listings.filters} />
 
@@ -229,6 +250,23 @@ export default async function AgentDashboardPage({
           {!listings.feed.ok && (
             <div className="mt-6">
               <Alert variant="error">İlanlar yüklenemedi.</Alert>
+              <Link
+                href={buildRetryHref(params)}
+                className="mt-2 inline-block text-terracotta-700 underline"
+              >
+                Tekrar dene
+              </Link>
+            </div>
+          )}
+
+          {listings.feed.ok && listings.feed.limit !== null && (
+            <div className="mt-6 flex flex-wrap items-center gap-3 text-sm text-slate-500">
+              <span>{`Bugün ${listings.feed.openToday}/${listings.feed.limit} ilan açık`}</span>
+              {(listings.feed.lockedCount === null || listings.feed.lockedCount > 0) && (
+                <Link href="/pricing" className="text-terracotta-700 underline">
+                  Planı yükselt
+                </Link>
+              )}
             </div>
           )}
 
