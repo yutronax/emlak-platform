@@ -23,7 +23,7 @@ describe("Landing (/) — WhatsApp güven bölümü (AC-9)", () => {
   it("AC-9: 'WhatsApp'ım güvende mi?' başlığı, 'Nasıl çalışır' adımlarının altında yer alır", () => {
     render(<LandingPage />);
 
-    const step = screen.getByText("Gruplarınızı seçin");
+    const step = screen.getByText("Bölge ve grupları filtreleyin");
     const heading = screen.getByRole("heading", { name: GUVEN_BASLIK });
     expect(step.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });

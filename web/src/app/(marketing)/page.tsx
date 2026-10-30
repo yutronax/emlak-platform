@@ -16,13 +16,13 @@ const dotGridBackground = {
 
 const steps = [
   {
-    title: "WhatsApp'ınızı bağlayın",
-    body: "Hesabınızı siteye bağlayın. Başka bir şey kurmanıza gerek yok.",
+    title: "Kayıt olun",
+    body: "E-postanızla hesap açın. Telefonunuza bir şey kurmanıza gerek yok.",
     illustration: "/illustrations/group-chat.svg",
   },
   {
-    title: "Gruplarınızı seçin",
-    body: "Hangi gruplardan ilan gelsin, siz seçersiniz.",
+    title: "Bölge ve grupları filtreleyin",
+    body: "İl, ilçe ve gruba göre yalnız ilgilendiğiniz ilanları görün.",
     illustration: "/illustrations/secure-login.svg",
   },
   {
@@ -71,7 +71,7 @@ const faqs = [
   {
     question: "Uygulama indirmem mi gerekiyor?",
     answer:
-      "Hayır. WhatsApp'ı zaten kullanıyorsunuz. Siteye yalnızca hesabınızı bağlarsınız.",
+      "Hayır. Telefonunuza bir şey kurmazsınız, WhatsApp hesabınızı da bağlamazsınız. Siteye girip ilanları görürsünüz.",
   },
   {
     question: "Ücretsiz deneyebilir miyim?",
@@ -110,8 +110,8 @@ export default function LandingPage() {
           </h1>
           <div className="flex flex-col gap-2">
             <p className="max-w-md font-body text-xl text-slate-500">
-              WhatsApp&apos;ınızı bağlayın, hangi gruplardan ilan geleceğini
-              seçin. Gerisini biz düzenleriz.
+              Emlak WhatsApp gruplarındaki ilanları biz topluyoruz. Siz tek
+              sayfada bölgeye ve gruba göre filtreleyin.
             </p>
             <p className="font-body text-sm font-medium text-ink-900">
               Uygulama yok. Kurulum yok. Kredi kartı istemeden ücretsiz deneyin.
