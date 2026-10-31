@@ -267,6 +267,15 @@ if (require.main === module) {
     console.error('[BRIDGE BAŞLATMA HATASI]', e);
     process.exit(1);
   });
+
+  // EML-105: kişisel oturumlar (WA_MULTI_SESSION=0 ile kapatılır). Hata ortak köprüyü durdurmaz.
+  if (process.env.WA_MULTI_SESSION !== '0') {
+    try {
+      require('./sessions').startSessions();
+    } catch (e) {
+      console.error('[KİŞİSEL OTURUM BAŞLATMA HATASI]', e && (e.name || 'error'));
+    }
+  }
 }
 
 module.exports = { isGroupJid, processIncomingMessage };

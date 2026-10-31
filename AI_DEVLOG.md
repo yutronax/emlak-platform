@@ -406,3 +406,13 @@ skill'i değişen dosyalara karşı çalıştırıldı — `secrets: PASS`,
 **Review'da bulunan ve düzeltilen** (kaynak: red_team.json, verify_report.md): Endpoint allowlist yalnız server action'daydı; oturumlu kullanıcı doğrudan PostgREST insert ile keyfi endpoint yazıp cron'a service_role adına istek attırabiliyordu (stored SSRF, critical) → 0022 DB CHECK kısıtı + cron'da göndermeden önce yeniden doğrulama; canlıda kötü adresler 23514. TS allowlist port/`?` içeren adresi kabul ediyor, SQL reddediyordu → hizalandı. Paylaşılan cihazda abonelik sahipliği tutarsızdı → sunucu doğrulaması + sahiplik devri.
 
 **Migration** (kaynak: plan.md): 0021 ve 0022 `db query --linked -f` ile kullanıcı onayıyla uygulandı. Rollback: `.down.sql` dosyaları. Yeni env: VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_SUBJECT, NEXT_PUBLIC_VAPID_PUBLIC_KEY (`npx web-push generate-vapid-keys`), CRON_SECRET.
+
+## faz3a-whatsapp-baglama (EML-104) — 2026-10-31
+
+**Kararlar** (kaynak: yol-haritasi.md, plan.md): Kullanıcı kararları — yalnız okuma (numaradan mesaj gönderilmez, sürümlü ban riski onayı), yalnız seçili gruplar (3b), sidecar kullanıcının VPS'inde, web ↔ sidecar Supabase tabloları üzerinden (sidecar 3 sn, panel 2 sn poll), `qrcode` paketi. Tablolara doğrudan erişim yok; yalnız `accept_wa_consent` / `request_wa_action` / `get_my_wa_status` RPC'leri. Oturum dosyaları AES-256-GCM (WA_AUTH_KEY), agent başına UUID klasör. Kişisel soketlerde mesaj dinleyicisi ve geçmiş senkronu yok.
+
+**Riskler** (kaynak: atdd.md, red_team.json): WhatsApp ban riski (kullanıcı onayıyla kabul). QR ele geçirilirse başkası kendi hesabını emlakçının paneline bağlayabilir (maskeli numara gösterilerek görünür). WA_AUTH_KEY kaybı tüm kişisel oturumları düşürür. get_my_wa_status zaman aşımı geçişini yazar (yan etkili okuma). Gerçek QR taraması yapılmadı.
+
+**Review'da bulunan ve düzeltilen** (kaynak: red_team.json, code_diff.md): Açılışta resume ile connect aynı agent için iki soket açabiliyordu → slot senkron rezerve + eski soket kapatma. _terminate idempotent. Eski bridge testleri aynı log dosyasında yarışıyordu → `node --test --test-concurrency=1`. Panelde `connection()` test ortamında kırıldığı için kaldırıldı; build'de dinamiklik cookies() ile.
+
+**Migration** (kaynak: plan.md): 0023 `db query --linked -f` ile kullanıcı onayıyla uygulandı; canlı probe'lar (RLS, onay, abonelik, hız sınırı, anon) geçti. Rollback: `0023_wa_connections.down.sql`, `NEXT_PUBLIC_WA_LINK_ENABLED` boş, `WA_MULTI_SESSION=0`. Yeni env: WA_AUTH_KEY (`openssl rand -hex 32`), WA_AUTH_ROOT, WA_MAX_SESSIONS, WA_MULTI_SESSION, NEXT_PUBLIC_WA_LINK_ENABLED.

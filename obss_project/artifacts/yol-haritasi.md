@@ -115,6 +115,13 @@ Amaç: Her emlakçı kendi gruplarından kendi ilanlarını görür.
 - [ ] Altyapı: emlakçı sayısı kadar eşzamanlı WhatsApp oturumu → sunucu kaynağı ve yeniden bağlanma stratejisi.
 - ⚠️ Başlamadan önce R1 ve R2 kullanıcıyla tekrar konuşulmalı.
 
+**Faz 3 kararları (kullanıcı, 2026-10-31):**
+- R1 → **Yalnız okuma.** Emlakçı numarasından hiçbir mesaj gönderilmez; bağlama ekranında ban riski açıkça yazılır ve onay alınır.
+- R2 → **Yalnız seçili gruplar.** Seçilmeyen grup ve birebir mesajlar işlenmez/saklanmaz; oturum anahtarları şifreli; gizlilik metnine yazılır; emlakçı bağlantıyı ve verilerini silebilir.
+- Sidecar barındırma → **Kullanıcının kendi VPS'i** (Docker/pm2); web ile Supabase tabloları üzerinden haberleşme.
+- Bölümleme → **3a** QR ile bağlama + oturum yönetimi + bağlantıyı kesme/veri silme; **3b** grup seçimi + kişisel ilan görünürlüğü + otomatik onay eşiği.
+- Onay → **Otomatik eşik.** Kalite puanı eşiği geçen kişisel ilan doğrudan emlakçıya düşer, altındakiler admin kuyruğuna.
+
 ### Faz 4 — Bot (ilan hazırlama + paylaşım yardımı) _(büyük)_
 - [ ] Bize ait bot numarası: emlakçı ilanı atar → bot ayrıştırır → düzgün formatlı ilan metni + (varsa) video linkiyle geri döner.
 - [ ] Önerilen ilk sürüm: bot **hazırlar**, emlakçı **tek tıkla kendisi paylaşır** (grup/durum). Otomatik paylaşım ancak R1 değerlendirmesinden sonra.

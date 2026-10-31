@@ -203,6 +203,11 @@ export default async function AgentDashboardPage({
           <Link href="/agent/videos" className="mt-2 inline-block text-terracotta-700 underline">
             Video siparişlerim
           </Link>
+          {process.env.NEXT_PUBLIC_WA_LINK_ENABLED && (
+            <Link href="/agent/whatsapp" className="mt-2 ml-4 inline-block text-terracotta-700 underline">
+              WhatsApp&apos;ını bağla
+            </Link>
+          )}
         </div>
         {listings && !feedNoSubscription && (
           <div className="flex items-center gap-2">

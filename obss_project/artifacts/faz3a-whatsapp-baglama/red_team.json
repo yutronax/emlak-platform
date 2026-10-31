@@ -1,0 +1,68 @@
+{
+  "task": "faz3a-whatsapp-baglama",
+  "reviewed_at": "2026-10-31T14:00:00+03:00",
+  "summary": "Migration 0023, sidecar sessions/* ve /agent/whatsapp threat model ile uyumlu: RLS kapalı + definer RPC'ler, AES-256-GCM rastgele IV + atomik yazma, UUID-only klasör, service_role yazma allowlist'i, log redaksiyonu, kişisel soketlerde mesaj dinleyicisi ve geçmiş senkronu yok. Bir gerçek yarış durumu (açılışta resume ile connect aynı agent için çift soket) bulundu. 2026-10-31: üç bulgu düzeltildi (resume rezervasyonu + eski soket kapatma, _terminate idempotent, RPC yorumu); sidecar 101 pass/1 skip, web vitest yeşil.",
+  "findings": [
+    {
+      "severity": "medium",
+      "category": "reliability",
+      "file": "scraper/sidecar/sessions/manager.js",
+      "issue": "_resume() sessions.has() kontrolünden sonra isSubscriptionActive await ederken tick()→_connect() aynı agent için ikinci soketi açabilir; kaybeden soket kapatılmaz, iki soket aynı satırı günceller.",
+      "better_approach": "_resume'da await'ten önce slotu senkron rezerve et (_connect'teki gibi); resume+connect eşzamanlı test.",
+      "reason": "AC-8 ile AC-2 etkileşimi testsiz; gerçek numarada replaced döngüsüne yol açabilir.",
+      "status": "fixed"
+    },
+    {
+      "severity": "low",
+      "category": "architecture",
+      "file": "supabase/migrations/0023_wa_connections.sql",
+      "issue": "get_my_wa_status() 2 sn poll ile çağrılırken sidecar_timeout/no_qr_generated için yazma + event üretiyor.",
+      "better_approach": "En azından yorumla belgele; ileride zaman aşımını sidecar/pg_cron'a taşı.",
+      "reason": "Okuma adlı RPC'nin yan etkisi; atdd tablosu bunu bilinçli istiyor.",
+      "status": "fixed"
+    },
+    {
+      "severity": "low",
+      "category": "test-gap",
+      "file": "scraper/sidecar/sessions/manager.js",
+      "issue": "_checkSubscriptions ve _sweepNoQr aynı oturumu aynı anda sonlandırmaya uygunsa çift event yazılmadığı test edilmemiş.",
+      "better_approach": "İki koşulu birlikte sağlayan oturumla regresyon testi.",
+      "reason": "_terminate kimlik kontrolüyle muhtemelen güvenli ama testsiz.",
+      "status": "fixed"
+    }
+  ],
+  "strengths": [
+    "paths.js UUID regex + path.relative ile kök dışına çıkışı engelliyor (AC-S3).",
+    "crypto-auth-state: her şifrelemede rastgele 12 bayt IV, 16 bayt tag, tmp+rename atomik yazma, yanlış anahtar sessiz sıfırlama değil hata (AC-S3).",
+    "supabase-rest: her agent sorgusunda UUID doğrulama, update alan allowlist'i (AC-S6).",
+    "Kişisel soketlerde yalnız connection.update ve creds.update; syncFullHistory/markOnlineOnConnect false, shouldSyncHistoryMessage false (AC-4).",
+    "0023 tablo grant'leri kapalı, RPC'ler agent_id almıyor; canlı probe'lar doğruladı (AC-S1).",
+    "QR yalnız React state'te ve yerel qrcode ile; loglara sızmıyor."
+  ],
+  "risks": [
+    "Resume/connect yarışı gerçek numarada kısa süreli çift soket ve replaced döngüsü (veri sızıntısı değil).",
+    "WA_AUTH_ROOT paylaşılan VPS'te yalnız 0700 izinle korunuyor (kabul edilen risk).",
+    "Sidecar döngüleri hataları yutuyor; kalıcı Supabase hatası yalnız heartbeat sayaçlarından görünür."
+  ],
+  "caveman_review": {
+    "complexity": "medium",
+    "unnecessary_files": 0,
+    "unnecessary_helpers": 0,
+    "unnecessary_abstractions": 0
+  },
+  "scope_review": {
+    "matches_atdd": true,
+    "scope_expansion": false
+  },
+  "ready_to_commit": {
+    "atdd_satisfied": true,
+    "tests_passed": true,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": true,
+    "security_acceptable": true,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": true
+  },
+  "verdict": "approve"
+}

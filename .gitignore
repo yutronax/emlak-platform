@@ -6,6 +6,7 @@ __pycache__/
 node_modules/
 .next/
 scraper/sidecar/session/
+scraper/sidecar/wa-auth/
 scraper/data/
 supabase/.temp/
 *.log

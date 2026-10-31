@@ -4,7 +4,8 @@
   "description": "WhatsApp emlak gruplarını dinleyip Python orchestrator'a (/baileys-webhook) POST eden köprü",
   "main": "bridge.js",
   "scripts": {
-    "start": "node bridge.js"
+    "start": "node bridge.js",
+    "test": "node --test --test-concurrency=1"
   },
   "license": "ISC",
   "type": "commonjs",
