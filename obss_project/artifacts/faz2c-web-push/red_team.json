@@ -1,0 +1,76 @@
+{
+  "task": "faz2c-web-push",
+  "reviewed_at": "2026-10-31T10:00:00+03:00",
+  "summary": "AC-S1/S3/S5/S6 doğru (canlı RLS probe'ları, timingSafeEqual CRON_SECRET, VAPID yalnız sunucuda, sw.js origin kontrolü). Ancak AC-S2 endpoint allowlist yalnız server action'da: oturumlu kullanıcı doğrudan PostgREST insert ile keyfi endpoint yazabilir ve cron service_role adına o adrese istek atar (stored SSRF). Paylaşılan cihazda abonelik sahipliği tutarsız. 2026-10-31: kritik ve orta bulgular düzeltildi; 0022 canlıda doğrulandı.",
+  "findings": [
+    {
+      "severity": "critical",
+      "category": "security",
+      "file": "supabase/migrations/0021_push_subscriptions.sql",
+      "issue": "RLS insert yalnız agent_id'yi kontrol ediyor; endpoint için DB kısıtı yok. isAllowedPushEndpoint yalnız savePushSubscription'da çalışıyor. Kullanıcı tarayıcı konsolundan supabase.from('push_subscriptions').insert({agent_id: kendisi, endpoint: 'http://169.254.169.254/...'}) ile satır yazabilir; cron (route.ts) bu endpoint'e webpush.sendNotification ile istek atar.",
+      "better_approach": "DB'de endpoint için CHECK kısıtı (https + host allowlist) ve cron'da göndermeden önce isAllowedPushEndpoint ile yeniden doğrulama (geçmezse satırı sil).",
+      "reason": "atdd threat model T maddesi ve AC-S2 'satır yazılmaz' garantisi tek kod yoluna bağlı; DB seviyesinde zorlanmıyor.",
+      "status": "fixed (0022 DB CHECK kısıtı canlıda, doğrudan insert 23514; cron ikinci katman doğrulama)"
+    },
+    {
+      "severity": "medium",
+      "category": "correctness",
+      "file": "web/src/app/agent/dashboard/push-toggle.tsx",
+      "issue": "Paylaşılan tarayıcıda B kullanıcısı, A'nın tarayıcı aboneliğini 'abone' olarak görür (getSubscription), DB satırı A'ya ait kalır; B bildirim almaz, B 'kapat'a basarsa tarayıcı aboneliği iptal olur ve A'nınki de sessizce bozulur.",
+      "better_approach": "detectStatus'ta endpoint'in bu kullanıcıya kayıtlı olduğunu sunucuda doğrula; değilse kayıt akışıyla sahipliği yeni kullanıcıya aktar (endpoint'e sahip olmak cihaz kanıtı).",
+      "reason": "Tarayıcı düzeyi abonelik ile DB sahipliği ayrışıyor.",
+      "status": "fixed (getPushRegistrationStatus + sahiplik devri)"
+    },
+    {
+      "severity": "low",
+      "category": "risk",
+      "file": "web/src/app/agent/dashboard/push-actions.ts",
+      "issue": "10 cihaz sınırı oku-sonra-sil; eşzamanlı iki kayıtta geçici olarak 10'u aşabilir.",
+      "better_approach": "Gerekirse DB trigger ile atomik sınır.",
+      "reason": "Sınırlı ve geçici; düşük risk.",
+      "status": "accepted-risk"
+    },
+    {
+      "severity": "low",
+      "category": "performance",
+      "file": "web/src/lib/push/targets.ts",
+      "issue": "Her hedef için ayrı count sorgusu (20 paralel).",
+      "better_approach": "Ölçek büyüyünce tek gruplu sorgu.",
+      "reason": "Bugünkü hacimde sorun değil.",
+      "status": "accepted-risk"
+    }
+  ],
+  "strengths": [
+    "Canlı RLS probe'ları çapraz select/delete/insert ve anon erişimini gerçekten denedi (AC-S1).",
+    "CRON_SECRET timingSafeEqual + uzunluk kontrolü, env yoksa 401 (AC-S3).",
+    "sw.js safeTarget dış URL'leri /agent/dashboard'a çeviriyor (AC-S6).",
+    "Kısmi başarı: 429/5xx satırı tutar ve last_notified_at ilerletmez, 404/410 siler (AC-7).",
+    "VAPID özel anahtarı yalnız sunucu modülünde (AC-S5)."
+  ],
+  "risks": [
+    "Kritik bulgu düzeltilmeden yayına çıkarsa stored SSRF.",
+    "Vercel Hobby planda cron günde 1.",
+    "web-push yeni bağımlılık; audit anlık."
+  ],
+  "caveman_review": {
+    "complexity": "medium",
+    "unnecessary_files": 0,
+    "unnecessary_helpers": 0,
+    "unnecessary_abstractions": 0
+  },
+  "scope_review": {
+    "matches_atdd": true,
+    "scope_expansion": false
+  },
+  "ready_to_commit": {
+    "atdd_satisfied": true,
+    "tests_passed": true,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": true,
+    "security_acceptable": true,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": true
+  },
+  "verdict": "approve"
+}

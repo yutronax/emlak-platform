@@ -26,6 +26,7 @@ export const metadata: Metadata = {
   title: "Emlak Platformu",
   description:
     "WhatsApp'tan toplanan emlak ilanlarını videolu vitrine dönüştüren abonelik platformu.",
+  manifest: "/manifest.webmanifest",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

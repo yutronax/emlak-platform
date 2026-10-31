@@ -11,6 +11,7 @@ import { createClient } from "@/lib/supabase/server";
 import { FeedFilters } from "./feed-filters";
 import { ListingCard } from "./listing-card";
 import { NotificationBell } from "./notification-bell";
+import { PushToggle } from "./push-toggle";
 
 // Next.js 16 Cache Components: cookies() (Supabase session) her istekte
 // değişebilir, bu route segment'i prerender edilemez — statik build'i
@@ -204,7 +205,10 @@ export default async function AgentDashboardPage({
           </Link>
         </div>
         {listings && !feedNoSubscription && (
-          <NotificationBell initialCount={listings.unread ?? 0} />
+          <div className="flex items-center gap-2">
+            <PushToggle />
+            <NotificationBell initialCount={listings.unread ?? 0} />
+          </div>
         )}
       </div>
       <p className="mt-2 inline-block rounded border border-mist-200 px-2 py-1 text-sm text-slate-500">

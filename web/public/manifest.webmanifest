@@ -1,0 +1,19 @@
+{
+  "name": "Emlak Platformu",
+  "short_name": "Emlak",
+  "description": "Emlakçı paneli: yeni ilan bildirimleri ve ilan akışı.",
+  "lang": "tr",
+  "start_url": "/agent/dashboard",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F5F6F4",
+  "theme_color": "#10253F",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -396,3 +396,13 @@ skill'i değişen dosyalara karşı çalıştırıldı — `secrets: PASS`,
 **Review'da bulunan ve düzeltilen** (kaynak: red_team.json, verify_report.md): past_due ilk planda erişimsiz bırakılmıştı (AC-6 ile çelişki) → düzeltildi, erişim kuralı yalnız RPC'de (dashboard `reason`'a dayanıyor). İlk canlı probe yanlışlıkla admin hesapla koşulup doğrudan okuma 16 gösterdi; admin olmayanla 0. AC-10 (limit 0) canlı probe ile doğrulandı.
 
 **Migration** (kaynak: plan.md): 0020 `db query --linked -f` ile kullanıcı onayıyla iki kez uygulandı (idempotent). Rollback: `0020_feed_daily_limit.down.sql`.
+
+## faz2c-web-push (EML-101) — 2026-10-31
+
+**Kararlar** (kaynak: plan.md, atdd.md): `web-push` paketi ve Vercel Cron (5 dk) kullanıcı kararı. Bildirim toplu ("N yeni ilan geldi"), içerikte ilan alanı yok (Faz 2b kilitli ilan + KVKK). Kuyruk tablosu yerine abonelik başına `last_notified_at`; admin onay akışına dokunulmadı. Erişim kuralı Faz 2b ile aynı (active/trialing/past_due).
+
+**Riskler** (kaynak: atdd.md, red_team.json): Vercel Hobby'de cron günde 1 → Pro gerekir. iOS yalnız ana ekrana ekli PWA'da (16.4+). Apple touch PNG ikonu yok. 10 cihaz sınırı oku-sonra-sil (geçici aşım). Hedef başına ayrı count sorgusu.
+
+**Review'da bulunan ve düzeltilen** (kaynak: red_team.json, verify_report.md): Endpoint allowlist yalnız server action'daydı; oturumlu kullanıcı doğrudan PostgREST insert ile keyfi endpoint yazıp cron'a service_role adına istek attırabiliyordu (stored SSRF, critical) → 0022 DB CHECK kısıtı + cron'da göndermeden önce yeniden doğrulama; canlıda kötü adresler 23514. TS allowlist port/`?` içeren adresi kabul ediyor, SQL reddediyordu → hizalandı. Paylaşılan cihazda abonelik sahipliği tutarsızdı → sunucu doğrulaması + sahiplik devri.
+
+**Migration** (kaynak: plan.md): 0021 ve 0022 `db query --linked -f` ile kullanıcı onayıyla uygulandı. Rollback: `.down.sql` dosyaları. Yeni env: VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_SUBJECT, NEXT_PUBLIC_VAPID_PUBLIC_KEY (`npx web-push generate-vapid-keys`), CRON_SECRET.
