@@ -27,6 +27,12 @@ vi.mock("next/navigation", () => ({
   }),
 }));
 
+// connection() istek kapsamı dışında throw eder; testte no-op'a çevrilir.
+vi.mock("next/server", async (orig) => ({
+  ...(await orig<typeof import("next/server")>()),
+  connection: vi.fn(async () => {}),
+}));
+
 // Sayfa, bildirim zilini (client bileşen) render eder; zil server action'ları
 // test ortamında gerçek DB'ye gitmesin diye stublanır.
 vi.mock("./actions", () => ({

@@ -222,3 +222,32 @@ Yok — en çok bulgu alan dosyalar hep tek görevden.
 ### Önerilen somut eylemler
 1. **`supabase-check` skill'ine madde:** Migration yeni bir SQL fonksiyonu tanımlıyorsa, canlıda `has_function_privilege('anon', '<fn>()', 'execute')` sorgulanır; fonksiyon anon'a kapalı olmalıysa sonuç `false` değilse gate FAIL. `revoke ... from public` tek başına kanıt sayılmaz, `from anon` (gerekirse `from authenticated`) açıkça yazılmalı. Gerekçe: faz2'de ve 0002'de aynı varsayım, ikisi de canlıda yanlış çıktı.
 2. **Takip görevi (ayrı iş):** `approve_raw_listing` / `reject_raw_listing` için `revoke execute ... from anon` migration'ı (0018). Düşük öncelik — RLS zaten koruyor.
+
+## Koşum 5 — 2026-10-31
+Görev sayısı: 28 (Koşum 4'teki 23 + yeni 5; pencere `--since-tasks 5`: p0-vitrin-guven, p1-hizli-kazanimlar, faz2b-plan-limitleri, faz2c-web-push, faz3a-whatsapp-baglama)
+Bulgu: 18 — critical 1, high 1, medium 6, low 10.
+
+| Kategori | Bulgu | Görev |
+|---|---|---|
+| correctness | 5 | faz2b, faz2c, p0 |
+| test-gap | 3 | faz2b, faz3a, p1 |
+| maintainability | 2 | faz2b, p0 |
+| performance | 2 | faz2b, faz2c |
+| scope | 2 | p1 |
+| security / risk / reliability / architecture | 1'er | faz2c, p0, faz3a, faz3a |
+
+Sıcak dosya: yok (hiçbir dosya 2+ görevde bulgu almadı).
+
+### Tekrar eden kalıplar (bulgu metinlerinden)
+1. **Güvenlik kontrolü yalnız uygulama katmanında** — faz2c'de endpoint allowlist yalnız server action'daydı; oturumlu kullanıcı doğrudan PostgREST insert ile atlayıp cron'a SSRF yaptırabiliyordu (critical). faz2b'de aynı sınıf (her abone listings'i doğrudan okuyabiliyordu) ancak keşifte yakalanıp tasarıma girdi. İki görevde aynı soru sorulmadı: "RLS'in izin verdiği doğrudan REST yolu bu kontrolü atlıyor mu?"
+2. **Abonelik/durum enum'unun eksik eşlenmesi** — p0'da canceled/past_due "Denemeniz bitti" gösterdi (medium), faz2b'de past_due akış erişimi atdd ile çelişti (high). İkisinde de durum değerlerinin tamamı sözleşme tablosunda satır değildi.
+3. **Panel E2E/görsel doğrulama yapılamıyor** — faz2b, faz2c, faz3a verify'larında "panel oturum gerektiriyor" diye NOT RUN (Browser pane'de oturum kalıcı olmuyor). Kilitli kart, bildirim butonu, WhatsApp sayfası hiç görülmedi; p1'deki "panel göz kontrolü" kabul edilmiş riski de aynı sebepten açık.
+
+### Önerilen eylemler
+| # | Eylem | Nereye |
+|---|---|---|
+| E1 | AC-S yazarken zorunlu soru: "Bu kontrolü atlayan, RLS'in izin verdiği doğrudan PostgREST okuma/yazma yolu var mı? Varsa kontrol DB'de (CHECK/RLS/definer RPC) de zorlanır ve AC-S'te doğrudan REST denemesi yazılır." | `threat-model` SKILL.md |
+| E2 | Davranış Sözleşmesi'nde bir durum/enum (ör. subscriptions.status) tüketiliyorsa enum'un TÜM değerleri (active, trialing, past_due, canceled, expired…) ayrı satır olarak yazılır; "diğerleri" satırı yasak. | `atdd` SKILL.md 4a |
+| E3 | Panel sayfaları için verify'da oturumlu tarayıcı doğrulaması: proje seed'inden test emlakçı hesabıyla localhost'ta giriş yapıp Browser pane'de oturumun kalıcı olmama sorununu (yalnız code-verifier çerezi yazılıyor) teşhis eden ayrı görev. | Ayrı görev (proje) |
+
+Uygulama (2026-10-31, kullanıcı onayı "Evet, uygula"): E1 → threat-model SKILL.md "Doğrudan veri yolu sorusu"; E2 → atdd SKILL.md 4a "Durum/enum tüketen davranışta her değer ayrı satır". E3 açık (ayrı görev).

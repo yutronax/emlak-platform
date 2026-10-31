@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import Link from "next/link";
+import { connection } from "next/server";
 import { redirect } from "next/navigation";
 
 import { Alert } from "@/components/ui/alert";
@@ -78,6 +79,9 @@ export default async function AgentDashboardPage({
 }: {
   searchParams: Promise<SearchParams>;
 }) {
+  // Date.now (Supabase getUser ve aşağıdaki new Date() çağrıları) prerender
+  // sırasında çalışmasın diye ilk await'ten önce istek-zamanlı işaretleme yapılır.
+  await connection();
   const params = await searchParams;
   const supabase = await createClient();
   const { data: auth } = await supabase.auth.getUser();
