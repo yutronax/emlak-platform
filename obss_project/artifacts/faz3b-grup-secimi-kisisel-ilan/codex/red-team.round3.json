@@ -1,0 +1,100 @@
+{
+  "task": "faz3b-grup-secimi-kisisel-ilan",
+  "reviewed_at": "2026-10-31T19:04:57.3237582+03:00",
+  "summary": "Tur-2 bulgularından service_role EXECUTE grant'leri, seçim/ingest yarışları, disconnect-delete DB yarışı, eşzamanlı seçim güncellemesi ve geçersiz eşik görünürlüğü düzeltilmiş; gereksiz eşik sorgusu kaldırılmıştır. Webhook'taki agentId hâlâ doğrulanmış bir sidecar oturumuna bağlı değildir. Grup seçici yenilemesi yalnız bağlantı durumunun değişmesine bağlı olduğundan bağlantıdan sonra tamamlanan grup senkronunu kaçırabilir. Ayrıca grup senkronu artık katılınmayan grupları silmediği için eski grupları kalıcı biçimde gösterebilir. Down migration sahiplik riski ve security-definer search_path sertleştirmesi çözülmemiştir.",
+  "findings": [
+    {
+      "severity": "medium",
+      "category": "security",
+      "file": "scraper/orchestrator.py:207",
+      "issue": "Webhook ortak bearer secret'ı doğruluyor ancak payload.agentId değerini gerçek ve aktif sidecar oturumuna bağlamıyor; BAILEYS_WEBHOOK_HOST ile loopback dışına da açılabiliyor. Secret'a ulaşabilen bir süreç, seçili grup JID'sini biliyorsa başka bir agent adına içerik enjekte edebilir.",
+      "better_approach": "Loopback dışı bind'i fail-closed yap ve her oturum için agentId ile oturum kimliğini bağlayan kısa ömürlü imzalı bir belirteç doğrula; yalnız ortak secret ve serbest payload alanına güvenme.",
+      "reason": "DB seçimi ve bağlantı kontrolleri grup/agent ilişkisinin mevcut olduğunu doğrular, fakat webhook çağrısının gerçekten o agent'ın sidecar oturumundan geldiğini kanıtlamaz. Tur-2 bulgusu düzeltilmemiştir.",
+      "source": "codex"
+    },
+    {
+      "severity": "medium",
+      "category": "correctness",
+      "file": "web/src/app/agent/whatsapp/wa-panel.tsx:115",
+      "issue": "Grup verisi yalnız bağlantı durumunun değişmesinde router.refresh ile yenileniyor. Sidecar connected durumunu DB'ye yazdıktan sonra grup senkronunu başlattığından refresh senkron tamamlanmadan çalışabilir; sonraki grup senkronları durum değiştirmediği için UI boş/eski snapshot'ta kalır.",
+      "better_approach": "connected ve groups_synced_at null durumunda grup RPC'sini kontrollü olarak poll et veya grup senkronu tamamlanmasını gözlenebilir bir sürüm/timestamp ile izleyip o değiştiğinde yenile.",
+      "reason": "Tur-2 düzeltmesi yalnız durum geçişini kapsıyor; bağlantı durumu ile grup senkronu arasındaki yarış devam ederek AC-1 ve AC-10'u manuel yenilemeye bağımlı bırakıyor.",
+      "source": "codex"
+    },
+    {
+      "severity": "medium",
+      "category": "correctness",
+      "file": "scraper/sidecar/sessions/manager.js:438",
+      "issue": "Grup senkronu yalnız mevcut grupları upsert ediyor; artık katılınmayan grupları wa_groups'tan silmiyor ve sonuç boşsa RPC'yi hiç çağırmıyor. Eski gruplar ve seçimleri süresiz kalabilir.",
+      "better_approach": "Grup listesini agent bazında atomik olarak uzlaştır: güncel JID'leri upsert et, artık bulunmayanları sil ve boş listeyi de geçerli bir tam senkron sonucu olarak işle. Disconnect kilidiyle aynı güvenlik düzenini koru.",
+      "reason": "AC-1 güncel katılımcı grup listesini bekler. Stale kayıtlar kullanıcının artık üyesi olmadığı grupları seçilebilir gösterir ve boş sonuç ile başarısız senkron ayrımını bozar.",
+      "source": "codex"
+    },
+    {
+      "severity": "low",
+      "category": "security",
+      "file": "supabase/migrations/0024_wa_groups_personal_listings.sql:148",
+      "issue": "Security-definer RPC'ler search_path=public kullanıyor ve tablo/fonksiyon adlarının çoğunu şemasız çözüyor.",
+      "better_approach": "search_path'i boş veya yalnız güvenilir sistem şemalarına sabitle; public nesnelerini açıkça şema adıyla nitele ve public şemasında CREATE yetkisinin kapalı olduğunu doğrula.",
+      "reason": "Tur-2 bulgusu çözülmemiştir. public üzerinde CREATE yanlışlıkla açılırsa definer yetkileriyle nesne gölgeleme etkisi oluşabilir.",
+      "source": "codex"
+    },
+    {
+      "severity": "low",
+      "category": "risk",
+      "file": "supabase/migrations/0024_wa_groups_personal_listings.down.sql:274",
+      "issue": "Up migration tabloları IF NOT EXISTS ile benimserken down migration wa_group_selection, wa_groups ve app_settings tablolarını koşulsuz düşürüyor; guard yalnız kişisel ilan satırlarını kontrol ediyor.",
+      "better_approach": "Önceden var olan nesnelerde up migration'ı durdur veya migration sahipliği/sürüm işareti kullanarak yalnız bu migration'ın oluşturduğu nesneleri kaldır.",
+      "reason": "Tur-2 bulgusu çözülmemiştir. İsimleri önceden kullanılan tablolardaki veriler rollback sırasında geri döndürülemez biçimde silinebilir.",
+      "source": "codex"
+    },
+    {
+      "severity": "low",
+      "category": "caveman",
+      "file": "scraper/supabase_client.py:95",
+      "issue": "Eşik kararı tamamen ingest_personal_listing RPC'sine taşınmış olmasına rağmen get_threshold yardımcısı ve yalnız onu doğrulayan testler üretim akışından kopuk olarak kalmış; orchestrator.py ayrıca bu kullanılmayan yardımcısı import ediyor.",
+      "better_approach": "Kullanılmayan import, yardımcı ve yalnız eski tasarımı sınayan testleri kaldır; eşik fallback davranışını doğrudan ingest RPC entegrasyonunda doğrula.",
+      "reason": "Tur-2'de gereksiz çalışma zamanı sorgusu kaldırılmış olsa da eski soyutlama ölü kod olarak korunmuş ve gerçek eşik otoritesini belirsizleştirmiştir.",
+      "source": "codex"
+    }
+  ],
+  "strengths": [
+    "Tur-2'de eksik olan service_role EXECUTE grant'leri ingest_personal_listing, bump_sidecar_counter, set_sidecar_counters ve upsert_wa_groups için açıkça verilmiş.",
+    "set_my_wa_group_selection agent bazlı advisory transaction lock kullanıyor; ingest seçim satırını FOR SHARE ile kilitlediğinden seçim kaldırma ile yazma arasındaki TOCTOU kapatılmış.",
+    "delete_my_wa_data bağlantı satırını FOR UPDATE ile kilitleyip requested_action=disconnect durumunu aynı transaction'da kalıcılaştırıyor; ingest ve grup upsert yolları FOR SHARE ile buna bağlanmış.",
+    "ingest_personal_listing owner değerini yalnız p_agent_id üzerinden alıyor, seçimi ve bağlantıyı DB'de yeniden doğruluyor ve eşiği app_settings'ten uyguluyor.",
+    "Feed RPC'leri ortak ilanlar ile yalnız auth.uid() sahibinin kişisel ilanlarını gösteriyor; ortak kullanıcıların önceki günlük limit davranışı korunuyor ve kişisel ilanlar limite sayılmıyor.",
+    "Doğrudan listings REST erişimi yeniden açılmamış; push sayımı hedef agent'a göre owner filtresi uyguluyor ve admin owner ilişkisi açık foreign-key adıyla seçiliyor.",
+    "Seçilmemiş grup ve DM içeriği sidecar'da metin çıkarılmadan eleniyor. Eski seçim önbelleği nedeniyle webhook'a ulaşan içerik de orchestrator tarafından parse öncesi güncel DB seçimiyle reddediliyor.",
+    "Admin eşik okumasında geçersiz değer artık operatöre fallback olarak görünür biçimde raporlanıyor."
+  ],
+  "risks": [
+    "Migration 0024 canlı DB'ye uygulanmadı ve verify_faz3b.py çalıştırılmadı; gerçek service_role ACL, iki-agent REST/RPC izolasyonu, RLS/PostgREST ilişkileri, yarış davranışları ve rollback henüz canlı ortamda doğrulanmış değil.",
+    "Deploy sırası migration 0024, ardından scraper/sidecar ve web olmalı; rollback ters sırada yapılmalı.",
+    "Webhook secret'ının başka süreçlerle paylaşılması veya BAILEYS_WEBHOOK_HOST'un dış arayüze açılması, serbest agentId güven sınırının etkisini büyütür.",
+    "Down migration kişisel ilanları guard etse de wa_groups, seçim ve app_settings verilerini ayrıca korumaz.",
+    "Bildirilen sidecar bridge.* log testlerinin aralıklı flaky olması regresyon sinyalinin güvenilirliğini azaltabilir."
+  ],
+  "caveman_review": {
+    "complexity": "medium",
+    "unnecessary_files": 0,
+    "unnecessary_helpers": 1,
+    "unnecessary_abstractions": 0
+  },
+  "scope_review": {
+    "matches_atdd": true,
+    "scope_expansion": false
+  },
+  "ready_to_commit": {
+    "atdd_satisfied": false,
+    "tests_passed": true,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": false,
+    "security_acceptable": false,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": false
+  },
+  "verdict": "block",
+  "reviewer_note": "Tur 3 (önceki: codex/red-team.round1.json, round2.json)"
+}

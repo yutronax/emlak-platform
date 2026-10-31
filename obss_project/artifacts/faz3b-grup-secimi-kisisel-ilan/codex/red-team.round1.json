@@ -1,0 +1,133 @@
+{
+  "task": "faz3b-grup-secimi-kisisel-ilan",
+  "reviewed_at": "2026-10-31T00:00:00+03:00",
+  "summary": "Bloklayıcı düzeyde ATDD ve güvenilirlik açıkları var. Sahip izolasyonu feed RPC'leri, kapalı doğrudan listings erişimi ve push sayımında uygulanmış; ancak seçim önbelleği kaldırılan gruptan içeriği 60 saniyeye kadar işlemeye devam edebilir, veri silme akışı bağlantıyı kesme işlemine bağlanmamış, admin kuyruğu yeni ikinci agents ilişkisi nedeniyle PostgREST'te belirsizleşebilir ve davranış sözleşmesindeki kişisel sonuç sayaçları heartbeat'e ulaşmıyor. Canlı yetkilendirme, E2E ve görsel doğrulamalar da henüz yapılmamış.",
+  "findings": [
+    {
+      "severity": "high",
+      "category": "security",
+      "file": "scraper/sidecar/sessions/manager.js",
+      "issue": "Grup seçimi 60 saniye önbellekleniyor. Kullanıcı bir grubun seçimini kaldırdıktan sonra s.selection eski kümeyi taşımaya devam ediyor ve bu sürede gelen mesajlar webhook'a gönderilip raw_listings/listings'e yazılabiliyor. Bu AC-5, AC-9 ve AC-S4'teki seçilmemiş grup içeriğinin hiçbir yere yazılmaması garantisini ihlal eder.",
+      "better_approach": "Seçim değişikliğini sidecar'a anında ve güvenilir biçimde bildir veya her mesaj öncesinde güncel seçimi doğrula. Önbellek kullanılacaksa seçim sürümü/updated_at ile invalidasyon yapılmalı; kaldırma işlemi kesinlikle gecikmeli uygulanmamalı.",
+      "reason": "Bu yalnızca gecikmeli UX değil, kullanıcının açıkça kapsam dışına çıkardığı mesaj içeriğinin kalıcı olarak saklanmasına yol açan bir mahremiyet ihlalidir.",
+      "source": "codex"
+    },
+    {
+      "severity": "high",
+      "category": "correctness",
+      "file": "scraper/sidecar/sessions/manager.js",
+      "issue": "Bağlantıyı kesme yolu yalnız wa_connections kaydını ve yerel auth verisini siliyor; delete_my_wa_data RPC'sini çağırmıyor. Web action'larında da bu RPC'ye çağrı yok. Dolayısıyla AC-12'deki bağlantıyı kes + verilerimi sil davranışı wa_groups, seçimler ve kişisel ilanları silmiyor.",
+      "better_approach": "Kullanıcının veri silme niyetini ayrı ve açık bir istek olarak DB'de kaydet; sidecar oturumu kapattıktan sonra sahip kapsamlı silme RPC'sini çağırıp sonucunu görünür şekilde raporlasın veya güvenli bir sunucu action'ı aynı iş akışını tamamlasın. Kısmi başarısızlık yeniden denenebilir olmalı.",
+      "reason": "KVKK kapsamındaki kullanıcı verileri UI'daki kaldırma işleminden sonra kalıcı olarak tutuluyor; mevcut RPC'nin varlığı tek başına kabul kriterini karşılamıyor.",
+      "source": "codex"
+    },
+    {
+      "severity": "high",
+      "category": "correctness",
+      "file": "web/src/app/admin/listings/page.tsx",
+      "issue": "raw_listings artık agents tablosuna hem reviewed_by hem owner_agent_id üzerinden bağlı. Sorgudaki agents(company_name) ilişkisi hangi foreign key'in kullanılacağını belirtmiyor ve PostgREST birden fazla ilişki olduğunda PGRST201 benzeri belirsiz ilişki hatası verebilir; admin kuyruğunun tamamı yüklenmez.",
+      "better_approach": "İlişkiyi owner_agent_id foreign key adıyla açıkça seç ve dönen alias'ı kullan; bunu gerçek PostgREST şemasıyla integration testinde doğrula.",
+      "reason": "AC-6'daki kişisel etiket dahil tüm admin onay kuyruğu yeni şemada çalışamaz hale gelebilir.",
+      "source": "codex"
+    },
+    {
+      "severity": "high",
+      "category": "reliability",
+      "file": "scraper/orchestrator.py",
+      "issue": "Davranış sözleşmesindeki personal_auto_approved, personal_queued, personal_queued_noscore, personal_not_listing, personal_duplicate, personal_write_error ve threshold_fallback sonuçları sidecar_heartbeat.counters'a aktarılmıyor; yalnız süreç loguna yazılıyor. personal_promote_error yolu ise atomik RPC tasarımı nedeniyle hiç üretilemiyor. Ayrıca personal_parse_error sayaç sözleşmesinde tanımlı değil.",
+      "better_approach": "Webhook yanıtını gerçek işleme sonucu tamamlanana kadar ilişkilendirerek sidecar sayacını artır, ortak bir metrik deposu kullan veya orchestrator'ın kendi heartbeat/metriklerini kalıcı biçimde yayınla. Atomik RPC tercih edilecekse davranış sözleşmesi ve sayaç kümesi buna göre açıkça güncellenmeli.",
+      "reason": "Sessiz başarı/hata ayrımı ve operatör görünürlüğü sözleşmesi karşılanmıyor; log rotasyonu veya süreç kaybında sonuçlar izlenemez.",
+      "source": "codex"
+    },
+    {
+      "severity": "medium",
+      "category": "correctness",
+      "file": "web/src/app/admin/listings/page.tsx",
+      "issue": "Admin eşiği authenticated kullanıcı istemcisiyle app_settings tablosundan doğrudan okunuyor; 0024 tablo grant'lerini kaldırıyor, RLS açıyor ve admin SELECT policy'si tanımlamıyor. Bu sorgu sürekli hata vererek UI'ın gerçek değer yerine 0.70 göstermesine neden olur.",
+      "better_approach": "Admin kontrolü yapan, yalnız ilgili anahtarı döndüren security-definer okuma RPC'si ekle veya app_settings için yalnız admin SELECT policy/grant tanımla.",
+      "reason": "Admin örneğin 0.90 kaydetse bile sayfa yenilendiğinde 0.70 görür; operatör yanlış sistem durumuyla yönlendirilir.",
+      "source": "codex"
+    },
+    {
+      "severity": "medium",
+      "category": "security",
+      "file": "scraper/orchestrator.py",
+      "issue": "Webhook ortak bearer secret'ı doğruluyor ve varsayılan olarak localhost'a bağlı; bu olumlu. Ancak doğrulamadan sonra payload.agentId doğrudan sahip kimliği kabul ediliyor. Secret'a sahip herhangi bir süreç veya yanlış yapılandırılmış dış erişim, seçili grup/oturum bağı olmadan başka bir agent adına kişisel ilan yazdırabilir.",
+      "better_approach": "Webhook kimliğini oturum kimliğine kriptografik veya sunucu taraflı olarak bağla; agentId'yi serbest payload alanı olarak güven sınırından geçirme. En azından agentId için aktif oturum/bağlantı doğrulaması ve kısa ömürlü oturum imzası kullan; host'un loopback dışına açılmasını fail-closed yap.",
+      "reason": "Mevcut secret çağıranı doğruluyor fakat iddia edilen agent ile gerçek Baileys oturumu arasındaki bağı doğrulamıyor; AC-S3 yalnız manager'ın dürüst davranmasına dayanıyor.",
+      "source": "codex"
+    },
+    {
+      "severity": "medium",
+      "category": "reliability",
+      "file": "scraper/sidecar/sessions/manager.js",
+      "issue": "messages.upsert dinleyicisi yalnız seçim kümesi boş değilken bağlanıyor. Başlangıçta hiç seçili grup yoksa DM ve seçilmemiş grup mesajları gözlemlenmediği için skipped_dm/skipped_unselected sayaçları artmıyor; davranış sözleşmesindeki her sessiz geçişin ayrı sayaçla görünür olması sağlanmıyor.",
+      "better_approach": "Dinleyiciyi bağlı her oturuma bir kez ekle, içerik/JID loglamadan önce sınıflandır ve yalnız seçili grup mesajında metni çıkarıp webhook'a gönder.",
+      "reason": "İçerik saklanmasa da operasyonel sözleşme ve AC-5 sayaç beklentisi seçim olmayan en yaygın durumda bozuluyor.",
+      "source": "codex"
+    },
+    {
+      "severity": "medium",
+      "category": "test-gap",
+      "file": "obss_project/artifacts/faz3b-grup-secimi-kisisel-ilan/verify_report.md",
+      "issue": "Canlı iki-agent REST/RPC izolasyonu, AC-S2, AC-S5, AC-S6, E2E grup seçimi akışı ve 375px görsel kontrol PENDING. AC-9, AC-12, AC-S8, admin invalid_value ve owner korumalı onay da testsiz. Buna rağmen yalnız statik/unit sonuçlarla güvenlik ve ATDD tamamlanmış sayılamaz.",
+      "better_approach": "0024'ü izole bir Supabase ortamına uygulayıp gerçek JWT'lerle tüm veri yollarını ayrı ayrı doğrula; seçim kaldırma yarışı, disconnect+delete, admin PostgREST ilişkisi, rollback ve deploy sırası için integration testleri ekle.",
+      "reason": "En yüksek riskli kontroller migration uygulanmadan ve gerçek PostgREST/RLS davranışı görülmeden doğrulanmış değil.",
+      "source": "codex"
+    },
+    {
+      "severity": "low",
+      "category": "risk",
+      "file": "supabase/migrations/0024_wa_groups_personal_listings.down.sql",
+      "issue": "Down migration kişisel ilan varken güvenli biçimde duruyor; ancak wa_groups, wa_group_selection ve app_settings tablolarını koşulsuz düşürüyor. Up migration create table if not exists kullandığından aynı isimli önceden var olan tablolar bulunursa rollback bu migration'ın oluşturmadığı veriyi de silebilir. Ayrıca uygulama/sidecar önce geri alınmazsa kaldırılan RPC'lere çağrılar kırılır.",
+      "better_approach": "Migration sahipliğini doğrulayan bir sürüm işareti kullan, rollback öncesi bağımlı uygulama sürümünü kontrol et ve ters deploy sırasını runbook'ta zorunlu kıl.",
+      "reason": "Normal temiz kurulumda sorun çıkmasa da idempotentlik iddiası ile koşulsuz DROP birlikte güvenli değildir.",
+      "source": "codex"
+    },
+    {
+      "severity": "low",
+      "category": "risk",
+      "file": "supabase/migrations/0024_wa_groups_personal_listings.sql",
+      "issue": "Security-definer fonksiyonlar search_path = public kullanıyor. Search path sabitlenmiş olsa da public şemasındaki tüm nesneler unqualified çözülüyor; public üzerinde CREATE yetkisi yanlışlıkla açıksa nesne gölgeleme riski oluşur.",
+      "better_approach": "search_path'i boş veya yalnız pg_catalog olacak şekilde sabitle ve public tablo/fonksiyonlarını şema adıyla nitele; ayrıca public CREATE yetkisinin kapalı olduğunu migration/test ile doğrula.",
+      "reason": "Security-definer kodunda yalnız değişken search_path'i engellemek değil, çağrılan nesnelerin güvenilir şemaya kesin bağlanması gerekir.",
+      "source": "codex"
+    }
+  ],
+  "strengths": [
+    "feed_listings, feed_filter_options ve feed_unread_count ortak veya auth.uid() sahibi koşulunu uyguluyor; ortak ilanların eski günlük limit sıralaması korunuyor ve kişisel ilanlar limite sayılmıyor.",
+    "listings doğrudan subscriber REST policy'si yeniden açılmamış; raw_listings, wa_groups ve seçim tablolarında authenticated doğrudan erişim kapalı tutulmuş.",
+    "Push sayımı her hedef için ortak ilanlar ile yalnız hedef agent'ın kişisel ilanlarını sayıyor; başka sahibin ilanı bildirime sızmıyor.",
+    "ingest_personal_listing owner_agent_id değerini p_record'dan almıyor, eşiği DB'de yeniden okuyor ve raw/listings yazımını tek transaction içinde gerçekleştiriyor.",
+    "Seçilmemiş grup ve DM yolu webhook'tan önce kesiliyor; içerik veya JID loglanmıyor. Webhook secret yoksa orchestrator başlamıyor ve sidecar kişisel mesaj iletmiyor.",
+    "Down migration kişisel satırlar varken sessiz veri kaybı yerine rollback'i durduruyor."
+  ],
+  "risks": [
+    "Deploy sırası zorunlu olarak migration 0024, ardından scraper ve web olmalı; rollback'te ters sıra gerekir.",
+    "60 saniyelik seçim önbelleği mahremiyet açısından kabul edilemez bir yarış penceresi oluşturuyor.",
+    "Yeni owner_agent_id foreign key'i mevcut PostgREST ilişki adlarını belirsizleştiriyor.",
+    "Global fingerprint indexinin owner-kapsamlı indexe dönüşümü uygulama eski sürümdeyken ortak dedup davranışını korusa da migration geri alımı yalnız kişisel kayıtlar temizlendikten sonra mümkündür.",
+    "Canlı RLS/PostgREST doğrulaması yapılmadığından grant, ilişki ve security-definer varsayımları henüz kanıtlanmış değil."
+  ],
+  "caveman_review": {
+    "complexity": "medium",
+    "unnecessary_files": 0,
+    "unnecessary_helpers": 2,
+    "unnecessary_abstractions": 0
+  },
+  "scope_review": {
+    "matches_atdd": true,
+    "scope_expansion": false
+  },
+  "ready_to_commit": {
+    "atdd_satisfied": false,
+    "tests_passed": false,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": false,
+    "security_acceptable": false,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": false
+  },
+  "verdict": "block"
+}

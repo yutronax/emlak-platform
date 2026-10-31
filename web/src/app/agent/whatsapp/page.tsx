@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
+import { getMyWaGroups } from "@/lib/whatsapp/groups";
 import { getMyWaStatus, type WaStatusView } from "@/lib/whatsapp/status";
 
 import { WaPanel } from "./wa-panel";
@@ -46,7 +47,11 @@ export default async function WhatsAppPage() {
       <Link href="/agent/dashboard" className="mt-2 inline-block text-terracotta-700 underline">
         Panele dön
       </Link>
-      <WaPanel initialStatus={initialStatus} consentAccepted={consentAccepted} />
+      <WaPanel
+        initialStatus={initialStatus}
+        consentAccepted={consentAccepted}
+        groups={await getMyWaGroups(supabase)}
+      />
     </main>
   );
 }

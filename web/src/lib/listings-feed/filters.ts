@@ -13,6 +13,8 @@ export type ParsedFilters = {
   oda: string | null;
   il: string | null;
   ilce: string | null;
+  /** EML-107 AC-8: "mine" yalnız kendi gruplarımdaki kişisel ilanları getirir; null = tümü. */
+  kapsam: "mine" | null;
   sayfa: number;
 };
 
@@ -38,6 +40,10 @@ function parsePrice(value: string): number | null {
   if (!/^\d+$/.test(value)) return null;
   const amount = Number(value);
   return amount <= MAX_PRICE ? amount : null;
+}
+
+function parseScope(value: string): "mine" | null {
+  return value === "mine" ? "mine" : null;
 }
 
 function parseRoom(value: string): string | null {
@@ -66,6 +72,7 @@ export function parseFeedFilters(
   const il = pick(params.il, allowOnly(options.cities));
   const ilce = pick(params.ilce, allowOnly(options.districts));
   const grup = pick(params.grup, allowOnly(options.groups));
+  const kapsam = pick(params.kapsam, parseScope);
 
   let fiyatMin = min.value;
   let fiyatMax = max.value;
@@ -73,7 +80,7 @@ export function parseFeedFilters(
     [fiyatMin, fiyatMax] = [fiyatMax, fiyatMin];
   }
 
-  const hadInvalid = [min, max, oda, il, ilce, grup].some((p) => p.invalid);
+  const hadInvalid = [min, max, oda, il, ilce, grup, kapsam].some((p) => p.invalid);
 
   return {
     filters: {
@@ -83,6 +90,7 @@ export function parseFeedFilters(
       oda: oda.value,
       il: il.value,
       ilce: ilce.value,
+      kapsam: kapsam.value,
       sayfa: parsePage(params.sayfa),
     },
     hadInvalid,

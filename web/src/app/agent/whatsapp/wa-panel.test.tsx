@@ -5,7 +5,7 @@ import type { ComponentProps } from "react";
 import QRCode from "qrcode";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { acceptWaConsent, getMyWaStatus, requestWaAction } from "./actions";
+import { acceptWaConsent, getMyWaGroupsAction, getMyWaStatus, requestWaAction } from "./actions";
 import { WaPanel } from "./wa-panel";
 
 // EML-106 / EML-104 AC-1, AC-2, AC-3, AC-5, AC-6, AC-7, AC-9, AC-10.
@@ -13,8 +13,15 @@ import { WaPanel } from "./wa-panel";
 
 vi.mock("./actions", () => ({
   getMyWaStatus: vi.fn(),
+  getMyWaGroupsAction: vi.fn(),
   requestWaAction: vi.fn(),
   acceptWaConsent: vi.fn(),
+  setMyWaGroupSelection: vi.fn(),
+}));
+
+const routerRefresh = vi.hoisted(() => vi.fn());
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ refresh: routerRefresh }),
 }));
 
 // QR, qrcode kütüphanesiyle SVG'ye çevrilir; test ortamında sahte SVG döner.
@@ -255,6 +262,125 @@ describe("WaPanel — durum hata kodu mesajları (AC-5, AC-6, AC-7, AC-10, AC-S3
     });
 
     expect(await screen.findByText(text)).toBeInTheDocument();
+  });
+});
+
+// EML-107 AC-1, AC-10: poll ile bağlantı durumu değişince grup listesi tazelenir ve seçici
+// canlı status'tan salt-okunur/yazılabilir olur.
+describe("WaPanel — durum değişince grup listesi (EML-107 AC-1, AC-10)", () => {
+  const SYNCED_AT = "2026-10-31T09:00:00.000Z";
+  const groupsStale = {
+    ok: true,
+    status: "disconnected",
+    groups: [{ jid: "111@g.us", name: "Grup A", selected: true }],
+    max: 20,
+    groups_synced_at: SYNCED_AT,
+  } as unknown as PanelProps["groups"];
+
+  it("poll ile status 'connected'a geçince router.refresh çağrılır", async () => {
+    vi.mocked(getMyWaStatus).mockResolvedValue({
+      ok: true,
+      status: "connected",
+      phone_masked: PHONE,
+    } as never);
+    renderPanel({
+      consentAccepted: true,
+      initialStatus: { status: "pending" } as PanelProps["initialStatus"],
+    });
+
+    expect(routerRefresh).not.toHaveBeenCalled();
+
+    await advance(2000);
+    expect(await screen.findByText(`Bağlı: ${PHONE}`)).toBeInTheDocument();
+    expect(routerRefresh).toHaveBeenCalledTimes(1);
+  });
+
+  it("aynı durum sürerken (ör. pending poll'u) router.refresh tekrar çağrılmaz", async () => {
+    vi.mocked(getMyWaStatus).mockResolvedValue({ ok: true, status: "pending" } as never);
+    renderPanel({
+      consentAccepted: true,
+      initialStatus: { status: "pending" } as PanelProps["initialStatus"],
+    });
+
+    await advance(4000);
+
+    expect(getMyWaStatus).toHaveBeenCalled();
+    expect(routerRefresh).not.toHaveBeenCalled();
+  });
+
+  it("grup seçici canlı status 'connected' olunca yazılabilir olur (önceki salt-okunur snapshot'a takılmaz)", async () => {
+    vi.mocked(getMyWaStatus).mockResolvedValue({
+      ok: true,
+      status: "connected",
+      phone_masked: PHONE,
+    } as never);
+    // Sunucu snapshot'ı ("disconnected") router.refresh öncesi eski kalmış olabilir; seçici
+    // yine de canlı poll durumuna göre karar verir.
+    render(
+      <WaPanel
+        initialStatus={{ status: "pending" }}
+        consentAccepted
+        groups={groupsStale}
+      />,
+    );
+    expect(screen.getByRole("checkbox", { name: "Grup A" })).toBeDisabled();
+
+    await advance(2000);
+    expect(await screen.findByText(`Bağlı: ${PHONE}`)).toBeInTheDocument();
+    expect(screen.getByRole("checkbox", { name: "Grup A" })).toBeEnabled();
+    expect(screen.queryByText("Yeniden bağlan")).toBeNull();
+  });
+});
+
+// EML-109: connected sonrası sidecar grup senkronunu geç bitirebilir; senkron bitene kadar grup
+// listesi poll edilir, bitince poll durur.
+describe("WaPanel — connected sonrası grup senkronu poll'u (EML-109)", () => {
+  const SYNCED_AT = "2026-10-31T09:00:00.000Z";
+  const groupsUnsynced = {
+    ok: true,
+    status: "connected",
+    groups: [],
+    max: 20,
+    groups_synced_at: null,
+  } as unknown as PanelProps["groups"];
+  const groupsSynced = {
+    ok: true,
+    status: "connected",
+    groups: [{ jid: "222@g.us", name: "Grup B", selected: false }],
+    max: 20,
+    groups_synced_at: SYNCED_AT,
+  };
+
+  it("connected + synced_at null → poll'da grup okuması çağrılır ve gelen grup listede görünür", async () => {
+    vi.mocked(getMyWaGroupsAction).mockResolvedValue(groupsSynced as never);
+    render(
+      <WaPanel
+        initialStatus={{ status: "connected", phone_masked: PHONE } as PanelProps["initialStatus"]}
+        consentAccepted
+        groups={groupsUnsynced}
+      />,
+    );
+    expect(screen.queryByRole("checkbox", { name: "Grup B" })).toBeNull();
+
+    await advance(2000);
+
+    expect(getMyWaGroupsAction).toHaveBeenCalled();
+    expect(await screen.findByRole("checkbox", { name: "Grup B" })).toBeInTheDocument();
+  });
+
+  it("synced_at dolu → ek grup okuması yapılmaz (ve durum poll'u da çalışmaz)", async () => {
+    render(
+      <WaPanel
+        initialStatus={{ status: "connected", phone_masked: PHONE } as PanelProps["initialStatus"]}
+        consentAccepted
+        groups={groupsSynced as PanelProps["groups"]}
+      />,
+    );
+
+    await advance(10000);
+
+    expect(getMyWaGroupsAction).not.toHaveBeenCalled();
+    expect(getMyWaStatus).not.toHaveBeenCalled();
   });
 });
 

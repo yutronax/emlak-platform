@@ -19,18 +19,27 @@ import threading
 from concurrent.futures import ThreadPoolExecutor
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from queue import Queue
-from typing import Set
+from typing import Optional, Set
 
 from api_key_manager import get_default_manager
 from fingerprint import compute_fingerprint
 from parser import parse_listing_message
 from quality_gate import is_safe_to_auto_approve, score_listing
-from supabase_client import fingerprint_exists, get_client, insert_raw_listing
+from supabase_client import (
+    bump_sidecar_counter,
+    fingerprint_exists,
+    get_client,
+    ingest_personal_listing,
+    insert_raw_listing,
+    is_group_selected,
+)
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("scraper.orchestrator")
 
 MAX_WORKERS = 10
+# Kişisel yol (agentId'li payload) yalnız yerel sidecar'dan kabul edilir (red-team tur 3).
+LOOPBACK_ADDRESSES = frozenset({"127.0.0.1", "::1"})
 
 message_queue: "Queue[dict]" = Queue()
 # Aynı mesaj ID'sinin kuyrukta iki kez işlenmesini önleyen bellek-içi set
@@ -39,27 +48,114 @@ _active_ids_lock = threading.Lock()
 _active_ids: Set[str] = set()
 
 
-def handle_message(payload: dict) -> None:
+def _personal_outcome_key(status: str, score: Optional[float]) -> str:
+    """Kişisel yazım sonucunu sayaç anahtarına çevirir (Davranış Sözleşmesi satır 1-3, 7, seçim).
+
+    Bu anahtarları DB (ingest_personal_listing) zaten sayar; burada yalnız içeriksiz log için kullanılır.
+    """
+    if status == "approved":
+        return "personal_auto_approved"
+    if status == "duplicate":
+        return "personal_duplicate"
+    if status == "unselected":
+        return "personal_unselected"
+    if status == "not_connected":
+        return "personal_not_connected"
+    if score is None:
+        return "personal_queued_noscore"
+    return "personal_queued"
+
+
+def _log_personal_outcome(key: str, agent_id: str) -> str:
+    """Sayaç anahtarını içeriksiz tek satır olarak loglar (mesaj metni/numara/jid yok)."""
+    logger.info("personal_outcome=%s agent=%s", key, agent_id)
+    return key
+
+
+def _count_personal(client, key: str, agent_id: str) -> str:
+    """Orchestrator'ın kendi sonucunu DB sayacına yazar (best-effort) ve içeriksiz loglar."""
+    bump_sidecar_counter(client, key)
+    return _log_personal_outcome(key, agent_id)
+
+
+def _handle_personal(
+    client,
+    agent_id: str,
+    payload: dict,
+    message_id: str,
+    text: str,
+    parsed: dict,
+) -> str:
+    """Kişisel ilan yolu: owner yalnız agent_id'den gelir (AC-S3). Ortak insert/dedup'a girmez.
+
+    Gönderen numarası record'a yazılmaz (AC-S4). Eşik: quality_score >= eşik ise approved,
+    aksi halde pending (admin kuyruğu). Yazma hatası yutulur; fallback yapılmaz (kısmi yazım yok).
+    """
+    score, _issues = score_listing(parsed)
+    # Eşik kararı tek yerde, DB'de verilir (ingest_personal_listing içinde, app_settings'ten).
+    # Python eşiği okumaz; record "status" alanı yalnız şekil uyumluluğu için sabit "pending"dir,
+    # DB bu alanı okumaz.
+    record = {
+        "source": "whatsapp",
+        "source_group": payload.get("group"),
+        "source_group_name": payload.get("groupName"),
+        "source_message_id": message_id or None,
+        "raw_text": text,
+        "parsed": parsed,
+        "fingerprint": compute_fingerprint(parsed),
+        "quality_score": score,
+        "status": "pending",
+    }
+    try:
+        outcome = ingest_personal_listing(client, agent_id, record)
+    except Exception:  # noqa: BLE001 - içeriksiz logla, worker'ı düşürme
+        logger.exception("Kişisel ilan yazılamadı (içerik loglanmaz)")
+        return _count_personal(client, "personal_write_error", agent_id)
+
+    return _log_personal_outcome(_personal_outcome_key(outcome, score), agent_id)
+
+
+def handle_message(payload: dict) -> Optional[str]:
     message_id = str(payload.get("id") or "")
     text = (payload.get("text") or "").strip()
     group = payload.get("group")
+    agent_id = payload.get("agentId")
 
     if not text:
-        return
+        return None
 
     try:
         client = get_client()
         key_manager = get_default_manager()
 
+        if agent_id:
+            # KVKK: seçim önbelleği (sidecar, 60 sn) eski olabilir; metin parse'a (Gemini) gitmeden
+            # önce grubun bu emlakçı için HÂLÂ seçili olduğu DB'den doğrulanır.
+            try:
+                selected = is_group_selected(client, agent_id, group)
+            except Exception:  # noqa: BLE001 - pesimist: doğrulanamazsa parse etme, içerik loglanmaz
+                logger.warning("Seçim doğrulanamadı, mesaj parse edilmedi (içerik loglanmaz)")
+                return _count_personal(client, "personal_selection_check_error", agent_id)
+            if not selected:
+                return _count_personal(client, "personal_unselected", agent_id)
+            try:
+                parsed = asyncio.run(parse_listing_message(text, key_manager))
+            except Exception:  # noqa: BLE001 - içerik loglanmaz, yalnız sayaç
+                return _count_personal(client, "personal_parse_error", agent_id)
+            if parsed is None:
+                return _count_personal(client, "personal_not_listing", agent_id)
+            return _handle_personal(client, agent_id, payload, message_id, text, parsed)
+
         parsed = asyncio.run(parse_listing_message(text, key_manager))
+
         if parsed is None:
             logger.info("Mesaj ilan değil veya parse edilemedi, atlandı: %s", message_id)
-            return
+            return None
 
         fingerprint = compute_fingerprint(parsed)
         if fingerprint_exists(client, fingerprint):
             logger.info("Mükerrer ilan (fingerprint eşleşti), atlandı: %s", message_id)
-            return
+            return None
 
         score, issues = score_listing(parsed)
         record = {
@@ -72,6 +168,7 @@ def handle_message(payload: dict) -> None:
             "fingerprint": fingerprint,
             "quality_score": score,
             "status": "pending",
+            "owner_agent_id": None,
         }
         _inserted_row, inserted = insert_raw_listing(client, record)
         if inserted:
@@ -92,6 +189,7 @@ def handle_message(payload: dict) -> None:
     finally:
         with _active_ids_lock:
             _active_ids.discard(message_id)
+    return None
 
 
 def _background_worker_loop(executor: ThreadPoolExecutor) -> None:
@@ -129,6 +227,17 @@ class WebhookHandler(BaseHTTPRequestHandler):
             logger.warning("Geçersiz webhook body (JSON/UTF-8 çözülemedi), 400 dönüldü.")
             response = json.dumps({"error": "invalid_body"}).encode("utf-8")
             self.send_response(400)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(response)))
+            self.end_headers()
+            self.wfile.write(response)
+            return
+
+        if payload.get("agentId") and self.client_address[0] not in LOOPBACK_ADDRESSES:
+            # Kişisel yol loopback dışından gelemez; hiçbir işlem yapılmaz. İçerik ve IP loglanmaz.
+            logger.warning("Loopback dışı kişisel webhook isteği reddedildi (403).")
+            response = json.dumps({"error": "forbidden"}).encode("utf-8")
+            self.send_response(403)
             self.send_header("Content-Type", "application/json")
             self.send_header("Content-Length", str(len(response)))
             self.end_headers()

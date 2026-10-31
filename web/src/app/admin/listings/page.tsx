@@ -1,8 +1,31 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 
 import { requireAdmin } from "@/lib/auth/requireAdmin";
 
-import { approveListing, rejectListing } from "./actions";
+import { approveListing, rejectListing, setPersonalThreshold } from "./actions";
+import { ThresholdForm } from "./threshold-form";
+
+const DEFAULT_THRESHOLD = 0.7;
+
+// EML-107 AC-7: mevcut eşik. app_settings doğrudan okunmaz (RLS kapalı); admin_get_threshold RPC'si
+// kontrolü yapıp yalnız eşiği döndürür. Hata/forbidden → varsayılan gösterilir ve bu ayrıca belirtilir.
+async function readThreshold(
+  supabase: SupabaseClient,
+): Promise<{ value: number; failed: boolean }> {
+  try {
+    const { data, error } = await supabase.rpc("admin_get_threshold");
+    if (error) return { value: DEFAULT_THRESHOLD, failed: true };
+    const r = (data ?? null) as { ok?: unknown; value?: unknown } | null;
+    if (r === null || r.ok !== true) return { value: DEFAULT_THRESHOLD, failed: true };
+    // ok:true ama değer sayı değilse şema/veri bozulmuş demektir: varsayılan gösterilir ve bu belirtilir.
+    return typeof r.value === "number" && Number.isFinite(r.value)
+      ? { value: r.value, failed: false }
+      : { value: DEFAULT_THRESHOLD, failed: true };
+  } catch {
+    return { value: DEFAULT_THRESHOLD, failed: true };
+  }
+}
 
 type ParsedListing = {
   title?: string | null;
@@ -23,6 +46,10 @@ type RawListingRow = {
   parsed: ParsedListing;
   quality_score: number | null;
   created_at: string;
+  /** EML-107 AC-6: dolu ise kişisel ilan (emlakçının kendi grubu). */
+  owner_agent_id: string | null;
+  /** owner_agent_id FK'si üzerinden açık embed (reviewed_by ile iki ilişki var, PGRST201 önlenir). */
+  owner: { company_name: string | null } | null;
 };
 
 export default async function AdminListingsPage() {
@@ -34,7 +61,9 @@ export default async function AdminListingsPage() {
 
   const { data: rawListings, error } = await supabase
     .from("raw_listings")
-    .select("id, source_group, raw_text, parsed, quality_score, created_at")
+    .select(
+      "id, source_group, raw_text, parsed, quality_score, created_at, owner_agent_id, owner:agents!raw_listings_owner_agent_id_fkey(company_name)",
+    )
     .eq("status", "pending")
     .order("created_at", { ascending: true })
     .returns<RawListingRow[]>();
@@ -48,10 +77,26 @@ export default async function AdminListingsPage() {
     );
   }
 
+  const threshold = await readThreshold(supabase);
+
   return (
     <main className="mx-auto max-w-3xl p-8">
       <h1 className="text-xl font-semibold">İlan Onay Paneli</h1>
-      <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+
+      <section className="mt-6 rounded border p-4">
+        <h2 className="text-sm font-semibold">Kişisel ilan otomatik onay eşiği</h2>
+        <p className="mt-1 text-xs text-zinc-500">
+          Eşiğin altındaki kişisel ilanlar bu kuyruğa düşer. Varsayılan 0.70.
+        </p>
+        {threshold.failed && (
+          <p className="mt-1 text-xs text-red-600">
+            Mevcut eşik okunamadı; 0.70 varsayılan gösteriliyor.
+          </p>
+        )}
+        <ThresholdForm value={threshold.value} onSave={setPersonalThreshold} />
+      </section>
+
+      <p className="mt-6 text-sm text-zinc-600 dark:text-zinc-400">
         {rawListings?.length ?? 0} incelenmemiş ilan.
       </p>
 
@@ -62,6 +107,11 @@ export default async function AdminListingsPage() {
               <span>{item.source_group ?? "bilinmeyen grup"}</span>
               <span>skor: {item.quality_score ?? "—"}</span>
             </div>
+            {item.owner_agent_id && (
+              <p className="mt-1 text-xs font-medium text-zinc-700">
+                {`Kişisel — ${item.owner?.company_name ?? "bilinmeyen emlakçı"}`}
+              </p>
+            )}
 
             <p className="mt-2 whitespace-pre-wrap text-sm">{item.raw_text}</p>
 

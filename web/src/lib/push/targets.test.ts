@@ -67,6 +67,10 @@ function makeQuery(db: Db, table: string, options: FakeOptions) {
       filters.push((r) => vs.includes(r[col]));
       return q;
     },
+    or: (expr: string) => {
+      filters.push(parseOr(expr));
+      return q;
+    },
     gt: (col: string, v: unknown) => {
       filters.push((r) => String(r[col]) > String(v));
       return q;
@@ -91,6 +95,18 @@ function makeQuery(db: Db, table: string, options: FakeOptions) {
       execute().then(resolve, reject),
   };
   return q;
+}
+
+/** PostgREST `.or("col.is.null,col.eq.val")` ifadesinin yalnız bu testte kullanılan alt kümesi. */
+function parseOr(expr: string): (r: Row) => boolean {
+  const terms = expr.split(",").map((term) => {
+    const [col, op, ...rest] = term.split(".");
+    const val = rest.join(".");
+    if (op === "is" && val === "null") return (r: Row) => r[col] == null;
+    if (op === "eq") return (r: Row) => r[col] === val;
+    throw new Error(`unsupported or term: ${term}`);
+  });
+  return (r: Row) => terms.some((f) => f(r));
 }
 
 const FUTURE = "2099-01-01T00:00:00.000Z";
@@ -242,25 +258,68 @@ describe("loadTargets — since hesabı", () => {
   });
 });
 
+const AGENT_A = "11111111-1111-4111-8111-111111111111";
+const AGENT_B = "22222222-2222-4222-8222-222222222222";
+
 describe("countNewListings", () => {
   it("since'ten sonra oluşan ilanları sayar", async () => {
     const db: Db = {
       listings: [
-        { id: "l1", created_at: "2026-10-29T09:00:00.000Z" },
-        { id: "l2", created_at: "2026-10-29T11:00:00.000Z" },
-        { id: "l3", created_at: "2026-10-29T12:00:00.000Z" },
+        { id: "l1", created_at: "2026-10-29T09:00:00.000Z", owner_agent_id: null },
+        { id: "l2", created_at: "2026-10-29T11:00:00.000Z", owner_agent_id: null },
+        { id: "l3", created_at: "2026-10-29T12:00:00.000Z", owner_agent_id: null },
       ],
     };
 
-    const result = await countNewListings(fakeAdmin(db), NOTIFIED);
+    const result = await countNewListings(fakeAdmin(db), NOTIFIED, AGENT_A);
 
     expect(result).toEqual({ count: 2, error: null });
   });
 
-  it("DB hatasında error döner", async () => {
-    const result = await countNewListings(fakeAdmin({ listings: [] }, { failTable: "listings" }), NOTIFIED);
+  it("AC-S1: başka emlakçının kişisel ilanı sayılmaz; ortak havuz ve kendi ilanı sayılır", async () => {
+    const after = "2026-10-29T12:00:00.000Z";
+    const db: Db = {
+      listings: [
+        { id: "pool", created_at: after, owner_agent_id: null },
+        { id: "own", created_at: after, owner_agent_id: AGENT_A },
+        { id: "other", created_at: after, owner_agent_id: AGENT_B },
+        { id: "old-pool", created_at: "2026-10-01T00:00:00.000Z", owner_agent_id: null },
+      ],
+    };
 
-    expect(result.error).toBeTruthy();
+    const forA = await countNewListings(fakeAdmin(db), NOTIFIED, AGENT_A);
+    const forB = await countNewListings(fakeAdmin(db), NOTIFIED, AGENT_B);
+
+    expect(forA).toEqual({ count: 2, error: null });
+    expect(forB).toEqual({ count: 2, error: null });
+  });
+
+  it("geçersiz agentId için error 'invalid agent_id' döner ve DB çağrılmaz", async () => {
+    let dbCalls = 0;
+    const admin = {
+      from: () => {
+        dbCalls += 1;
+        throw new Error("DB must not be called");
+      },
+    } as unknown as SupabaseClient;
+
+    const result = await countNewListings(admin, NOTIFIED, "agent-active");
+
+    expect(result.count).toBe(0);
+    expect(result.error).toBeInstanceOf(Error);
+    expect((result.error as Error).message).toBe("invalid agent_id");
+    expect(dbCalls).toBe(0);
+  });
+
+  it("DB hatasında (geçerli agentId ile) error döner", async () => {
+    const result = await countNewListings(
+      fakeAdmin({ listings: [] }, { failTable: "listings" }),
+      NOTIFIED,
+      AGENT_A,
+    );
+
+    expect(result.count).toBe(0);
+    expect(result.error).toEqual({ message: "boom" });
   });
 });
 

@@ -8,6 +8,31 @@ const { SessionManager } = require('./manager');
 const { SupabaseRest } = require('./supabase-rest');
 
 const DEFAULT_MAX_SESSIONS = 50;
+const DEFAULT_WEBHOOK_URL = 'http://localhost:8090/baileys-webhook';
+
+// EML-107: Sidecar Supabase istemcisine grup yazımı/okuma. Grup yazımı yalnız service_role
+// RPC'si upsert_wa_groups üzerinden (DB bağlantı kilidi + 'not_connected' kontrolü); seçim okuma
+// her sorgu agent_id ile sınırlı.
+class SessionsRest extends SupabaseRest {
+  // Dönüş: 'ok' | 'not_connected' (bağlı değil ya da kesme istendi; hiçbir şey yazılmadı).
+  async upsertWaGroups(agentId, rows) {
+    this._agentFilter(agentId);
+    const body = rows.map((r) => {
+      if (r.agent_id !== agentId) throw new Error('grup satırı agent uyuşmuyor');
+      return { group_jid: r.group_jid, name: r.name };
+    });
+    // RPC dönüşü (text) gövdede gelir; 204 gelirse _request null döner -> 'ok'.
+    const result = await this._request('POST', 'rpc/upsert_wa_groups', {
+      body: { p_agent_id: agentId, p_rows: body },
+    });
+    return result === 'not_connected' ? 'not_connected' : 'ok';
+  }
+
+  async fetchSelection(agentId) {
+    const rows = await this._request('GET', `wa_group_selection?select=group_jid&${this._agentFilter(agentId)}`);
+    return (Array.isArray(rows) ? rows : []).map((r) => r.group_jid);
+  }
+}
 
 function parseMaxSessions(raw) {
   const n = Number.parseInt(raw || '', 10);
@@ -35,12 +60,18 @@ function startSessions(env = process.env) {
     return null;
   }
 
+  const webhookSecret = env.BAILEYS_WEBHOOK_SECRET;
+  if (!webhookSecret) {
+    console.error('[wa] BAILEYS_WEBHOOK_SECRET yok; seçili grup ilanları iletilmez');
+  }
+
   const manager = new SessionManager({
-    rest: new SupabaseRest({ url, serviceKey }),
+    rest: new SessionsRest({ url, serviceKey }),
     makeSocket,
     authRoot: env.WA_AUTH_ROOT || path.join(__dirname, '..', 'wa-auth'),
     key: env.WA_AUTH_KEY,
     maxSessions: parseMaxSessions(env.WA_MAX_SESSIONS),
+    webhook: { url: env.WEBHOOK_URL || DEFAULT_WEBHOOK_URL, secret: webhookSecret },
   });
 
   manager.start().catch((e) => {

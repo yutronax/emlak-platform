@@ -102,3 +102,28 @@ describe("ListingCard — açık öğe (mevcut görünüm)", () => {
     expect(screen.queryByRole("link", { name: "Planı yükselt" })).toBeNull();
   });
 });
+
+// EML-107 AC-8: kişisel ilan (owner_agent_id dolu) "Kendi grubun" rozetiyle gösterilir.
+describe("ListingCard — kişisel ilan rozeti (AC-8)", () => {
+  it("owner_agent_id doluysa 'Kendi grubun' rozeti görünür", () => {
+    render(
+      <ListingCard
+        listing={{ ...OPEN_ROW, owner_agent_id: "agent-a" } as never}
+        now={NOW}
+      />,
+    );
+
+    expect(screen.getByText("Kendi grubun")).toBeInTheDocument();
+  });
+
+  it("owner_agent_id null ise 'Kendi grubun' rozeti görünmez", () => {
+    render(
+      <ListingCard
+        listing={{ ...OPEN_ROW, owner_agent_id: null } as never}
+        now={NOW}
+      />,
+    );
+
+    expect(screen.queryByText("Kendi grubun")).toBeNull();
+  });
+});

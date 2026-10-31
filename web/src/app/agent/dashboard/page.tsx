@@ -190,7 +190,8 @@ export default async function AgentDashboardPage({
       filters.fiyatMax !== null ||
       filters.oda !== null ||
       filters.il !== null ||
-      filters.ilce !== null);
+      filters.ilce !== null ||
+      filters.kapsam !== null);
   const now = new Date();
   // Sunucu aboneliksiz derse (reason) erişim ekranı gösterilir, liste gizlenir.
   const feedNoSubscription =

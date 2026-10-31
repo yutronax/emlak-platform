@@ -18,7 +18,14 @@ export function ListingCard({ listing, now }: { listing: FeedItem; now: Date }) 
 function OpenListingCard({ listing, now }: { listing: OpenFeedRow; now: Date }) {
   return (
     <li className="rounded-md border border-mist-200 bg-white p-4">
-      <p className="text-sm text-slate-500">{formatGroup(listing.source_group_name)}</p>
+      <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500">
+        <p>{formatGroup(listing.source_group_name)}</p>
+        {listing.owner_agent_id ? (
+          <span className="rounded border border-mist-200 px-2 py-0.5 text-xs text-ink-900">
+            Kendi grubun
+          </span>
+        ) : null}
+      </div>
       <h2 className="mt-1 font-medium text-ink-900">{listing.title}</h2>
       <p className="mt-2 font-semibold text-ink-900">
         {formatPrice(listing.price, listing.currency)}

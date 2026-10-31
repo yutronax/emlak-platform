@@ -16,6 +16,8 @@ export type FeedRow = {
   district: string | null;
   source_group_name: string | null;
   created_at: string;
+  /** EML-107 AC-8: dolu ise kişisel ilan (kendi grubum) — rozet için. */
+  owner_agent_id?: string | null;
 };
 
 export type OpenFeedRow = FeedRow & { locked: false };
@@ -64,6 +66,8 @@ export async function fetchFeed(
           fiyatMin: filters.fiyatMin,
           fiyatMax: filters.fiyatMax,
           oda: filters.oda,
+          // scope yalnız "mine" iken gider; varsayılan çağrı şekli değişmez.
+          ...(filters.kapsam === "mine" ? { scope: "mine" } : {}),
         },
         p_page: filters.sayfa,
       })

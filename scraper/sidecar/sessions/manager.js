@@ -4,10 +4,20 @@
 // açılır; connection.update / creds.update olayları bu sınıfta işlenir.
 // Dış bağımlılıklar enjekte edilir: rest (Supabase), makeSocket, zamanlayıcılar, saat.
 //
-// Mesaj işlenmez: soket messages.upsert dinleyicisi BAĞLANMAZ (AC-4).
+// EML-107: Grup senkronu (bağlantı + 6 sa + groups.update), messages.upsert dinleyicisi (bağlantı
+// açılınca her zaman bağlanır; seçili olmayan/DM mesajlar yalnız sayaç), sayaçlar.
 const { useEncryptedAuthState } = require('./crypto-auth-state');
 const { agentAuthDir, removeAgentAuth, isValidAgentId } = require('./paths');
 const { maskPhone, redact } = require('./mask');
+const {
+  classifyIncoming,
+  capGroups,
+  createCounters,
+  bump,
+  toGroupRows,
+  messageText,
+  MAX_GROUPS,
+} = require('./groups');
 
 const POLL_MS = 3000;
 const HEARTBEAT_MS = 30_000;
@@ -20,6 +30,9 @@ const NO_QR_SWEEP_MS = 1000;
 const BACKOFF_BASE_MS = 2000;
 const BACKOFF_MAX_MS = 300_000;
 const DEFAULT_MAX_SESSIONS = 50;
+const GROUP_SYNC_MS = 6 * 60 * 60_000;
+const SELECTION_TTL_MS = 60_000;
+const WEBHOOK_MAX_ATTEMPTS = 3;
 
 // Baileys DisconnectReason değerleri (bağımlılık yüklemeden sabit).
 const LOGGED_OUT = 401;
@@ -60,6 +73,7 @@ class SessionManager {
     setTimeout: schedule = globalThis.setTimeout,
     clearTimeout: unschedule = globalThis.clearTimeout,
     rnd = Math.random,
+    webhook = null,
   }) {
     this.rest = rest;
     this.makeSocket = makeSocket;
@@ -70,11 +84,14 @@ class SessionManager {
     this._schedule = schedule;
     this._unschedule = unschedule;
     this.rnd = rnd;
+    // { url, secret, fetchImpl }: yalnız seçili grup ilanları buraya POST edilir.
+    this.webhook = webhook;
 
     this.sessions = new Map();
     this.running = false;
     this._ticking = false;
     this.counters = { ticks: 0, reconnects: 0, terminated: 0 };
+    this.msgCounters = createCounters();
   }
 
   _iso(ms) {
@@ -120,6 +137,8 @@ class SessionManager {
     this._loop(NO_QR_SWEEP_MS, () => this._sweepNoQr());
     this._loop(HEARTBEAT_MS, () => this._beat());
     this._loop(SUBSCRIPTION_CHECK_MS, () => this._checkSubscriptions());
+    this._loop(GROUP_SYNC_MS, () => this._syncAllGroups());
+    this._loop(SELECTION_TTL_MS, () => this._refreshAllSelections());
   }
 
   _loop(ms, fn) {
@@ -149,7 +168,7 @@ class SessionManager {
     await this.rest.heartbeat({
       sessions_open: this.sessions.size,
       misconfigured: !this.key,
-      counters: { ...this.counters },
+      counters: { ...this.counters, ...this.msgCounters },
     });
   }
 
@@ -332,6 +351,7 @@ class SessionManager {
 
     sock.ev.on('connection.update', (u) => this._guard('bağlantı olayı', () => this._onUpdate(s, sock, u)));
     sock.ev.on('creds.update', () => this._guard('creds olayı', () => this._onCreds(s, sock, saveCreds)));
+    sock.ev.on('groups.update', () => this._guard('grup güncelleme', () => this._syncGroups(s, sock)));
   }
 
   _isCurrent(s, sock) {
@@ -404,6 +424,136 @@ class SessionManager {
       error_code: null,
     });
     log('bağlandı', { agent_id: s.agentId });
+    // EML-107: dinleyici bağlıyken HER gelen mesaj sınıflandırılır (seçim boş olsa bile); seçili
+    // olmayan grup/DM yalnız sayaç artırır. Seçim yokluğu dinleyiciyi kapatmaz.
+    this._attachMessages(s, sock);
+    await this._guard('grup senkronu', () => this._syncGroups(s, sock));
+  }
+
+  // -------------------------------------------------------------------------
+  // Gruplar ve seçim (EML-107 AC-1, AC-S7)
+  // -------------------------------------------------------------------------
+
+  // wa_groups tam senkronu (hesap başına en fazla MAX_GROUPS); ardından seçim yenilenir.
+  // Liste otoritedir: DB, gönderilen listede olmayan grupları siler (seçimler cascade). Boş liste
+  // geçerli bir sonuçtur ve RPC çağrılır. Fetch hatası / geçersiz sonuç: RPC HİÇ çağrılmaz (pesimist).
+  async _syncGroups(s, sock) {
+    if (!this._isCurrent(s, sock) || typeof sock.groupFetchAllParticipating !== 'function') return;
+    let meta;
+    try {
+      meta = await sock.groupFetchAllParticipating();
+    } catch (e) {
+      bump(this.msgCounters, 'groups_sync_error');
+      logError('grup listesi alınamadı, eski kayıtlar korundu', { agent_id: s.agentId, error: (e && e.name) || 'error' });
+      return;
+    }
+    if (!meta || typeof meta !== 'object') {
+      bump(this.msgCounters, 'groups_sync_error');
+      logError('grup listesi geçersiz, eski kayıtlar korundu', { agent_id: s.agentId });
+      return;
+    }
+    const capped = capGroups(Object.values(meta), MAX_GROUPS);
+    if (capped.truncated) bump(this.msgCounters, 'groups_truncated');
+    const rows = toGroupRows(s.agentId, capped.groups);
+    s.groupNames = new Map(rows.map((r) => [r.group_jid, r.name]));
+    const result = await this.rest.upsertWaGroups(s.agentId, rows);
+    if (result === 'not_connected') bump(this.msgCounters, 'groups_sync_rejected');
+    await this._refreshSelection(s);
+  }
+
+  async _syncAllGroups() {
+    for (const s of [...this.sessions.values()]) {
+      if (s.opened && s.sock) await this._guard('grup periyodik', () => this._syncGroups(s, s.sock));
+    }
+  }
+
+  // Seçim önbelleği (60 sn). Okuma hatasında boş küme: hiçbir grup işlenmez (pesimist).
+  async _refreshSelection(s) {
+    let set;
+    try {
+      const jids = await this.rest.fetchSelection(s.agentId);
+      set = new Set(Array.isArray(jids) ? jids : []);
+    } catch (e) {
+      bump(this.msgCounters, 'selection_read_error');
+      logError('grup seçimi okunamadı', { agent_id: s.agentId, error: (e && e.name) || 'error' });
+      set = new Set();
+    }
+    s.selection = { set, at: this.now() };
+    return set;
+  }
+
+  async _refreshAllSelections() {
+    for (const s of [...this.sessions.values()]) {
+      if (s.opened && s.sock) await this._guard('seçim yenileme', () => this._refreshSelection(s));
+    }
+  }
+
+  async _selectionOf(s) {
+    if (!s.selection || this.now() - s.selection.at >= SELECTION_TTL_MS) await this._refreshSelection(s);
+    return s.selection ? s.selection.set : new Set();
+  }
+
+  // -------------------------------------------------------------------------
+  // Mesaj işleme (yalnız seçili gruplar; DM ve seçilmeyenler içeriksiz sayaçla düşer)
+  // -------------------------------------------------------------------------
+
+  // Dinleyici oturum soketine en fazla bir kez bağlanır (yeniden bağlanmada yeni soket için tekrar).
+  _attachMessages(s, sock) {
+    if (s.msgSock === sock) return;
+    s.msgSock = sock;
+    sock.ev.on('messages.upsert', (u) => this._guard('mesaj olayı', () => this._onMessages(s, sock, u)));
+  }
+
+  async _onMessages(s, sock, u) {
+    if (!this._isCurrent(s, sock)) return;
+    const { messages, type } = u || {};
+    if (type !== 'notify' || !Array.isArray(messages)) return;
+    for (const msg of messages) {
+      await this._guard('mesaj', () => this._onMessage(s, msg));
+    }
+  }
+
+  async _onMessage(s, msg) {
+    // Kendi gönderdiklerimiz gelen mesaj değildir.
+    if (!msg || !msg.key || msg.key.fromMe) return;
+
+    // Sınıflandırma metin çıkarmadan ÖNCE: seçili olmayan grup/DM içeriği hiç okunmaz (AC-S4).
+    const remoteJid = msg.key.remoteJid;
+    const selection = await this._selectionOf(s);
+    const outcome = classifyIncoming({ remoteJid }, selection);
+    if (outcome !== 'process') {
+      bump(this.msgCounters, outcome);
+      return;
+    }
+
+    // Seçili grup + metinsiz (tepki, protokol) mesaj: ilan adayı değildir, sayılmaz.
+    const text = messageText(msg.message);
+    if (!text) return;
+
+    const groupName = (s.groupNames && s.groupNames.get(remoteJid)) || null;
+    const payload = { id: msg.key.id, text, group: remoteJid, groupName, agentId: s.agentId };
+    const ok = await this._postWebhook(payload);
+    if (!ok) bump(this.msgCounters, 'webhook_post_failed');
+  }
+
+  // Ortak köprünün (bridge.js) webhook desenine uyumlu: 3 deneme, bekleme yok. İçerik loglanmaz.
+  async _postWebhook(payload) {
+    const { url, secret, fetchImpl = globalThis.fetch } = this.webhook || {};
+    if (!url || !secret) return false;
+    for (let attempt = 1; attempt <= WEBHOOK_MAX_ATTEMPTS; attempt += 1) {
+      try {
+        const res = await fetchImpl(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${secret}` },
+          body: JSON.stringify(payload),
+        });
+        if (res.ok) return true;
+        logError('webhook yanıtı başarısız', { status: res.status });
+      } catch (e) {
+        logError('webhook bağlantı hatası', { error: (e && e.name) || 'error' });
+      }
+    }
+    return false;
   }
 
   async _onClose(s, sock, code) {

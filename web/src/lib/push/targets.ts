@@ -96,15 +96,24 @@ export async function loadTargets(
   return { data, error: null };
 }
 
-/** `since` anından sonra onaylanmış (listings'e düşmüş) ilan sayısı. */
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/**
+ * `since` anından sonra onaylanmış ilan sayısı, hedef agent'a görünür olanlar:
+ * ortak havuz (owner_agent_id is null) ve agent'ın KENDİ kişisel ilanları (AC-S1).
+ * Başka emlakçının kişisel ilanı bu agent'a sayılmaz.
+ */
 export async function countNewListings(
   admin: SupabaseClient,
   since: string,
+  agentId: string,
 ): Promise<{ count: number; error: unknown }> {
+  if (!UUID_RE.test(agentId)) return { count: 0, error: new Error("invalid agent_id") };
   const { count, error } = await admin
     .from("listings")
     .select("id", { count: "exact", head: true })
-    .gt("created_at", since);
+    .gt("created_at", since)
+    .or(`owner_agent_id.is.null,owner_agent_id.eq.${agentId}`);
   if (error) return { count: 0, error };
   return { count: count ?? 0, error: null };
 }

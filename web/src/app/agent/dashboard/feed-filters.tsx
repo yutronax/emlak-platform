@@ -49,6 +49,12 @@ export function FeedFilters({
       onSubmit={dropEmptyFields}
       className="mt-6 grid gap-3 md:grid-cols-3"
     >
+      <Field label="Kapsam">
+        <select name="kapsam" defaultValue={filters.kapsam ?? ""} className={fieldClass}>
+          <option value="">Tümü</option>
+          <option value="mine">Kendi gruplarım</option>
+        </select>
+      </Field>
       <Field label="Kaynak grup">
         <select name="grup" defaultValue={filters.grup ?? ""} className={fieldClass}>
           <option value="">Tümü</option>

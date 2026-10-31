@@ -1,12 +1,21 @@
 "use client";
 
 import QRCode from "qrcode";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { Alert } from "@/components/ui/alert";
+import type { WaGroupsResult } from "@/lib/whatsapp/groups";
 import { WA_CONSENT_VERSION, type WaStatusResult, type WaStatusView } from "@/lib/whatsapp/status";
 
-import { acceptWaConsent, getMyWaStatus, requestWaAction } from "./actions";
+import {
+  acceptWaConsent,
+  getMyWaGroupsAction,
+  getMyWaStatus,
+  requestWaAction,
+  setMyWaGroupSelection,
+} from "./actions";
+import { GroupPicker } from "./group-picker";
 
 // EML-106 / EML-104 AC-1, AC-2, AC-3, AC-5..AC-11. Hiçbir agent_id istemciden gönderilmez (AC-S1).
 // QR yalnız get_my_wa_status yanıtından gelir (AC-S2); qrcode kütüphanesiyle SVG'ye çevrilir.
@@ -14,6 +23,8 @@ import { acceptWaConsent, getMyWaStatus, requestWaAction } from "./actions";
 const POLL_MS = 2000;
 /** Kaldırma sonrası sidecar işlemezse bu kadar poll'dan sonra hata gösterilir (~60 sn). */
 const DISCONNECT_MAX_POLLS = 30;
+/** EML-109: connected sonrası grup senkronu bitmezse grup okuma poll'u bu kadar tur sonra durur (~2 dk). */
+const GROUPS_MAX_POLLS = 60;
 
 const CONSENT_TEXT =
   "WhatsApp resmi olmayan bağlantıları kısıtlayabilir; numaranız kapatılabilir. Sistem numaranızdan hiçbir mesaj göndermez, yalnızca seçtiğiniz gruplardaki ilanları okur.";
@@ -51,6 +62,8 @@ type PanelError = { message: string; retry?: RetryKind } | null;
 export type WaPanelProps = {
   initialStatus: WaStatusView;
   consentAccepted: boolean;
+  /** EML-107: grup listesi (sunucu, get_my_wa_groups). Yoksa grup bölümü gösterilmez. */
+  groups?: WaGroupsResult;
 };
 
 /** Hata/durum mesajı gereken durumlar; "Bağla" yerine "Tekrar dene" gösterilir. */
@@ -87,7 +100,7 @@ function applyPoll(prev: ViewStatus, res: WaStatusResult, timedOut: boolean): Vi
   return res;
 }
 
-export function WaPanel({ initialStatus, consentAccepted }: WaPanelProps) {
+export function WaPanel({ initialStatus, consentAccepted, groups }: WaPanelProps) {
   const [status, setStatus] = useState<ViewStatus>(initialStatus);
   const [consent, setConsent] = useState(consentAccepted);
   const [ticked, setTicked] = useState(false);
@@ -96,21 +109,62 @@ export function WaPanel({ initialStatus, consentAccepted }: WaPanelProps) {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [qrImage, setQrImage] = useState<{ value: string; svg: string } | null>(null);
   const pollCountRef = useRef(0);
+  const groupsPollCountRef = useRef(0);
+  const router = useRouter();
+  const lastStatusRef = useRef<string>(initialStatus.status);
+  // EML-109: poll'la okunan grup listesi. Her kayıt, okunduğu sunucu prop'u (base) ile birlikte tutulur;
+  // prop referansı değişince (router.refresh) kopya geçersiz sayılır. Sıfırlama effect'i gerekmez.
+  const [liveGroups, setLiveGroups] = useState<{ base: WaGroupsResult | undefined; data: WaGroupsResult } | null>(
+    null,
+  );
+  const liveGroupsForCurrent = liveGroups !== null && liveGroups.base === groups ? liveGroups.data : null;
+  const effectiveGroups = liveGroupsForCurrent ?? groups;
+  // Poll interval'ı kapanışta en güncel prop'u okusun diye ref (interval yeniden kurulmaz).
+  const groupsPropRef = useRef(groups);
+  useEffect(() => {
+    groupsPropRef.current = groups;
+  }, [groups]);
 
   const isPolling =
     status.status === "pending" || status.status === "qr" || status.status === "disconnecting";
 
-  // 2 sn poll: yalnız bekleme/QR/kaldırma sürerken.
+  // EML-109: connected iken grup senkronu henüz bitmediyse (groups_synced_at null) grup listesi poll edilir.
+  const groupsSynced =
+    effectiveGroups !== undefined && effectiveGroups.ok && effectiveGroups.groups_synced_at !== null;
+  const groupsSyncPending = groups !== undefined && status.status === "connected" && !groupsSynced;
+
+  // Bağlantı durumu değiştiğinde (ör. connected) sunucu bileşeni yeniden çalışır ve grup listesi
+  // tazelenir; mount'taki ilk durum değişimi sayılmaz.
   useEffect(() => {
-    if (!isPolling) return;
+    if (lastStatusRef.current === status.status) return;
+    lastStatusRef.current = status.status;
+    router.refresh();
+  }, [status.status, router]);
+
+  // 2 sn poll: bekleme/QR/kaldırma sürerken durum; connected + grup senkronu bekleniyorken grup listesi.
+  // Her iki durum aynı anda geçerli olamaz (isPolling ve connected ayrışık).
+  useEffect(() => {
+    if (!isPolling && !groupsSyncPending) return;
+    groupsPollCountRef.current = 0;
     const id = setInterval(async () => {
-      pollCountRef.current += 1;
-      const timedOut = pollCountRef.current > DISCONNECT_MAX_POLLS;
-      const res = await getMyWaStatus();
-      setStatus((prev) => applyPoll(prev, res, timedOut));
+      if (isPolling) {
+        pollCountRef.current += 1;
+        const timedOut = pollCountRef.current > DISCONNECT_MAX_POLLS;
+        const res = await getMyWaStatus();
+        setStatus((prev) => applyPoll(prev, res, timedOut));
+        return;
+      }
+      groupsPollCountRef.current += 1;
+      if (groupsPollCountRef.current > GROUPS_MAX_POLLS) {
+        clearInterval(id);
+        return;
+      }
+      const res = await getMyWaGroupsAction();
+      // Yalnız başarılı yanıt alınır; seçici key'i yalnız groups_synced_at değişince yeniden kurulur.
+      if (res.ok) setLiveGroups({ base: groupsPropRef.current, data: res });
     }, POLL_MS);
     return () => clearInterval(id);
-  }, [isPolling]);
+  }, [isPolling, groupsSyncPending]);
 
   const qrValue = status.status === "qr" ? status.qr : null;
 
@@ -303,6 +357,21 @@ export function WaPanel({ initialStatus, consentAccepted }: WaPanelProps) {
           Bağla
         </button>
       )}
+
+      {effectiveGroups !== undefined &&
+        (effectiveGroups.ok ? (
+          // Salt-okunur durum canlı poll'dan (status) türer; durum ya da grup senkronu değişince
+          // seçici yeniden kurulur (seçim ve "not_connected" durumu sıfırlanır).
+          <GroupPicker
+            key={`${status.status}:${effectiveGroups.groups_synced_at ?? ""}`}
+            initial={{ ...effectiveGroups, status: status.status }}
+            onSave={setMyWaGroupSelection}
+          />
+        ) : (
+          <Alert variant="error">
+            <p>Grup listesi yüklenemedi, sayfayı yenileyin.</p>
+          </Alert>
+        ))}
 
       {confirmOpen && (
         <div

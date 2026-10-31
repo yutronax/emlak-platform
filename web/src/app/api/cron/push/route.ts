@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
   }
 
   // Önce tüm sayımlar; herhangi biri hata verirse hiçbir cihaza gönderim yapılmaz.
-  const counts = await mapLimit(targets, CONCURRENCY, (t) => countNewListings(admin, t.since));
+  const counts = await mapLimit(targets, CONCURRENCY, (t) => countNewListings(admin, t.since, t.agent_id));
   const countFailure = counts.find((c) => c.error);
   if (countFailure) {
     console.error("[push] cron db_failed: countNewListings", countFailure.error);

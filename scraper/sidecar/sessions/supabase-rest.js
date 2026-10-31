@@ -97,7 +97,9 @@ class SupabaseRest {
     await this._request('DELETE', `wa_connections?${filter}`, { prefer: 'return=minimal' });
   }
 
-  // Tek satır (id=1) upsert. Yalnız sayaçlar ve bayraklar.
+  // Tek satır (id=1) upsert: yalnız zaman, oturum sayısı, bayrak. counters BU upsert'te gönderilmez
+  // (PostgREST upsert counters kolonunu komple ezer ve 'orchestrator' alt nesnesini silerdi).
+  // Sayaçlar ayrı RPC ile yalnız 'sidecar' alt anahtarına yazılır (DB: counters || {sidecar: ...}).
   async heartbeat({ sessions_open, misconfigured, counters }) {
     await this._request('POST', 'sidecar_heartbeat?on_conflict=id', {
       body: {
@@ -105,9 +107,12 @@ class SupabaseRest {
         last_beat_at: new Date(this.now()).toISOString(),
         sessions_open: Number.isInteger(sessions_open) ? sessions_open : 0,
         misconfigured: misconfigured === true,
-        counters: counters && typeof counters === 'object' ? counters : {},
       },
       prefer: 'resolution=merge-duplicates,return=minimal',
+    });
+    await this._request('POST', 'rpc/set_sidecar_counters', {
+      body: { p_counters: counters && typeof counters === 'object' ? counters : {} },
+      prefer: 'return=minimal',
     });
   }
 

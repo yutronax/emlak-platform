@@ -248,7 +248,7 @@ test("connection.update {connection:'open'} → connected, maskeli numara, qr nu
 // AC-4: mesaj işlenmez
 // ---------------------------------------------------------------------------
 
-test('AC-4: kişisel soket — messages.upsert dinleyicisi YOK; syncFullHistory:false, markOnlineOnConnect:false', async () => {
+test('AC-4 (EML-107 güncelleme): kişisel soket — seçim boşken de messages.upsert dinleyicisi bağlı; mesaj webhook\'a gitmez', async () => {
   const h = harness();
   queueRow(h.rest, 'connect');
   await h.manager.tick();
@@ -256,14 +256,33 @@ test('AC-4: kişisel soket — messages.upsert dinleyicisi YOK; syncFullHistory:
 
   assert.strictEqual(sock.opts.syncFullHistory, false);
   assert.strictEqual(sock.opts.markOnlineOnConnect, false);
-  assert.strictEqual(sock.ev.listenerCount('messages.upsert'), 0);
+  assert.strictEqual(sock.ev.listenerCount('messages.upsert'), 0, 'bağlanmadan önce dinleyici olmamalı');
 
   emitQr(sock, QR_OK);
   await flush();
   emitOpen(sock);
   await flush();
 
-  assert.strictEqual(sock.ev.listenerCount('messages.upsert'), 0, 'bağlandıktan sonra da dinleyici olmamalı');
+  assert.strictEqual(sock.ev.listenerCount('messages.upsert'), 1, 'bağlandıktan sonra dinleyici bağlı olmalı (seçim boş)');
+
+  // Seçim boş: DM mesajı içerikle birlikte gelir -> yalnız skipped_dm sayılır, webhook'a hiçbir şey gitmez.
+  sock.ev.emit('messages.upsert', {
+    type: 'notify',
+    messages: [
+      {
+        key: { remoteJid: PHONE_JID, id: 'dm-1', fromMe: false },
+        message: { conversation: 'DM-ICERIK-ASLA-YAZILMAZ' },
+      },
+    ],
+  });
+  await flush();
+
+  assert.strictEqual(h.manager.msgCounters.skipped_dm, 1, 'DM sayacı artmalı');
+  assert.strictEqual(h.manager.msgCounters.webhook_post_failed, 0, 'webhook denemesi yapılmamalı');
+  assert.ok(
+    !h.rest.calls.some((c) => JSON.stringify(c).includes('DM-ICERIK-ASLA-YAZILMAZ')),
+    'DM içeriği rest çağrılarında geçmemeli',
+  );
 });
 
 // ---------------------------------------------------------------------------
