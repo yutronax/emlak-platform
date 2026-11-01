@@ -7,6 +7,8 @@ import { checkPassword, LEVEL_LABEL } from "@/lib/auth-ui/password-strength";
 import { FieldError, inputClass } from "./field";
 
 type PasswordFieldProps = {
+  id?: string;
+  label?: string;
   value: string;
   onChange: (value: string) => void;
   autoComplete: "current-password" | "new-password";
@@ -17,20 +19,28 @@ type PasswordFieldProps = {
 const barColor = { weak: "bg-brick-700", medium: "bg-terracotta-600", strong: "bg-moss-700" } as const;
 const barCount = { weak: 1, medium: 2, strong: 3 } as const;
 
-export function PasswordField({ value, onChange, autoComplete, error, showStrength = false }: PasswordFieldProps) {
+export function PasswordField({
+  id = "password",
+  label = "Şifre",
+  value,
+  onChange,
+  autoComplete,
+  error,
+  showStrength = false,
+}: PasswordFieldProps) {
   const [visible, setVisible] = useState(false);
   const strength = checkPassword(value);
-  const describedBy = [error && "password-error", showStrength && "password-strength"].filter(Boolean).join(" ");
+  const describedBy = [error && `${id}-error`, showStrength && `${id}-strength`].filter(Boolean).join(" ");
 
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor="password" className="text-sm font-medium">
-        Şifre
+      <label htmlFor={id} className="text-sm font-medium">
+        {label}
       </label>
       <div className="relative">
         <input
-          id="password"
-          name="password"
+          id={id}
+          name={id}
           type={visible ? "text" : "password"}
           autoComplete={autoComplete}
           value={value}
@@ -49,9 +59,9 @@ export function PasswordField({ value, onChange, autoComplete, error, showStreng
           {visible ? "Gizle" : "Göster"}
         </button>
       </div>
-      <FieldError id="password-error" message={error} />
+      <FieldError id={`${id}-error`} message={error} />
       {showStrength && (
-        <div id="password-strength" className="mt-1">
+        <div id={`${id}-strength`} className="mt-1">
           <div className="flex gap-1" aria-hidden="true">
             {[0, 1, 2].map((i) => (
               <span
