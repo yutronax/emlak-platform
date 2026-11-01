@@ -22,6 +22,18 @@
   --color-brick-700: #A23B2E;
 }
 
+@keyframes auth-rise {
+  from { opacity: 0; transform: translateY(8px); }
+}
+@keyframes auth-slide {
+  from { opacity: 0; transform: translateX(12px); }
+}
+.auth-card-enter { animation: auth-rise 200ms ease-out; }
+.auth-step-enter { animation: auth-slide 160ms ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  .auth-card-enter, .auth-step-enter { animation: none; }
+}
+
 body {
   background: var(--background);
   color: var(--foreground);

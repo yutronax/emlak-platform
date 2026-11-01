@@ -1,71 +1,114 @@
 "use client";
 import Link from "next/link";
-import { useActionState } from "react";
+import { useRef, useState, type FormEvent } from "react";
 
+import { AuthShell } from "@/components/auth/auth-shell";
+import { GoogleButton, TextField } from "@/components/auth/field";
+import { PasswordField } from "@/components/auth/password-field";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { errorText, FIELD_TEXT, isEmail } from "@/lib/auth-ui/messages";
+import { getAuthService } from "@/lib/auth-ui/service";
+import type { AuthResult } from "@/lib/auth-ui/types";
 
-import { login } from "./actions";
-
-const initialState: { error: string } | null = null;
+type FieldErrors = { email?: string; password?: string };
 
 export default function LoginPage() {
-  const [state, formAction, isPending] = useActionState(
-    async (_prev: { error: string } | null, formData: FormData) => login(formData),
-    initialState,
-  );
+  const [service] = useState(getAuthService);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [formError, setFormError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+  const [isPending, setIsPending] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  function handleResult(result: AuthResult) {
+    if (result.status === "ok") {
+      window.location.assign(result.redirectTo);
+      return;
+    }
+    if (result.status === "error") {
+      // Google penceresini kapatmak hata değildir; form olduğu gibi kalır.
+      if (result.code === "oauth_cancelled") setNotice(errorText(result));
+      else setFormError(errorText(result));
+    }
+  }
+
+  async function run(action: () => Promise<AuthResult>) {
+    setFormError(null);
+    setNotice(null);
+    setIsPending(true);
+    try {
+      handleResult(await action());
+    } finally {
+      setIsPending(false);
+    }
+  }
+
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const errors: FieldErrors = {};
+    if (!isEmail(email)) errors.email = FIELD_TEXT.email;
+    if (!password) errors.password = FIELD_TEXT.password;
+    setFieldErrors(errors);
+    if (errors.email || errors.password) {
+      formRef.current?.querySelector<HTMLInputElement>(errors.email ? "#email" : "#password")?.focus();
+      return;
+    }
+    await run(() => service.signIn({ email: email.trim(), password }));
+  }
 
   return (
-    <main className="bg-fog-50 text-ink-900">
-      <div className="mx-auto w-full max-w-6xl px-4 pt-10 pb-12 md:px-6 md:pt-16">
-      <div className="mx-auto w-full max-w-sm">
-        <h2 className="font-display text-2xl font-bold">Giriş yap</h2>
-        <p className="mt-2 font-body text-sm text-slate-500">
-          Hesabınıza girin, takip ettiğiniz WhatsApp gruplarındaki ilanlara buradan devam edin.
-        </p>
-        <form action={formAction} className="mt-6 flex flex-col gap-4 font-body">
-          <div className="flex flex-col gap-1">
-            <label htmlFor="email" className="text-sm font-medium">
-              E-posta
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              autoComplete="email"
-              className="rounded-md border border-mist-200 bg-white px-3 py-2 focus-visible:outline-2 focus-visible:outline-ink-900"
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="password" className="text-sm font-medium">
-              Şifre
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              autoComplete="current-password"
-              className="rounded-md border border-mist-200 bg-white px-3 py-2 focus-visible:outline-2 focus-visible:outline-ink-900"
-            />
-          </div>
-          <Link href="/sifremi-unuttum" className="self-end text-sm font-medium text-terracotta-700 hover:underline">
-            Şifremi unuttum
-          </Link>
-          {state?.error && <Alert variant="error">{state.error}</Alert>}
-          <Button type="submit" isPending={isPending}>
-            Giriş yap
-          </Button>
-        </form>
-        <p className="mt-4 text-center text-sm text-slate-500">
-          Hesabınız yok mu?{" "}
-          <Link href="/signup" className="font-medium text-terracotta-700 hover:underline">
-            Ücretsiz deneyin
-          </Link>
-        </p>
-      </div>
-      </div>
-    </main>
+    <AuthShell
+      eyebrow="Tekrar hoş geldiniz"
+      pitch={
+        <>
+          Gruplardaki ilanlar <span className="text-terracotta-600">sizi bekliyor.</span>
+        </>
+      }
+    >
+      <h2 className="font-display text-[1.75rem] leading-tight font-bold">Giriş yap</h2>
+      <p className="mt-2 font-body text-sm text-slate-500">
+        Hesabınıza girin, takip ettiğiniz WhatsApp gruplarındaki ilanlara buradan devam edin.
+      </p>
+
+      <form ref={formRef} onSubmit={onSubmit} noValidate aria-busy={isPending} className="mt-6 flex flex-col gap-4 font-body">
+        {service.capabilities.google && (
+          <GoogleButton disabled={isPending} onClick={() => run(() => service.signInWithGoogle("login"))} />
+        )}
+        <TextField
+          name="email"
+          label="E-posta"
+          type="email"
+          autoComplete="email"
+          inputMode="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          error={fieldErrors.email}
+        />
+        <PasswordField
+          value={password}
+          onChange={setPassword}
+          autoComplete="current-password"
+          error={fieldErrors.password}
+        />
+        <Link href="/sifremi-unuttum" className="self-end text-sm font-medium text-terracotta-700 hover:underline">
+          Şifremi unuttum
+        </Link>
+        {formError && <Alert variant="error">{formError}</Alert>}
+        {notice && <p className="text-sm text-slate-500">{notice}</p>}
+        <Button type="submit" isPending={isPending} className="py-2.5">
+          {isPending ? "Giriş yapılıyor…" : "Giriş yap"}
+        </Button>
+      </form>
+
+      <p className="mt-6 text-center text-sm text-slate-500">
+        Hesabınız yok mu?{" "}
+        <Link href="/signup" className="font-medium text-terracotta-700 hover:underline">
+          Ücretsiz deneyin
+        </Link>
+      </p>
+    </AuthShell>
   );
 }
