@@ -8,7 +8,7 @@ type AuthShellProps = {
 };
 
 // Parsel/harita dokusu: iki ince ızgara + bir köşegen, saf CSS (img/svg yok).
-const texture = {
+export const brandTexture = {
   backgroundImage: [
     "linear-gradient(to right, rgb(245 246 244 / 0.05) 1px, transparent 1px)",
     "linear-gradient(to bottom, rgb(245 246 244 / 0.05) 1px, transparent 1px)",
@@ -21,7 +21,7 @@ export function AuthShell({ eyebrow, pitch, children }: AuthShellProps) {
   return (
     <main className="relative isolate overflow-hidden bg-ink-900 text-fog-50">
       <div data-auth-decor aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 select-none">
-        <div className="absolute inset-0" style={texture} />
+        <div className="absolute inset-0" style={brandTexture} />
         <div className="absolute -right-8 bottom-[-0.18em] flex flex-col items-end font-display font-bold leading-[0.82] tracking-tight text-fog-50/[0.06] text-[clamp(5rem,16vw,15rem)]">
           <span>ilan.</span>
           <span>müşteri.</span>
