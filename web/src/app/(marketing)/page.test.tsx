@@ -1,9 +1,12 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
 import { cleanup, render, screen, within } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import LandingPage from "./page";
+
+// Async sunucu bileşeni istemci render'ında askıya alınır; kendi testi showcase-preview.test.tsx'te.
+vi.mock("@/components/showcase/showcase-preview", () => ({ ShowcasePreview: () => null }));
 
 const GUVEN_BASLIK = "WhatsApp'ım güvende mi?";
 

@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { HeroPhoneMockup } from "@/components/hero-phone-mockup";
+import { ShowcasePreview } from "@/components/showcase/showcase-preview";
 import { SUPPORT_WHATSAPP_DISPLAY, SUPPORT_WHATSAPP_URL } from "@/lib/contact";
 
 const primaryLink =
@@ -228,6 +229,8 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      <ShowcasePreview />
 
       <section className="border-t border-mist-200">
         <div className="mx-auto max-w-3xl px-4 py-20 md:px-6">
