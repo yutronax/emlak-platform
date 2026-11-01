@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+import type { ButtonHTMLAttributes, ReactNode, Ref } from "react";
 
 type ButtonVariant = "primary" | "secondary";
 
@@ -6,6 +6,7 @@ type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children"> & {
   variant?: ButtonVariant;
   isPending?: boolean;
   children: ReactNode;
+  ref?: Ref<HTMLButtonElement>;
 };
 
 const base =

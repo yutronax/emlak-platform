@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { getBillingService } from "@/lib/billing-ui/service";
 import { createClient } from "@/lib/supabase/server";
+
+import { BillingClient } from "./billing-client";
 
 // Next.js 16 Cache Components: cookies() (Supabase session) her istekte
 // değişebilir, bu route segment'i prerender edilemez — statik build'i
@@ -47,7 +50,16 @@ function formatDate(value: string | null): string {
   return Number.isNaN(date.getTime()) ? "—" : dateFormatter.format(date);
 }
 
-export default async function AccountSubscriptionPage() {
+export default async function AccountSubscriptionPage(props?: {
+  searchParams?: Promise<{ durum?: string | string[] }>;
+}) {
+  // Yeni abonelik yönetimi tasarımı yalnız dev'de mock ile (NEXT_PUBLIC_BILLING_MOCK=1);
+  // gerçek servis bağlanana kadar aşağıdaki mevcut sürüm production'da aynen çalışır.
+  if (getBillingService()) {
+    const durum = (await props?.searchParams)?.durum;
+    return <BillingClient scenario={typeof durum === "string" ? durum : undefined} />;
+  }
+
   const supabase = await createClient();
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) {
