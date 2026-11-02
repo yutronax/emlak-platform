@@ -69,8 +69,15 @@ function featuresFor(index: number): string[] {
   return PLAN_FEATURES[index] ?? PLAN_FEATURES[PLAN_FEATURES.length - 1];
 }
 
-const primaryLink =
-  "inline-flex w-full items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 bg-terracotta-600 text-white hover:bg-terracotta-700";
+// Tasarım dili: obss_project/artifacts/tasarim-dili-stellar-concrete/design_direction.md
+const ctaLink =
+  "inline-flex w-full items-center justify-center rounded-leaf px-4 py-3 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-600";
+const ctaTone = {
+  default: "bg-ink-900 text-white hover:bg-ink-800",
+  highlighted: "bg-cream-50 text-ink-900 hover:bg-white",
+};
+
+const container = "mx-auto w-full max-w-6xl px-4 md:px-6";
 
 export default async function PricingPage() {
   const supabase = await createClient();
@@ -84,8 +91,8 @@ export default async function PricingPage() {
   if (plansError) {
     console.error("plans sorgusu başarısız", plansError);
     return (
-      <main className="flex-1 bg-fog-50 text-ink-900">
-        <div className="mx-auto max-w-6xl px-4 py-16 md:px-6">
+      <main className="flex-1 bg-cream-50 text-charcoal">
+        <div className={`${container} py-16`}>
           <Alert variant="error">
             Planlar yüklenemedi, lütfen daha sonra tekrar deneyin.
           </Alert>
@@ -126,70 +133,70 @@ export default async function PricingPage() {
   const highlightIndex = findHighlightIndex(planList);
 
   return (
-    <main className="flex-1 bg-fog-50 text-ink-900">
-      <div className="mx-auto max-w-6xl px-4 py-16 md:px-6">
-        <div className="flex items-center justify-between gap-8">
-          <div>
-            <h1 className="font-display text-3xl font-bold">Abonelik Planları</h1>
-            <p className="mt-2 font-body text-slate-500">{AC8_TEXT}</p>
-          </div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/illustrations/pricing.svg" alt="" aria-hidden="true" className="hidden h-36 w-auto md:block" />
+    <main className="flex-1 bg-cream-50 text-charcoal">
+      {/* Başlık bandı: taş zemin, ince dev başlık + tek serif vurgu. Bölüm başlıkları h2 değil:
+          testler h2'leri plan adları olarak sayar. */}
+      <header className="bg-stone-200">
+        <div className={`${container} pt-16 pb-14 md:pt-24 md:pb-20`}>
+          <p className="font-body text-sm font-medium tracking-[0.2em] text-ash-400 uppercase">Fiyatlar</p>
+          <h1 className="mt-4 max-w-4xl font-display text-5xl leading-[0.98] font-light tracking-[-0.045em] md:text-[5.5rem]">
+            Abonelik planları, <em className="accent">taahhütsüz</em>.
+          </h1>
+          <p className="mt-6 max-w-2xl font-body text-lg text-charcoal/75">{AC8_TEXT}</p>
+          <p className="mt-3 font-body text-sm text-charcoal/60">Reklam videosu ayrı ücretlendirilen bir hizmettir.</p>
         </div>
-        <p className="mt-4 font-body text-sm text-slate-500">
-          Reklam videosu ayrı ücretlendirilen bir hizmettir.
-        </p>
+      </header>
 
+      <div className={`${container} py-14 md:py-20`}>
         {subscriptionError && (
-          <div className="mt-6">
+          <div className="mb-8">
             <Alert variant="error">
               Abonelik durumunuz yüklenemedi, plan satın alma şu an kullanılamıyor.
             </Alert>
           </div>
         )}
 
-        {!subscriptionError && cta.kind === "trialing" && (
-          <p className="mt-6 font-body text-sm font-medium text-ink-900">
-            {`Denemeniz sürüyor: ${cta.daysLeft} gün kaldı`}
+        {!subscriptionError && (cta.kind === "trialing" || cta.kind === "expired" || cta.kind === "lapsed") && (
+          <p className="mb-8 inline-flex items-center gap-2 rounded-leaf border border-charcoal/15 bg-white px-4 py-2 font-body text-sm font-medium text-ink-900">
+            <span aria-hidden="true" className="h-2 w-2 rounded-full bg-terracotta-600" />
+            {cta.kind === "trialing"
+              ? `Denemeniz sürüyor: ${cta.daysLeft} gün kaldı`
+              : cta.kind === "expired"
+                ? "Denemeniz bitti"
+                : "Aboneliğiniz sona erdi"}
           </p>
         )}
-        {!subscriptionError && cta.kind === "expired" && (
-          <p className="mt-6 font-body text-sm font-medium text-ink-900">Denemeniz bitti</p>
-        )}
-        {!subscriptionError && cta.kind === "lapsed" && (
-          <p className="mt-6 font-body text-sm font-medium text-ink-900">Aboneliğiniz sona erdi</p>
-        )}
 
-        <ul className="mt-10 grid gap-6 md:grid-cols-3">
+        <ul className="grid gap-5 md:grid-cols-3 md:items-stretch">
           {planList.map((plan, index) => {
             const isHighlighted = index === highlightIndex;
             const cardTone = isHighlighted
-              ? "bg-ink-900 text-white md:-translate-y-2 md:shadow-lg"
-              : "border border-mist-200 bg-fog-50 text-ink-900";
-            const priceTone = isHighlighted ? "text-white" : "text-ink-900";
+              ? "bg-ink-900 text-cream-50"
+              : "border border-charcoal/12 bg-white text-charcoal";
+            const muted = isHighlighted ? "text-cream-50/70" : "text-charcoal/60";
+            const rule = isHighlighted ? "border-cream-50/15" : "border-charcoal/10";
             const isCurrent =
               cta.kind === "active" && subscription?.plan_id === plan.id;
             return (
               <li
                 key={plan.id}
-                className={`flex flex-col gap-4 rounded-xl p-6 font-body transition-transform ${cardTone}`}
+                className={`flex flex-col gap-6 rounded-leaf p-6 font-body md:p-8 ${cardTone}`}
               >
-                <h2 className="font-display text-xl font-semibold">{plan.name}</h2>
-                <p className={`font-display text-4xl font-bold ${priceTone}`}>
-                  {formatPrice(plan.price_minor_unit)}
-                  <span className="ml-2 font-body text-base font-normal">/ ay</span>
+                <h2 className="font-display text-2xl font-normal tracking-[-0.03em]">{plan.name}</h2>
+                <p className="flex items-baseline gap-2">
+                  <span className="font-display text-5xl font-light tracking-[-0.045em] tabular-nums">
+                    {formatPrice(plan.price_minor_unit)}
+                  </span>
+                  <span className={`font-body text-base ${muted}`}>/ ay</span>
                 </p>
                 {/* Ayrı satır: madde listesindeki li sayısı değişmesin (plan testleri 3-4 madde bekler). */}
-                <p className={`text-sm font-medium ${isHighlighted ? "text-white" : "text-ink-900"}`}>
-                  {listingLimitLabel(plan.max_listings)}
-                </p>
-                <ul className="flex flex-col gap-2 text-sm">
+                <p className={`border-y py-3 text-sm font-medium ${rule}`}>{listingLimitLabel(plan.max_listings)}</p>
+                <ul className="flex flex-col gap-2.5 text-sm">
                   {featuresFor(index).map((feature) => (
-                    <li
-                      key={feature}
-                      className={`flex gap-2 ${isHighlighted ? "text-white/80" : "text-slate-500"}`}
-                    >
-                      <span aria-hidden="true" className={isHighlighted ? "text-white" : "text-moss-700"}>✓</span>
+                    <li key={feature} className={`flex gap-2.5 ${muted}`}>
+                      <span aria-hidden="true" className={isHighlighted ? "text-terracotta-600" : "text-moss-700"}>
+                        ✓
+                      </span>
                       {feature}
                     </li>
                   ))}
@@ -197,7 +204,10 @@ export default async function PricingPage() {
                 {!subscriptionError && (
                   <div className="mt-auto flex flex-col gap-2">
                     {cta.kind === "guest" && (
-                      <Link href="/signup" className={primaryLink}>
+                      <Link
+                        href="/signup"
+                        className={`${ctaLink} ${isHighlighted ? ctaTone.highlighted : ctaTone.default}`}
+                      >
                         14 gün ücretsiz dene
                       </Link>
                     )}
@@ -234,13 +244,7 @@ export default async function PricingPage() {
                           variant={isHighlighted ? "inverse" : "primary"}
                         />
                       ))}
-                    {!isCurrent && (
-                      <p
-                        className={`text-xs ${isHighlighted ? "text-white/70" : "text-slate-500"}`}
-                      >
-                        Taahhüt yok, istediğiniz an iptal edin.
-                      </p>
-                    )}
+                    {!isCurrent && <p className={`text-xs ${muted}`}>Taahhüt yok, istediğiniz an iptal edin.</p>}
                   </div>
                 )}
               </li>

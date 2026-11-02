@@ -7,12 +7,12 @@ import { Alert } from "@/components/ui/alert";
 type BuyButtonVariant = "primary" | "secondary" | "inverse";
 
 const baseClass =
-  "w-full rounded-md px-4 py-2 text-sm font-medium disabled:opacity-50";
+  "w-full rounded-leaf px-4 py-3 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-600 disabled:opacity-50";
 
 const variantClass: Record<BuyButtonVariant, string> = {
-  primary: "bg-terracotta-600 text-white hover:bg-terracotta-700",
-  secondary: "border border-ink-900 bg-transparent text-ink-900 hover:bg-mist-200",
-  inverse: "bg-white text-ink-900 hover:bg-mist-200",
+  primary: "bg-ink-900 text-white hover:bg-ink-800",
+  secondary: "border border-ink-900 bg-transparent text-ink-900 hover:bg-ink-900/5",
+  inverse: "bg-cream-50 text-ink-900 hover:bg-white",
 };
 
 function messageForStatus(status: number): string {
