@@ -16,7 +16,7 @@ export function Poster({ item, className = "" }: { item: ShowcaseItem; className
       ) : (
         <span
           aria-hidden="true"
-          className="absolute inset-0 flex items-end p-4 font-display text-5xl font-bold text-white/15"
+          className="absolute inset-0 flex items-end p-4 font-display text-5xl font-light tracking-[-0.04em] text-white/20"
         >
           {item.district}
         </span>
@@ -37,12 +37,14 @@ export function Poster({ item, className = "" }: { item: ShowcaseItem; className
 
 export function ShowcaseCard({ item }: { item: ShowcaseItem }) {
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-2xl border border-mist-200 bg-white font-body text-ink-900 transition-shadow focus-within:ring-2 focus-within:ring-terracotta-600 hover:shadow-[0_12px_32px_-16px_rgb(16_37_63/0.35)]">
+    <article className="group relative flex flex-col overflow-hidden rounded-leaf border border-charcoal/10 bg-white font-body text-charcoal transition-shadow focus-within:ring-2 focus-within:ring-terracotta-600 hover:shadow-[0_16px_40px_-20px_rgb(16_37_63/0.35)]">
       <Poster item={item} />
       <div className="flex flex-1 flex-col gap-1.5 p-4">
         <div className="flex items-center justify-between gap-2">
-          <p className="font-display text-xl font-bold tabular-nums">{formatShowcasePrice(item.priceMinor, item.deal)}</p>
-          <span className="rounded-full bg-fog-50 px-2.5 py-0.5 text-xs font-semibold text-slate-500">
+          <p className="font-display text-2xl font-light tracking-[-0.035em] tabular-nums">
+            {formatShowcasePrice(item.priceMinor, item.deal)}
+          </p>
+          <span className="rounded-leaf bg-stone-200 px-2.5 py-0.5 text-xs font-medium text-charcoal/75">
             {DEAL_LABEL[item.deal]}
           </span>
         </div>
@@ -52,10 +54,10 @@ export function ShowcaseCard({ item }: { item: ShowcaseItem }) {
             {item.title}
           </Link>
         </h3>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-charcoal/60">
           {item.district}, {item.city}
         </p>
-        <p className="mt-auto pt-1 text-sm text-slate-500">
+        <p className="mt-auto border-t border-charcoal/10 pt-3 text-sm text-charcoal/60">
           {item.rooms} · {item.areaM2} m²
         </p>
       </div>

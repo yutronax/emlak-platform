@@ -16,8 +16,8 @@ type ListState =
   | { status: "ready"; items: ShowcaseItem[]; nextCursor: string | null; total: number };
 
 const control =
-  "rounded-md border border-mist-200 bg-white px-3 py-2 text-sm text-ink-900 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-terracotta-600";
-const label = "text-xs font-medium text-slate-500";
+  "rounded-md border border-charcoal/15 bg-white px-3 py-2 text-sm text-ink-900 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-terracotta-600";
+const label = "text-xs font-medium text-charcoal/60";
 
 const DEAL_OPTIONS: { value: Deal | ""; label: string }[] = [
   { value: "", label: "Tümü" },
@@ -114,7 +114,7 @@ export function ShowcaseView({ service, initialFilters }: Props) {
   const count = activeFilterCount(filters);
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-8 font-body text-ink-900 md:px-6 md:py-10">
+    <div className="mx-auto w-full max-w-6xl px-4 py-8 font-body text-charcoal md:px-6 md:py-12">
       <div className="md:hidden">
         <Button
           variant="secondary"
@@ -130,15 +130,15 @@ export function ShowcaseView({ service, initialFilters }: Props) {
         id="showcase-filters"
         onSubmit={onPriceSubmit}
         noValidate
-        className={`${panelOpen ? "flex" : "hidden"} mt-4 flex-col gap-4 rounded-2xl border border-mist-200 bg-white p-4 md:mt-0 md:flex md:flex-row md:flex-wrap md:items-end`}
+        className={`${panelOpen ? "flex" : "hidden"} mt-4 flex-col gap-4 rounded-leaf border border-charcoal/10 bg-white p-4 md:mt-0 md:flex md:flex-row md:flex-wrap md:items-end`}
       >
         <fieldset className="flex flex-col gap-1">
           <legend className={label}>İşlem</legend>
-          <div className="mt-1 inline-flex rounded-md border border-mist-200 p-0.5">
+          <div className="mt-1 inline-flex rounded-md border border-charcoal/15 p-0.5">
             {DEAL_OPTIONS.map((o) => (
               <label
                 key={o.label}
-                className="cursor-pointer rounded px-3 py-1.5 text-sm has-checked:bg-ink-900 has-checked:text-fog-50 has-focus-visible:outline-2 has-focus-visible:outline-terracotta-600"
+                className="cursor-pointer rounded px-3 py-1.5 text-sm has-checked:bg-ink-900 has-checked:text-cream-50 has-focus-visible:outline-2 has-focus-visible:outline-terracotta-600"
               >
                 <input
                   type="radio"
@@ -253,13 +253,13 @@ export function ShowcaseView({ service, initialFilters }: Props) {
 
       <section aria-label="İlanlar" aria-busy={state.status === "loading" ? "true" : undefined} className="mt-6">
         {state.status === "ready" && (
-          <p className="mb-4 text-sm text-slate-500">{state.total} ilan</p>
+          <p className="mb-4 text-sm text-charcoal/60">{state.total} ilan</p>
         )}
 
         {state.status === "loading" && (
           <ul aria-hidden="true" className="grid animate-pulse gap-5 motion-reduce:animate-none sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }, (_, i) => (
-              <li key={i} className="overflow-hidden rounded-2xl border border-mist-200 bg-white">
+              <li key={i} className="overflow-hidden rounded-leaf border border-charcoal/10 bg-white">
                 <div className="aspect-video bg-mist-200" />
                 <div className="flex flex-col gap-2 p-4">
                   <div className="h-5 w-28 rounded bg-mist-200" />
@@ -272,7 +272,7 @@ export function ShowcaseView({ service, initialFilters }: Props) {
         )}
 
         {state.status === "error" && (
-          <div role="alert" className="flex flex-col items-start gap-3 rounded-2xl border border-mist-200 bg-white p-6">
+          <div role="alert" className="flex flex-col items-start gap-3 rounded-leaf border border-charcoal/10 bg-white p-6">
             <p className="font-medium">İlanlar yüklenemedi.</p>
             <Button
               variant="secondary"
@@ -287,9 +287,9 @@ export function ShowcaseView({ service, initialFilters }: Props) {
         )}
 
         {state.status === "ready" && state.items.length === 0 && (
-          <div className="flex flex-col items-start gap-3 rounded-2xl border border-mist-200 bg-white p-6">
+          <div className="flex flex-col items-start gap-3 rounded-leaf border border-charcoal/10 bg-white p-6">
             <p className="font-medium">Bu filtrelere uyan ilan yok</p>
-            <p className="text-sm text-slate-500">Fiyat aralığını genişletmeyi ya da başka bir şehir seçmeyi deneyin.</p>
+            <p className="text-sm text-charcoal/60">Fiyat aralığını genişletmeyi ya da başka bir şehir seçmeyi deneyin.</p>
             <Button variant="secondary" onClick={clearAll}>
               Filtreleri temizle
             </Button>

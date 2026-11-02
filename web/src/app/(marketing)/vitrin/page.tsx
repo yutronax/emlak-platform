@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { brandTexture } from "@/components/auth/auth-shell";
 import { parseFilters } from "@/lib/showcase-ui/filters";
 import { getShowcaseService } from "@/lib/showcase-ui/service";
+import { STOCK } from "@/lib/stock-images";
 
 import { ShowcaseClient } from "./showcase-client";
 
@@ -25,18 +25,28 @@ export default async function ShowcasePage({
   const filters = parseFilters(await searchParams);
 
   return (
-    <main className="flex-1 bg-fog-50">
-      <header className="relative isolate overflow-hidden bg-ink-900 text-fog-50">
-        <div aria-hidden="true" className="absolute inset-0 -z-10" style={brandTexture} />
-        <div className="mx-auto max-w-6xl px-4 py-10 md:px-6 md:py-14">
-          <p className="font-body text-xs font-medium tracking-[0.2em] text-terracotta-600 uppercase">Videolu vitrin</p>
-          <h1 className="mt-2 font-display text-[2rem] leading-tight font-bold text-balance md:text-[2.75rem]">
-            Evi gezmeden önce videosunu izleyin.
+    <main className="flex-1 bg-cream-50 text-charcoal">
+      {/* Ana sayfa ilk ekranının kısa hali: fotoğraf (süs, CSS arka plan) + ince dev başlık. */}
+      <header className="relative isolate flex min-h-[46svh] flex-col justify-end overflow-hidden bg-ink-900 text-cream-50">
+        <div aria-hidden="true" className="absolute inset-0 -z-10">
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url("${STOCK.heroLiving.src(1800)}")` }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink-900 via-ink-900/60 to-ink-900/20" />
+        </div>
+        <div className="mx-auto w-full max-w-6xl px-4 pt-24 pb-10 md:px-6 md:pb-14">
+          <p className="font-body text-xs font-medium tracking-[0.2em] text-cream-50/70 uppercase">Videolu vitrin</p>
+          <h1 className="mt-3 max-w-4xl font-display text-[2.5rem] leading-[1] font-light tracking-[-0.045em] text-balance md:text-7xl">
+            Evi gezmeden önce <em className="accent">videosunu</em> izleyin.
           </h1>
-          <p className="mt-3 max-w-xl font-body text-fog-50/75">
+          <p className="mt-4 max-w-xl font-body text-cream-50/80">
             Emlakçıların editörlerimizle hazırladığı videolu ilanlar. Beğendiğinizde doğrudan WhatsApp&apos;tan yazın.
           </p>
         </div>
+        <p className="absolute bottom-2 left-4 font-body text-[10px] text-cream-50/50 md:right-3 md:left-auto">
+          Fotoğraf: {STOCK.heroLiving.credit}
+        </p>
       </header>
       <ShowcaseClient initialFilters={filters} />
     </main>
