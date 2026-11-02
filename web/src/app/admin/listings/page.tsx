@@ -2,8 +2,10 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 
 import { requireAdmin } from "@/lib/auth/requireAdmin";
+import { getReviewService } from "@/lib/review-ui/service";
 
 import { approveListing, rejectListing, setPersonalThreshold } from "./actions";
+import { ReviewClient } from "./review-client";
 import { ThresholdForm } from "./threshold-form";
 
 const DEFAULT_THRESHOLD = 0.7;
@@ -57,6 +59,10 @@ export default async function AdminListingsPage() {
   if (!auth.ok) {
     redirect(auth.reason === "no-session" ? "/login" : "/agent/dashboard");
   }
+  // Yeni inceleme masası tasarımı yalnız dev'de mock ile (NEXT_PUBLIC_ADMIN_MOCK=1); admin kontrolünden
+  // SONRA — oturum/yetki kontrolü atlanmaz. Bayraksız aşağıdaki mevcut sürüm aynen çalışır.
+  if (getReviewService()) return <ReviewClient />;
+
   const { supabase } = auth;
 
   const { data: rawListings, error } = await supabase
