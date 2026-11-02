@@ -104,7 +104,7 @@ export default function SignupPage() {
       eyebrow="Ücretsiz deneyin"
       pitch={
         <>
-          WhatsApp gruplarındaki ilanlar, <span className="text-terracotta-600">tek bir akışta.</span>
+          WhatsApp gruplarındaki ilanlar, <em className="accent">tek bir akışta</em>.
         </>
       }
     >
@@ -115,7 +115,7 @@ export default function SignupPage() {
   if (sentTo) {
     return shell(
       <div role="status" className="flex flex-col gap-3">
-        <h2 className="font-display text-[1.75rem] leading-tight font-bold">E-postanızı kontrol edin</h2>
+        <h2 className="font-display text-[2rem] leading-tight font-normal tracking-[-0.035em]">E-postanızı kontrol edin</h2>
         <p className="text-sm text-slate-500">
           Kaydınızı aldık. <strong className="font-medium text-ink-900">{sentTo}</strong> adresinin gelen kutusuna
           (ve spam klasörüne) bakın; onay bağlantısıyla hesabınızı açabilirsiniz. Bu adresle daha önce kayıt
@@ -124,7 +124,7 @@ export default function SignupPage() {
         <div className="mt-2 flex flex-col gap-2 sm:flex-row">
           <Link
             href="/login"
-            className="inline-flex flex-1 items-center justify-center rounded-md bg-terracotta-600 px-4 py-2.5 font-medium text-white hover:bg-terracotta-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900"
+            className="inline-flex flex-1 items-center justify-center rounded-leaf bg-ink-900 px-4 py-2.5 font-medium text-white hover:bg-ink-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-600"
           >
             Giriş yap
           </Link>
@@ -152,7 +152,7 @@ export default function SignupPage() {
         <span className="h-1 flex-1 rounded-full bg-terracotta-600" />
         <span className={`h-1 flex-1 rounded-full transition-colors ${step === 2 ? "bg-terracotta-600" : "bg-mist-200"}`} />
       </div>
-      <h2 className="mt-4 font-display text-[1.75rem] leading-tight font-bold">Ücretsiz Deneyin</h2>
+      <h2 className="mt-4 font-display text-[2rem] leading-tight font-normal tracking-[-0.035em]">Ücretsiz Deneyin</h2>
       <p className="mt-2 font-body text-sm text-slate-500">
         Yeni bir şey öğrenmenize gerek yok. WhatsApp&apos;ı zaten kullanıyorsunuz, o kadarı yeterli.
       </p>

@@ -13,9 +13,9 @@ type StatusScreenProps = {
 };
 
 export const primaryAction =
-  "inline-flex items-center justify-center rounded-md bg-terracotta-600 px-5 py-2.5 font-medium text-white hover:bg-terracotta-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fog-50";
+  "inline-flex items-center justify-center rounded-leaf bg-cream-50 px-5 py-3 font-medium text-ink-900 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream-50";
 export const secondaryAction =
-  "inline-flex items-center justify-center rounded-md border border-fog-50/40 px-5 py-2.5 font-medium text-fog-50 hover:bg-fog-50/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fog-50";
+  "inline-flex items-center justify-center rounded-leaf border border-fog-50/40 px-5 py-2.5 font-medium text-fog-50 hover:bg-fog-50/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fog-50";
 
 // 404 ve hata ekranları için marka sahnesi (giriş/kayıt ile aynı dil). Hook yok: sunucu ve client'ta kullanılır.
 export function StatusScreen({ mark, eyebrow, title, children, actions, headingRef }: StatusScreenProps) {

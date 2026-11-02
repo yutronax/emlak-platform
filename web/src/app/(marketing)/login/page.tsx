@@ -64,11 +64,11 @@ export default function LoginPage() {
       eyebrow="Tekrar hoş geldiniz"
       pitch={
         <>
-          Gruplardaki ilanlar <span className="text-terracotta-600">sizi bekliyor.</span>
+          Gruplardaki ilanlar sizi <em className="accent">bekliyor</em>.
         </>
       }
     >
-      <h2 className="font-display text-[1.75rem] leading-tight font-bold">Giriş yap</h2>
+      <h2 className="font-display text-[2rem] leading-tight font-normal tracking-[-0.035em]">Giriş yap</h2>
       <p className="mt-2 font-body text-sm text-slate-500">
         Hesabınıza girin, takip ettiğiniz WhatsApp gruplarındaki ilanlara buradan devam edin.
       </p>

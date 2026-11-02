@@ -18,9 +18,9 @@ const ERROR_TEXT = {
 } as const;
 
 const primaryLink =
-  "inline-flex items-center justify-center rounded-md bg-terracotta-600 px-4 py-2.5 font-medium text-white hover:bg-terracotta-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900";
+  "inline-flex items-center justify-center rounded-leaf bg-ink-900 px-4 py-3 font-medium text-white hover:bg-ink-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-600";
 const secondaryLink =
-  "inline-flex items-center justify-center rounded-md border border-ink-900 px-4 py-2.5 font-medium text-ink-900 hover:bg-mist-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900";
+  "inline-flex items-center justify-center rounded-leaf border border-ink-900 px-4 py-3 font-medium text-ink-900 hover:bg-ink-900/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-600";
 
 const STEPS = [
   { title: "WhatsApp'ı bağlayın", desc: "Telefonunuzdan QR kodu okutun; bir dakika sürer." },
@@ -35,11 +35,11 @@ export function ConfirmView({ state, service }: { state: ConfirmState; service: 
       pitch={
         state === "onaylandi" ? (
           <>
-            Hoş geldiniz. <span className="text-terracotta-600">İlk ilanlar birkaç adım ötede.</span>
+            Hoş geldiniz. İlk ilanlar <em className="accent">birkaç adım</em> ötede.
           </>
         ) : (
           <>
-            Bir bağlantı eskimiş; <span className="text-terracotta-600">yenisini hemen gönderelim.</span>
+            Bir bağlantı eskimiş; yenisini <em className="accent">hemen</em> gönderelim.
           </>
         )
       }
@@ -53,7 +53,7 @@ function Confirmed() {
   return (
     <div className="flex flex-col gap-5 font-body">
       <div>
-        <h2 className="font-display text-[1.75rem] leading-tight font-bold">E-postanız onaylandı</h2>
+        <h2 className="font-display text-[2rem] leading-tight font-normal tracking-[-0.035em]">E-postanız onaylandı</h2>
         <p className="mt-2 text-sm text-slate-500">Hesabınız hazır. Üç adımda ilk ilanlarınızı görürsünüz.</p>
       </div>
       <ol aria-label="Sonraki adımlar" className="flex flex-col gap-3">
@@ -118,7 +118,7 @@ function Invalid({ service }: { service: ConfirmService | null }) {
   return (
     <div className="flex flex-col gap-5 font-body">
       <div>
-        <h2 className="font-display text-[1.75rem] leading-tight font-bold">Bu onay bağlantısı geçersiz</h2>
+        <h2 className="font-display text-[2rem] leading-tight font-normal tracking-[-0.035em]">Bu onay bağlantısı geçersiz</h2>
         <p className="mt-2 text-sm text-slate-500">Süresi dolmuş ya da daha önce kullanılmış olabilir.</p>
       </div>
 
