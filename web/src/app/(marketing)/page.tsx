@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { Suspense } from "react";
+
 import { ShowcasePreview } from "@/components/showcase/showcase-preview";
 import { SUPPORT_WHATSAPP_DISPLAY, SUPPORT_WHATSAPP_URL } from "@/lib/contact";
 import { srcSet, STOCK } from "@/lib/stock-images";
@@ -211,7 +213,10 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <ShowcasePreview />
+      {/* Sayfanın geri kalanı statik kalır; önizleme istek anında gelir, gelmezse hiç görünmez. */}
+      <Suspense fallback={null}>
+        <ShowcasePreview />
+      </Suspense>
 
       {/* 6 · SSS */}
       <section className="bg-stone-200">

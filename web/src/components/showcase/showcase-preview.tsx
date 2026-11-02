@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { connection } from "next/server";
 
 import { getShowcaseService } from "@/lib/showcase-ui/service";
 
@@ -7,6 +8,8 @@ import { ShowcaseCard } from "./showcase-card";
 // Ana sayfa: vitrinden en yeni 3 video. Servis yoksa veya yüklenemezse bölüm hiç görünmez.
 // Stellar "Featured properties" uyarlaması: ince dev başlık + serif vurgu, sağda bağlantı.
 export async function ShowcasePreview() {
+  // Vitrin canlı veridir: derlemede prerender edilmez, istek anında (Suspense içinde) yüklenir.
+  await connection();
   const service = getShowcaseService({ delayMs: 0 });
   const res = await service.list({ sort: "yeni" }).catch(() => null);
   if (!res || res.status !== "ok" || res.items.length === 0) return null;
