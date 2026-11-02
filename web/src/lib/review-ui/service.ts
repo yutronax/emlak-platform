@@ -1,3 +1,12 @@
+import {
+  reviewApprove,
+  reviewCities,
+  reviewGetThreshold,
+  reviewList,
+  reviewReject,
+  reviewSaveThreshold,
+} from "@/app/admin/listings/review-actions";
+
 import { scoreBand } from "./edits";
 import type { ReviewItem, ReviewService } from "./types";
 
@@ -87,15 +96,26 @@ function createMockReviewService(delayMs = 500): ReviewService {
   };
 }
 
-// Gerçek servis yok → null: mevcut sunucu sayfası çalışır.
-export function selectReviewService(env: { nodeEnv: string | undefined; mockFlag: string | undefined }): ReviewService | null {
+// Sunucu aksiyonlarının istemci sarmalayıcısı.
+export const realReviewService: ReviewService = {
+  kind: "real",
+  list: (q) => reviewList(q),
+  cities: () => reviewCities(),
+  approve: (id, edits) => reviewApprove(id, edits),
+  reject: (id, reason, note) => reviewReject(id, reason, note),
+  getThreshold: () => reviewGetThreshold(),
+  saveThreshold: (v) => reviewSaveThreshold(v),
+};
+
+// Varsayılan gerçek servis; mock yalnız dev'de bayrakla.
+export function selectReviewService(env: { nodeEnv: string | undefined; mockFlag: string | undefined }): ReviewService {
   if (env.mockFlag === "1") {
     if (env.nodeEnv === "production") throw new Error("Admin mock servisi production'da kullanılamaz.");
     return createMockReviewService();
   }
-  return null;
+  return realReviewService;
 }
 
-export function getReviewService(): ReviewService | null {
+export function getReviewService(): ReviewService {
   return selectReviewService({ nodeEnv: process.env.NODE_ENV, mockFlag: process.env.NEXT_PUBLIC_ADMIN_MOCK });
 }

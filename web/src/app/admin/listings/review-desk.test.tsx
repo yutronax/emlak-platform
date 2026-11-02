@@ -4,6 +4,8 @@ import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-li
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { selectReviewService } from "@/lib/review-ui/service";
+
+vi.mock("@/app/admin/listings/review-actions", () => ({}));
 import type { ReviewItem, ReviewService } from "@/lib/review-ui/types";
 
 import { ReviewDesk } from "./review-desk";
@@ -207,7 +209,7 @@ describe("ReviewDesk — klavye", () => {
 describe("selectReviewService", () => {
   it("production'da mock hata fırlatır; bayraksız null", () => {
     expect(() => selectReviewService({ nodeEnv: "production", mockFlag: "1" })).toThrow(/mock/i);
-    expect(selectReviewService({ nodeEnv: "development", mockFlag: undefined })).toBeNull();
+    expect(selectReviewService({ nodeEnv: "development", mockFlag: undefined }).kind).toBe("real");
     expect(selectReviewService({ nodeEnv: "development", mockFlag: "1" })?.kind).toBe("mock");
   });
 });
