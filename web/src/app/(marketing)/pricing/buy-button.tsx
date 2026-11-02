@@ -3,6 +3,8 @@
 import { useState } from "react";
 
 import { Alert } from "@/components/ui/alert";
+import { SUPPORT_WHATSAPP_URL } from "@/lib/contact";
+import { paymentsEnabled } from "@/lib/payments/enabled";
 
 type BuyButtonVariant = "primary" | "secondary" | "inverse";
 
@@ -33,6 +35,23 @@ export function BuyButton({
 }) {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Kartla ödeme kapalıyken abonelik WhatsApp üzerinden elle başlatılır (admin uzatır).
+  if (!paymentsEnabled()) {
+    return (
+      <div className="flex flex-col gap-2">
+        <a
+          href={`${SUPPORT_WHATSAPP_URL}?text=${encodeURIComponent(`${label}: abonelik başlatmak istiyorum.`)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`${baseClass} ${variantClass[variant]} text-center`}
+        >
+          WhatsApp&apos;tan abone ol<span className="sr-only"> (yeni sekmede açılır)</span>
+        </a>
+        <p className="text-xs opacity-70">Kartla ödeme yakında. Şimdilik aboneliğinizi biz başlatıyoruz.</p>
+      </div>
+    );
+  }
 
   async function handleClick() {
     setPending(true);

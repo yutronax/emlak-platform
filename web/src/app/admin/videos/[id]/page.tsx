@@ -9,6 +9,8 @@ import { type OrderStatus, STATUS_LABELS } from "@/lib/video-orders/status";
 
 import { AssetDownloadButton } from "./asset-download-button";
 import { DeliveryUpload } from "./delivery-upload";
+import { ManualPayment } from "./manual-payment";
+import { paymentsEnabled } from "@/lib/payments/enabled";
 import { QuoteForm } from "./quote-form";
 import { RejectForm } from "./reject-form";
 import { formatTryMinor } from "@/lib/format-price";
@@ -250,6 +252,18 @@ export default async function AdminVideoDetailPage({
           </div>
         </section>
       )}
+
+      {!paymentsEnabled() &&
+        (order.status === "awaiting_payment" || order.status === "payment_failed") &&
+        order.price_minor_unit !== null && (
+          <section className="flex flex-col gap-3">
+            <h2 className="font-display text-lg font-normal tracking-[-0.03em]">Elle ödeme</h2>
+            <p className="text-sm text-slate-500">
+              Kartla ödeme kapalı. Havale ya da elden ödemeyi aldığınızda kaydedin.
+            </p>
+            <ManualPayment orderId={order.id} amountLabel={formatTryMinor(order.price_minor_unit)} />
+          </section>
+        )}
 
       {order.status === "in_progress" && (
         <section className="flex flex-col gap-3">

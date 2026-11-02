@@ -4,6 +4,8 @@ import { useState } from "react";
 
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { SUPPORT_WHATSAPP_URL } from "@/lib/contact";
+import { paymentsEnabled } from "@/lib/payments/enabled";
 import { DELIVERY_BUSINESS_DAYS } from "@/lib/video-orders/limits";
 
 function messageFor(status: number, code: string | null): string {
@@ -22,6 +24,25 @@ function messageFor(status: number, code: string | null): string {
 export function PayButton({ orderId, amountLabel }: { orderId: string; amountLabel: string }) {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Kartla ödeme kapalıyken ödeme havale/elden alınır; admin "ödeme alındı" deyince hazırlık başlar.
+  if (!paymentsEnabled()) {
+    return (
+      <div className="flex flex-col gap-3">
+        <a
+          href={`${SUPPORT_WHATSAPP_URL}?text=${encodeURIComponent(`Video siparişi ${orderId} için ödeme yapmak istiyorum (${amountLabel}).`)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex min-h-12 w-full items-center justify-center rounded-leaf bg-ink-900 px-4 py-2 text-base font-medium text-white hover:bg-ink-800"
+        >
+          Ödeme için WhatsApp&apos;tan yazın ({amountLabel})<span className="sr-only"> (yeni sekmede açılır)</span>
+        </a>
+        <p className="text-sm text-slate-500">
+          Kartla ödeme yakında. Ödemeniz alındığında videonuz {DELIVERY_BUSINESS_DAYS} iş günü içinde hazırlanır.
+        </p>
+      </div>
+    );
+  }
 
   async function handleClick() {
     setPending(true);

@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { requireAdmin } from "@/lib/auth/requireAdmin";
 import { createServiceRoleClient } from "@/lib/supabase/server";
 
-import { adminSetAdmin, adminSetSuspended, adminListAgents } from "./actions";
+import { adminExtendSubscription, adminSetAdmin, adminSetSuspended, adminListAgents } from "./actions";
 
 vi.mock("@/lib/auth/requireAdmin", () => ({ requireAdmin: vi.fn() }));
 vi.mock("@/lib/supabase/server", () => ({ createServiceRoleClient: vi.fn() }));
@@ -65,6 +65,60 @@ describe("adminSetSuspended", () => {
     const { updates } = db();
     await adminSetSuspended(OTHER, false);
     expect(updates).toEqual([{ table: "agents", values: { suspended_at: null } }]);
+  });
+});
+
+describe("adminExtendSubscription", () => {
+  function subsDb(latest: { id: string; current_period_end: string | null } | null) {
+    const writes: { op: string; values: unknown }[] = [];
+    const chain = (data: unknown) => {
+      const q: Record<string, unknown> = {};
+      for (const m of ["select", "eq", "order", "limit"]) q[m] = vi.fn(() => q);
+      q.maybeSingle = vi.fn(async () => ({ data, error: null }));
+      q.then = (r: (v: unknown) => unknown) => Promise.resolve({ data: Array.isArray(data) ? data : [data], error: null }).then(r);
+      return q;
+    };
+    const from = vi.fn((table: string) => {
+      if (table === "subscriptions") {
+        const q = chain(latest ? [latest] : []);
+        return {
+          ...q,
+          update: vi.fn((values: unknown) => {
+            writes.push({ op: "update", values });
+            return { eq: vi.fn(async () => ({ error: null })) };
+          }),
+          insert: vi.fn(async (values: unknown) => {
+            writes.push({ op: "insert", values });
+            return { error: null };
+          }),
+        };
+      }
+      if (table === "plans") return chain({ id: "plan-cheap" });
+      // detay yeniden yükleme
+      return chain(null);
+    });
+    vi.mocked(createServiceRoleClient).mockReturnValue({ from } as never);
+    return writes;
+  }
+
+  it("süresi geçmişse bugünden, sürüyorsa mevcut sondan 30 gün ileri alır", async () => {
+    vi.useFakeTimers({ now: new Date("2026-11-02T00:00:00Z") });
+    let writes = subsDb({ id: "s1", current_period_end: "2026-10-01T00:00:00Z" });
+    await adminExtendSubscription(OTHER);
+    expect(writes).toEqual([{ op: "update", values: { status: "active", current_period_end: "2026-12-02T00:00:00.000Z" } }]);
+
+    writes = subsDb({ id: "s1", current_period_end: "2026-11-10T00:00:00Z" });
+    await adminExtendSubscription(OTHER);
+    expect(writes[0].values).toMatchObject({ current_period_end: "2026-12-10T00:00:00.000Z" });
+    vi.useRealTimers();
+  });
+
+  it("abonelik yoksa en ucuz planla aktif abonelik açar", async () => {
+    const writes = subsDb(null);
+    await adminExtendSubscription(OTHER);
+    expect(writes).toEqual([
+      { op: "insert", values: expect.objectContaining({ agent_id: OTHER, plan_id: "plan-cheap", status: "active" }) },
+    ]);
   });
 });
 

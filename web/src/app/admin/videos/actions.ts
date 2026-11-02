@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 
 import { requireAdmin } from "@/lib/auth/requireAdmin";
 import { createServiceRoleClient } from "@/lib/supabase/server";
-import { ASSET_RULES } from "@/lib/video-orders/limits";
+import { ASSET_RULES, addBusinessDays, DELIVERY_BUSINESS_DAYS } from "@/lib/video-orders/limits";
 import { type OrderStatus, canTransition } from "@/lib/video-orders/status";
 
 const ASSET_BUCKET = "video-order-assets";
@@ -145,6 +145,40 @@ export async function setQuote(orderId: string, priceTl: string): Promise<Action
     .select("id");
   if (error) {
     console.error("Fiyat teklifi kaydedilemedi", error);
+    return fail("INTERNAL_ERROR");
+  }
+  if (!updated || updated.length === 0) {
+    return fail("INVALID_STATE");
+  }
+
+  revalidateOrder(order.id);
+  return { ok: true };
+}
+
+// Kartla ödeme kapalıyken: havale/elden ödeme alındığında admin onaylar; webhook'taki ödendi geçişinin aynısı.
+export async function markOrderPaidManually(orderId: string): Promise<ActionResult> {
+  const g = await gate();
+  if (!g.ok) return g;
+
+  const order = await loadOrder(g.admin, orderId);
+  if (!order) return fail("NOT_FOUND");
+  if (order.status !== "awaiting_payment" && order.status !== "payment_failed") {
+    return fail("INVALID_STATE");
+  }
+
+  const now = new Date();
+  const { data: updated, error } = await g.admin
+    .from("video_orders")
+    .update({
+      status: "in_progress",
+      paid_at: now.toISOString(),
+      due_at: addBusinessDays(now, DELIVERY_BUSINESS_DAYS).toISOString(),
+    })
+    .eq("id", order.id)
+    .in("status", ["awaiting_payment", "payment_failed"])
+    .select("id");
+  if (error) {
+    console.error("Elle ödeme kaydedilemedi", error);
     return fail("INTERNAL_ERROR");
   }
   if (!updated || updated.length === 0) {

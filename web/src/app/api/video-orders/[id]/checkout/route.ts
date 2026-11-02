@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { paymentsEnabled } from "@/lib/payments/enabled";
 import { createCheckoutSession } from "@/lib/payments/iyzico";
 import { createClient } from "@/lib/supabase/server";
 
@@ -29,6 +30,9 @@ export async function POST(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  if (!paymentsEnabled()) {
+    return NextResponse.json({ error: "PAYMENTS_DISABLED" }, { status: 503 });
+  }
   const supabase = await createClient();
   const { data: auth, error: authError } = await supabase.auth.getUser();
   if (authError || !auth.user) {

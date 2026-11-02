@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { paymentsEnabled } from "@/lib/payments/enabled";
 import { createCheckoutSession } from "@/lib/payments/iyzico";
 import { createClient, createServiceRoleClient } from "@/lib/supabase/server";
 
@@ -21,6 +22,9 @@ function isProviderTimeout(error: unknown): boolean {
 }
 
 export async function POST(request: NextRequest) {
+  if (!paymentsEnabled()) {
+    return NextResponse.json({ error: "PAYMENTS_DISABLED" }, { status: 503 });
+  }
   const supabase = await createClient();
   const { data: auth, error: authError } = await supabase.auth.getUser();
   if (authError || !auth.user) {

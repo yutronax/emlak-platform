@@ -50,4 +50,6 @@ export interface AdminService {
   getAgent(id: string): Promise<{ status: "ok"; agent: AgentDetail; isSelf: boolean } | { status: "not_found" } | { status: "error" }>;
   setSuspended(id: string, suspended: boolean): Promise<{ status: "ok"; agent: AgentDetail } | AdminError>;
   setAdmin(id: string, isAdmin: boolean): Promise<{ status: "ok"; agent: AgentDetail } | AdminError>;
+  // Kartla ödeme kapalıyken (havale/elden ödeme) aboneliği 30 gün uzatır.
+  extendSubscription(id: string): Promise<{ status: "ok"; agent: AgentDetail } | AdminError>;
 }

@@ -16,7 +16,7 @@ type State =
   | { status: "not_found" }
   | { status: "ok"; agent: AgentDetail; isSelf: boolean };
 
-type Action = { kind: "suspend" | "unsuspend" | "makeAdmin" | "removeAdmin"; trigger: HTMLElement };
+type Action = { kind: "suspend" | "unsuspend" | "makeAdmin" | "removeAdmin" | "extend"; trigger: HTMLElement };
 
 const PAYMENT: Record<AgentDetail["payments"][number]["status"], string> = {
   paid: "Ödendi",
@@ -53,6 +53,12 @@ const ACTION_TEXT: Record<Action["kind"], { title: string; confirm: string; body
     confirm: "Yetkiyi kaldır",
     body: "Kullanıcı yönetim ekranlarına erişemez; emlakçı paneli etkilenmez.",
     danger: true,
+  },
+  extend: {
+    title: "Aboneliği 30 gün uzat",
+    confirm: "30 gün uzat",
+    body: "Ödemeyi aldıysanız onaylayın. Abonelik etkin olur ve dönem sonu 30 gün ileri alınır (bitmişse bugünden itibaren).",
+    danger: false,
   },
 };
 
@@ -91,9 +97,11 @@ export function AgentDetailView({ service, id }: { service: AdminService; id: st
     try {
       const a = state.agent;
       const res =
-        action.kind === "suspend" || action.kind === "unsuspend"
-          ? await service.setSuspended(a.id, action.kind === "suspend")
-          : await service.setAdmin(a.id, action.kind === "makeAdmin");
+        action.kind === "extend"
+          ? await service.extendSubscription(a.id)
+          : action.kind === "suspend" || action.kind === "unsuspend"
+            ? await service.setSuspended(a.id, action.kind === "suspend")
+            : await service.setAdmin(a.id, action.kind === "makeAdmin");
       if (res.status === "ok") {
         setState({ ...state, agent: res.agent });
         setNotice(
@@ -102,6 +110,7 @@ export function AgentDetailView({ service, id }: { service: AdminService; id: st
             unsuspend: "Hesap yeniden etkinleştirildi.",
             makeAdmin: "Admin yetkisi verildi.",
             removeAdmin: "Admin yetkisi kaldırıldı.",
+            extend: "Abonelik 30 gün uzatıldı.",
           }[action.kind],
         );
         setAction(null);
@@ -245,6 +254,7 @@ export function AgentDetailView({ service, id }: { service: AdminService; id: st
             Hesap aksiyonları
           </h2>
           <div className="flex flex-col gap-2">
+            <Button onClick={open("extend")}>Aboneliği 30 gün uzat</Button>
             {agent.suspended ? (
               <Button variant="secondary" onClick={open("unsuspend")}>
                 Yeniden etkinleştir

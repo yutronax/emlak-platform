@@ -1,4 +1,5 @@
 import {
+  adminExtendSubscription,
   adminGetAgent,
   adminListAgents,
   adminOverview,
@@ -120,6 +121,19 @@ export function createMockAdminService(delayMs = 500): AdminService {
       if (id === "a7") return { status: "error" };
       return { status: "ok", agent: update(id, { isAdmin }) };
     },
+    async extendSubscription(id) {
+      await wait();
+      if (id === "a7") return { status: "error" };
+      const a = agents.find((x) => x.id === id)!;
+      const base = Math.max(Date.now(), a.currentPeriodEnd ? Date.parse(a.currentPeriodEnd) : 0);
+      return {
+        status: "ok",
+        agent: update(id, {
+          subscription: { status: "active", planName: a.subscription.planName ?? "Temel" },
+          currentPeriodEnd: new Date(base + 30 * 86_400_000).toISOString(),
+        }),
+      };
+    },
   };
 }
 
@@ -131,6 +145,7 @@ export const realAdminService: AdminService = {
   getAgent: (id) => adminGetAgent(id),
   setSuspended: (id, suspended) => adminSetSuspended(id, suspended),
   setAdmin: (id, isAdmin) => adminSetAdmin(id, isAdmin),
+  extendSubscription: (id) => adminExtendSubscription(id),
 };
 
 // Varsayılan gerçek servis; mock yalnız dev'de bayrakla.

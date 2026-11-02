@@ -196,6 +196,36 @@ export async function adminSetSuspended(id: string, suspended: boolean) {
   });
 }
 
+const PERIOD_MS = 30 * 24 * 60 * 60 * 1000;
+
+// Elle tahsilat sonrası: en yeni abonelik aktif yapılır ve dönem sonu max(şimdi, mevcut son) + 30 gün olur;
+// abonelik yoksa en ucuz planla açılır.
+export async function adminExtendSubscription(id: string) {
+  return mutate(id, async (db) => {
+    const { data: subs, error } = await db
+      .from("subscriptions")
+      .select("id, current_period_end")
+      .eq("agent_id", id)
+      .order("created_at", { ascending: false })
+      .limit(1);
+    if (error) return [{ error }];
+    const latest = subs?.[0] as { id: string; current_period_end: string | null } | undefined;
+    const base = Math.max(Date.now(), latest?.current_period_end ? Date.parse(latest.current_period_end) : 0);
+    const current_period_end = new Date(base + PERIOD_MS).toISOString();
+    if (latest) {
+      return [await db.from("subscriptions").update({ status: "active", current_period_end }).eq("id", latest.id)];
+    }
+    const { data: plan, error: planError } = await db
+      .from("plans")
+      .select("id")
+      .order("price_minor_unit", { ascending: true })
+      .limit(1)
+      .maybeSingle();
+    if (planError || !plan) return [{ error: planError ?? new Error("plan yok") }];
+    return [await db.from("subscriptions").insert({ agent_id: id, plan_id: plan.id, status: "active", current_period_end })];
+  });
+}
+
 export async function adminSetAdmin(id: string, isAdmin: boolean) {
   const auth = await requireAdmin();
   if (!auth.ok) return { status: "error" } as AdminError;

@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import {
   confirmDelivery,
   getAssetDownloadUrl,
+  markOrderPaidManually,
   rejectOrder,
   requestDeliveryUploadUrl,
   setQuote,
@@ -26,6 +27,7 @@ type Q = {
   update: (payload: Row) => Q;
   delete: () => Q;
   eq: (col: string, val: unknown) => Q;
+  in: (col: string, vals: unknown[]) => Q;
   single: () => Q;
   maybeSingle: () => Q;
   then: (onOk: (v: Result) => unknown, onErr?: (e: unknown) => unknown) => Promise<unknown>;
@@ -50,8 +52,10 @@ const h = vi.hoisted(() => {
     let payload: Row | Row[] | null = null;
     let single = false;
     const filters: Array<[string, unknown]> = [];
+    const inFilters: Array<[string, unknown[]]> = [];
     const rows = (): Row[] => (db[table] ??= []);
-    const matches = (row: Row) => filters.every(([col, val]) => row[col] === val);
+    const matches = (row: Row) =>
+      filters.every(([col, val]) => row[col] === val) && inFilters.every(([col, vals]) => vals.includes(row[col]));
 
     const exec = (): Result => {
       state.beforeExec?.(table, op);
@@ -105,6 +109,10 @@ const h = vi.hoisted(() => {
       },
       eq(col, val) {
         filters.push([col, val]);
+        return api;
+      },
+      in(col, vals) {
+        inFilters.push([col, vals]);
         return api;
       },
       single() {
@@ -601,5 +609,19 @@ describe("confirmDelivery", () => {
     expect(rowsOf("property_videos")).toHaveLength(1);
     expect(orderRow(orderId)?.status).toBe("in_progress");
     expect(h.objects.has(`${DELIVERED_BUCKET}/${path}`)).toBe(false);
+  });
+});
+
+describe("markOrderPaidManually (kartla ödeme kapalıyken)", () => {
+  it("ödeme bekleyen siparişi hazırlanıyor yapar, teslim tarihini başlatır", async () => {
+    const { orderId } = seedOrder({ serviceCode: "onsite", status: "awaiting_payment", price: 150_000 });
+    expect(await markOrderPaidManually(orderId)).toEqual({ ok: true });
+    expect(orderRow(orderId)).toMatchObject({ status: "in_progress", paid_at: expect.any(String), due_at: expect.any(String) });
+  });
+
+  it("başka durumdaki sipariş INVALID_STATE, değişmez", async () => {
+    const { orderId } = seedOrder({ status: "in_progress" });
+    expect(await markOrderPaidManually(orderId)).toMatchObject({ ok: false, error: "INVALID_STATE" });
+    expect(orderRow(orderId)?.status).toBe("in_progress");
   });
 });
