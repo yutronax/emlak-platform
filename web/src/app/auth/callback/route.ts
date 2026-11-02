@@ -11,7 +11,10 @@ function safeNext(next: string | null): string {
   return next;
 }
 
-// E-posta linkindeki code'u oturuma çevirir (şifre sıfırlama). Hata: yeni bağlantı isteme sayfası.
+const CONFIRM_TARGET = "/e-posta-onay";
+
+// E-posta linkindeki code'u oturuma çevirir (kayıt onayı, şifre sıfırlama).
+// Hata: isteğin türüne göre yeni bağlantı isteme sayfası.
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
@@ -22,7 +25,8 @@ export async function GET(request: Request) {
   const supabase = await createClient();
   const { error } = await supabase.auth.exchangeCodeForSession(code);
   if (error) {
-    return NextResponse.redirect(new URL("/sifremi-unuttum", url.origin));
+    const fallback = target === CONFIRM_TARGET ? `${CONFIRM_TARGET}?durum=gecersiz` : "/sifremi-unuttum";
+    return NextResponse.redirect(new URL(fallback, url.origin));
   }
   return NextResponse.redirect(new URL(target, url.origin));
 }

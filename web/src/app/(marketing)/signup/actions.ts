@@ -30,7 +30,11 @@ export async function signup(formData: FormData): Promise<{ message: string } | 
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
-    options: { data: { company_name: companyName, terms_version: TERMS_VERSION } },
+    options: {
+      data: { company_name: companyName, terms_version: TERMS_VERSION },
+      // Onay bağlantısı /e-posta-onay'a döner; adres sunucu sabitinden (istek header'ı okunmaz, AC-S5).
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=/e-posta-onay`,
+    },
   });
 
   if (error) {

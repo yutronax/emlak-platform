@@ -6,7 +6,10 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { selectConfirmService } from "@/lib/confirm-ui/service";
 import type { ConfirmService } from "@/lib/confirm-ui/types";
 
+import { resendConfirmation } from "./actions";
 import { ConfirmView } from "./confirm-view";
+
+vi.mock("./actions", () => ({ resendConfirmation: vi.fn() }));
 
 const service = (resend: ConfirmService["resend"] = vi.fn(async () => ({ status: "ok" as const }))): ConfirmService => ({
   kind: "mock",
@@ -83,9 +86,20 @@ describe("ConfirmView — geçersiz", () => {
 });
 
 describe("selectConfirmService", () => {
-  it("production'da mock hata fırlatır; bayraksız null", () => {
+  it("production'da mock hata fırlatır; bayraksız gerçek servis; dev+bayrak mock", () => {
     expect(() => selectConfirmService({ nodeEnv: "production", mockFlag: "1" })).toThrow(/mock/i);
-    expect(selectConfirmService({ nodeEnv: "development", mockFlag: undefined })).toBeNull();
-    expect(selectConfirmService({ nodeEnv: "development", mockFlag: "1" })?.kind).toBe("mock");
+    expect(selectConfirmService({ nodeEnv: "production", mockFlag: undefined }).kind).toBe("real");
+    expect(selectConfirmService({ nodeEnv: "development", mockFlag: "1" }).kind).toBe("mock");
+  });
+
+  it("gerçek servis sunucu aksiyonunu çağırır; ağ hatasını network'e çevirir", async () => {
+    const real = selectConfirmService({ nodeEnv: "production", mockFlag: undefined });
+
+    vi.mocked(resendConfirmation).mockResolvedValueOnce({ status: "error", code: "rate_limited" });
+    expect(await real.resend("ayse@acme.com")).toEqual({ status: "error", code: "rate_limited" });
+    expect(resendConfirmation).toHaveBeenCalledWith("ayse@acme.com");
+
+    vi.mocked(resendConfirmation).mockRejectedValueOnce(new TypeError("Failed to fetch"));
+    expect(await real.resend("ayse@acme.com")).toEqual({ status: "error", code: "network" });
   });
 });

@@ -76,6 +76,38 @@ describe("GET /auth/callback", () => {
     expect(target.pathname).toBe(DEFAULT_TARGET);
   });
 
+  // e-posta-onay-ekrani: geçersiz/süresi dolmuş bağlantı, isteğin türüne göre doğru sayfaya düşer.
+  it("kayıt onayı (next=/e-posta-onay) code hatasında /e-posta-onay?durum=gecersiz'e yönlenir", async () => {
+    vi.mocked(createClient).mockResolvedValue({
+      auth: { exchangeCodeForSession: vi.fn().mockResolvedValue({ data: {}, error: { message: "expired" } }) },
+    } as never);
+
+    const target = redirectTarget(await callCallback({ code: "eski", next: "/e-posta-onay" }));
+
+    expect(target.origin).toBe(ORIGIN);
+    expect(target.pathname).toBe("/e-posta-onay");
+    expect(target.searchParams.get("durum")).toBe("gecersiz");
+  });
+
+  it("şifre sıfırlama code hatasında eskisi gibi /sifremi-unuttum'a yönlenir", async () => {
+    vi.mocked(createClient).mockResolvedValue({
+      auth: { exchangeCodeForSession: vi.fn().mockResolvedValue({ data: {}, error: { message: "expired" } }) },
+    } as never);
+
+    const target = redirectTarget(await callCallback({ code: "eski", next: "/sifre-yenile" }));
+
+    expect(target.pathname).toBe("/sifremi-unuttum");
+  });
+
+  it("kayıt onayı başarılıysa /e-posta-onay'a yönlenir", async () => {
+    setupSupabase();
+
+    const target = redirectTarget(await callCallback({ code: "abc", next: "/e-posta-onay" }));
+
+    expect(target.pathname).toBe("/e-posta-onay");
+    expect(target.searchParams.get("durum")).toBeNull();
+  });
+
   it("next verilmezse /agent/dashboard'a yönlenir", async () => {
     setupSupabase();
 

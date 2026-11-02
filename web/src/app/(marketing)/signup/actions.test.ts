@@ -56,6 +56,8 @@ const VALID_FIELDS = {
 describe("signup", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.unstubAllEnvs();
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://emlak.example.com");
   });
 
   // AC-6: company_name boş/sadece boşluk -> signUp() hiç çağrılmaz.
@@ -86,10 +88,25 @@ describe("signup", () => {
     expect(signUp).toHaveBeenCalledWith({
       email: "test@example.com",
       password: "sifre123",
-      options: { data: { company_name: "Acme Emlak", terms_version: TERMS_VERSION } },
+      options: {
+        data: { company_name: "Acme Emlak", terms_version: TERMS_VERSION },
+        emailRedirectTo: "https://emlak.example.com/auth/callback?next=/e-posta-onay",
+      },
     });
     expect(ensureAgentRow).toHaveBeenCalledWith(supabase, "user-1", "Acme Emlak", { accepted: true });
     expect(redirect).toHaveBeenCalledWith("/agent/dashboard");
+  });
+
+  // e-posta-onay-ekrani: onay bağlantısı /e-posta-onay'a döner; adres sunucu sabitinden (istek header'ı değil, AC-S5).
+  it("onay bağlantısının dönüş adresi NEXT_PUBLIC_SITE_URL'den üretilir", async () => {
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://baska.example.com");
+    const { signUp } = setupSupabase({ data: { user: null, session: null }, error: null });
+
+    await signup(makeFormData(VALID_FIELDS));
+
+    expect(signUp.mock.calls[0][0].options.emailRedirectTo).toBe(
+      "https://baska.example.com/auth/callback?next=/e-posta-onay",
+    );
   });
 
   // Regresyon (login ile aynı davranış): ensureAgentRow hata verirse signOut + açık hata mesajı,
@@ -183,7 +200,10 @@ describe("signup", () => {
     expect(signUp).toHaveBeenCalledWith({
       email: "test@example.com",
       password: "sifre123",
-      options: { data: { company_name: "Acme Emlak", terms_version: TERMS_VERSION } },
+      options: {
+        data: { company_name: "Acme Emlak", terms_version: TERMS_VERSION },
+        emailRedirectTo: "https://emlak.example.com/auth/callback?next=/e-posta-onay",
+      },
     });
     const payload = JSON.stringify(signUp.mock.calls[0]);
     expect(payload).not.toContain("terms_accepted_at");
