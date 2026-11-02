@@ -2,6 +2,9 @@ import { connection } from "next/server";
 import { notFound, redirect } from "next/navigation";
 import type { ReactNode } from "react";
 
+import { AppHeader, type HeaderSection } from "@/components/app-shell/app-header";
+import { getAdminService } from "@/lib/admin-ui/service";
+import { getProfileService } from "@/lib/profile-ui/service";
 import { createClient } from "@/lib/supabase/server";
 
 // Next.js 16 Cache Components: cookies() (Supabase session) her istekte
@@ -32,5 +35,29 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     notFound();
   }
 
-  return <>{children}</>;
+  // Genel bakış ve Emlakçılar yalnız servis varken (gerçek servis gelene kadar mock/dev).
+  const sections: HeaderSection[] = getAdminService()
+    ? [
+        { href: "/admin", label: "Genel bakış", exact: true },
+        { href: "/admin/listings", label: "İlanlar" },
+        { href: "/admin/videos", label: "Videolar" },
+        { href: "/admin/agents", label: "Emlakçılar" },
+      ]
+    : [
+        { href: "/admin/listings", label: "İlanlar" },
+        { href: "/admin/videos", label: "Videolar" },
+      ];
+
+  return (
+    <div className="flex min-h-screen flex-col bg-fog-50">
+      <AppHeader
+        email={userData.user.email ?? null}
+        showProfile={getProfileService() !== null}
+        sections={sections}
+        navLabel="Yönetim bölümleri"
+        homeHref={sections[0].href}
+      />
+      {children}
+    </div>
+  );
 }

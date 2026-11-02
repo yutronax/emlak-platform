@@ -47,6 +47,30 @@ describe("AppHeader — bölüm gezinmesi", () => {
   });
 });
 
+describe("AppHeader — özel bölümler (admin)", () => {
+  it("verilen bölümler, gezinme etiketi ve logo hedefi kullanılır", () => {
+    pathname.value = "/admin/agents/a1";
+    render(
+      <AppHeader
+        email="admin@acme.com"
+        showProfile
+        homeHref="/admin"
+        navLabel="Yönetim bölümleri"
+        sections={[
+          { href: "/admin", label: "Genel bakış", exact: true },
+          { href: "/admin/agents", label: "Emlakçılar" },
+        ]}
+      />,
+    );
+
+    expect(screen.getByRole("link", { name: "Emlak Platformu" })).toHaveAttribute("href", "/admin");
+    const nav = screen.getByRole("navigation", { name: "Yönetim bölümleri" });
+    expect(within(nav).getByRole("link", { name: "Emlakçılar" })).toHaveAttribute("aria-current", "page");
+    // "/admin" yalnız tam eşleşmede aktif (alt sayfalarda değil).
+    expect(within(nav).getByRole("link", { name: "Genel bakış" })).not.toHaveAttribute("aria-current");
+  });
+});
+
 describe("AppHeader — hesap menüsü", () => {
   const openMenu = () => fireEvent.click(screen.getByRole("button", { name: /Hesap menüsü/ }));
 

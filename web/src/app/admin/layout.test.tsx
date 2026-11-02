@@ -17,6 +17,8 @@ vi.mock("next/server", () => ({
 }));
 
 vi.mock("next/navigation", () => ({
+  // Layout artık AppHeader'ı (client) render ediyor.
+  usePathname: () => "/admin/listings",
   redirect: vi.fn(() => {
     throw new Error("NEXT_REDIRECT");
   }),

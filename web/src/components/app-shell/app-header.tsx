@@ -8,7 +8,9 @@ import { useFormStatus } from "react-dom";
 import { signOut } from "@/app/auth/actions";
 import { isActivePath } from "@/lib/nav/is-active-path";
 
-const SECTIONS = [
+export type HeaderSection = { href: string; label: string; exact?: boolean };
+
+const AGENT_SECTIONS: HeaderSection[] = [
   { href: "/agent/dashboard", label: "İlanlar" },
   { href: "/agent/whatsapp", label: "WhatsApp" },
   { href: "/agent/videos", label: "Videolar" },
@@ -18,6 +20,10 @@ type AppHeaderProps = {
   email: string | null;
   // Profil servisi yoksa /account/profile 404 döner; bağlantı gösterilmez.
   showProfile: boolean;
+  // Varsayılanlar emlakçı paneli; admin alanı kendi bölümlerini verir.
+  sections?: HeaderSection[];
+  navLabel?: string;
+  homeHref?: string;
 };
 
 const itemClass =
@@ -39,7 +45,13 @@ function LogoutItem({ onKeyDown }: { onKeyDown: (e: KeyboardEvent<HTMLElement>) 
   );
 }
 
-export function AppHeader({ email, showProfile }: AppHeaderProps) {
+export function AppHeader({
+  email,
+  showProfile,
+  sections = AGENT_SECTIONS,
+  navLabel = "Panel bölümleri",
+  homeHref = "/agent/dashboard",
+}: AppHeaderProps) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -100,18 +112,19 @@ export function AppHeader({ email, showProfile }: AppHeaderProps) {
     <header className="border-b border-white/10 bg-ink-900 text-fog-50">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 px-4 md:h-14 md:flex-nowrap md:px-6">
         <Link
-          href="/agent/dashboard"
+          href={homeHref}
           className="flex h-14 items-center font-display text-lg font-bold whitespace-nowrap focus-visible:outline-2 focus-visible:outline-terracotta-600 md:h-auto"
         >
           Emlak Platformu
         </Link>
 
         <nav
-          aria-label="Panel bölümleri"
-          className="order-last -mx-4 grid basis-[calc(100%+2rem)] grid-cols-3 border-t border-white/10 md:order-none md:mx-0 md:flex md:basis-auto md:self-stretch md:border-t-0"
+          aria-label={navLabel}
+          style={{ gridTemplateColumns: `repeat(${sections.length}, minmax(0, 1fr))` }}
+          className="order-last -mx-4 grid basis-[calc(100%+2rem)] border-t border-white/10 md:order-none md:mx-0 md:flex md:basis-auto md:self-stretch md:border-t-0"
         >
-          {SECTIONS.map((s) => {
-            const active = isActivePath(pathname, s.href);
+          {sections.map((s) => {
+            const active = s.exact ? pathname === s.href : isActivePath(pathname, s.href);
             return (
               <Link
                 key={s.href}
