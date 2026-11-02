@@ -18,6 +18,8 @@ vi.mock("../actions", () => ({
   getDeliveredVideoUrl: vi.fn(),
 }));
 
+vi.mock("./showcase-form", () => ({ ShowcaseForm: () => <p>vitrin formu</p> }));
+
 vi.mock("next/navigation", () => ({
   redirect: vi.fn(() => {
     throw new Error("NEXT_REDIRECT");
@@ -56,6 +58,9 @@ function setupSupabase({
   const query = makeQuery(order);
   const from = vi.fn((table: string) => {
     if (table === "video_orders") return query;
+    // Vitrin formu durumu (yalnız teslim edilen siparişte okunur).
+    if (table === "property_videos") return makeQuery({ data: { status: "draft" }, error: null });
+    if (table === "agents") return makeQuery({ data: { phone: "5321234567", showcase_phone_consent_at: null }, error: null });
     throw new Error(`Beklenmeyen tablo: ${table}`);
   });
   const supabase = {

@@ -8,7 +8,6 @@ import { ShowcaseCard } from "./showcase-card";
 // Stellar "Featured properties" uyarlaması: ince dev başlık + serif vurgu, sağda bağlantı.
 export async function ShowcasePreview() {
   const service = getShowcaseService({ delayMs: 0 });
-  if (!service) return null;
   const res = await service.list({ sort: "yeni" }).catch(() => null);
   if (!res || res.status !== "ok" || res.items.length === 0) return null;
 

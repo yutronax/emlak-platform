@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 
 import { parseFilters } from "@/lib/showcase-ui/filters";
-import { getShowcaseService } from "@/lib/showcase-ui/service";
 import { STOCK } from "@/lib/stock-images";
 
 import { ShowcaseClient } from "./showcase-client";
@@ -20,8 +18,6 @@ export default async function ShowcasePage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  // Gerçek vitrin servisi yokken sayfa yayında değil (sahte ilan gösterilmez).
-  if (!getShowcaseService()) notFound();
   const filters = parseFilters(await searchParams);
 
   return (

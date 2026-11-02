@@ -512,8 +512,7 @@ describe("confirmDelivery", () => {
         property_id: propertyId,
         order_id: orderId,
         storage_path: path,
-        status: "published",
-        published_at: expect.any(String),
+        status: "draft",
       }),
     ]);
     expect(orderRow(orderId)).toMatchObject({ status: "delivered", delivered_at: expect.any(String) });

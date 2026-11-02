@@ -10,7 +10,6 @@ export const instant = false;
 
 async function load(id: string) {
   const service = getShowcaseService({ delayMs: 0 });
-  if (!service) notFound();
   const res = await service.get(id);
   if (res.status === "not_found") notFound();
   // Hata sınırı (app/error.tsx) "Tekrar dene" ile karşılar.

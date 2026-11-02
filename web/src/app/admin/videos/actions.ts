@@ -292,8 +292,8 @@ export async function confirmDelivery(orderId: string, path: string): Promise<Ac
       property_id: order.property_id,
       order_id: order.id,
       storage_path: path,
-      status: "published",
-      published_at: now,
+      // Vitrine emlakçı kendisi çıkarır (mülk bilgileri + telefon onayıyla).
+      status: "draft",
     })
     .select("id")
     .single();

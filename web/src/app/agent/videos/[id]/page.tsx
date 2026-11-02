@@ -9,7 +9,61 @@ import { type OrderStatus, STATUS_LABELS } from "@/lib/video-orders/status";
 import { getDeliveredVideoUrl } from "../actions";
 
 import { PayButton } from "./pay-button";
+import { ShowcaseForm } from "./showcase-form";
 import { formatTryMinor } from "@/lib/format-price";
+import type { PublishInput } from "@/lib/showcase-ui/publish";
+
+type PropertyShowcaseRow = {
+  deal: "satilik" | "kiralik" | null;
+  price_minor: number | null;
+  city: string | null;
+  district: string | null;
+  rooms: string | null;
+  area_m2: number | null;
+  floor: string | null;
+  building_age: number | null;
+  heating: string | null;
+  description: string | null;
+};
+
+// Vitrin formunun başlangıç değerleri: mülkün kayıtlı bilgileri, yayın durumu ve emlakçının numarası.
+async function loadShowcaseState(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  orderId: string,
+  agentId: string,
+): Promise<{ initial: PublishInput; published: boolean; phone: string | null }> {
+  const [{ data: order }, { data: video }, { data: agent }] = await Promise.all([
+    supabase
+      .from("video_orders")
+      .select(
+        "properties(deal, price_minor, city, district, rooms, area_m2, floor, building_age, heating, description)",
+      )
+      .eq("id", orderId)
+      .maybeSingle(),
+    supabase.from("property_videos").select("status").eq("order_id", orderId).maybeSingle(),
+    supabase.from("agents").select("phone, showcase_phone_consent_at").eq("id", agentId).maybeSingle(),
+  ]);
+  const raw = (order as { properties: PropertyShowcaseRow | PropertyShowcaseRow[] | null } | null)?.properties;
+  const p = (Array.isArray(raw) ? raw[0] : raw) ?? null;
+  const s = (v: string | number | null | undefined) => (v === null || v === undefined ? "" : String(v));
+  return {
+    published: video?.status === "published",
+    phone: agent?.phone ? `+90${agent.phone}` : null,
+    initial: {
+      deal: p?.deal ?? "",
+      price: p?.price_minor ? String(Math.round(p.price_minor / 100)) : "",
+      city: s(p?.city),
+      district: s(p?.district),
+      rooms: s(p?.rooms),
+      areaM2: s(p?.area_m2),
+      floor: s(p?.floor),
+      buildingAge: s(p?.building_age),
+      heating: s(p?.heating),
+      description: s(p?.description),
+      phoneConsent: Boolean(agent?.showcase_phone_consent_at),
+    },
+  };
+}
 
 export const instant = false;
 
@@ -139,11 +193,13 @@ export default async function VideoOrderDetailPage({
     order.price_minor_unit > 0;
 
   let deliveredUrl: string | null = null;
+  let showcase: { initial: PublishInput; published: boolean; phone: string | null } | null = null;
   if (order.status === "delivered") {
     const delivered = await getDeliveredVideoUrl(order.id);
     if (delivered.ok) {
       deliveredUrl = delivered.url;
     }
+    showcase = await loadShowcaseState(supabase, order.id, auth.user.id);
   }
 
   return (
@@ -246,6 +302,10 @@ export default async function VideoOrderDetailPage({
             <Alert variant="error">Video şu an açılamıyor. Lütfen sayfayı yenileyin.</Alert>
           )}
         </section>
+      )}
+
+      {showcase && (
+        <ShowcaseForm orderId={order.id} initial={showcase.initial} published={showcase.published} phone={showcase.phone} />
       )}
     </main>
   );

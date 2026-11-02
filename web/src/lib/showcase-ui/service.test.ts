@@ -1,13 +1,15 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { createMockShowcaseService, filterFixture } from "./mock-service";
 import { selectShowcaseService } from "./service";
 
+vi.mock("@/app/(marketing)/vitrin/actions", () => ({}));
+
 describe("selectShowcaseService", () => {
-  it("production'da mock hata fırlatır; bayraksız null; dev+bayrak mock", () => {
+  it("production'da mock hata fırlatır; bayraksız gerçek; dev+bayrak mock", () => {
     expect(() => selectShowcaseService({ nodeEnv: "production", mockFlag: "1" })).toThrow(/mock/i);
-    expect(selectShowcaseService({ nodeEnv: "development", mockFlag: undefined })).toBeNull();
-    expect(selectShowcaseService({ nodeEnv: "development", mockFlag: "1" })?.kind).toBe("mock");
+    expect(selectShowcaseService({ nodeEnv: "development", mockFlag: undefined }).kind).toBe("real");
+    expect(selectShowcaseService({ nodeEnv: "development", mockFlag: "1" }).kind).toBe("mock");
   });
 });
 
