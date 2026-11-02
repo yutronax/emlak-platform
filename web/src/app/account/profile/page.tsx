@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 
 import { getProfileService } from "@/lib/profile-ui/service";
 import { createClient } from "@/lib/supabase/server";
@@ -14,9 +14,7 @@ export default async function AccountProfilePage({
 }: {
   searchParams: Promise<{ tab?: string | string[] }>;
 }) {
-  // Gerçek profil servisi henüz yok: sahte veri göstermek yerine sayfa yok sayılır.
   const service = getProfileService();
-  if (!service) notFound();
 
   // Mock yalnız dev'de seçilebilir (production'da selectProfileService fırlatır); tasarımı
   // oturumsuz görebilmek için orada oturum aranmaz. Gerçek serviste kontrol her zaman yapılır.
