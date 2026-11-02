@@ -3,7 +3,6 @@ import { notFound, redirect } from "next/navigation";
 import type { ReactNode } from "react";
 
 import { AppHeader, type HeaderSection } from "@/components/app-shell/app-header";
-import { getAdminService } from "@/lib/admin-ui/service";
 import { getProfileService } from "@/lib/profile-ui/service";
 import { createClient } from "@/lib/supabase/server";
 
@@ -35,18 +34,12 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     notFound();
   }
 
-  // Genel bakış ve Emlakçılar yalnız servis varken (gerçek servis gelene kadar mock/dev).
-  const sections: HeaderSection[] = getAdminService()
-    ? [
-        { href: "/admin", label: "Genel bakış", exact: true },
-        { href: "/admin/listings", label: "İlanlar" },
-        { href: "/admin/videos", label: "Videolar" },
-        { href: "/admin/agents", label: "Emlakçılar" },
-      ]
-    : [
-        { href: "/admin/listings", label: "İlanlar" },
-        { href: "/admin/videos", label: "Videolar" },
-      ];
+  const sections: HeaderSection[] = [
+    { href: "/admin", label: "Genel bakış", exact: true },
+    { href: "/admin/listings", label: "İlanlar" },
+    { href: "/admin/videos", label: "Videolar" },
+    { href: "/admin/agents", label: "Emlakçılar" },
+  ];
 
   return (
     <div className="flex min-h-screen flex-col bg-cream-50">

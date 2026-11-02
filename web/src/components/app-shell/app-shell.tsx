@@ -7,16 +7,34 @@ import { createClient } from "@/lib/supabase/server";
 import { AppHeader } from "./app-header";
 
 // agent/ ve account/ layout'ları için ortak kabuk. Oturum kontrolü (redirect) sayfalarda kalır;
-// burada yalnız menüde gösterilecek e-posta okunur.
+// burada menüdeki e-posta okunur ve askıdaki hesabın paneli kapatılır (veri tarafı 0027'de).
 export async function AppShell({ children }: { children: ReactNode }) {
   await connection();
   const supabase = await createClient();
   const { data } = await supabase.auth.getUser();
 
+  let suspended = false;
+  if (data.user) {
+    const { data: agent } = await supabase.from("agents").select("suspended_at").eq("id", data.user.id).maybeSingle();
+    suspended = Boolean(agent?.suspended_at);
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-cream-50">
-      <AppHeader email={data.user?.email ?? null} showProfile={getProfileService() !== null} />
-      {children}
+      <AppHeader email={data.user?.email ?? null} showProfile={!suspended && getProfileService() !== null} />
+      {suspended ? <SuspendedNotice /> : children}
     </div>
+  );
+}
+
+function SuspendedNotice() {
+  return (
+    <main className="mx-auto flex w-full max-w-xl flex-1 flex-col justify-center px-4 py-16">
+      <h1 className="font-display text-3xl tracking-tight text-ink-900">Hesabınız askıya alındı</h1>
+      <p className="mt-4 text-slate-600">
+        Bu süre içinde panel, ilan akışı ve WhatsApp ilan toplama kullanılamaz. Bunun bir hata olduğunu
+        düşünüyorsanız bizimle iletişime geçin.
+      </p>
+    </main>
   );
 }

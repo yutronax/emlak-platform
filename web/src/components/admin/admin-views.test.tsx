@@ -7,6 +7,8 @@ import { createMockAdminService, selectAdminService } from "@/lib/admin-ui/servi
 import type { AdminService } from "@/lib/admin-ui/types";
 
 import { AgentDetailView } from "./agent-detail-view";
+
+vi.mock("@/app/admin/agents/actions", () => ({}));
 import { AgentsView } from "./agents-view";
 import { AdminOverview } from "./admin-overview";
 
@@ -154,6 +156,6 @@ describe("AgentDetailView", () => {
 describe("selectAdminService", () => {
   it("production'da mock hata; bayraksız null", () => {
     expect(() => selectAdminService({ nodeEnv: "production", mockFlag: "1" })).toThrow(/mock/i);
-    expect(selectAdminService({ nodeEnv: "development", mockFlag: undefined })).toBeNull();
+    expect(selectAdminService({ nodeEnv: "development", mockFlag: undefined }).kind).toBe("real");
   });
 });

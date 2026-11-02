@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 
 import { AgentsClient } from "@/components/admin/clients";
-import { getAdminService } from "@/lib/admin-ui/service";
 import type { AgentQuery } from "@/lib/admin-ui/types";
 
 export const metadata: Metadata = { title: "Emlakçılar · Yönetim · Emlak Platformu" };
@@ -14,7 +12,6 @@ export default async function AdminAgentsPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  if (!getAdminService()) notFound();
   const sp = await searchParams;
   const one = (k: string) => (typeof sp[k] === "string" ? (sp[k] as string) : undefined);
   const page = Number(one("sayfa"));

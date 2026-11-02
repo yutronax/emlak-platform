@@ -234,16 +234,14 @@ describe.skipIf(!hasRealSupabaseEnv)(
       expect(check?.company_name).toBe("Test Danışman B");
     });
 
-    it("AC-S2 ek / Davranış Sözleşmesi #4 — anon key ile UPDATE denemesi 0 satır etkiler (auth.uid() null, eşleşen satır yok)", async () => {
-      const { data, error, status } = await anonClient
+    it("AC-S2 ek / Davranış Sözleşmesi #4 — anon key ile UPDATE reddedilir (0026'dan beri anon'un UPDATE yetkisi yok)", async () => {
+      const { error } = await anonClient
         .from("agents")
         .update({ company_name: "Anon Deneme" })
         .eq("id", userAId)
         .select();
 
-      expect(error).toBeNull();
-      expect(status).toBe(200);
-      expect(data).toEqual([]);
+      expect(error?.code).toBe("42501");
 
       const { data: check } = await serviceClient
         .from("agents")

@@ -1,3 +1,11 @@
+import {
+  adminGetAgent,
+  adminListAgents,
+  adminOverview,
+  adminSetAdmin,
+  adminSetSuspended,
+} from "@/app/admin/agents/actions";
+
 import type { AdminService, AgentDetail, AgentQuery, AgentRow } from "./types";
 
 // Yalnız dev: NEXT_PUBLIC_ADMIN_MOCK=1 (admin oturumu yine gerekir). 24 emlakçı → 2 sayfa.
@@ -115,15 +123,25 @@ export function createMockAdminService(delayMs = 500): AdminService {
   };
 }
 
-// Gerçek servis yok → null: yeni admin sayfaları 404, üst çubukta bağlantıları gizli.
+// Sunucu aksiyonlarının istemci sarmalayıcısı; yetki her aksiyonda sunucuda.
+export const realAdminService: AdminService = {
+  kind: "real",
+  overview: () => adminOverview(),
+  listAgents: (q) => adminListAgents(q),
+  getAgent: (id) => adminGetAgent(id),
+  setSuspended: (id, suspended) => adminSetSuspended(id, suspended),
+  setAdmin: (id, isAdmin) => adminSetAdmin(id, isAdmin),
+};
+
+// Varsayılan gerçek servis; mock yalnız dev'de bayrakla.
 export function selectAdminService(env: { nodeEnv: string | undefined; mockFlag: string | undefined; delayMs?: number }) {
   if (env.mockFlag === "1") {
     if (env.nodeEnv === "production") throw new Error("Admin mock servisi production'da kullanılamaz.");
     return createMockAdminService(env.delayMs);
   }
-  return null;
+  return realAdminService;
 }
 
-export function getAdminService(opts: { delayMs?: number } = {}): AdminService | null {
+export function getAdminService(opts: { delayMs?: number } = {}): AdminService {
   return selectAdminService({ nodeEnv: process.env.NODE_ENV, mockFlag: process.env.NEXT_PUBLIC_ADMIN_MOCK, delayMs: opts.delayMs });
 }
