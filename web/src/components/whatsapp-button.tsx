@@ -8,7 +8,7 @@ export function WhatsAppButton({ hideOnMobile = false }: { hideOnMobile?: boolea
       target="_blank"
       rel="noopener noreferrer"
       aria-label="WhatsApp destek"
-      className={`fixed bottom-4 right-4 z-50 ${hideOnMobile ? "hidden md:flex" : "flex"} h-12 w-12 flex-col items-center justify-center rounded-full bg-terracotta-600 text-white shadow-lg ring-2 ring-white transition-colors hover:bg-terracotta-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 md:h-auto md:w-auto md:flex-row md:gap-2 md:rounded-full md:px-4 md:py-3`}
+      className={`fixed bottom-4 right-4 z-50 ${hideOnMobile ? "hidden md:flex" : "flex"} h-12 w-12 flex-col items-center justify-center rounded-leaf bg-ink-900 text-white shadow-lg ring-2 ring-cream-50 transition-colors hover:bg-ink-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-600 md:h-auto md:w-auto md:flex-row md:gap-2 md:px-4 md:py-3`}
     >
       <svg
         width="24"

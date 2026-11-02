@@ -10,9 +10,16 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-display: var(--font-sora);
+  /* Tasarım dili: obss_project/artifacts/tasarim-dili-stellar-concrete/design_direction.md */
+  --font-display: var(--font-inter-tight);
+  --font-accent: var(--font-instrument-serif);
   --font-body: var(--font-inter);
   --color-ink-900: #10253F;
+  --color-ink-800: #1A3354;
+  --color-charcoal: #141416;
+  --color-stone-200: #DCD9C8;
+  --color-cream-50: #FFFDF1;
+  --color-ash-400: #97968D;
   --color-fog-50: #F5F6F4;
   --color-terracotta-600: #C1532B;
   --color-terracotta-700: #9C4423;
@@ -32,6 +39,19 @@
 .auth-step-enter { animation: auth-slide 160ms ease-out; }
 @media (prefers-reduced-motion: reduce) {
   .auth-card-enter, .auth-step-enter { animation: none; }
+}
+
+/* İmza köşe (Stellar uyarlaması): sol üst ve sağ alt düz, diğer iki köşe yuvarlak. */
+@utility rounded-leaf {
+  border-radius: 0 10px;
+}
+
+/* Başlıkta tek vurgu kelimesi: <em class="accent">tek akışta</em> */
+@utility accent {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
 }
 
 body {

@@ -9,12 +9,13 @@ type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children"> & {
   ref?: Ref<HTMLButtonElement>;
 };
 
+// Tasarım dili: birincil lacivert, imza köşe (rounded-leaf); turuncu yalnız küçük vurgularda.
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 disabled:cursor-not-allowed disabled:opacity-50";
+  "inline-flex items-center justify-center gap-2 rounded-leaf px-4 py-2 font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-600 disabled:cursor-not-allowed disabled:opacity-50";
 
 const variants: Record<ButtonVariant, string> = {
-  primary: "bg-terracotta-600 text-white hover:bg-terracotta-700",
-  secondary: "border border-ink-900 text-ink-900 bg-transparent hover:bg-mist-200",
+  primary: "bg-ink-900 text-white hover:bg-ink-800",
+  secondary: "border border-ink-900 text-ink-900 bg-transparent hover:bg-ink-900/5",
 };
 
 export function Button({

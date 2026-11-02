@@ -42,7 +42,7 @@ export function HeaderNav() {
       {!signupActive && (
         <Link
           href="/signup"
-          className="inline-flex items-center whitespace-nowrap rounded-md bg-terracotta-600 px-2.5 py-1.5 font-medium text-white hover:bg-terracotta-700 md:px-4 md:py-2"
+          className="inline-flex items-center whitespace-nowrap rounded-leaf bg-ink-900 px-2.5 py-1.5 font-medium text-white hover:bg-ink-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-600 md:px-4 md:py-2"
         >
           Kayıt Ol
         </Link>
