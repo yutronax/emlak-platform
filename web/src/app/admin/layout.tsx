@@ -49,7 +49,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
       ];
 
   return (
-    <div className="flex min-h-screen flex-col bg-fog-50">
+    <div className="flex min-h-screen flex-col bg-cream-50">
       <AppHeader
         email={userData.user.email ?? null}
         showProfile={getProfileService() !== null}

@@ -76,7 +76,7 @@ export function AgentsView({ service, initialQuery }: { service: AdminService; i
     <main className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-8 font-body text-ink-900 md:px-6 md:py-10">
       <div>
         <p className="text-xs font-medium tracking-[0.2em] text-terracotta-700 uppercase">Yönetim</p>
-        <h1 className="mt-1 font-display text-[1.75rem] leading-tight font-bold">Emlakçılar</h1>
+        <h1 className="mt-1 font-display text-[1.75rem] leading-tight font-normal tracking-[-0.03em]">Emlakçılar</h1>
       </div>
 
       <div className={`${card} flex flex-col gap-3 p-4 md:flex-row md:items-end`}>
@@ -181,7 +181,7 @@ export function AgentsView({ service, initialQuery }: { service: AdminService; i
           <div className={`${card} hidden overflow-hidden md:block`}>
             <table className="w-full text-left text-sm">
               <caption className="sr-only">Emlakçılar</caption>
-              <thead className="bg-fog-50 text-xs text-slate-500">
+              <thead className="bg-cream-50 text-xs text-slate-500">
                 <tr>
                   <th scope="col" className="px-4 py-2.5 font-medium">Emlakçı</th>
                   <th scope="col" className="px-4 py-2.5 font-medium">Abonelik</th>

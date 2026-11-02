@@ -78,7 +78,7 @@ export function GroupPicker({ initial, onSave }: GroupPickerProps) {
   }
 
   const primaryButton =
-    "rounded-md bg-terracotta-700 px-4 py-2 text-sm font-medium text-white hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 disabled:opacity-50";
+    "rounded-leaf bg-ink-900 px-4 py-2 text-sm font-medium text-white hover:bg-ink-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-600 disabled:opacity-50";
 
   return (
     <section aria-labelledby="wa-groups-title" className="max-w-xl space-y-4">

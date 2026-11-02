@@ -14,7 +14,7 @@ export async function AppShell({ children }: { children: ReactNode }) {
   const { data } = await supabase.auth.getUser();
 
   return (
-    <div className="flex min-h-screen flex-col bg-fog-50">
+    <div className="flex min-h-screen flex-col bg-cream-50">
       <AppHeader email={data.user?.email ?? null} showProfile={getProfileService() !== null} />
       {children}
     </div>

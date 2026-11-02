@@ -81,11 +81,11 @@ export function ProfileView({
   };
 
   return (
-    <main className="min-h-[70vh] bg-fog-50 text-ink-900">
+    <main className="min-h-[70vh] bg-cream-50 text-ink-900">
       <header className="bg-ink-900 text-fog-50">
         <div className="mx-auto w-full max-w-6xl px-4 py-6 md:px-6 md:py-8">
           <p className="font-body text-xs font-medium tracking-[0.2em] text-terracotta-600 uppercase">Profilim</p>
-          <h1 className="mt-2 font-display text-2xl leading-tight font-bold text-pretty break-words md:text-[1.75rem]">
+          <h1 className="mt-2 font-display text-2xl leading-tight font-normal tracking-[-0.03em] text-pretty break-words md:text-[1.75rem]">
             {profile?.companyName || "Profil"}
           </h1>
           {profile && <p className="mt-1 font-body text-sm text-fog-50/70 break-all">{profile.email}</p>}
@@ -132,7 +132,7 @@ export function ProfileView({
           id={`panel-${tab}`}
           aria-labelledby={`tab-${tab}`}
           aria-busy={state.status === "loading" ? "true" : undefined}
-          className="min-w-0 rounded-2xl border border-mist-200 bg-white p-5 font-body sm:p-8"
+          className="min-w-0 rounded-leaf border border-mist-200 bg-white p-5 font-body sm:p-8"
         >
           {state.status === "loading" && (
             <div className="flex animate-pulse flex-col gap-4 motion-reduce:animate-none">

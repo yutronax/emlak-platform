@@ -149,7 +149,7 @@ export default async function AdminVideoDetailPage({
 
       <header className="flex flex-col gap-3">
         <span className={badgeClass(order.status)}>{STATUS_LABELS[order.status]}</span>
-        <h1 className="font-display text-2xl font-bold">{property?.title ?? "Adsız mülk"}</h1>
+        <h1 className="font-display text-2xl font-normal tracking-[-0.03em]">{property?.title ?? "Adsız mülk"}</h1>
         <p className="text-slate-500">{SERVICE_NAMES[order.service_code]}</p>
       </header>
 
@@ -218,7 +218,7 @@ export default async function AdminVideoDetailPage({
 
       {assets.length > 0 && (
         <section className="flex flex-col gap-3">
-          <h2 className="font-display text-lg font-bold">Emlakçının dosyaları</h2>
+          <h2 className="font-display text-lg font-normal tracking-[-0.03em]">Emlakçının dosyaları</h2>
           <ul className="flex flex-col gap-2">
             {assets.map((asset) => (
               <li
@@ -241,11 +241,11 @@ export default async function AdminVideoDetailPage({
       {order.status === "quote_pending" && (
         <section className="flex flex-col gap-6">
           <div className="flex flex-col gap-3">
-            <h2 className="font-display text-lg font-bold">Fiyat teklifi</h2>
+            <h2 className="font-display text-lg font-normal tracking-[-0.03em]">Fiyat teklifi</h2>
             <QuoteForm orderId={order.id} />
           </div>
           <div className="flex flex-col gap-3">
-            <h2 className="font-display text-lg font-bold">Talebi reddet</h2>
+            <h2 className="font-display text-lg font-normal tracking-[-0.03em]">Talebi reddet</h2>
             <RejectForm orderId={order.id} />
           </div>
         </section>
@@ -253,14 +253,14 @@ export default async function AdminVideoDetailPage({
 
       {order.status === "in_progress" && (
         <section className="flex flex-col gap-3">
-          <h2 className="font-display text-lg font-bold">Bitmiş videoyu yükle</h2>
+          <h2 className="font-display text-lg font-normal tracking-[-0.03em]">Bitmiş videoyu yükle</h2>
           <DeliveryUpload orderId={order.id} />
         </section>
       )}
 
       {order.status === "delivered" && (
         <section className="flex flex-col gap-3">
-          <h2 className="font-display text-lg font-bold">Teslim</h2>
+          <h2 className="font-display text-lg font-normal tracking-[-0.03em]">Teslim</h2>
           {deliveredVideos.length === 0 && (
             <Alert variant="error">Teslim videosu kaydı bulunamadı. Kontrol edin.</Alert>
           )}

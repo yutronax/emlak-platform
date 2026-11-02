@@ -78,7 +78,7 @@ export default async function AdminListingsPage() {
     console.error("raw_listings sorgusu başarısız", error);
     return (
       <main className="mx-auto max-w-3xl p-8">
-        <p className="text-red-600">İlanlar yüklenemedi, lütfen tekrar deneyin.</p>
+        <p className="text-brick-700">İlanlar yüklenemedi, lütfen tekrar deneyin.</p>
       </main>
     );
   }
@@ -87,41 +87,41 @@ export default async function AdminListingsPage() {
 
   return (
     <main className="mx-auto max-w-3xl p-8">
-      <h1 className="text-xl font-semibold">İlan Onay Paneli</h1>
+      <h1 className="font-display text-[1.75rem] leading-tight font-normal tracking-[-0.03em]">İlan Onay Paneli</h1>
 
       <section className="mt-6 rounded border p-4">
         <h2 className="text-sm font-semibold">Kişisel ilan otomatik onay eşiği</h2>
-        <p className="mt-1 text-xs text-zinc-500">
+        <p className="mt-1 text-xs text-charcoal/60">
           Eşiğin altındaki kişisel ilanlar bu kuyruğa düşer. Varsayılan 0.70.
         </p>
         {threshold.failed && (
-          <p className="mt-1 text-xs text-red-600">
+          <p className="mt-1 text-xs text-brick-700">
             Mevcut eşik okunamadı; 0.70 varsayılan gösteriliyor.
           </p>
         )}
         <ThresholdForm value={threshold.value} onSave={setPersonalThreshold} />
       </section>
 
-      <p className="mt-6 text-sm text-zinc-600 dark:text-zinc-400">
+      <p className="mt-6 text-sm text-charcoal/60">
         {rawListings?.length ?? 0} incelenmemiş ilan.
       </p>
 
       <div className="mt-6 flex flex-col gap-4">
         {rawListings?.map((item) => (
           <article key={item.id} className="rounded border p-4">
-            <div className="flex items-center justify-between text-xs text-zinc-500">
+            <div className="flex items-center justify-between text-xs text-charcoal/60">
               <span>{item.source_group ?? "bilinmeyen grup"}</span>
               <span>skor: {item.quality_score ?? "—"}</span>
             </div>
             {item.owner_agent_id && (
-              <p className="mt-1 text-xs font-medium text-zinc-700">
+              <p className="mt-1 text-xs font-medium text-charcoal/80">
                 {`Kişisel — ${item.owner?.company_name ?? "bilinmeyen emlakçı"}`}
               </p>
             )}
 
             <p className="mt-2 whitespace-pre-wrap text-sm">{item.raw_text}</p>
 
-            <dl className="mt-3 grid grid-cols-2 gap-1 text-sm text-zinc-700 dark:text-zinc-300">
+            <dl className="mt-3 grid grid-cols-2 gap-1 text-sm text-charcoal/80">
               <dt>Başlık</dt>
               <dd>{item.parsed.title ?? "—"}</dd>
               <dt>Fiyat</dt>
@@ -164,7 +164,7 @@ export default async function AdminListingsPage() {
         ))}
 
         {rawListings?.length === 0 && (
-          <p className="text-sm text-zinc-500">İncelenmemiş ilan yok.</p>
+          <p className="text-sm text-charcoal/60">İncelenmemiş ilan yok.</p>
         )}
       </div>
     </main>

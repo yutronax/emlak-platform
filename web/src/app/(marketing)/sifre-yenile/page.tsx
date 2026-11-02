@@ -24,10 +24,10 @@ export default function ResetPasswordPage() {
   const expired = state?.error === EXPIRED_MESSAGE;
 
   return (
-    <main className="bg-fog-50 font-body text-ink-900">
+    <main className="bg-cream-50 font-body text-ink-900">
       <div className="mx-auto w-full max-w-6xl px-4 pt-10 pb-12 md:px-6 md:pt-16">
         <div className="mx-auto flex w-full max-w-sm flex-col gap-4">
-          <h1 className="font-display text-2xl font-bold">Yeni şifre belirleyin</h1>
+          <h1 className="font-display text-2xl font-normal tracking-[-0.03em]">Yeni şifre belirleyin</h1>
 
           <form action={formAction} className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">

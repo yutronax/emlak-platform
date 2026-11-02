@@ -158,7 +158,7 @@ export default async function VideoOrderDetailPage({
         >
           {STATUS_LABELS[order.status]}
         </span>
-        <h1 className="font-display text-2xl font-bold">
+        <h1 className="font-display text-2xl font-normal tracking-[-0.03em]">
           {property?.title ?? "Adsız mülk"}
         </h1>
         <p className="text-slate-500">{SERVICE_NAMES[order.service_code]}</p>
@@ -209,7 +209,7 @@ export default async function VideoOrderDetailPage({
 
       {assets.length > 0 && (
         <section className="flex flex-col gap-3">
-          <h2 className="font-display text-lg font-bold">Yüklenen dosyalar</h2>
+          <h2 className="font-display text-lg font-normal tracking-[-0.03em]">Yüklenen dosyalar</h2>
           <ul className="flex flex-col gap-2">
             {assets.map((asset) => (
               <li
@@ -228,7 +228,7 @@ export default async function VideoOrderDetailPage({
 
       {order.status === "delivered" && (
         <section className="flex flex-col gap-4">
-          <h2 className="font-display text-lg font-bold">Teslim videonuz</h2>
+          <h2 className="font-display text-lg font-normal tracking-[-0.03em]">Teslim videonuz</h2>
           {deliveredUrl ? (
             <>
               <video

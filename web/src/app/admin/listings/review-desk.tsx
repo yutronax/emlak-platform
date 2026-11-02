@@ -254,7 +254,7 @@ export function ReviewDesk({ service }: { service: ReviewService }) {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="text-xs font-medium tracking-[0.2em] text-terracotta-700 uppercase">Yönetim</p>
-          <h1 className="mt-1 font-display text-[1.75rem] leading-tight font-bold">İlan onay kuyruğu</h1>
+          <h1 className="mt-1 font-display text-[1.75rem] leading-tight font-normal tracking-[-0.03em]">İlan onay kuyruğu</h1>
         </div>
         <p className="hidden text-xs text-slate-500 lg:block">
           Kısayollar: <kbd className="rounded border border-mist-200 bg-white px-1">J</kbd>/
@@ -264,7 +264,7 @@ export function ReviewDesk({ service }: { service: ReviewService }) {
         </p>
       </div>
 
-      <details className="rounded-2xl border border-mist-200 bg-white px-4 py-3">
+      <details className="rounded-leaf border border-mist-200 bg-white px-4 py-3">
         <summary className="cursor-pointer text-sm font-medium">Ayarlar · kişisel ilan otomatik onay eşiği</summary>
         {threshold && (
           <div className="pt-2">
@@ -276,7 +276,7 @@ export function ReviewDesk({ service }: { service: ReviewService }) {
         )}
       </details>
 
-      <div className="flex flex-col gap-3 rounded-2xl border border-mist-200 bg-white p-4 lg:flex-row lg:flex-wrap lg:items-end">
+      <div className="flex flex-col gap-3 rounded-leaf border border-mist-200 bg-white p-4 lg:flex-row lg:flex-wrap lg:items-end">
         <form role="search" onSubmit={onSearch} className="flex flex-1 items-end gap-2">
           <div className="flex flex-1 flex-col gap-1">
             <label htmlFor="rq-search" className={smallLabel}>
@@ -350,7 +350,7 @@ export function ReviewDesk({ service }: { service: ReviewService }) {
           )}
 
           {list.status === "error" && (
-            <div role="alert" className="flex flex-col items-start gap-3 rounded-2xl border border-mist-200 bg-white p-5">
+            <div role="alert" className="flex flex-col items-start gap-3 rounded-leaf border border-mist-200 bg-white p-5">
               <p className="font-medium">Kuyruk yüklenemedi.</p>
               <Button
                 variant="secondary"
@@ -365,7 +365,7 @@ export function ReviewDesk({ service }: { service: ReviewService }) {
           )}
 
           {list.status === "ready" && items.length === 0 && (
-            <div className="flex flex-col items-start gap-3 rounded-2xl border border-mist-200 bg-white p-5">
+            <div className="flex flex-col items-start gap-3 rounded-leaf border border-mist-200 bg-white p-5">
               <p className="font-medium">{filtered ? "Bu filtrelere uyan ilan yok" : "İncelenecek ilan yok"}</p>
               {filtered && (
                 <Button variant="secondary" onClick={clearFilters}>
@@ -432,7 +432,7 @@ export function ReviewDesk({ service }: { service: ReviewService }) {
         <section
           ref={paneRef}
           aria-label="İnceleme"
-          className={`${mobileView === "list" ? "hidden" : "flex"} min-w-0 flex-col rounded-2xl border border-mist-200 bg-white lg:flex`}
+          className={`${mobileView === "list" ? "hidden" : "flex"} min-w-0 flex-col rounded-leaf border border-mist-200 bg-white lg:flex`}
         >
           {selected && form ? (
             <>
@@ -457,7 +457,7 @@ export function ReviewDesk({ service }: { service: ReviewService }) {
                 <div className="grid gap-5 xl:grid-cols-2">
                   <div>
                     <h2 className="text-xs font-medium text-slate-500">WhatsApp mesajı</h2>
-                    <p className="mt-2 rounded-2xl rounded-tl-sm bg-[#e7f6e9] px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap text-ink-900">
+                    <p className="mt-2 rounded-leaf rounded-tl-sm bg-[#e7f6e9] px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap text-ink-900">
                       {selected.rawText}
                     </p>
                   </div>

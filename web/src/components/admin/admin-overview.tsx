@@ -30,7 +30,7 @@ export function AdminOverview({ service }: { service: AdminService }) {
     <main className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8 font-body text-ink-900 md:px-6 md:py-10">
       <div>
         <p className="text-xs font-medium tracking-[0.2em] text-terracotta-700 uppercase">Yönetim</p>
-        <h1 className="mt-1 font-display text-[1.75rem] leading-tight font-bold">Genel bakış</h1>
+        <h1 className="mt-1 font-display text-[1.75rem] leading-tight font-normal tracking-[-0.03em]">Genel bakış</h1>
       </div>
 
       {state.status === "loading" && (
@@ -73,7 +73,7 @@ export function AdminOverview({ service }: { service: AdminService }) {
 
           <section aria-labelledby="recent" className={card}>
             <div className="flex items-center justify-between gap-3 px-5 pt-5">
-              <h2 id="recent" className="font-display text-xl font-bold">
+              <h2 id="recent" className="font-display text-xl font-normal tracking-[-0.03em]">
                 Son katılan emlakçılar
               </h2>
               <Link href="/admin/agents" className="text-sm font-medium text-terracotta-700 hover:underline">
@@ -102,7 +102,7 @@ function Stat({ href, value, label, hint, warning = false }: { href: string; val
           warning ? "border-brick-700/40 bg-brick-700/5" : ""
         }`}
       >
-        <span className={`font-display text-4xl font-bold tabular-nums ${warning ? "text-brick-700" : ""}`}>{value}</span>
+        <span className={`font-display text-4xl font-normal tracking-[-0.03em] tabular-nums ${warning ? "text-brick-700" : ""}`}>{value}</span>
         <span className="font-medium">{label}</span>
         <span className="text-sm text-slate-500">{hint}</span>
       </Link>

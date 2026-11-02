@@ -78,7 +78,7 @@ function useSave(formRef: React.RefObject<HTMLFormElement | null>) {
 function SectionHeading({ title, children }: { title: string; children?: ReactNode }) {
   return (
     <div className="mb-6">
-      <h2 className="font-display text-xl font-bold">{title}</h2>
+      <h2 className="font-display text-xl font-normal tracking-[-0.03em]">{title}</h2>
       {children && <p className="mt-1 text-sm text-slate-500">{children}</p>}
     </div>
   );
@@ -327,7 +327,7 @@ export function ContactSection({ profile, service, onSaved, onDirty }: SectionPr
           <p className="mt-1 text-sm break-all text-slate-500">{profile.email}</p>
         </div>
         {profile.pendingEmail && (
-          <p role="status" className="rounded-md border border-mist-200 bg-fog-50 px-4 py-3 text-sm">
+          <p role="status" className="rounded-md border border-mist-200 bg-cream-50 px-4 py-3 text-sm">
             {profile.pendingEmail} adresine onay bağlantısı gönderildi. Onaylanana kadar {profile.email} geçerli.
           </p>
         )}
@@ -432,7 +432,7 @@ export function SecuritySection({ service, onDirty, navigate }: SecurityProps) {
 
       <div className={divider} />
 
-      <h2 className="font-display text-xl font-bold">Oturumlar</h2>
+      <h2 className="font-display text-xl font-normal tracking-[-0.03em]">Oturumlar</h2>
       <p className="mt-1 text-sm text-slate-500">
         Bir cihazı kaybettiyseniz veya şifrenizi başka biri biliyorsa tüm cihazlardan çıkış yapın.
       </p>

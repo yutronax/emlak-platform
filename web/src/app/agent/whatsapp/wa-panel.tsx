@@ -242,7 +242,7 @@ export function WaPanel({ initialStatus, consentAccepted, groups }: WaPanelProps
   const canConnect =
     status.status === "none" || status.status === "error" || status.status === "disconnected" || status.status === "logged_out";
   const primaryButton =
-    "rounded-md bg-terracotta-700 px-4 py-2 text-sm font-medium text-white hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 disabled:opacity-50";
+    "rounded-leaf bg-ink-900 px-4 py-2 text-sm font-medium text-white hover:bg-ink-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-600 disabled:opacity-50";
   const secondaryButton =
     "rounded-md border border-mist-200 px-4 py-2 text-sm text-ink-900 hover:bg-mist-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 disabled:opacity-60";
 
@@ -378,7 +378,7 @@ export function WaPanel({ initialStatus, consentAccepted, groups }: WaPanelProps
           role="dialog"
           aria-modal="true"
           aria-labelledby="wa-confirm-title"
-          className="space-y-3 rounded-md border border-mist-200 bg-fog-50 p-4"
+          className="space-y-3 rounded-md border border-mist-200 bg-cream-50 p-4"
           onKeyDown={(e) => {
             if (e.key === "Escape") setConfirmOpen(false);
           }}

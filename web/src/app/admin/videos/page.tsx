@@ -149,7 +149,7 @@ export default async function AdminVideosPage({
   return (
     <main className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 font-body text-ink-900 md:px-8">
       <header className="flex flex-col gap-2">
-        <h1 className="font-display text-2xl font-bold">Video siparişleri</h1>
+        <h1 className="font-display text-2xl font-normal tracking-[-0.03em]">Video siparişleri</h1>
         <p className="text-sm text-slate-500">Ödeme bekleyen: {pendingCount}</p>
       </header>
 
@@ -207,7 +207,7 @@ export default async function AdminVideosPage({
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <h2 className="font-display text-lg font-bold">
+                      <h2 className="font-display text-lg font-normal tracking-[-0.03em]">
                         {property?.title ?? "Adsız mülk"}
                       </h2>
                       <p className="text-sm text-slate-500">{property?.address ?? "-"}</p>

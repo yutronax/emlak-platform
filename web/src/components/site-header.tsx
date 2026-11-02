@@ -9,7 +9,7 @@ export function SiteHeader() {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-2.5 md:gap-4 md:px-6">
         <Link
           href="/"
-          className="whitespace-nowrap font-display text-lg font-bold md:text-xl"
+          className="whitespace-nowrap font-display text-lg font-normal tracking-[-0.03em] md:text-xl"
         >
           Emlak Platformu
         </Link>

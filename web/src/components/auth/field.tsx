@@ -53,7 +53,7 @@ export function GoogleButton({ onClick, disabled }: { onClick: () => void; disab
         disabled={disabled}
         className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-mist-200 bg-white px-4 py-2.5 font-medium text-ink-900 hover:bg-mist-200/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-600 disabled:opacity-50"
       >
-        <span aria-hidden="true" className="font-display font-bold text-terracotta-600">
+        <span aria-hidden="true" className="font-display font-normal tracking-[-0.03em] text-terracotta-600">
           G
         </span>
         Google ile devam et

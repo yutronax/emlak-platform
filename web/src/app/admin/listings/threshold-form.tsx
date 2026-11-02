@@ -56,7 +56,7 @@ export function ThresholdForm({
 
   return (
     <form noValidate onSubmit={handleSubmit} className="mt-4 space-y-3">
-      <label className="block text-sm text-zinc-700">
+      <label className="block text-sm text-charcoal/80">
         Otomatik onay eşiği (0-1)
         <input
           type="number"
@@ -72,7 +72,7 @@ export function ThresholdForm({
       <button
         type="submit"
         disabled={busy}
-        className="rounded bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-700 disabled:opacity-50"
+        className="rounded bg-ink-900 px-3 py-1.5 text-sm text-white hover:bg-ink-800 disabled:opacity-50"
       >
         Kaydet
       </button>

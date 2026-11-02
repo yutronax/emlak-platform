@@ -113,7 +113,7 @@ export function AppHeader({
       <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 px-4 md:h-14 md:flex-nowrap md:px-6">
         <Link
           href={homeHref}
-          className="flex h-14 items-center font-display text-lg font-bold whitespace-nowrap focus-visible:outline-2 focus-visible:outline-terracotta-600 md:h-auto"
+          className="flex h-14 items-center font-display text-lg font-normal tracking-[-0.03em] whitespace-nowrap focus-visible:outline-2 focus-visible:outline-terracotta-600 md:h-auto"
         >
           Emlak Platformu
         </Link>

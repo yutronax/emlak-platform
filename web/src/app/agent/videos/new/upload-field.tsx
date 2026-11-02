@@ -243,7 +243,7 @@ export function UploadField({
         accept={accept}
         disabled={remaining <= 0}
         onChange={handleSelect}
-        className="block min-h-14 w-full cursor-pointer rounded-md border border-mist-200 bg-white text-base file:mr-4 file:min-h-12 file:cursor-pointer file:rounded-md file:border-0 file:bg-terracotta-600 file:px-5 file:font-medium file:text-white hover:file:bg-terracotta-700 disabled:opacity-50"
+        className="block min-h-14 w-full cursor-pointer rounded-leaf border border-mist-200 bg-white text-base file:mr-4 file:min-h-12 file:cursor-pointer file:rounded-leaf file:border-0 file:bg-ink-900 file:px-5 file:font-medium file:text-white hover:file:bg-ink-800 disabled:opacity-50"
       />
       <p className="text-sm text-slate-500">
         {copy.allowed} · Dosya başı en fazla {megabyteLabel(maxBytes)}

@@ -168,7 +168,7 @@ export function AgentDetailView({ service, id }: { service: AdminService; id: st
   return (
     <Shell back={back}>
       <header className="flex flex-col gap-2">
-        <h1 className="flex flex-wrap items-center gap-2 font-display text-[1.75rem] leading-tight font-bold">
+        <h1 className="flex flex-wrap items-center gap-2 font-display text-[1.75rem] leading-tight font-normal tracking-[-0.03em]">
           <span className="break-words">{agent.companyName}</span>
           <AgentTags agent={agent} />
         </h1>
@@ -241,7 +241,7 @@ export function AgentDetailView({ service, id }: { service: AdminService; id: st
         </div>
 
         <section aria-labelledby="actions" className={`${card} flex flex-col gap-4 self-start p-5`}>
-          <h2 id="actions" className="font-display text-lg font-bold">
+          <h2 id="actions" className="font-display text-lg font-normal tracking-[-0.03em]">
             Hesap aksiyonları
           </h2>
           <div className="flex flex-col gap-2">
@@ -310,7 +310,7 @@ function Section({ title, empty, count, children }: { title: string; empty: stri
   const id = `sec-${title.replace(/\s+/g, "-")}`;
   return (
     <section aria-labelledby={id} className={`${card} p-5`}>
-      <h2 id={id} className="font-display text-lg font-bold">
+      <h2 id={id} className="font-display text-lg font-normal tracking-[-0.03em]">
         {title}
       </h2>
       {count === 0 ? (

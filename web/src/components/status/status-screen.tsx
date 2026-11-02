@@ -23,7 +23,7 @@ export function StatusScreen({ mark, eyebrow, title, children, actions, headingR
     <main className="relative isolate flex flex-1 overflow-hidden bg-ink-900 text-fog-50">
       <div data-status-decor aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 select-none">
         <div className="absolute inset-0" style={brandTexture} />
-        <span className="absolute -right-6 -bottom-[0.2em] font-display font-bold leading-none tracking-tight text-fog-50/[0.06] text-[clamp(10rem,34vw,26rem)]">
+        <span className="absolute -right-6 -bottom-[0.2em] font-display font-light leading-none tracking-[-0.06em] text-fog-50/[0.06] text-[clamp(10rem,34vw,26rem)]">
           {mark}
         </span>
       </div>
@@ -32,7 +32,7 @@ export function StatusScreen({ mark, eyebrow, title, children, actions, headingR
         <h1
           ref={headingRef}
           tabIndex={headingRef ? -1 : undefined}
-          className="mt-3 max-w-xl font-display text-[2rem] leading-tight font-bold text-balance outline-none md:text-[2.75rem]"
+          className="mt-3 max-w-xl font-display text-[2rem] leading-tight font-normal tracking-[-0.03em] text-balance outline-none md:text-[2.75rem]"
         >
           {title}
         </h1>

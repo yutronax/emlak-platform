@@ -42,8 +42,8 @@ export default async function WhatsAppPage() {
     : { status: "error", error_code: null };
 
   return (
-    <main className="mx-auto max-w-4xl bg-fog-50 p-4 md:p-8">
-      <h1 className="text-xl font-semibold text-ink-900">WhatsApp</h1>
+    <main className="mx-auto max-w-4xl bg-cream-50 p-4 md:p-8">
+      <h1 className="font-display text-[1.75rem] leading-tight font-normal tracking-[-0.03em] text-ink-900">WhatsApp</h1>
       <Link href="/agent/dashboard" className="mt-2 inline-block text-terracotta-700 underline">
         Panele dön
       </Link>

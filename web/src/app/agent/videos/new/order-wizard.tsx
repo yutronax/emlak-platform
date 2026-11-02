@@ -72,7 +72,7 @@ const inputClass =
 const labelClass = "text-sm font-medium";
 
 const buttonLinkClass =
-  "inline-flex min-h-12 w-full items-center justify-center rounded-md bg-terracotta-600 px-4 py-2 font-medium text-white hover:bg-terracotta-700";
+  "inline-flex min-h-12 w-full items-center justify-center rounded-leaf bg-ink-900 px-4 py-2 font-medium text-white hover:bg-ink-800";
 
 function SummaryRow({ label, value }: { label: string; value: string }) {
   return (
@@ -143,7 +143,7 @@ export function OrderWizard({ services }: { services: ServiceOption[] }) {
     <div className="flex flex-col gap-6">
       {step === "service" && (
         <section className="flex flex-col gap-5">
-          <h2 className="font-display text-xl font-bold">Hangi hizmeti istiyorsunuz?</h2>
+          <h2 className="font-display text-xl font-normal tracking-[-0.03em]">Hangi hizmeti istiyorsunuz?</h2>
           <div role="radiogroup" aria-label="Hizmet" className="flex flex-col gap-3">
             {options.map((service) => {
               const checked = service.code === serviceCode;
@@ -156,7 +156,7 @@ export function OrderWizard({ services }: { services: ServiceOption[] }) {
                   onClick={() => setServiceCode(service.code)}
                   className={`flex min-h-24 flex-col gap-2 rounded-xl border-2 bg-white p-5 text-left ${checked ? "border-terracotta-700" : "border-mist-200"}`}
                 >
-                  <span className="font-display text-lg font-bold">{service.name}</span>
+                  <span className="font-display text-lg font-normal tracking-[-0.03em]">{service.name}</span>
                   <span className="text-sm text-slate-500">
                     {SERVICE_DESCRIPTIONS[service.code]}
                   </span>
@@ -180,7 +180,7 @@ export function OrderWizard({ services }: { services: ServiceOption[] }) {
 
       {step === "property" && selected && (
         <form onSubmit={handleProperty} className="flex flex-col gap-5">
-          <h2 className="font-display text-xl font-bold">Mülk bilgileri</h2>
+          <h2 className="font-display text-xl font-normal tracking-[-0.03em]">Mülk bilgileri</h2>
           <div className="flex flex-col gap-1">
             <label htmlFor="video-title" className={labelClass}>
               Mülk başlığı
@@ -252,7 +252,7 @@ export function OrderWizard({ services }: { services: ServiceOption[] }) {
 
       {orderId && rules && (
         <section hidden={step !== "files"} className="flex flex-col gap-5">
-          <h2 className="font-display text-xl font-bold">Dosyaları yükleyin</h2>
+          <h2 className="font-display text-xl font-normal tracking-[-0.03em]">Dosyaları yükleyin</h2>
           <UploadField
             orderId={orderId}
             kind={rules.kind}
@@ -282,7 +282,7 @@ export function OrderWizard({ services }: { services: ServiceOption[] }) {
 
       {step === "summary" && selected && (
         <section className="flex flex-col gap-5">
-          <h2 className="font-display text-xl font-bold">Özet</h2>
+          <h2 className="font-display text-xl font-normal tracking-[-0.03em]">Özet</h2>
           <dl className="flex flex-col gap-4 rounded-xl border border-mist-200 bg-white p-5">
             <SummaryRow label="Hizmet" value={selected.name} />
             <SummaryRow label="Mülk" value={title} />

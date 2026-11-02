@@ -30,4 +30,4 @@ export function AgentTags({ agent }: { agent: Pick<AgentRow, "suspended" | "isAd
 const dateFmt = new Intl.DateTimeFormat("tr-TR", { day: "2-digit", month: "2-digit", year: "numeric", timeZone: "Europe/Istanbul" });
 export const fmtDate = (iso: string | null) => (iso ? dateFmt.format(new Date(iso)) : "—");
 
-export const card = "rounded-2xl border border-mist-200 bg-white";
+export const card = "rounded-leaf border border-mist-200 bg-white";

@@ -9,16 +9,16 @@ export const metadata: Metadata = {
 
 export default function KullanimSartlariPage() {
   return (
-    <main className="bg-fog-50 text-ink-900">
+    <main className="bg-cream-50 text-ink-900">
       <div className="mx-auto max-w-3xl px-6 py-16 font-body">
         <Alert variant="error">
           Taslak — bu metin henüz hukuki kontrolden geçmemiştir.
         </Alert>
 
-        <h1 className="mt-10 font-display text-3xl font-bold">Kullanım Şartları</h1>
+        <h1 className="mt-10 font-display text-3xl font-normal tracking-[-0.03em]">Kullanım Şartları</h1>
 
         <section className="mt-8 flex flex-col gap-3">
-          <h2 className="font-display text-xl font-semibold">Hizmetin kapsamı</h2>
+          <h2 className="font-display text-xl font-normal tracking-[-0.03em]">Hizmetin kapsamı</h2>
           <p className="text-slate-500">
             Hizmet, WhatsApp gruplarınızdan gelen ilanların sitede düzenli ve
             filtrelenebilir bir listede gösterilmesini içerir. Reklam videosu
@@ -28,14 +28,14 @@ export default function KullanimSartlariPage() {
         </section>
 
         <section className="mt-8 flex flex-col gap-3">
-          <h2 className="font-display text-xl font-semibold">Deneme süresi</h2>
+          <h2 className="font-display text-xl font-normal tracking-[-0.03em]">Deneme süresi</h2>
           <p className="text-slate-500">
             Ücretsiz deneme için kredi kartı bilgisi istenmez.
           </p>
         </section>
 
         <section className="mt-8 flex flex-col gap-3">
-          <h2 className="font-display text-xl font-semibold">Hesabınız</h2>
+          <h2 className="font-display text-xl font-normal tracking-[-0.03em]">Hesabınız</h2>
           <p className="text-slate-500">
             Hesabınızın güvenliğinden ve hesabınızla yapılan işlemlerden siz
             sorumlusunuz. Yüklediğiniz ilan bilgilerinin doğru olması sizin
@@ -44,7 +44,7 @@ export default function KullanimSartlariPage() {
         </section>
 
         <section className="mt-8 flex flex-col gap-3">
-          <h2 className="font-display text-xl font-semibold">Destek</h2>
+          <h2 className="font-display text-xl font-normal tracking-[-0.03em]">Destek</h2>
           <p className="text-slate-500">
             Sorularınız için destek ekibimize WhatsApp üzerinden yazabilirsiniz:{" "}
             <a
@@ -59,7 +59,7 @@ export default function KullanimSartlariPage() {
         </section>
 
         <section className="mt-8 flex flex-col gap-3">
-          <h2 className="font-display text-xl font-semibold">Veri sorumlusu</h2>
+          <h2 className="font-display text-xl font-normal tracking-[-0.03em]">Veri sorumlusu</h2>
           <p className="text-slate-500">[Şirket bilgileri eklenecek]</p>
         </section>
       </div>

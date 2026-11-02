@@ -69,9 +69,9 @@ export function ConfirmDialog({
         aria-labelledby={titleId}
         aria-describedby={bodyId}
         onKeyDown={onKeyDown}
-        className="relative w-full max-w-md rounded-2xl bg-white p-6 font-body text-ink-900 shadow-[0_24px_60px_-20px_rgb(16_37_63/0.5)]"
+        className="relative w-full max-w-md rounded-leaf bg-white p-6 font-body text-ink-900 shadow-[0_24px_60px_-20px_rgb(16_37_63/0.5)]"
       >
-        <h2 id={titleId} className="font-display text-xl font-bold">
+        <h2 id={titleId} className="font-display text-xl font-normal tracking-[-0.03em]">
           {title}
         </h2>
         <div id={bodyId} className="mt-2 text-sm text-slate-500">

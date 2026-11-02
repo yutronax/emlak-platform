@@ -201,10 +201,10 @@ export default async function AgentDashboardPage({
   const passwordUpdated = params.password_updated === "1";
 
   return (
-    <main className="mx-auto max-w-4xl bg-fog-50 p-4 md:p-8">
+    <main className="mx-auto max-w-4xl bg-cream-50 p-4 md:p-8">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold text-ink-900">Emlakçı Paneli</h1>
+          <h1 className="font-display text-[1.75rem] leading-tight font-normal tracking-[-0.03em] text-ink-900">Emlakçı Paneli</h1>
           <Link href="/agent/videos" className="mt-2 inline-block text-terracotta-700 underline">
             Video siparişlerim
           </Link>

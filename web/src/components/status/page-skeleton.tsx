@@ -14,7 +14,7 @@ export function PageSkeleton() {
           <div className="h-8 w-56 rounded bg-mist-200" />
         </div>
         {[0, 1, 2].map((i) => (
-          <div key={i} className="flex flex-col gap-3 rounded-2xl border border-mist-200 bg-white p-5 sm:p-8">
+          <div key={i} className="flex flex-col gap-3 rounded-leaf border border-mist-200 bg-white p-5 sm:p-8">
             <div className="h-5 w-40 rounded bg-mist-200" />
             <div className="h-4 w-full rounded bg-mist-200/70" />
             <div className="h-4 w-2/3 rounded bg-mist-200/70" />

@@ -21,7 +21,7 @@ export default async function NewVideoOrderPage() {
 
   return (
     <main className="mx-auto flex max-w-xl flex-col gap-6 px-4 py-8 font-body text-ink-900">
-      <h1 className="font-display text-2xl font-bold">Yeni video siparişi</h1>
+      <h1 className="font-display text-2xl font-normal tracking-[-0.03em]">Yeni video siparişi</h1>
       {error ? (
         <Alert variant="error">Hizmetler yüklenemedi. Lütfen sayfayı yenileyin.</Alert>
       ) : (

@@ -50,8 +50,8 @@ const PAYMENT_LABEL: Record<Payment["status"], { label: string; className: strin
 const hasPlan = (s: SubscriptionStatus) => s === "active" || s === "trialing" || s === "past_due";
 const busy = (s: SubscriptionStatus) => s === "pending" || s === "needs_review";
 
-const card = "rounded-2xl border border-mist-200 bg-white p-5 sm:p-8";
-const sectionTitle = "font-display text-xl font-bold";
+const card = "rounded-leaf border border-mist-200 bg-white p-5 sm:p-8";
+const sectionTitle = "font-display text-xl font-normal tracking-[-0.03em]";
 
 type Dialog = { kind: "change"; plan: Plan; trigger: HTMLElement | null } | { kind: "cancel"; trigger: HTMLElement | null };
 
@@ -198,7 +198,7 @@ export function BillingView({ service, navigate = (url) => window.location.assig
           <>
             {sub.plan && (
               <p className="mt-4 flex flex-wrap items-baseline gap-x-3">
-                <span className="font-display text-3xl font-bold">{sub.plan.name}</span>
+                <span className="font-display text-3xl font-normal tracking-[-0.03em]">{sub.plan.name}</span>
                 <span className="text-sm text-slate-500">{formatTryMinor(sub.plan.priceMinor)} / ay</span>
               </p>
             )}
@@ -240,7 +240,7 @@ export function BillingView({ service, navigate = (url) => window.location.assig
                   }`}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <h3 className="font-display text-lg font-bold">{plan.name}</h3>
+                    <h3 className="font-display text-lg font-normal tracking-[-0.03em]">{plan.name}</h3>
                     {isCurrent && (
                       <span className="rounded-full bg-terracotta-600/10 px-2.5 py-0.5 text-xs font-semibold text-terracotta-700">
                         Mevcut plan
@@ -248,7 +248,7 @@ export function BillingView({ service, navigate = (url) => window.location.assig
                     )}
                   </div>
                   <p className="mt-1 text-sm text-slate-500">
-                    <span className="font-display text-2xl font-bold text-ink-900">{formatTryMinor(plan.priceMinor)}</span> / ay
+                    <span className="font-display text-2xl font-normal tracking-[-0.03em] text-ink-900">{formatTryMinor(plan.priceMinor)}</span> / ay
                   </p>
                   <ul className="mt-4 flex flex-1 flex-col gap-1.5 text-sm">
                     {plan.features.map((f) => (
@@ -398,7 +398,7 @@ function Shell({ children }: { children: ReactNode }) {
     <main className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 py-8 font-body text-ink-900 md:px-6 md:py-10">
       <div>
         <p className="text-xs font-medium tracking-[0.2em] text-terracotta-700 uppercase">Hesap</p>
-        <h1 className="mt-1 font-display text-[1.75rem] leading-tight font-bold">Aboneliğim</h1>
+        <h1 className="mt-1 font-display text-[1.75rem] leading-tight font-normal tracking-[-0.03em]">Aboneliğim</h1>
       </div>
       {children}
     </main>

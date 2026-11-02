@@ -76,8 +76,8 @@ export default async function AccountSubscriptionPage(props?: {
     console.error("subscriptions sorgusu başarısız", error);
     return (
       <main className="mx-auto max-w-2xl p-8">
-        <h1 className="text-xl font-semibold">Aboneliğim</h1>
-        <p className="mt-4 text-red-600">
+        <h1 className="font-display text-[1.75rem] leading-tight font-normal tracking-[-0.03em]">Aboneliğim</h1>
+        <p className="mt-4 text-brick-700">
           Abonelik bilgisi yüklenemedi, lütfen daha sonra tekrar deneyin.
         </p>
       </main>
@@ -91,8 +91,8 @@ export default async function AccountSubscriptionPage(props?: {
   if (!subscription) {
     return (
       <main className="mx-auto max-w-2xl p-8">
-        <h1 className="text-xl font-semibold">Aboneliğim</h1>
-        <p className="mt-4 text-zinc-600 dark:text-zinc-400">
+        <h1 className="font-display text-[1.75rem] leading-tight font-normal tracking-[-0.03em]">Aboneliğim</h1>
+        <p className="mt-4 text-charcoal/60">
           Aboneliğiniz yok.{" "}
           <Link href="/pricing" className="underline">
             Planları görüntüle
@@ -106,10 +106,10 @@ export default async function AccountSubscriptionPage(props?: {
 
   return (
     <main className="mx-auto max-w-2xl p-8">
-      <h1 className="text-xl font-semibold">Aboneliğim</h1>
+      <h1 className="font-display text-[1.75rem] leading-tight font-normal tracking-[-0.03em]">Aboneliğim</h1>
 
       {isPastDue && (
-        <div role="alert" className="mt-4 rounded border border-red-300 p-4 text-sm text-red-600">
+        <div role="alert" className="mt-4 rounded border border-brick-700/30 p-4 text-sm text-brick-700">
           <p>
             Ödemeniz gecikti. Aboneliğinizin devamı için lütfen ödemenizi
             tamamlayın.
@@ -121,11 +121,11 @@ export default async function AccountSubscriptionPage(props?: {
       )}
 
       <dl className="mt-6 grid grid-cols-2 gap-2 text-sm">
-        <dt className="text-zinc-500">Plan</dt>
+        <dt className="text-charcoal/60">Plan</dt>
         <dd>{subscription.plan?.name ?? "—"}</dd>
-        <dt className="text-zinc-500">Durum</dt>
+        <dt className="text-charcoal/60">Durum</dt>
         <dd>{STATUS_LABELS[subscription.status] ?? subscription.status}</dd>
-        <dt className="text-zinc-500">Dönem sonu</dt>
+        <dt className="text-charcoal/60">Dönem sonu</dt>
         <dd>{formatDate(subscription.current_period_end)}</dd>
       </dl>
     </main>
