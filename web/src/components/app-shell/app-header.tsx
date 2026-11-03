@@ -14,10 +14,14 @@ const AGENT_SECTIONS: HeaderSection[] = [
   { href: "/agent/dashboard", label: "İlanlar" },
   { href: "/agent/whatsapp", label: "WhatsApp" },
   { href: "/agent/videos", label: "Videolar" },
+  // Alıcıların gördüğü herkese açık videolu vitrin.
+  { href: "/vitrin", label: "Vitrin" },
 ];
 
 type AppHeaderProps = {
   email: string | null;
+  // Menüde görünen ad (yetkili adı ya da firma); yoksa e-posta.
+  name?: string | null;
   // Profil servisi yoksa /account/profile 404 döner; bağlantı gösterilmez.
   showProfile: boolean;
   // Varsayılanlar emlakçı paneli; admin alanı kendi bölümlerini verir.
@@ -50,7 +54,9 @@ export function AppHeader({
   showProfile,
   sections = AGENT_SECTIONS,
   navLabel = "Panel bölümleri",
-  homeHref = "/agent/dashboard",
+  name = null,
+  // Logo herkese açık ana sayfaya gider (vitrin ve tanıtım orada); admin kendi ana sayfasını verir.
+  homeHref = "/",
 }: AppHeaderProps) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -106,7 +112,8 @@ export function AppHeader({
     }
   }
 
-  const initial = email ? email.trim().charAt(0).toLocaleUpperCase("tr-TR") : "?";
+  const display = name?.trim() || email;
+  const initial = display ? display.trim().charAt(0).toLocaleUpperCase("tr-TR") : "?";
 
   return (
     <header className="border-b border-white/10 bg-ink-900 text-fog-50">
@@ -146,7 +153,7 @@ export function AppHeader({
           <button
             ref={triggerRef}
             type="button"
-            aria-label={`Hesap menüsü${email ? ` (${email})` : ""}`}
+            aria-label={`Hesap menüsü${display ? ` (${display})` : ""}`}
             aria-haspopup="menu"
             aria-expanded={open}
             aria-controls={open ? "account-menu" : undefined}
@@ -154,7 +161,7 @@ export function AppHeader({
             onKeyDown={onTriggerKeyDown}
             className="flex items-center gap-2 rounded-full py-1 pr-1 pl-1 font-body text-sm text-fog-50/80 hover:text-fog-50 focus-visible:outline-2 focus-visible:outline-terracotta-600 md:pl-3"
           >
-            <span className="hidden max-w-[220px] truncate md:inline">{email}</span>
+            <span className="hidden max-w-[220px] truncate md:inline">{display}</span>
             <span
               aria-hidden="true"
               className="flex h-8 w-8 items-center justify-center rounded-full bg-terracotta-600 font-display text-sm font-bold text-white"
@@ -169,9 +176,12 @@ export function AppHeader({
               id="account-menu"
               role="menu"
               aria-label="Hesap"
-              className="absolute right-0 z-50 mt-2 w-64 rounded-xl border border-mist-200 bg-white p-1.5 font-body text-ink-900 shadow-[0_16px_40px_-12px_rgb(16_37_63/0.35)]"
+              className="panel-menu absolute right-0 z-50 mt-2 w-64 rounded-xl border border-mist-200 bg-white p-1.5 font-body text-ink-900 shadow-[0_16px_40px_-12px_rgb(16_37_63/0.35)]"
             >
-              <p className="truncate px-3 pt-2 pb-2 text-xs text-slate-500">{email ?? "Hesabım"}</p>
+              <div className="px-3 pt-2 pb-2">
+                <p className="truncate text-sm font-medium text-ink-900">{display ?? "Hesabım"}</p>
+                {name?.trim() && email && <p className="truncate text-xs text-slate-500">{email}</p>}
+              </div>
               <div className="mb-1 h-px bg-mist-200" />
               {showProfile && (
                 <Link href="/account/profile" role="menuitem" tabIndex={-1} onKeyDown={onItemKeyDown} className={itemClass}>

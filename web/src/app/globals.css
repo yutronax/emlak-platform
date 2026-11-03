@@ -10,10 +10,15 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  /* Tasarım dili: obss_project/artifacts/tasarim-dili-stellar-concrete/design_direction.md */
-  --font-display: var(--font-inter-tight);
   --font-accent: var(--font-instrument-serif);
   --font-body: var(--font-inter);
+}
+
+/* inline değil: renk ve başlık fontu utility'lerde var() olarak kalır ki
+   [data-panel-theme="editorial"] kapsamı bunları yeniden tanımlayabilsin. */
+@theme {
+  /* Tasarım dili: obss_project/artifacts/tasarim-dili-stellar-concrete/design_direction.md */
+  --font-display: var(--font-inter-tight);
   --color-ink-900: #10253F;
   --color-ink-800: #1A3354;
   --color-charcoal: #141416;
@@ -43,7 +48,171 @@
 
 /* İmza köşe (Stellar uyarlaması): sol üst ve sağ alt düz, diğer iki köşe yuvarlak. */
 @utility rounded-leaf {
-  border-radius: 0 10px;
+  border-radius: var(--radius-leaf, 0 10px);
+}
+
+/* Emlakçı paneli — Sıcak Editorial (obss_project/artifacts/panel-oturum-dogrulama/tasarim-uygulama-plani.md).
+   Yalnız agent/layout.tsx altında; tanıtım, hesap ve admin ekranları Stellar Concrete'te kalır. */
+[data-panel-theme="editorial"] {
+  --font-display: var(--font-lora), Georgia, serif;
+  --color-ink-900: #26332D;
+  --color-ink-800: #1B2621;
+  --color-charcoal: #26332D;
+  --color-cream-50: #F6F3EC;
+  --color-stone-200: #DED8CC;
+  --color-fog-50: #F6F3EC;
+  --color-terracotta-600: #B85C3B;
+  --color-terracotta-700: #9C482E;
+  --color-mist-200: #DED8CC;
+  --color-moss-700: #356247;
+  --color-brick-700: #963D32;
+  --radius-leaf: 10px;
+  color-scheme: light;
+  color: var(--color-ink-900);
+  background: var(--color-cream-50);
+  font-family: var(--font-inter), Arial, sans-serif;
+}
+
+[data-panel-theme="editorial"] :where(h1, h2, h3) {
+  font-weight: 500;
+}
+
+[data-panel-theme="editorial"] :where(a, button, input, select, textarea, summary):focus-visible {
+  outline: 2px solid var(--color-ink-900);
+  outline-offset: 3px;
+}
+
+/* Koyu header'da aktif bölüm: avatarın gölgesinde kalmasın diye zemin + terakota alt çizgi.
+   Çizgi ::after ile soldan uzar; tüm sekmeler aynı ağırlıkta, genişlik oynamaz. */
+[data-panel-theme="editorial"] header nav a {
+  position: relative;
+  border-bottom-color: transparent;
+  font-weight: 500;
+  transition: color var(--motion-fast) var(--ease-ui), background-color var(--motion-fast) var(--ease-ui);
+}
+[data-panel-theme="editorial"] header nav a[aria-current="page"] {
+  background: rgb(246 243 236 / 8%);
+  color: #FFFEFA;
+}
+[data-panel-theme="editorial"] header nav a[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -2px;
+  height: 2px;
+  background: #B85C3B;
+  transform-origin: left;
+  animation: panel-underline var(--motion-ui) var(--ease-settle);
+}
+
+/* Hareket kimliği: ağırbaşlı, kısa, dokunsal — yaylanma/overshoot yok (animasyon-plani.md). */
+[data-panel-theme="editorial"] {
+  --motion-fast: 120ms;
+  --motion-ui: 180ms;
+  --motion-panel: 240ms;
+  --motion-enter: 320ms;
+  --motion-step: 40ms;
+  --ease-settle: cubic-bezier(.22, 1, .36, 1);
+  --ease-ui: cubic-bezier(.2, 0, .2, 1);
+  --motion-rise: 8px;
+}
+@media (max-width: 767px) {
+  [data-panel-theme="editorial"] {
+    --motion-rise: 4px;
+    --motion-step: 24ms;
+  }
+}
+
+@keyframes panel-enter {
+  from { opacity: 0; transform: translateY(var(--motion-rise, 8px)); }
+}
+@keyframes panel-menu {
+  from { opacity: 0; transform: translateY(-4px); }
+}
+@keyframes panel-underline {
+  from { transform: scaleX(0); }
+}
+@keyframes panel-fade {
+  from { opacity: 0; }
+}
+@keyframes panel-check {
+  from { stroke-dashoffset: 1; }
+}
+@keyframes panel-skeleton {
+  0%, 100% { opacity: .55; }
+  50% { opacity: .9; }
+}
+@keyframes panel-spin {
+  to { transform: rotate(360deg); }
+}
+
+@utility panel-enter {
+  animation: panel-enter var(--motion-enter, 320ms) var(--ease-settle, ease-out) var(--enter-delay, 0ms) backwards;
+}
+/* Kartlar: 80ms + sıra × adım (mobilde 48ms + sıra × 24ms). Sıra --enter-index ile gelir. */
+@utility panel-stagger {
+  --enter-delay: calc(80ms + var(--enter-index, 0) * var(--motion-step, 40ms));
+  @media (max-width: 767px) {
+    --enter-delay: calc(48ms + var(--enter-index, 0) * var(--motion-step, 24ms));
+  }
+}
+@utility panel-menu {
+  transform-origin: top right;
+  animation: panel-menu 160ms var(--ease-settle, ease-out) backwards;
+}
+@utility panel-fade {
+  animation: panel-fade var(--motion-ui, 180ms) var(--ease-ui, ease-out) backwards;
+}
+@utility panel-check {
+  stroke-dasharray: 1;
+  animation: panel-check var(--motion-enter, 320ms) var(--ease-settle, ease-out) 120ms backwards;
+}
+@utility panel-skeleton {
+  background-color: #EAE5D9;
+  animation: panel-skeleton 1600ms ease-in-out infinite;
+}
+@utility panel-spinner {
+  animation: panel-spin 1000ms linear infinite;
+}
+
+/* Filtre paneli: native <details>; destekleyen tarayıcıda yükseklik + opaklık geçişi, yoksa anında açılır. */
+@supports (interpolate-size: allow-keywords) and (transition-behavior: allow-discrete) {
+  [data-panel-theme="editorial"] .panel-details {
+    interpolate-size: allow-keywords;
+  }
+  [data-panel-theme="editorial"] .panel-details::details-content {
+    block-size: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition:
+      block-size var(--motion-panel) var(--ease-ui),
+      opacity var(--motion-ui) var(--ease-ui),
+      content-visibility var(--motion-panel) allow-discrete;
+  }
+  [data-panel-theme="editorial"] .panel-details[open]::details-content {
+    block-size: auto;
+    opacity: 1;
+  }
+}
+
+/* Azaltılmış hareket: giriş, stagger, çizgi, spinner ve iskelet durur; renk, durum metni ve odak kalır. */
+@media (prefers-reduced-motion: reduce) {
+  [data-panel-theme="editorial"],
+  [data-panel-theme="editorial"] *,
+  [data-panel-theme="editorial"] *::before,
+  [data-panel-theme="editorial"] *::after,
+  [data-panel-theme="editorial"] .panel-details::details-content {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* İlan kartındaki dürüst mimari yer tutucu (gerçek fotoğraf izlenimi vermez). */
+.panel-placeholder {
+  background:
+    url("/illustrations/property-placeholder.svg") center / contain no-repeat,
+    #EAE5D9;
 }
 
 /* Başlıkta tek vurgu kelimesi: <em class="accent">tek akışta</em> */

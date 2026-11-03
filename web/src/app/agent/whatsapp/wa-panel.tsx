@@ -108,6 +108,14 @@ export function WaPanel({ initialStatus, consentAccepted, groups }: WaPanelProps
   const [error, setError] = useState<PanelError>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [qrImage, setQrImage] = useState<{ value: string; svg: string } | null>(null);
+  // "Bağlandı" işareti yalnız bu oturumda görülen qr/pending → connected geçişinde çizilir;
+  // sayfa zaten bağlı açıldığında ya da router.refresh sonrasında tekrar oynamaz.
+  const [motionStatus, setMotionStatus] = useState<string>(initialStatus.status);
+  const [celebrate, setCelebrate] = useState(false);
+  if (motionStatus !== status.status) {
+    setMotionStatus(status.status);
+    setCelebrate(status.status === "connected" && (motionStatus === "qr" || motionStatus === "pending"));
+  }
   const pollCountRef = useRef(0);
   const groupsPollCountRef = useRef(0);
   const router = useRouter();
@@ -242,25 +250,49 @@ export function WaPanel({ initialStatus, consentAccepted, groups }: WaPanelProps
   const canConnect =
     status.status === "none" || status.status === "error" || status.status === "disconnected" || status.status === "logged_out";
   const primaryButton =
-    "rounded-leaf bg-ink-900 px-4 py-2 text-sm font-medium text-white hover:bg-ink-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-600 disabled:opacity-50";
+    "min-h-11 w-full rounded-lg bg-terracotta-600 px-[18px] py-2 text-sm font-semibold text-white hover:bg-terracotta-700 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-charcoal/60 disabled:opacity-100 sm:w-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900";
   const secondaryButton =
-    "rounded-md border border-mist-200 px-4 py-2 text-sm text-ink-900 hover:bg-mist-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 disabled:opacity-60";
+    "min-h-11 rounded-lg border border-charcoal/35 bg-white px-4 py-2 text-sm font-medium text-ink-900 hover:bg-cream-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 disabled:opacity-60";
 
   const qrSvg = qrValue !== null && qrImage?.value === qrValue ? qrImage.svg : null;
 
+  // Animasyon anahtarı ham yanıt değil, faz: poll sonuçları içeriği yeniden oynatmaz.
+  const motionPhase = !consent ? "consent" : status.status === "connected" ? "groups" : "connect";
+
   return (
-    <section aria-labelledby="wa-panel-title" className="mt-6 max-w-xl space-y-4">
-      <h2 id="wa-panel-title" className="text-lg font-semibold text-ink-900">
-        WhatsApp bağlantısı
-      </h2>
+    <section
+      aria-labelledby="wa-panel-title"
+      className="space-y-5 rounded-xl border border-stone-200 bg-[#FFFEFA] p-4 shadow-[0_4px_16px_rgb(38_51_45/5%)] md:p-6"
+    >
+      <div className="space-y-1">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 id="wa-panel-title" className="font-display text-xl tracking-[-0.02em] text-ink-900">
+            WhatsApp bağlantısı
+          </h2>
+          {/* Durum rozeti: bağlantının gerçek hali; aşama bilgisi altında küçük yardımcı metin. */}
+          <span
+            aria-hidden="true"
+            className="inline-flex items-center gap-1.5 rounded-full bg-[#EAE5D9] px-2.5 py-1 text-xs font-medium text-[#665D48]"
+          >
+            <span
+              className={`h-1.5 w-1.5 rounded-full ${status.status === "connected" ? "bg-moss-700" : "bg-terracotta-600"}`}
+            />
+            {status.status === "connected" ? "Bağlı" : status.status === "qr" || status.status === "pending" ? "Bağlanıyor" : "Bağlı değil"}
+          </span>
+        </div>
+        <p className="text-xs text-charcoal/70">
+          {!consent ? "Adım 1 / 3 · Risk onayı" : status.status === "connected" ? "Adım 3 / 3 · Grupları seç" : "Adım 2 / 3 · QR ile bağlan"}
+        </p>
+      </div>
 
       {!consent && (
-        <div className="space-y-3 rounded-md border border-mist-200 p-4 text-sm text-ink-900">
+        <div className="space-y-3 rounded-lg border-l-2 border-terracotta-600 bg-[#F4ECD9] p-4 text-sm leading-relaxed text-ink-900">
+          <p className="font-semibold">Bağlanmadan önce okuyun</p>
           <p>{CONSENT_TEXT}</p>
-          <label className="flex items-start gap-2">
+          <label className="flex min-h-11 cursor-pointer items-center gap-3">
             <input
               type="checkbox"
-              className="mt-1"
+              className="h-5 w-5 shrink-0 accent-terracotta-600"
               checked={ticked}
               onChange={(e) => setTicked(e.target.checked)}
             />
@@ -277,25 +309,46 @@ export function WaPanel({ initialStatus, consentAccepted, groups }: WaPanelProps
         </div>
       )}
 
-      <div aria-live="polite" className="space-y-3 text-sm text-ink-900">
-        {status.status === "none" && <p>Bağlı değil</p>}
+      <div aria-live="polite" className="text-sm text-ink-900">
+        {/* Faz değişince (onay → bağlan → gruplar) içerik bir kez belirir; 2 sn'lik poll'larda yeniden oynamaz. */}
+        <div key={motionPhase} className="panel-fade space-y-3">
+        {status.status === "none" && (
+          <p className="text-charcoal/80">
+            <span className="sr-only">Bağlı değil. </span>
+            Bağla&apos;ya bastığınızda bir QR kod çıkar; bağlanacak telefonun WhatsApp&apos;ıyla okutursunuz.
+          </p>
+        )}
 
-        {status.status === "pending" && <p>Hazırlanıyor…</p>}
+        {status.status === "pending" && (
+          <p className="flex items-center gap-2">
+            <span
+              aria-hidden="true"
+              className="panel-spinner inline-block h-4 w-4 rounded-full border-2 border-stone-200 border-t-terracotta-600"
+            />
+            Hazırlanıyor…
+          </p>
+        )}
 
         {status.status === "disconnecting" && <p>Bağlantı kaldırılıyor…</p>}
 
         {status.status === "qr" && (
           <div className="space-y-3">
-            {qrSvg ? (
-              <div
-                role="img"
-                aria-label="WhatsApp QR kodu"
-                className="inline-block rounded bg-white p-3"
-                dangerouslySetInnerHTML={{ __html: qrSvg }}
-              />
-            ) : (
-              <p>QR hazırlanıyor…</p>
-            )}
+            {/* QR alanının yeri önceden ayrılır: kod gelince metin aşağı sıçramaz. QR'ın kendisi hareket etmez. */}
+            <div className="aspect-square w-full max-w-64 rounded-lg border border-stone-200 bg-white p-3">
+              {qrSvg ? (
+                <div
+                  key={qrValue ?? ""}
+                  role="img"
+                  aria-label="WhatsApp QR kodu"
+                  className="panel-fade h-full w-full [&_svg]:h-full [&_svg]:w-full"
+                  dangerouslySetInnerHTML={{ __html: qrSvg }}
+                />
+              ) : (
+                <p className="panel-skeleton flex h-full w-full items-center justify-center rounded text-charcoal/70">
+                  QR hazırlanıyor…
+                </p>
+              )}
+            </div>
             <p className="text-slate-500">
               Telefonunuzda WhatsApp → Ayarlar → Bağlı cihazlar → Cihaz bağla yolunu açıp bu kodu okutun.
             </p>
@@ -304,6 +357,20 @@ export function WaPanel({ initialStatus, consentAccepted, groups }: WaPanelProps
 
         {status.status === "connected" && (
           <div className="flex flex-wrap items-center gap-3">
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              className="h-6 w-6 shrink-0 text-moss-700"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.75}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="12" r="9" />
+              {/* Onay işareti yalnız bu oturumdaki gerçek qr/pending → connected geçişinde çizilir. */}
+              <path d="M8 12.5l2.5 2.5L16 9.5" pathLength={1} className={celebrate ? "panel-check" : undefined} />
+            </svg>
             <p>{status.phone_masked ? `Bağlı: ${status.phone_masked}` : "Bağlı"}</p>
             <button
               type="button"
@@ -315,6 +382,7 @@ export function WaPanel({ initialStatus, consentAccepted, groups }: WaPanelProps
             </button>
           </div>
         )}
+        </div>
       </div>
 
       {error && (
@@ -348,14 +416,23 @@ export function WaPanel({ initialStatus, consentAccepted, groups }: WaPanelProps
       )}
 
       {canConnect && !statusError && (
-        <button
-          type="button"
-          onClick={handleConnect}
-          disabled={!consent || busy}
-          className={primaryButton}
-        >
-          Bağla
-        </button>
+        // Onaydan önce tek ana eylem "Onayla"dır; "Bağla" yalnız sessiz, devre dışı bir sonraki adım olarak durur.
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={handleConnect}
+            disabled={!consent || busy}
+            aria-describedby={consent ? undefined : "wa-connect-hint"}
+            className={consent ? primaryButton : `${secondaryButton} border-dashed`}
+          >
+            Bağla
+          </button>
+          {!consent && (
+            <p id="wa-connect-hint" className="text-xs text-charcoal/70">
+              Önce yukarıdaki riski onaylayın.
+            </p>
+          )}
+        </div>
       )}
 
       {effectiveGroups !== undefined &&
