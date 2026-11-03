@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { connection } from "next/server";
 
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -80,6 +81,9 @@ const ctaTone = {
 const container = "mx-auto w-full max-w-6xl px-4 md:px-6";
 
 export default async function PricingPage() {
+  // Supabase oturum okuması Date.now() kullanır; prerender sırasında çalışmasın diye
+  // ilk await'ten önce istek-zamanlı işaretlenir (dashboard ile aynı gerekçe).
+  await connection();
   const supabase = await createClient();
 
   const { data: plans, error: plansError } = await supabase
