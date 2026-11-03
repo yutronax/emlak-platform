@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import { ensureAgentRow } from "@/lib/auth/ensureAgentRow";
 import { createClient } from "@/lib/supabase/server";
 
+const FALLBACK_COMPANY_NAME = "Adsız emlak ofisi";
+
 export async function login(formData: FormData): Promise<{ error: string } | never> {
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
@@ -29,10 +31,13 @@ export async function login(formData: FormData): Promise<{ error: string } | nev
   const { data: userData } = await supabase.auth.getUser();
   let isAdmin = false;
   if (userData.user) {
-    const companyName = String(userData.user.user_metadata?.company_name ?? "");
+    // Firma adı kayıt formundan gelir. Panelden ("Add user") ya da formsuz açılan hesaplarda yoktur;
+    // o zaman da agents satırı açılır (yoksa deneme başlamaz, panel yarım kalır). company_name
+    // 2–100 karakter zorunlu ve vitrinde görünür: e-postayı sızdırmayan nötr bir ad, profilden değiştirilir.
+    const companyName = String(userData.user.user_metadata?.company_name ?? "").trim() || FALLBACK_COMPANY_NAME;
     // Onay e-postalı kayıtta şartlar kayıt anında değil, ilk girişte kaydedilir (AC-3).
     const termsVersion = userData.user.user_metadata?.terms_version;
-    if (companyName) {
+    {
       try {
         if (termsVersion) {
           await ensureAgentRow(supabase, userData.user.id, companyName, { accepted: true });

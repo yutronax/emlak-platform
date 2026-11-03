@@ -82,14 +82,16 @@ describe("login", () => {
     expect(redirect).toHaveBeenCalledWith("/agent/dashboard");
   });
 
-  // AC-4 negatif: company_name yok/boş -> ensureAgentRow ÇAĞRILMAZ, redirect YİNE çağrılır.
+  // company_name yok/boş (panelden açılmış hesap) -> agents satırı yine açılır, nötr yedek adla.
+  // Eskiden hiç çağrılmıyordu: satırsız hesapta start_trial false dönüyor, panel yarım kalıyordu.
   // agents mock'u KURULMADI -> pessimist fallback: /agent/dashboard.
   it.each([
     { label: "user_metadata boş obje", metadata: {} },
     { label: "company_name boş string", metadata: { company_name: "" } },
+    { label: "company_name yalnız boşluk", metadata: { company_name: "   " } },
     { label: "user_metadata yok", metadata: undefined },
   ])(
-    "company_name $label ise ensureAgentRow ÇAĞRILMAZ, redirect yine (pessimist) /agent/dashboard'a çağrılır",
+    "company_name $label ise ensureAgentRow 'Adsız emlak ofisi' ile çağrılır, redirect /agent/dashboard'a",
     async ({ metadata }) => {
       setupSupabase(
         { error: null },
@@ -100,7 +102,7 @@ describe("login", () => {
         login(makeFormData({ email: "test@example.com", password: "sifre123" })),
       ).rejects.toThrow("NEXT_REDIRECT");
 
-      expect(ensureAgentRow).not.toHaveBeenCalled();
+      expect(ensureAgentRow).toHaveBeenCalledWith(expect.anything(), "user-1", "Adsız emlak ofisi");
       expect(redirect).toHaveBeenCalledWith("/agent/dashboard");
     },
   );
