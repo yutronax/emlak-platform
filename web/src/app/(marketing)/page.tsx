@@ -198,6 +198,29 @@ export default function LandingPage() {
                 Video siparişi ver
               </Link>
             </div>
+            {/* Örnek: stok görüntülerle hazırlanmış, gerçek bir ilan değil (kaynaklar public/images/CREDITS.md). */}
+            <figure className="mt-4 flex max-w-[280px] flex-col gap-3">
+              <div className="relative overflow-hidden rounded-leaf bg-ink-900">
+                <span className="absolute top-3 left-3 z-10 rounded-leaf bg-cream-50 px-2 py-0.5 font-body text-xs font-medium text-ink-900">
+                  Örnek video
+                </span>
+                <video
+                  controls
+                  playsInline
+                  preload="none"
+                  poster="/videos/ornek-ilan-kapak.jpg"
+                  width={720}
+                  height={1280}
+                  className="aspect-[9/16] h-auto w-full"
+                  aria-label="Örnek ilan videosu: dikey, 27 saniye, müzikli"
+                >
+                  <source src="/videos/ornek-ilan.mp4" type="video/mp4" />
+                </video>
+              </div>
+              <figcaption className="font-body text-xs text-charcoal/60">
+                Stok görüntülerle hazırlanmış örnektir; gösterilen ilan gerçek değildir.
+              </figcaption>
+            </figure>
           </div>
           <ul className="border-t border-charcoal/10">
             {videoOptions.map((option) => (

@@ -10,3 +10,5 @@ scraper/sidecar/wa-auth/
 scraper/data/
 supabase/.temp/
 *.log
+
+video-calisma/
