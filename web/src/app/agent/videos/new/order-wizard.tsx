@@ -67,7 +67,7 @@ function priceText(price: number | null): string {
 }
 
 const inputClass =
-  "min-h-12 rounded-md border border-mist-200 bg-white px-3 py-2 text-base focus-visible:outline-2 focus-visible:outline-ink-900";
+  "min-h-12 rounded-md border border-mist-200 bg-panel-surface px-3 py-2 text-base focus-visible:outline-2 focus-visible:outline-ink-900";
 
 const labelClass = "text-sm font-medium";
 
@@ -154,7 +154,7 @@ export function OrderWizard({ services }: { services: ServiceOption[] }) {
                   role="radio"
                   aria-checked={checked}
                   onClick={() => setServiceCode(service.code)}
-                  className={`flex min-h-24 flex-col gap-2 rounded-xl border-2 bg-white p-5 text-left ${checked ? "border-terracotta-700" : "border-mist-200"}`}
+                  className={`flex min-h-24 flex-col gap-2 rounded-xl border-2 bg-panel-surface p-5 text-left ${checked ? "border-terracotta-700" : "border-mist-200"}`}
                 >
                   <span className="font-display text-lg font-normal tracking-[-0.03em]">{service.name}</span>
                   <span className="text-sm text-slate-500">
@@ -283,7 +283,7 @@ export function OrderWizard({ services }: { services: ServiceOption[] }) {
       {step === "summary" && selected && (
         <section className="flex flex-col gap-5">
           <h2 className="font-display text-xl font-normal tracking-[-0.03em]">Özet</h2>
-          <dl className="flex flex-col gap-4 rounded-xl border border-mist-200 bg-white p-5">
+          <dl className="flex flex-col gap-4 rounded-xl border border-mist-200 bg-panel-surface p-5">
             <SummaryRow label="Hizmet" value={selected.name} />
             <SummaryRow label="Mülk" value={title} />
             <SummaryRow label="Adres" value={address} />

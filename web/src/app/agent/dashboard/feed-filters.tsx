@@ -25,7 +25,7 @@ function dropEmptyFields(event: FormEvent<HTMLFormElement>) {
 }
 
 const fieldClass =
-  "mt-1.5 h-11 w-full min-w-0 rounded-lg border border-charcoal/35 bg-white px-3 text-base text-ink-900 focus-visible:border-ink-900 focus-visible:outline-2 focus-visible:outline-terracotta-600";
+  "mt-1.5 h-11 w-full min-w-0 rounded-lg border border-charcoal/35 bg-panel-surface px-3 text-base text-ink-900 focus-visible:border-ink-900 focus-visible:outline-2 focus-visible:outline-terracotta-600";
 
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (

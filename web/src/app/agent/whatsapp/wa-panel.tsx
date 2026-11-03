@@ -252,7 +252,7 @@ export function WaPanel({ initialStatus, consentAccepted, groups }: WaPanelProps
   const primaryButton =
     "min-h-11 w-full rounded-lg bg-terracotta-600 px-[18px] py-2 text-sm font-semibold text-white hover:bg-terracotta-700 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-charcoal/60 disabled:opacity-100 sm:w-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900";
   const secondaryButton =
-    "min-h-11 rounded-lg border border-charcoal/35 bg-white px-4 py-2 text-sm font-medium text-ink-900 hover:bg-cream-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 disabled:opacity-60";
+    "min-h-11 rounded-lg border border-charcoal/35 bg-panel-surface px-4 py-2 text-sm font-medium text-ink-900 hover:bg-cream-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 disabled:opacity-60";
 
   const qrSvg = qrValue !== null && qrImage?.value === qrValue ? qrImage.svg : null;
 
@@ -262,7 +262,7 @@ export function WaPanel({ initialStatus, consentAccepted, groups }: WaPanelProps
   return (
     <section
       aria-labelledby="wa-panel-title"
-      className="space-y-5 rounded-xl border border-stone-200 bg-[#FFFEFA] p-4 shadow-[0_4px_16px_rgb(38_51_45/5%)] md:p-6"
+      className="space-y-5 rounded-xl border border-stone-200 bg-panel-surface p-4 shadow-[0_4px_16px_rgb(38_51_45/5%)] md:p-6"
     >
       <div className="space-y-1">
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -272,7 +272,7 @@ export function WaPanel({ initialStatus, consentAccepted, groups }: WaPanelProps
           {/* Durum rozeti: bağlantının gerçek hali; aşama bilgisi altında küçük yardımcı metin. */}
           <span
             aria-hidden="true"
-            className="inline-flex items-center gap-1.5 rounded-full bg-[#EAE5D9] px-2.5 py-1 text-xs font-medium text-[#665D48]"
+            className="inline-flex items-center gap-1.5 rounded-full bg-panel-muted px-2.5 py-1 text-xs font-medium text-panel-badge-ink"
           >
             <span
               className={`h-1.5 w-1.5 rounded-full ${status.status === "connected" ? "bg-moss-700" : "bg-terracotta-600"}`}
@@ -334,7 +334,7 @@ export function WaPanel({ initialStatus, consentAccepted, groups }: WaPanelProps
         {status.status === "qr" && (
           <div className="space-y-3">
             {/* QR alanının yeri önceden ayrılır: kod gelince metin aşağı sıçramaz. QR'ın kendisi hareket etmez. */}
-            <div className="aspect-square w-full max-w-64 rounded-lg border border-stone-200 bg-white p-3">
+            <div className="aspect-square w-full max-w-64 rounded-lg border border-stone-200 bg-panel-surface p-3">
               {qrSvg ? (
                 <div
                   key={qrValue ?? ""}

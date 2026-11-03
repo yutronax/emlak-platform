@@ -136,6 +136,8 @@ export function AppHeader({
               <Link
                 key={s.href}
                 href={s.href}
+                // Bölüm geçişi animasyonunu yalnız sekme gezinmesi tetikler (PanelTransition).
+                transitionTypes={["panel-section"]}
                 aria-current={active ? "page" : undefined}
                 className={`flex h-11 items-center justify-center border-b-2 px-3 font-body text-sm whitespace-nowrap focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-terracotta-600 md:h-full ${
                   active

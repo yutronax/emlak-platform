@@ -210,7 +210,7 @@ export default async function VideoOrderDetailPage({
 
       <header className="flex flex-col gap-3">
         <span
-          className={`inline-flex w-fit rounded-full border bg-white px-3 py-1 text-sm font-medium ${badgeTone[order.status] ?? "border-mist-200 text-slate-500"}`}
+          className={`inline-flex w-fit rounded-full border bg-panel-surface px-3 py-1 text-sm font-medium ${badgeTone[order.status] ?? "border-mist-200 text-slate-500"}`}
         >
           {STATUS_LABELS[order.status]}
         </span>
@@ -220,7 +220,7 @@ export default async function VideoOrderDetailPage({
         <p className="text-slate-500">{SERVICE_NAMES[order.service_code]}</p>
       </header>
 
-      <dl className="flex flex-col gap-4 rounded-xl border border-mist-200 bg-white p-5">
+      <dl className="flex flex-col gap-4 rounded-xl border border-mist-200 bg-panel-surface p-5">
         <div className="flex flex-col gap-1">
           <dt className="text-sm text-slate-500">Adres</dt>
           <dd className="font-medium">{property?.address ?? "-"}</dd>
@@ -270,7 +270,7 @@ export default async function VideoOrderDetailPage({
             {assets.map((asset) => (
               <li
                 key={asset.id}
-                className="flex items-center justify-between gap-3 rounded-md border border-mist-200 bg-white px-4 py-3 text-sm"
+                className="flex items-center justify-between gap-3 rounded-md border border-mist-200 bg-panel-surface px-4 py-3 text-sm"
               >
                 <span className="font-medium">{KIND_LABELS[asset.kind]}</span>
                 <span className="text-slate-500">
@@ -287,13 +287,16 @@ export default async function VideoOrderDetailPage({
           <h2 className="font-display text-lg font-normal tracking-[-0.03em]">Teslim videonuz</h2>
           {deliveredUrl ? (
             <>
-              <video
-                controls
-                preload="metadata"
-                src={deliveredUrl}
-                aria-label="Teslim videosu"
-                className="w-full rounded-xl bg-ink-900"
-              />
+              {/* Teslim anı paneldeki tek "sahne": koyu çerçeve maskeyle açılır; oynatıcı ölçeklenmez. */}
+              <div className="panel-reveal overflow-hidden rounded-xl bg-panel-deep p-2 md:p-3">
+                <video
+                  controls
+                  preload="metadata"
+                  src={deliveredUrl}
+                  aria-label="Teslim videosu"
+                  className="w-full rounded-lg bg-panel-deep"
+                />
+              </div>
               <a href={deliveredUrl} download className={buttonLinkClass}>
                 İndir
               </a>

@@ -20,7 +20,7 @@ export default function Loading() {
           {[0, 1].map((i) => (
             <div
               key={i}
-              className="grid grid-cols-[64px_minmax(0,1fr)] gap-3 rounded-xl border border-stone-200 bg-[#FFFEFA] p-4 md:grid-cols-[96px_minmax(0,1fr)] md:gap-4 md:p-5"
+              className="grid grid-cols-[64px_minmax(0,1fr)] gap-3 rounded-xl border border-stone-200 bg-panel-surface p-4 md:grid-cols-[96px_minmax(0,1fr)] md:gap-4 md:p-5"
             >
               <div className="panel-skeleton h-16 w-16 rounded-lg md:h-24 md:w-24" />
               <div className="flex flex-col gap-2">

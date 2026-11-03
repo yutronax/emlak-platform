@@ -32,6 +32,15 @@
   --color-mist-200: #DCE1E0;
   --color-moss-700: #2F6E4F;
   --color-brick-700: #A23B2E;
+  /* Panel yüzey görevleri (awwwards-karsilastirma.md §1): renk değil rol adı. Varsayılanlar
+     Stellar Concrete'e düşer; editorial kapsam aşağıda kendi değerlerini verir. */
+  --color-panel-surface: #FFFFFF;
+  --color-panel-muted: var(--color-fog-50);
+  --color-panel-line: var(--color-mist-200);
+  --color-panel-line-strong: var(--color-ash-400);
+  --color-panel-deep: var(--color-ink-900);
+  --color-panel-accent-soft: rgb(193 83 43 / 10%);
+  --color-panel-badge-ink: var(--color-charcoal);
 }
 
 @keyframes auth-rise {
@@ -60,10 +69,18 @@
   --color-charcoal: #26332D;
   --color-cream-50: #F6F3EC;
   --color-stone-200: #DED8CC;
-  --color-fog-50: #F6F3EC;
+  /* fog/mist artık cream/stone'un kopyası değil: ikincil yüzey ve belirgin sınır. */
+  --color-fog-50: #EAE5D9;
   --color-terracotta-600: #B85C3B;
   --color-terracotta-700: #9C482E;
-  --color-mist-200: #DED8CC;
+  --color-mist-200: #C8C0B2;
+  --color-panel-surface: #FFFEFA;
+  --color-panel-muted: #EAE5D9;
+  --color-panel-line: #DED8CC;
+  --color-panel-line-strong: #C8C0B2;
+  --color-panel-deep: #1B2621;
+  --color-panel-accent-soft: #F1E1D7;
+  --color-panel-badge-ink: #665D48;
   --color-moss-700: #356247;
   --color-brick-700: #963D32;
   --radius-leaf: 10px;
@@ -115,6 +132,20 @@
   --ease-settle: cubic-bezier(.22, 1, .36, 1);
   --ease-ui: cubic-bezier(.2, 0, .2, 1);
   --motion-rise: 8px;
+  /* Sahne katmanı: yalnız büyük yüzey/medya geçişleri (sayfa değişimi, video maskesi).
+     Küçük tepkiler hızlı eğride kalır; iki katman karışmaz. */
+  --motion-scene: 420ms;
+  --motion-media: 520ms;
+  --ease-scene: cubic-bezier(.28, .11, .32, 1);
+  /* Tailwind'in transition-* sınıfları süre/eğri belirtilmezse bunları okur: paneldeki bütün
+     hover/renk geçişleri tek dosya düzenlemesiyle ortak 180ms + UI eğrisine bağlanır. */
+  --default-transition-duration: 180ms;
+  --default-transition-timing-function: cubic-bezier(.2, 0, .2, 1);
+}
+
+/* Gerçek düğmelerde basış geri bildirimi; bağlantılar ve kartlar basılınca küçülmez. */
+[data-panel-theme="editorial"] button:not(:disabled):active {
+  transform: scale(.99);
 }
 @media (max-width: 767px) {
   [data-panel-theme="editorial"] {
@@ -195,6 +226,37 @@
   }
 }
 
+/* Bölüm geçişi (View Transitions, PanelTransition): eski içerik hızlı söner, yeni içerik sahne
+   eğrisiyle hafifçe yükselerek gelir. Tam ekran perde yok; header aynı kaldığı için kıpırdamaz. */
+@keyframes panel-vt-out {
+  to { opacity: 0; }
+}
+@keyframes panel-vt-in {
+  from { opacity: 0; transform: translateY(6px); }
+}
+::view-transition-old(.panel-out) {
+  animation: panel-vt-out 160ms cubic-bezier(.2, 0, .2, 1) both;
+}
+::view-transition-new(.panel-in) {
+  animation: panel-vt-in 240ms cubic-bezier(.28, .11, .32, 1) 80ms both;
+}
+
+/* Medya sahnesi: video önizlemesi maskeyle açılır, gerçek bağlantılı kartta hover'da hafif büyür.
+   Oynatıcının kendisi ölçeklenmez; yalnız önizleme görseli. */
+@keyframes panel-reveal {
+  from { clip-path: inset(0 0 100% 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+@utility panel-reveal {
+  animation: panel-reveal var(--motion-media, 520ms) var(--ease-scene, ease-out) backwards;
+}
+@utility panel-media-zoom {
+  transition: transform var(--motion-enter, 320ms) var(--ease-scene, ease-out);
+  @media (hover: hover) and (pointer: fine) {
+    .group:hover & { transform: scale(1.02); }
+  }
+}
+
 /* Azaltılmış hareket: giriş, stagger, çizgi, spinner ve iskelet durur; renk, durum metni ve odak kalır. */
 @media (prefers-reduced-motion: reduce) {
   [data-panel-theme="editorial"],
@@ -205,6 +267,11 @@
     animation: none !important;
     transition: none !important;
     scroll-behavior: auto !important;
+  }
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation: none !important;
   }
 }
 

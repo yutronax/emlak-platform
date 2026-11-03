@@ -22,7 +22,7 @@ const FIELDS: Field[] = [
 ];
 
 const inputClass =
-  "min-h-11 w-full rounded-md border border-mist-200 bg-white px-3 py-2 text-base text-ink-900 focus-visible:outline-2 focus-visible:outline-terracotta-600 aria-[invalid=true]:border-brick-700";
+  "min-h-11 w-full rounded-md border border-mist-200 bg-panel-surface px-3 py-2 text-base text-ink-900 focus-visible:outline-2 focus-visible:outline-terracotta-600 aria-[invalid=true]:border-brick-700";
 
 // Teslim edilen videoyu vitrine çıkarma/kaldırma. Telefon onayı olmadan yayın yok (KVKK).
 export function ShowcaseForm({
@@ -79,7 +79,7 @@ export function ShowcaseForm({
     ) : null;
 
   return (
-    <section aria-labelledby="sc-title" className="flex flex-col gap-4 rounded-xl border border-mist-200 bg-white p-5">
+    <section aria-labelledby="sc-title" className="flex flex-col gap-4 rounded-xl border border-mist-200 bg-panel-surface p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 id="sc-title" className="font-display text-lg font-normal tracking-[-0.03em]">
           Vitrine çıkar

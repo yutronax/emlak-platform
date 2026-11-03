@@ -27,8 +27,9 @@ export function ListingCard({ listing, now, index }: { listing: FeedItem; now: D
 type Enter = { className: string; style: CSSProperties } | undefined;
 
 // Ana içerik yüzeyi: sıcak beyaz, taş çizgi, hafif gölge (kapsül ve rozetlerden ayrışır).
+// Terakota her kartın süsü değil; yalnız gerçek vurgu anlarına (kendi grubun rozeti, odak) ayrılır.
 const cardBase =
-  "@container flex h-full flex-col rounded-xl border border-stone-200 bg-[#FFFEFA] shadow-[0_4px_16px_rgb(38_51_45/5%)]";
+  "@container flex h-full flex-col rounded-xl border border-stone-200 bg-panel-surface shadow-[0_4px_16px_rgb(38_51_45/5%)]";
 
 const metaRow =
   "mt-auto flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-t border-stone-200 pt-3 text-sm text-charcoal/70";
@@ -42,7 +43,7 @@ function OpenListingCard({ listing, now, enter }: { listing: OpenFeedRow; now: D
   return (
     <li
       style={enter?.style}
-      className={`${cardBase} ${enter?.className ?? ""} border-t-2 border-t-terracotta-600 transition-colors duration-120 hover:border-charcoal/30 hover:border-t-terracotta-600 focus-within:border-terracotta-600`}
+      className={`${cardBase} ${enter?.className ?? ""} transition-colors duration-(--motion-ui) ease-(--ease-ui) hover:border-panel-line-strong focus-within:border-terracotta-600`}
     >
       <div className="grid h-full grid-cols-[64px_minmax(0,1fr)] gap-3 p-4 @md:grid-cols-[96px_minmax(0,1fr)] @md:gap-4 @md:p-5">
         <div aria-hidden="true" className="panel-placeholder h-16 w-16 rounded-lg @md:h-24 @md:w-24" />
@@ -68,9 +69,9 @@ function OpenListingCard({ listing, now, enter }: { listing: OpenFeedRow; now: D
           )}
           {(listing.rooms || listing.area_m2 !== null) && (
             <div className="mt-3 flex flex-wrap gap-1.5 text-xs font-medium text-ink-900">
-              {listing.rooms ? <span className="rounded-full bg-[#EAE5D9] px-2.5 py-1">{listing.rooms}</span> : null}
+              {listing.rooms ? <span className="rounded-full bg-panel-muted px-2.5 py-1">{listing.rooms}</span> : null}
               {listing.area_m2 !== null ? (
-                <span className="rounded-full bg-[#EAE5D9] px-2.5 py-1">{`${listing.area_m2} m²`}</span>
+                <span className="rounded-full bg-panel-muted px-2.5 py-1">{`${listing.area_m2} m²`}</span>
               ) : null}
             </div>
           )}
@@ -91,7 +92,7 @@ function LockedListingCard({ listing, now, enter }: { listing: LockedFeedRow; no
   return (
     <li style={enter?.style} className={`${cardBase} ${enter?.className ?? ""} bg-[#F6F3EC] p-4 shadow-none @md:p-5`}>
       <div className="flex items-start gap-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#EAE5D9] text-ink-900">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-panel-muted text-ink-900">
           <svg
             aria-hidden="true"
             viewBox="0 0 20 20"

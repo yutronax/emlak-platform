@@ -1,3 +1,4 @@
+import { PanelTransition } from "@/components/app-shell/panel-transition";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
@@ -42,6 +43,7 @@ export default async function WhatsAppPage() {
     : { status: "error", error_code: null };
 
   return (
+    <PanelTransition>
     <main className="mx-auto w-full max-w-6xl px-4 py-6 md:px-6 md:py-12">
       <h1 className="font-display text-[1.75rem] leading-tight tracking-[-0.025em] text-ink-900 md:text-4xl">WhatsApp</h1>
       <p className="mt-2 max-w-xl text-charcoal/75">
@@ -66,7 +68,7 @@ export default async function WhatsAppPage() {
               ["Grupları seçin", "Yalnız seçtiğiniz gruplardaki ilanlar okunur; sistem mesaj göndermez."],
             ].map(([title, body], i) => (
               <li key={title} className="flex gap-3">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#EAE5D9] text-xs font-semibold text-ink-900">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-panel-muted text-xs font-semibold text-ink-900">
                   {i + 1}
                 </span>
                 <span>
@@ -79,5 +81,6 @@ export default async function WhatsAppPage() {
         </aside>
       </div>
     </main>
+    </PanelTransition>
   );
 }

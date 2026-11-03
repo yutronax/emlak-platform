@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { PanelTransition } from "@/components/app-shell/panel-transition";
 import Link from "next/link";
 import { connection } from "next/server";
 import { redirect } from "next/navigation";
@@ -243,13 +244,14 @@ export default async function AgentDashboardPage({
   // Şifre yenileme sonrası yönlendirme işareti (/sifre-yenile).
   const passwordUpdated = params.password_updated === "1";
 
-  const card = "rounded-leaf border border-charcoal/10 bg-white";
+  const card = "rounded-leaf border border-charcoal/10 bg-panel-surface";
 
   return (
+    <PanelTransition>
     <main className="mx-auto w-full max-w-6xl px-4 py-6 font-body text-ink-900 md:px-6 md:py-12">
       <header className="panel-enter flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="inline-flex items-center gap-2 rounded-full bg-[#EAE5D9] px-2.5 py-1 text-xs font-medium text-[#665D48]">
+          <p className="inline-flex items-center gap-2 rounded-full bg-panel-muted px-2.5 py-1 text-xs font-medium text-panel-badge-ink">
             <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-terracotta-600" />
             {badge}
           </p>
@@ -296,9 +298,11 @@ export default async function AgentDashboardPage({
       )}
 
       {listings && !feedNoSubscription && (
-        <div className="panel-enter mt-6 flex flex-col gap-4 [--enter-delay:40ms] [--motion-enter:240ms] md:mt-8">
+        <div className="mt-6 flex flex-col gap-4 md:mt-8">
+          {/* Kapsayıcı kendisi saydamlıktan başlamaz: kartlar zaten kendi girişini yapar, üst üste
+              binen iki fade ilk kareyi gereğinden fazla silikleştirir. Yalnız sonuç satırı girer. */}
           {/* Sonuçlar önce: filtreler kapalı bir panelde, uygulananlar kapsül olarak dışarıda. */}
-          <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-stone-200 pb-3">
+          <div className="panel-enter flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 [--enter-delay:40ms] [--motion-enter:240ms] border-b border-stone-200 pb-3">
             <p className="text-sm font-semibold">
               {listings.feed.ok ? `Bu sayfada ${listings.feed.items.length} ilan` : "Sonuçlar yüklenemedi"}
             </p>
@@ -314,7 +318,7 @@ export default async function AgentDashboardPage({
             )}
           </div>
 
-          <details className="panel-details group rounded-xl border border-stone-200 bg-transparent open:bg-[#FFFEFA]">
+          <details className="panel-details group rounded-xl border border-stone-200 bg-transparent open:bg-panel-surface">
             <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm font-medium [&::-webkit-details-marker]:hidden">
               <span>
                 Filtrele
@@ -347,7 +351,7 @@ export default async function AgentDashboardPage({
                   <Link
                     href={f.removeHref}
                     aria-label={`${f.label}: ${f.value} filtresini kaldır`}
-                    className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-transparent bg-[#EAE5D9] px-3 text-xs font-medium hover:border-charcoal/40"
+                    className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-transparent bg-panel-muted px-3 text-xs font-medium hover:border-charcoal/40"
                   >
                     <span className="text-charcoal/70">{f.label}:</span>
                     <span className="max-w-[16rem] truncate">{f.value}</span>
@@ -405,5 +409,6 @@ export default async function AgentDashboardPage({
         </div>
       )}
     </main>
+    </PanelTransition>
   );
 }
