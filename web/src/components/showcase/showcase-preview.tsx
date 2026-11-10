@@ -36,7 +36,7 @@ export async function ShowcasePreview() {
             Tüm vitrin →
           </Link>
         </div>
-        <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-10 grid grid-cols-2 gap-3 md:gap-5 lg:grid-cols-4">
           {res.items.slice(0, 3).map((item) => (
             <li key={item.id} className="flex">
               <ShowcaseCard item={item} />

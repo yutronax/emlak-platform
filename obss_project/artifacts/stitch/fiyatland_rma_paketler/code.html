@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "on-tertiary": "#ffffff",
+          "on-primary": "#ffffff",
+          "error-container": "#ffdad6",
+          "primary-fixed": "#d7e6dd",
+          "secondary-container": "#ff946f",
+          "outline-variant": "#c3c8c3",
+          "on-surface-variant": "#434845",
+          "on-secondary-container": "#772b0e",
+          "on-primary-container": "#8d9b93",
+          "surface-container-highest": "#e5e2db",
+          "on-primary-fixed-variant": "#3c4a43",
+          "tertiary-fixed-dim": "#ccc6ba",
+          "secondary-fixed": "#ffdbcf",
+          "surface": "#fcf9f2",
+          "error": "#ba1a1a",
+          "on-tertiary-container": "#9c988d",
+          "inverse-primary": "#bbcac1",
+          "on-primary-fixed": "#111e19",
+          "surface-bright": "#fcf9f2",
+          "surface-container-high": "#ebe8e1",
+          "surface-dim": "#dcdad3",
+          "surface-container": "#f1eee7",
+          "primary-container": "#26332d",
+          "secondary-fixed-dim": "#ffb59c",
+          "on-secondary-fixed-variant": "#7b2e11",
+          "background": "#fcf9f2",
+          "inverse-surface": "#31312c",
+          "secondary": "#9a4526",
+          "on-secondary-fixed": "#390c00",
+          "on-tertiary-fixed": "#1e1b14",
+          "on-background": "#1c1c18",
+          "surface-container-lowest": "#ffffff",
+          "surface-variant": "#e5e2db",
+          "inverse-on-surface": "#f3f0e9",
+          "tertiary-container": "#333028",
+          "tertiary": "#1d1b14",
+          "on-secondary": "#ffffff",
+          "surface-container-low": "#f6f3ec",
+          "on-tertiary-fixed-variant": "#4a473e",
+          "primary-fixed-dim": "#bbcac1",
+          "surface-tint": "#54615a",
+          "outline": "#737875",
+          "primary": "#111e19",
+          "on-error-container": "#93000a",
+          "on-surface": "#1c1c18",
+          "on-error": "#ffffff",
+          "tertiary-fixed": "#e8e2d6"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "gutter-mobile": "1rem",
+          "space-md": "1rem",
+          "space-sm": "0.5rem",
+          "margin-mobile": "1.25rem",
+          "space-xl": "2.5rem",
+          "space-lg": "1.5rem",
+          "space-xs": "0.25rem",
+          "margin": "4rem",
+          "gutter": "1.5rem"
+        },
+        "fontFamily": {
+          "body-sm": ["Inter"],
+          "body-md": ["Inter"],
+          "headline-sm": ["Newsreader"],
+          "display-mobile": ["Newsreader"],
+          "label-sm": ["Inter"],
+          "headline-lg-mobile": ["Newsreader"],
+          "headline-md": ["Newsreader"],
+          "label-md": ["Inter"],
+          "body-lg": ["Inter"],
+          "display": ["Newsreader"],
+          "headline-lg": ["Newsreader"]
+        },
+        "fontSize": {
+          "body-sm": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+          "body-md": ["15px", {"lineHeight": "24px", "fontWeight": "400"}],
+          "headline-sm": ["22px", {"lineHeight": "30px", "fontWeight": "500"}],
+          "display-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+          "label-sm": ["11px", {"lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600"}],
+          "headline-lg-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+          "headline-md": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+          "label-md": ["13px", {"lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+          "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+          "display": ["56px", {"lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "400"}],
+          "headline-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.015em", "fontWeight": "400"}]
+        }
+      },
+    },
+  }</script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed"><header class="fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(38,51,45,0.04)]"><div class="max-w-[1360px] mx-auto px-gutter-mobile lg:px-margin h-20 flex items-center justify-between"><div class="flex items-center gap-space-lg"><a class="flex items-center gap-space-sm" data-path="anasayfa" href="#"><img alt="Emlak Platformu Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrCv0F-0ZQ4fkVeyuIw77gU9LiipvW0Robysh67G7lSPZ6JslcYm8YpYjHC1m161BjRhcnX3IWyfPlqoZu1kMwTvgquEZZLK6YG4K5yp9WcI5e7D2FfEGCXHip1rMN7TCquDQHs599YTxczxRf4aJb3QMMD32J3hdNZDOi0xGC6wnHQuqGgFQkXboNOi0av-3KxZdJO5Rj2UET26Taz5FunU8TNqghfyHhiiE9pm0zNn"/><span class="font-headline-sm text-headline-sm text-primary tracking-tight font-medium">Emlak Platformu</span></a></div><nav class="hidden lg:flex items-center gap-space-xl" data-active-classes="text-primary font-medium"><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="vitrin" href="#">Vitrin</a><a aria-current="page" class="transition-colors text-primary font-medium" data-path="fiyatlar" href="#">Fiyatlar</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="video-uretimi" href="#">Video Üretimi</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="nasil-calisir" href="#">Nasıl Çalışır?</a></nav><div class="flex items-center gap-space-md"><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface px-space-md py-space-sm rounded-lg transition-colors" data-path="giris-yap" href="#">Giriş Yap</a><a class="bg-primary-container text-on-primary font-label-md text-label-md px-space-lg py-space-sm rounded-full shadow-[0_4px_12px_rgba(38,51,45,0.15)] hover:bg-primary transition-all duration-200 ease-out" data-path="kayit-ol" href="#">Ücretsiz Başla</a></div></div></header><main class="w-full pt-20 bg-surface min-h-screen"><div class="flex flex-col w-full">
+<!-- Minimalist Editorial Hero & Toggle -->
+<section class="relative w-full max-w-[1360px] mx-auto px-gutter-mobile lg:px-margin pt-12 pb-16 text-center">
+<div class="inline-flex items-center gap-space-xs px-space-md py-1 rounded-full bg-secondary/10 text-secondary mb-space-md">
+<span class="material-symbols-outlined text-sm">verified</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Şeffaf Tarife &amp; Taahhütsüz Başlangıç</span>
+</div>
+<h1 class="font-display text-display text-primary max-w-3xl mx-auto mb-space-md tracking-tight">
+      Şeffaf ve Esnek Paketler
+    </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mb-space-xl">
+      Portföyünüzü yapay zeka ve dikey videolarla büyütün. 14 gün ücretsiz deneme dahildir, kredi kartı gerekmez.
+    </p>
+<!-- Billing Toggle (Monthly / Annual) -->
+<div class="inline-flex items-center p-1.5 rounded-full bg-surface-container shadow-sm mx-auto">
+<button class="billing-btn px-space-lg py-2.5 rounded-full font-label-md text-label-md transition-all duration-200 bg-primary text-on-primary shadow-sm" id="toggle-monthly" onclick="switchBilling('monthly')" type="button">
+        Aylık Ödeme
+      </button>
+<button class="billing-btn px-space-lg py-2.5 rounded-full font-label-md text-label-md transition-all duration-200 text-on-surface-variant hover:text-on-surface flex items-center gap-1.5" id="toggle-annual" onclick="switchBilling('annual')" type="button">
+<span>Yıllık Ödeme</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-[10px] uppercase font-bold tracking-tight">
+          %20 İndirimli
+        </span>
+</button>
+</div>
+</section>
+<!-- Pricing Cards (3 tiers) -->
+<section class="w-full max-w-[1360px] mx-auto px-gutter-mobile lg:px-margin pb-20">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-space-lg items-stretch">
+<!-- Plan 1: Başlangıç -->
+<div class="bg-surface-container-lowest rounded-xl p-space-xl flex flex-col justify-between shadow-[0_4px_24px_rgba(38,51,45,0.03)] hover:shadow-lg transition-all duration-300">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant">Bireysel</span>
+<span class="material-symbols-outlined text-outline">apartment</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-primary mb-space-xs">Başlangıç</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-lg min-h-[40px]">
+            Bireysel ve yeni başlayan bağımsız danışmanlar için ideal giriş seviyesi.
+          </p>
+<div class="flex items-baseline gap-1 mb-space-lg pb-space-lg bg-surface-container-low p-space-md rounded-lg">
+<span class="font-display text-display text-primary plan-price" data-annual="79" data-monthly="99">99</span>
+<span class="font-body-md text-body-md text-on-surface-variant">₺</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/ ay</span>
+<span class="annual-note hidden ml-auto font-label-sm text-label-sm text-secondary bg-secondary-fixed/50 px-2 py-0.5 rounded">Yıllık faturalandırılır</span>
+</div>
+<ul class="space-y-space-md mb-space-xl">
+<li class="flex items-start gap-space-sm font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">check_circle</span>
+<span><strong>5 WhatsApp</strong> grubu bağlantısı</span>
+</li>
+<li class="flex items-start gap-space-sm font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">check_circle</span>
+<span>Günlük <strong>50 ilan</strong> filtreleme ve tekilleştirme</span>
+</li>
+<li class="flex items-start gap-space-sm font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">check_circle</span>
+<span>Standart portföy vitrin sayfası</span>
+</li>
+<li class="flex items-start gap-space-sm font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">check_circle</span>
+<span>Topluluk &amp; e-posta desteği</span>
+</li>
+<li class="flex items-start gap-space-sm font-body-sm text-body-sm text-outline">
+<span class="material-symbols-outlined text-outline-variant text-base mt-0.5">remove</span>
+<span>Otomatik yapay zeka video kredisi</span>
+</li>
+</ul>
+</div>
+<button class="w-full py-3.5 px-space-lg rounded-full font-label-md text-label-md bg-surface-container hover:bg-surface-container-high text-primary transition-all text-center" type="button">
+          Hemen Başla
+        </button>
+</div>
+<!-- Plan 2: Profesyonel (Featured) -->
+<div class="relative bg-surface-container-lowest rounded-xl p-space-xl flex flex-col justify-between shadow-[0_16px_40px_rgba(38,51,45,0.08)] bg-gradient-to-b from-surface-container-lowest to-surface-container-low lg:-translate-y-2">
+<div class="absolute -top-3.5 left-1/2 -translate-x-1/2">
+<span class="bg-secondary text-on-secondary px-space-md py-1 rounded-full font-label-sm text-label-sm tracking-wider uppercase shadow-sm">
+            En Çok Tercih Edilen
+          </span>
+</div>
+<div>
+<div class="flex items-center justify-between mb-space-sm mt-2">
+<span class="font-label-md text-label-md uppercase tracking-wider text-secondary font-bold">Profesyonel</span>
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">stars</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-primary mb-space-xs">Profesyonel</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-lg min-h-[40px]">
+            Hızlı portföy kapatan ve dijitalde öne çıkmak isteyen aktif gayrimenkul profesyonelleri için.
+          </p>
+<div class="flex items-baseline gap-1 mb-space-lg pb-space-lg bg-surface-container p-space-md rounded-lg">
+<span class="font-display text-display text-primary plan-price" data-annual="239" data-monthly="299">299</span>
+<span class="font-body-md text-body-md text-on-surface-variant">₺</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/ ay</span>
+<span class="annual-note hidden ml-auto font-label-sm text-label-sm text-secondary bg-secondary-fixed/50 px-2 py-0.5 rounded">Yıllık faturalandırılır</span>
+</div>
+<ul class="space-y-space-md mb-space-xl">
+<li class="flex items-start gap-space-sm font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-secondary text-base mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span><strong>Sınırsız</strong> WhatsApp grubu dinleme</span>
+</li>
+<li class="flex items-start gap-space-sm font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-secondary text-base mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Yapay zeka ile anlık tekilleştirme &amp; özetleme</span>
+</li>
+<li class="flex items-start gap-space-sm font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-secondary text-base mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span><strong>Ayda 3 profesyonel 9:16 dikey video</strong> (AI seslendirme + altyazı)</span>
+</li>
+<li class="flex items-start gap-space-sm font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-secondary text-base mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Öncelikli vitrin sıralaması &amp; özel danışman linki</span>
+</li>
+<li class="flex items-start gap-space-sm font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-secondary text-base mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Özel WhatsApp hızlı destek hattı</span>
+</li>
+</ul>
+</div>
+<button class="w-full py-3.5 px-space-lg rounded-full font-label-md text-label-md bg-secondary text-on-secondary hover:opacity-95 shadow-[0_4px_16px_rgba(184,92,59,0.25)] transition-all text-center" type="button">
+          14 Gün Ücretsiz Dene
+        </button>
+</div>
+<!-- Plan 3: Ajans & Ofis -->
+<div class="bg-surface-container-lowest rounded-xl p-space-xl flex flex-col justify-between shadow-[0_4px_24px_rgba(38,51,45,0.03)] hover:shadow-lg transition-all duration-300">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant">Kurumsal</span>
+<span class="material-symbols-outlined text-outline">domain</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-primary mb-space-xs">Ajans &amp; Ofis</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-lg min-h-[40px]">
+            Butik gayrimenkul ofisleri ve geniş portföy yöneten profesyonel ekipler için.
+          </p>
+<div class="flex items-baseline gap-1 mb-space-lg pb-space-lg bg-surface-container-low p-space-md rounded-lg">
+<span class="font-display text-display text-primary plan-price" data-annual="479" data-monthly="599">599</span>
+<span class="font-body-md text-body-md text-on-surface-variant">₺</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/ ay</span>
+<span class="annual-note hidden ml-auto font-label-sm text-label-sm text-secondary bg-secondary-fixed/50 px-2 py-0.5 rounded">Yıllık faturalandırılır</span>
+</div>
+<ul class="space-y-space-md mb-space-xl">
+<li class="flex items-start gap-space-sm font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">check_circle</span>
+<span><strong>Çoklu kullanıcı</strong> hesabı (tüm ofis danışmanları)</span>
+</li>
+<li class="flex items-start gap-space-sm font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">check_circle</span>
+<span>Sınırsız ilan analizi ve WhatsApp grubu</span>
+</li>
+<li class="flex items-start gap-space-sm font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">check_circle</span>
+<span><strong>Ayda 10 dikey video</strong> üretim kredisi</span>
+</li>
+<li class="flex items-start gap-space-sm font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">check_circle</span>
+<span>Özel kurumsal marka şablonu (logo &amp; filigran)</span>
+</li>
+<li class="flex items-start gap-space-sm font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">check_circle</span>
+<span>7/24 özel müşteri temsilcisi &amp; API erişimi</span>
+</li>
+</ul>
+</div>
+<button class="w-full py-3.5 px-space-lg rounded-full font-label-md text-label-md bg-primary-container text-on-primary hover:bg-primary transition-all text-center" type="button">
+          İletişime Geç
+        </button>
+</div>
+</div>
+</section>
+<!-- Guarantee Banner -->
+<section class="w-full max-w-[1360px] mx-auto px-gutter-mobile lg:px-margin pb-20">
+<div class="rounded-xl bg-primary-container text-on-primary p-space-xl flex flex-col md:flex-row items-center justify-between gap-space-lg shadow-xl relative overflow-hidden">
+<!-- Abstract subtle pattern -->
+<div class="absolute right-0 top-0 bottom-0 w-1/3 opacity-10 pointer-events-none flex items-center justify-center">
+<svg class="w-full h-full" fill="currentColor" viewbox="0 0 200 200">
+<circle cx="100" cy="100" fill="none" r="80" stroke="currentColor" stroke-width="4"></circle>
+<path d="M 60,100 L 90,130 L 140,70" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="8"></path>
+</svg>
+</div>
+<div class="space-y-space-xs max-w-xl z-10">
+<div class="inline-flex items-center gap-space-xs px-2.5 py-1 rounded-full bg-surface-container-lowest/15 text-primary-fixed mb-1">
+<span class="material-symbols-outlined text-sm">lock_open</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Risksiz Deneyim</span>
+</div>
+<h3 class="font-headline-md text-headline-md tracking-tight">14 gün boyunca tüm özellikleri taahhütsüz deneyin</h3>
+<p class="font-body-md text-body-md text-primary-fixed-dim">
+          Kart bilgisi girmeden platformu hemen test edin. Memnun kalmazsanız hiçbir ücret ödemeden ayrılabilirsiniz.
+        </p>
+</div>
+<div class="flex items-center gap-space-md shrink-0 z-10">
+<a class="bg-secondary text-on-secondary px-space-xl py-3.5 rounded-full font-label-md text-label-md hover:opacity-95 shadow-md transition-all" href="#">
+          Hemen Başlayın
+        </a>
+</div>
+</div>
+</section>
+<!-- Feature Comparison Table -->
+<section class="w-full max-w-[1360px] mx-auto px-gutter-mobile lg:px-margin pb-24">
+<div class="text-center mb-space-xl">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-bold">Detaylı İnceleme</span>
+<h2 class="font-headline-lg text-headline-lg text-primary mt-space-xs">Özellik Karşılaştırması</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xl mx-auto mt-space-xs">
+        İhtiyaçlarınıza en uygun paketi belirlemek için sunduğumuz tüm özellikleri yan yana inceleyin.
+      </p>
+</div>
+<!-- Responsive Table Container -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-x-auto">
+<table class="w-full text-left border-collapse min-w-[680px]">
+<thead>
+<tr class="bg-surface-container-low text-primary">
+<th class="p-space-lg font-label-md text-label-md uppercase tracking-wider w-2/5">Özellikler</th>
+<th class="p-space-lg font-headline-sm text-headline-sm text-center w-1/5">Başlangıç</th>
+<th class="p-space-lg font-headline-sm text-headline-sm text-center w-1/5 bg-secondary-fixed/30 text-secondary">Profesyonel</th>
+<th class="p-space-lg font-headline-sm text-headline-sm text-center w-1/5">Ajans &amp; Ofis</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm text-on-surface">
+<!-- WhatsApp Section -->
+<tr class="bg-surface-container">
+<td class="py-2.5 px-space-lg font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant" colspan="4">WhatsApp &amp; Veri Toplama</td>
+</tr>
+<tr>
+<td class="p-space-lg text-on-surface font-medium">WhatsApp Grup Bağlantısı</td>
+<td class="p-space-lg text-center text-on-surface-variant">5 Grup</td>
+<td class="p-space-lg text-center font-bold text-secondary bg-secondary-fixed/10">Sınırsız</td>
+<td class="p-space-lg text-center font-semibold">Sınırsız</td>
+</tr>
+<tr class="bg-surface-container-low/50">
+<td class="p-space-lg text-on-surface font-medium">Günlük Mesaj Analiz Limiti</td>
+<td class="p-space-lg text-center text-on-surface-variant">50 İlan</td>
+<td class="p-space-lg text-center font-bold text-secondary bg-secondary-fixed/10">Sınırsız</td>
+<td class="p-space-lg text-center font-semibold">Sınırsız</td>
+</tr>
+<tr>
+<td class="p-space-lg text-on-surface font-medium">Yapay Zeka Tekilleştirme &amp; Özetleme</td>
+<td class="p-space-lg text-center text-outline-variant"><span class="material-symbols-outlined text-sm">remove</span></td>
+<td class="p-space-lg text-center bg-secondary-fixed/10"><span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="p-space-lg text-center"><span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+</tr>
+<!-- Video Studio Section -->
+<tr class="bg-surface-container">
+<td class="py-2.5 px-space-lg font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant" colspan="4">Video &amp; Görsel Üretim</td>
+</tr>
+<tr>
+<td class="p-space-lg text-on-surface font-medium">Aylık Dikey Video Kredisi (9:16)</td>
+<td class="p-space-lg text-center text-outline-variant">—</td>
+<td class="p-space-lg text-center font-bold text-secondary bg-secondary-fixed/10">3 Video / Ay</td>
+<td class="p-space-lg text-center font-semibold">10 Video / Ay</td>
+</tr>
+<tr class="bg-surface-container-low/50">
+<td class="p-space-lg text-on-surface font-medium">AI Seslendirme ve Altyazı Desteği</td>
+<td class="p-space-lg text-center text-outline-variant">—</td>
+<td class="p-space-lg text-center bg-secondary-fixed/10"><span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="p-space-lg text-center"><span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+</tr>
+<tr>
+<td class="p-space-lg text-on-surface font-medium">Özel Ofis Filigranı &amp; Logo</td>
+<td class="p-space-lg text-center text-outline-variant"><span class="material-symbols-outlined text-sm">remove</span></td>
+<td class="p-space-lg text-center text-outline-variant bg-secondary-fixed/10"><span class="material-symbols-outlined text-sm">remove</span></td>
+<td class="p-space-lg text-center"><span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+</tr>
+<!-- Vitrin & Ekip Section -->
+<tr class="bg-surface-container">
+<td class="py-2.5 px-space-lg font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant" colspan="4">Vitrin &amp; Organizasyon</td>
+</tr>
+<tr>
+<td class="p-space-lg text-on-surface font-medium">Kullanıcı Sayısı</td>
+<td class="p-space-lg text-center text-on-surface-variant">1 Danışman</td>
+<td class="p-space-lg text-center font-medium bg-secondary-fixed/10">1 Danışman</td>
+<td class="p-space-lg text-center font-semibold">Çoklu Kullanıcı (Ofis)</td>
+</tr>
+<tr class="bg-surface-container-low/50">
+<td class="p-space-lg text-on-surface font-medium">Özel Portföy Vitrin Sayfası</td>
+<td class="p-space-lg text-center">Standart</td>
+<td class="p-space-lg text-center font-bold text-secondary bg-secondary-fixed/10">Öncelikli Sıralama</td>
+<td class="p-space-lg text-center font-semibold">Özel Ofis Domaini</td>
+</tr>
+<tr>
+<td class="p-space-lg text-on-surface font-medium">Destek &amp; Müşteri Yöneticisi</td>
+<td class="p-space-lg text-center text-on-surface-variant">E-posta &amp; Topluluk</td>
+<td class="p-space-lg text-center font-medium bg-secondary-fixed/10">Özel WhatsApp Hattı</td>
+<td class="p-space-lg text-center font-semibold">7/24 Birebir Danışman</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- FAQ Accordion Section -->
+<section class="w-full max-w-[1040px] mx-auto px-gutter-mobile lg:px-margin pb-28">
+<div class="text-center mb-space-xl">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-bold">Aklınıza Takılanlar</span>
+<h2 class="font-headline-lg text-headline-lg text-primary mt-space-xs">Sıkça Sorulan Sorular</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-xs">
+        Ödeme yöntemleri, video kredileri ve abonelik süreçlerine dair merak edilen tüm cevaplar.
+      </p>
+</div>
+<div class="space-y-space-md" id="faq-accordion">
+<!-- Q1 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm transition-all">
+<button class="faq-toggle w-full flex items-center justify-between text-left focus:outline-none" onclick="toggleFaq(this)" type="button">
+<span class="font-headline-sm text-headline-sm text-primary pr-space-md">14 günlük ücretsiz deneme nasıl çalışır?</span>
+<span class="faq-icon material-symbols-outlined text-primary transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content hidden pt-space-md text-on-surface-variant font-body-md text-body-md leading-relaxed">
+          Kayıt olduğunuz anda Profesyonel paketin tüm özellikleri 14 gün boyunca hesabınıza tanımlanır. Kredi kartı veya ön ödeme gerekmez. Deneme süresi sonunda dilediğiniz paketi seçebilir ya da hiçbir ücret ödemeden kullanımınızı sonlandırabilirsiniz.
+        </div>
+</div>
+<!-- Q2 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm transition-all">
+<button class="faq-toggle w-full flex items-center justify-between text-left focus:outline-none" onclick="toggleFaq(this)" type="button">
+<span class="font-headline-sm text-headline-sm text-primary pr-space-md">Kullanılmayan video kredileri sonraki aya devreder mi?</span>
+<span class="faq-icon material-symbols-outlined text-primary transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content hidden pt-space-md text-on-surface-variant font-body-md text-body-md leading-relaxed">
+          Evet, aktif aboneliğiniz devam ettiği sürece kullanmadığınız dikey video kredileri 60 gün boyunca havuzunuzda saklanır ve bir sonraki fatura dönemine devreder. Ek video ihtiyacınız olduğunda panel üzerinden dilediğiniz zaman uygun fiyatlı ek video paketleri alabilirsiniz.
+        </div>
+</div>
+<!-- Q3 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm transition-all">
+<button class="faq-toggle w-full flex items-center justify-between text-left focus:outline-none" onclick="toggleFaq(this)" type="button">
+<span class="font-headline-sm text-headline-sm text-primary pr-space-md">İstediğim zaman paket değiştirebilir veya iptal edebilir miyim?</span>
+<span class="faq-icon material-symbols-outlined text-primary transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content hidden pt-space-md text-on-surface-variant font-body-md text-body-md leading-relaxed">
+          Kesinlikle. Aboneliğinizi profil ayarlarınızdan tek bir tıkla dondurabilir veya iptal edebilirsiniz. Herhangi bir cayma bedeli veya taahhüt bulunmaz. Paket yükseltmelerinde aradaki gün farkı otomatik olarak hesabınıza mahsup edilir.
+        </div>
+</div>
+<!-- Q4 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm transition-all">
+<button class="faq-toggle w-full flex items-center justify-between text-left focus:outline-none" onclick="toggleFaq(this)" type="button">
+<span class="font-headline-sm text-headline-sm text-primary pr-space-md">Ofis ve ajanslar için faturalandırma ve KDV süreçleri nasıl ilerler?</span>
+<span class="faq-icon material-symbols-outlined text-primary transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content hidden pt-space-md text-on-surface-variant font-body-md text-body-md leading-relaxed">
+          Tüm fiyatlarımıza e-arşiv veya kurumsal e-fatura dahil olup, ödeme işleminiz sonrasında şirket bilgileriniz doğrultusunda faturanız anında e-posta adresinize iletilir. Toplu lisans veya kurumsal sözleşme talepleriniz için ofis ekibimizle özel teklif çalışılabilir.
+        </div>
+</div>
+</div>
+</section>
+</div>
+<script>
+  function switchBilling(period) {
+    const monthlyBtn = document.getElementById('toggle-monthly');
+    const annualBtn = document.getElementById('toggle-annual');
+    const prices = document.querySelectorAll('.plan-price');
+    const notes = document.querySelectorAll('.annual-note');
+
+    if (period === 'annual') {
+      monthlyBtn.classList.remove('bg-primary', 'text-on-primary');
+      monthlyBtn.classList.add('text-on-surface-variant');
+      
+      annualBtn.classList.add('bg-primary', 'text-on-primary');
+      annualBtn.classList.remove('text-on-surface-variant');
+
+      prices.forEach(p => {
+        p.textContent = p.getAttribute('data-annual');
+      });
+      notes.forEach(n => n.classList.remove('hidden'));
+    } else {
+      annualBtn.classList.remove('bg-primary', 'text-on-primary');
+      annualBtn.classList.add('text-on-surface-variant');
+      
+      monthlyBtn.classList.add('bg-primary', 'text-on-primary');
+      monthlyBtn.classList.remove('text-on-surface-variant');
+
+      prices.forEach(p => {
+        p.textContent = p.getAttribute('data-monthly');
+      });
+      notes.forEach(n => n.classList.add('hidden'));
+    }
+  }
+
+  function toggleFaq(btn) {
+    const content = btn.nextElementSibling;
+    const icon = btn.querySelector('.faq-icon');
+    const isHidden = content.classList.contains('hidden');
+
+    // Close all FAQs first
+    document.querySelectorAll('.faq-content').forEach(c => c.classList.add('hidden'));
+    document.querySelectorAll('.faq-icon').forEach(i => i.classList.remove('rotate-180'));
+
+    if (isHidden) {
+      content.classList.remove('hidden');
+      icon.classList.add('rotate-180');
+    }
+  }
+</script></main><footer class="w-full bg-surface-container-low"><div class="max-w-[1360px] mx-auto px-gutter-mobile lg:px-margin py-space-xl"><div class="grid grid-cols-1 md:grid-cols-4 gap-space-xl pb-space-xl"><div class="space-y-space-md"><div class="flex items-center gap-space-sm"><img alt="Emlak Platformu Logo" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrCv0F-0ZQ4fkVeyuIw77gU9LiipvW0Robysh67G7lSPZ6JslcYm8YpYjHC1m161BjRhcnX3IWyfPlqoZu1kMwTvgquEZZLK6YG4K5yp9WcI5e7D2FfEGCXHip1rMN7TCquDQHs599YTxczxRf4aJb3QMMD32J3hdNZDOi0xGC6wnHQuqGgFQkXboNOi0av-3KxZdJO5Rj2UET26Taz5FunU8TNqghfyHhiiE9pm0zNn"/><span class="font-headline-sm text-headline-sm text-primary">Emlak Platformu</span></div><p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">Yüksek performanslı gayrimenkul danışmanları ve butik ofisler için yeni nesil portföy, vitrin ve mimari pazarlama ekosistemi.</p></div><div><h4 class="font-label-md text-label-md text-primary uppercase tracking-wider mb-space-md">Platform</h4><ul class="space-y-space-sm"><li class="font-body-sm text-body-sm text-on-surface-variant">Portföy Yönetimi</li><li class="font-body-sm text-body-sm text-on-surface-variant">Yapay Zeka Video Stüdyosu</li><li class="font-body-sm text-body-sm text-on-surface-variant">Baskı &amp; Dijital Broşür</li><li class="font-body-sm text-body-sm text-on-surface-variant">Müşteri CRM</li></ul></div><div><h4 class="font-label-md text-label-md text-primary uppercase tracking-wider mb-space-md">Kaynaklar</h4><ul class="space-y-space-sm"><li class="font-body-sm text-body-sm text-on-surface-variant">Mimari Şablonlar</li><li class="font-body-sm text-body-sm text-on-surface-variant">Gayrimenkul Trend Raporu</li><li class="font-body-sm text-body-sm text-on-surface-variant">Entegrasyonlar</li><li class="font-body-sm text-body-sm text-on-surface-variant">API &amp; Geliştirici</li></ul></div><div><h4 class="font-label-md text-label-md text-primary uppercase tracking-wider mb-space-md">İletişim</h4><p class="font-body-sm text-body-sm text-on-surface-variant mb-space-sm">Nişantaşı, Teşvikiye Cad. No: 42<br/>Şişli, İstanbul</p><p class="font-body-sm text-body-sm text-on-surface-variant">destek@emlakplatformu.com</p></div></div><div class="pt-space-lg flex flex-col md:flex-row items-center justify-between gap-space-md"><p class="font-body-sm text-body-sm text-on-surface-variant">© 2025 Emlak Platformu. Tüm hakları saklıdır.</p><div class="flex items-center gap-space-lg"><span class="font-label-sm text-label-sm text-on-surface-variant">Gizlilik Politikası</span><span class="font-label-sm text-label-sm text-on-surface-variant">Kullanım Koşulları</span><span class="font-label-sm text-label-sm text-on-surface-variant">KVKK Aydınlatma Metni</span></div></div></div></footer></body></html>

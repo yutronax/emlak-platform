@@ -1,7 +1,7 @@
 import type { InputHTMLAttributes } from "react";
 
 export const inputClass =
-  "rounded-md border border-mist-200 bg-white px-3 py-2.5 text-ink-900 aria-[invalid=true]:border-brick-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-terracotta-600";
+  "min-h-11 rounded-lg border border-panel-line bg-panel-muted/40 px-3 py-2.5 text-ink-900 transition-colors focus-visible:bg-panel-surface aria-[invalid=true]:border-brick-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-terracotta-600";
 
 export function FieldError({ id, message }: { id: string; message?: string }) {
   if (!message) return null;
@@ -51,7 +51,7 @@ export function GoogleButton({ onClick, disabled }: { onClick: () => void; disab
         type="button"
         onClick={onClick}
         disabled={disabled}
-        className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-mist-200 bg-white px-4 py-2.5 font-medium text-ink-900 hover:bg-mist-200/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-600 disabled:opacity-50"
+        className="inline-flex w-full items-center justify-center gap-2 min-h-11 rounded-lg border border-panel-line bg-panel-muted px-4 py-2.5 font-medium text-ink-900 hover:bg-panel-line focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-600 disabled:opacity-50"
       >
         <span aria-hidden="true" className="font-display font-normal tracking-[-0.03em] text-terracotta-600">
           G

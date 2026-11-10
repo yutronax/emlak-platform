@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "on-tertiary": "#ffffff",
+          "on-primary": "#ffffff",
+          "error-container": "#ffdad6",
+          "primary-fixed": "#d7e6dd",
+          "secondary-container": "#ff946f",
+          "outline-variant": "#c3c8c3",
+          "on-surface-variant": "#434845",
+          "on-secondary-container": "#772b0e",
+          "on-primary-container": "#8d9b93",
+          "surface-container-highest": "#e5e2db",
+          "on-primary-fixed-variant": "#3c4a43",
+          "tertiary-fixed-dim": "#ccc6ba",
+          "secondary-fixed": "#ffdbcf",
+          "surface": "#fcf9f2",
+          "error": "#ba1a1a",
+          "on-tertiary-container": "#9c988d",
+          "inverse-primary": "#bbcac1",
+          "on-primary-fixed": "#111e19",
+          "surface-bright": "#fcf9f2",
+          "surface-container-high": "#ebe8e1",
+          "surface-dim": "#dcdad3",
+          "surface-container": "#f1eee7",
+          "primary-container": "#26332d",
+          "secondary-fixed-dim": "#ffb59c",
+          "on-secondary-fixed-variant": "#7b2e11",
+          "background": "#fcf9f2",
+          "inverse-surface": "#31312c",
+          "secondary": "#9a4526",
+          "on-secondary-fixed": "#390c00",
+          "on-tertiary-fixed": "#1e1b14",
+          "on-background": "#1c1c18",
+          "surface-container-lowest": "#ffffff",
+          "surface-variant": "#e5e2db",
+          "inverse-on-surface": "#f3f0e9",
+          "tertiary-container": "#333028",
+          "tertiary": "#1d1b14",
+          "on-secondary": "#ffffff",
+          "surface-container-low": "#f6f3ec",
+          "on-tertiary-fixed-variant": "#4a473e",
+          "primary-fixed-dim": "#bbcac1",
+          "surface-tint": "#54615a",
+          "outline": "#737875",
+          "primary": "#111e19",
+          "on-error-container": "#93000a",
+          "on-surface": "#1c1c18",
+          "on-error": "#ffffff",
+          "tertiary-fixed": "#e8e2d6"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "gutter-mobile": "1rem",
+          "space-md": "1rem",
+          "space-sm": "0.5rem",
+          "margin-mobile": "1.25rem",
+          "space-xl": "2.5rem",
+          "space-lg": "1.5rem",
+          "space-xs": "0.25rem",
+          "margin": "4rem",
+          "gutter": "1.5rem"
+        },
+        "fontFamily": {
+          "body-sm": ["Inter"],
+          "body-md": ["Inter"],
+          "headline-sm": ["Newsreader"],
+          "display-mobile": ["Newsreader"],
+          "label-sm": ["Inter"],
+          "headline-lg-mobile": ["Newsreader"],
+          "headline-md": ["Newsreader"],
+          "label-md": ["Inter"],
+          "body-lg": ["Inter"],
+          "display": ["Newsreader"],
+          "headline-lg": ["Newsreader"]
+        },
+        "fontSize": {
+          "body-sm": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+          "body-md": ["15px", {"lineHeight": "24px", "fontWeight": "400"}],
+          "headline-sm": ["22px", {"lineHeight": "30px", "fontWeight": "500"}],
+          "display-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+          "label-sm": ["11px", {"lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600"}],
+          "headline-lg-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+          "headline-md": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+          "label-md": ["13px", {"lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+          "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+          "display": ["56px", {"lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "400"}],
+          "headline-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.015em", "fontWeight": "400"}]
+        }
+      },
+    },
+  }</script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed"><header class="fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(38,51,45,0.04)]"><div class="max-w-[1360px] mx-auto px-gutter-mobile lg:px-margin h-20 flex items-center justify-between"><div class="flex items-center gap-space-lg"><a class="flex items-center gap-space-sm" data-path="anasayfa" href="#"><img alt="Emlak Platformu Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrCv0F-0ZQ4fkVeyuIw77gU9LiipvW0Robysh67G7lSPZ6JslcYm8YpYjHC1m161BjRhcnX3IWyfPlqoZu1kMwTvgquEZZLK6YG4K5yp9WcI5e7D2FfEGCXHip1rMN7TCquDQHs599YTxczxRf4aJb3QMMD32J3hdNZDOi0xGC6wnHQuqGgFQkXboNOi0av-3KxZdJO5Rj2UET26Taz5FunU8TNqghfyHhiiE9pm0zNn"/><span class="font-headline-sm text-headline-sm text-primary tracking-tight font-medium">Emlak Platformu</span></a></div><nav class="hidden lg:flex items-center gap-space-xl" data-active-classes="text-primary font-medium"><a aria-current="page" class="transition-colors text-primary font-medium" data-path="vitrin" href="#">Vitrin</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="fiyatlar" href="#">Fiyatlar</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="video-uretimi" href="#">Video Üretimi</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="nasil-calisir" href="#">Nasıl Çalışır?</a></nav><div class="flex items-center gap-space-md"><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface px-space-md py-space-sm rounded-lg transition-colors" data-path="giris-yap" href="#">Giriş Yap</a><a class="bg-primary-container text-on-primary font-label-md text-label-md px-space-lg py-space-sm rounded-full shadow-[0_4px_12px_rgba(38,51,45,0.15)] hover:bg-primary transition-all duration-200 ease-out" data-path="kayit-ol" href="#">Ücretsiz Başla</a></div></div></header><main class="w-full pt-20 bg-surface min-h-screen"><div class="flex flex-col w-full">
+<!-- Top Subtle Ambient Light & Hero Header -->
+<section class="relative w-full bg-surface-container-low px-gutter-mobile lg:px-margin pt-space-xl pb-space-lg overflow-hidden">
+<div class="absolute -right-20 -top-20 w-96 h-96 rounded-full bg-secondary/5 blur-3xl pointer-events-none"></div>
+<div class="absolute -left-20 top-1/2 w-80 h-80 rounded-full bg-primary-fixed/30 blur-3xl pointer-events-none"></div>
+<div class="max-w-[1360px] mx-auto relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-space-lg">
+<div class="max-w-2xl space-y-space-xs">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface shadow-sm">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Canlı Sinematik Yayın</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Gayrimenkul Video Vitrini</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant font-normal">
+          Dikey formatta hazırlanmış sinematik portföy turlarını keşfedin; mimari zarafeti ve mekan duygusunu hissedin.
+        </p>
+</div>
+<!-- Quick Metrics Counter Strip -->
+<div class="flex items-center gap-space-md self-start md:self-auto bg-surface-container-lowest px-space-lg py-space-sm rounded-xl shadow-sm">
+<div class="text-right">
+<span class="block font-headline-sm text-headline-sm text-primary">128+</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant uppercase">Aktif Tur</span>
+</div>
+<div class="w-px h-8 bg-surface-container-highest"></div>
+<div class="text-right">
+<span class="block font-headline-sm text-headline-sm text-secondary">4K UHD</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant uppercase">Dikey Format</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Sticky Filter & Interactive Search Hub -->
+<section class="sticky top-20 z-40 bg-surface/95 backdrop-blur-md shadow-sm py-space-md px-gutter-mobile lg:px-margin">
+<div class="max-w-[1360px] mx-auto space-y-space-sm">
+<!-- Search Input and Primary Switches -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-sm items-center">
+<!-- Search Field -->
+<div class="lg:col-span-6 relative">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-xl pointer-events-none">search</span>
+<input class="w-full pl-11 pr-4 py-2.5 rounded-lg bg-surface-container-lowest text-primary placeholder-on-surface-variant/50 font-body-md text-body-md shadow-sm outline-none focus:bg-surface" placeholder="İlan başlığı, semt, mimari stil veya danışman ara..." type="text"/>
+</div>
+<!-- Listing Type Segments -->
+<div class="lg:col-span-3 flex items-center bg-surface-container p-1 rounded-lg">
+<button class="filter-type-btn flex-1 py-1.5 px-3 rounded text-center font-label-md text-label-md transition-all bg-primary-container text-on-primary shadow-sm" data-type="all" type="button">Tümü</button>
+<button class="filter-type-btn flex-1 py-1.5 px-3 rounded text-center font-label-md text-label-md text-on-surface-variant transition-all hover:text-primary" data-type="sale" type="button">Satılık</button>
+<button class="filter-type-btn flex-1 py-1.5 px-3 rounded text-center font-label-md text-label-md text-on-surface-variant transition-all hover:text-primary" data-type="rent" type="button">Kiralık</button>
+</div>
+<!-- Sorting Menu Dropdown -->
+<div class="lg:col-span-3 relative flex justify-end">
+<div class="relative w-full">
+<select class="w-full appearance-none bg-surface-container-lowest text-primary font-label-md text-label-md py-2.5 px-3.5 pr-8 rounded-lg shadow-sm outline-none cursor-pointer hover:bg-surface">
+<option>Sıralama: En Yeniler</option>
+<option>Fiyat: Düşükten Yükseğe</option>
+<option>Fiyat: Yüksekten Düşüğe</option>
+<option>En Çok İzlenenler</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline text-lg pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Granular Chip Filter Carousels -->
+<div class="flex flex-wrap items-center gap-x-space-lg gap-y-space-xs pt-1">
+<!-- City Chips -->
+<div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mr-1">Şehir:</span>
+<button class="chip-filter active px-3 py-1 rounded-full font-label-sm text-label-sm transition-all bg-primary text-on-primary">Tümü</button>
+<button class="chip-filter px-3 py-1 rounded-full font-label-sm text-label-sm transition-all bg-surface-container-lowest text-on-surface-variant shadow-sm hover:bg-surface-container">İstanbul</button>
+<button class="chip-filter px-3 py-1 rounded-full font-label-sm text-label-sm transition-all bg-surface-container-lowest text-on-surface-variant shadow-sm hover:bg-surface-container">İzmir</button>
+<button class="chip-filter px-3 py-1 rounded-full font-label-sm text-label-sm transition-all bg-surface-container-lowest text-on-surface-variant shadow-sm hover:bg-surface-container">Muğla / Bodrum</button>
+<button class="chip-filter px-3 py-1 rounded-full font-label-sm text-label-sm transition-all bg-surface-container-lowest text-on-surface-variant shadow-sm hover:bg-surface-container">Antalya</button>
+</div>
+<div class="hidden lg:block w-px h-4 bg-surface-container-highest"></div>
+<!-- Room Count Chips -->
+<div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mr-1">Oda:</span>
+<button class="chip-room active px-3 py-1 rounded-full font-label-sm text-label-sm transition-all bg-primary text-on-primary">Tümü</button>
+<button class="chip-room px-3 py-1 rounded-full font-label-sm text-label-sm transition-all bg-surface-container-lowest text-on-surface-variant shadow-sm hover:bg-surface-container">1+1</button>
+<button class="chip-room px-3 py-1 rounded-full font-label-sm text-label-sm transition-all bg-surface-container-lowest text-on-surface-variant shadow-sm hover:bg-surface-container">2+1</button>
+<button class="chip-room px-3 py-1 rounded-full font-label-sm text-label-sm transition-all bg-surface-container-lowest text-on-surface-variant shadow-sm hover:bg-surface-container">3+1</button>
+<button class="chip-room px-3 py-1 rounded-full font-label-sm text-label-sm transition-all bg-surface-container-lowest text-on-surface-variant shadow-sm hover:bg-surface-container">4+1 ve üzeri</button>
+<button class="chip-room px-3 py-1 rounded-full font-label-sm text-label-sm transition-all bg-surface-container-lowest text-on-surface-variant shadow-sm hover:bg-surface-container">Müstakil Villa</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Main 9:16 Video Showcase Mosaic -->
+<main class="w-full px-gutter-mobile lg:px-margin py-space-xl max-w-[1360px] mx-auto">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-space-lg">
+<!-- Video Card 1: Nişantaşı -->
+<article class="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col bg-primary aspect-[9/16]">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105" data-alt="Editorial cinematic vertical shot of a high-ceiling historical Art Nouveau apartment in Nişantaşı Istanbul, herringbone oak parquet floors, warm morning sunlight cascading across bespoke minimal furniture, soft linen curtains, dignified and warm editorial atmosphere with sage and olive tone accents." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAjAXdPgQ3ZhIGCCDQXMnQ__nY4kowBVuzWMk18xOwOALHpNWP4S9L9m5wko_nqWfFqwb1Ykb1rui46freUQiIqjqKSsLMostCNubh301DXTpwH2ucKiBpZ13j8RuRaif7i1s1MGigxPY9DVp0kWPUUEhWPVP-6210hwn0Xa5vyJxq7zHDV0LLRAwSK8EghBek7fj0jNQIXdmg1xVwc6vccLXpiW7zYS2rWE_WY6ds7')"></div>
+<!-- Gradient Overlay -->
+<div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/40 to-black/20 pointer-events-none"></div>
+<!-- Top Badges -->
+<div class="relative z-10 p-space-md flex items-start justify-between w-full">
+<div class="flex items-center gap-1.5">
+<span class="bg-secondary text-on-secondary px-2.5 py-0.5 rounded-full font-label-sm text-label-sm shadow-sm tracking-wide">Satılık</span>
+<span class="bg-primary/80 backdrop-blur-md text-surface px-2 py-0.5 rounded-full font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">videocam</span> 4K UHD
+            </span>
+</div>
+<span class="bg-primary/70 backdrop-blur-md text-surface/90 px-2 py-0.5 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[13px]">visibility</span> 18.4K
+          </span>
+</div>
+<!-- Center Play Trigger -->
+<div class="relative z-10 my-auto flex justify-center items-center pointer-events-none">
+<div class="w-14 h-14 rounded-full bg-surface-container-lowest/20 backdrop-blur-md flex items-center justify-center text-on-primary transition-all duration-300 group-hover:scale-110 group-hover:bg-surface group-hover:text-primary shadow-lg">
+<span class="material-symbols-outlined text-3xl translate-x-0.5">play_arrow</span>
+</div>
+</div>
+<!-- Bottom Content Strip -->
+<div class="relative z-10 p-space-md space-y-space-xs mt-auto">
+<div class="inline-block bg-surface-container-lowest/15 backdrop-blur-md px-2 py-0.5 rounded text-surface font-label-sm text-label-sm">
+            00:54 • Mimari Tur
+          </div>
+<div>
+<div class="text-surface font-headline-sm text-headline-sm leading-snug font-medium line-clamp-1">
+              Nişantaşı Tarihi Apartman Katı
+            </div>
+<p class="text-surface-dim font-body-sm text-body-sm mt-0.5">
+              İstanbul / Şişli • 3+1 • 175 m²
+            </p>
+</div>
+<div class="pt-1 flex items-baseline justify-between">
+<span class="text-surface font-headline-md text-headline-md tracking-tight">14.500.000 ₺</span>
+</div>
+<!-- Action Button -->
+<a class="w-full mt-2 inline-flex items-center justify-center gap-2 bg-primary-container/90 hover:bg-primary-container text-on-primary font-label-md text-label-md py-2.5 px-4 rounded-xl backdrop-blur-md shadow-md transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-base">chat</span>
+<span>WhatsApp ile İletişime Geç</span>
+</a>
+</div>
+</article>
+<!-- Video Card 2: Bodrum Yalıkavak -->
+<article class="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col bg-primary aspect-[9/16]">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105" data-alt="Vertical architectural photograph of a luxury minimalist stone villa in Yalıkavak Bodrum, panoramic infinity pool overlooking the Aegean Sea during golden hour, dry-stacked natural limestone walls, olive trees, clean shadows, cinematic tranquil atmosphere." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDHRzHbodoECTSF48aS7XbUenh0DgYn_xwOXAYWOyCtXYENJYjGdm7GdQ5GMpb13QJjJ47c9YDq8E27Y-qNh12ENSpWVooJVSwgT1oVItuo4iqP36sJNH1OnuvrcLor6jXbor2ZrtcBb9MoVjm5q-UQTpS9nr5DYGPixLmdI1cXDG-w5kzAhQ_I9RYtlwH_qo5a6YYWTiZaq38JNWIvr3kmjGkux5VJw73_Z6efdaJP')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/30 to-black/20 pointer-events-none"></div>
+<div class="relative z-10 p-space-md flex items-start justify-between w-full">
+<div class="flex items-center gap-1.5">
+<span class="bg-secondary text-on-secondary px-2.5 py-0.5 rounded-full font-label-sm text-label-sm shadow-sm tracking-wide">Satılık</span>
+<span class="bg-primary/80 backdrop-blur-md text-surface px-2 py-0.5 rounded-full font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">videocam</span> 4K
+            </span>
+</div>
+<span class="bg-primary/70 backdrop-blur-md text-surface/90 px-2 py-0.5 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[13px]">visibility</span> 32.1K
+          </span>
+</div>
+<div class="relative z-10 my-auto flex justify-center items-center pointer-events-none">
+<div class="w-14 h-14 rounded-full bg-surface-container-lowest/20 backdrop-blur-md flex items-center justify-center text-on-primary transition-all duration-300 group-hover:scale-110 group-hover:bg-surface group-hover:text-primary shadow-lg">
+<span class="material-symbols-outlined text-3xl translate-x-0.5">play_arrow</span>
+</div>
+</div>
+<div class="relative z-10 p-space-md space-y-space-xs mt-auto">
+<div class="inline-block bg-surface-container-lowest/15 backdrop-blur-md px-2 py-0.5 rounded text-surface font-label-sm text-label-sm">
+            01:12 • Müstakil Havuzlu
+          </div>
+<div>
+<div class="text-surface font-headline-sm text-headline-sm leading-snug font-medium line-clamp-1">
+              Bodrum Yalıkavak Panoramik Villa
+            </div>
+<p class="text-surface-dim font-body-sm text-body-sm mt-0.5">
+              Muğla / Bodrum • 5+2 • 420 m²
+            </p>
+</div>
+<div class="pt-1 flex items-baseline justify-between">
+<span class="text-surface font-headline-md text-headline-md tracking-tight">48.000.000 ₺</span>
+</div>
+<a class="w-full mt-2 inline-flex items-center justify-center gap-2 bg-primary-container/90 hover:bg-primary-container text-on-primary font-label-md text-label-md py-2.5 px-4 rounded-xl backdrop-blur-md shadow-md transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-base">chat</span>
+<span>Danışmana Yaz</span>
+</a>
+</div>
+</article>
+<!-- Video Card 3: Karaköy Bosphorus Loft -->
+<article class="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col bg-primary aspect-[9/16]">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105" data-alt="Vertical interior video capture of a contemporary industrial loft in Karaköy overlooking the Bosphorus Strait, exposed red brick masonry, steel mullion floor-to-ceiling windows, mid-century leather armchairs, atmospheric moody lighting." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBLtnnNgwlxH14CfNBFerRh6q-kEPPLyzzT7BDapcBtmZGI4kR2QCnO6IEXw4DoVbzLsdGT08-i7Fxb7dTpjF3Fa95mxuN54H7GrdObwYd_M3BmOfNyzmlY9IFbpKJ5AZVJEzSLwqcDF1YJIeYugtGn8qz6jHQE1t0iNIRNqysjuq48EFKD19o7Kgpk18ITBpbCbqtlvuW8rc_RTpVnIZG4QBvv_PQDr84ahFWk7fz-')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/40 to-black/20 pointer-events-none"></div>
+<div class="relative z-10 p-space-md flex items-start justify-between w-full">
+<div class="flex items-center gap-1.5">
+<span class="bg-surface text-primary px-2.5 py-0.5 rounded-full font-label-sm text-label-sm shadow-sm tracking-wide">Kiralık</span>
+<span class="bg-primary/80 backdrop-blur-md text-surface px-2 py-0.5 rounded-full font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">videocam</span> 4K
+            </span>
+</div>
+<span class="bg-primary/70 backdrop-blur-md text-surface/90 px-2 py-0.5 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[13px]">visibility</span> 12.6K
+          </span>
+</div>
+<div class="relative z-10 my-auto flex justify-center items-center pointer-events-none">
+<div class="w-14 h-14 rounded-full bg-surface-container-lowest/20 backdrop-blur-md flex items-center justify-center text-on-primary transition-all duration-300 group-hover:scale-110 group-hover:bg-surface group-hover:text-primary shadow-lg">
+<span class="material-symbols-outlined text-3xl translate-x-0.5">play_arrow</span>
+</div>
+</div>
+<div class="relative z-10 p-space-md space-y-space-xs mt-auto">
+<div class="inline-block bg-surface-container-lowest/15 backdrop-blur-md px-2 py-0.5 rounded text-surface font-label-sm text-label-sm">
+            00:42 • Boğaz Manzaralı
+          </div>
+<div>
+<div class="text-surface font-headline-sm text-headline-sm leading-snug font-medium line-clamp-1">
+              Karaköy Bosphorus Loft
+            </div>
+<p class="text-surface-dim font-body-sm text-body-sm mt-0.5">
+              İstanbul / Beyoğlu • 2+1 • 135 m²
+            </p>
+</div>
+<div class="pt-1 flex items-baseline justify-between">
+<span class="text-surface font-headline-md text-headline-md tracking-tight">85.000 ₺<span class="font-body-sm text-body-sm text-surface-dim">/ay</span></span>
+</div>
+<a class="w-full mt-2 inline-flex items-center justify-center gap-2 bg-primary-container/90 hover:bg-primary-container text-on-primary font-label-md text-label-md py-2.5 px-4 rounded-xl backdrop-blur-md shadow-md transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-base">chat</span>
+<span>WhatsApp ile İletişime Geç</span>
+</a>
+</div>
+</article>
+<!-- Video Card 4: Urla Müstakil Taş Ev -->
+<article class="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col bg-primary aspect-[9/16]">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105" data-alt="Vertical shot of an authentic renovated stone farmhouse in Urla İzmir, vine covered wooden pergolas, landscaped lavender and olive garden, warm rustic earthenware pottery, natural Mediterranean light and relaxed upscale aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD-4F268NOKMpbsErO7Crzwdm1B25AWflA3c1FoPYGyrf4oYtbjo4QZN52lcgv1gr_xAwl3O32Ovvz7JD2zKJXIvTJobiYOswl4blI33rsYceFveA_DpuPJXZyog9Ztk2sFM4XUgA2jQlINqj273cDHqaejwA8MIubfp8JjTgXi7VwuExUqFz7G-nuaoOX5Dxko4daUg9Hrmn7-JJl16oYPnck_S2uAYl7-omvxdRtP')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/30 to-black/20 pointer-events-none"></div>
+<div class="relative z-10 p-space-md flex items-start justify-between w-full">
+<div class="flex items-center gap-1.5">
+<span class="bg-secondary text-on-secondary px-2.5 py-0.5 rounded-full font-label-sm text-label-sm shadow-sm tracking-wide">Satılık</span>
+<span class="bg-primary/80 backdrop-blur-md text-surface px-2 py-0.5 rounded-full font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">videocam</span> 4K
+            </span>
+</div>
+<span class="bg-primary/70 backdrop-blur-md text-surface/90 px-2 py-0.5 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[13px]">visibility</span> 24.8K
+          </span>
+</div>
+<div class="relative z-10 my-auto flex justify-center items-center pointer-events-none">
+<div class="w-14 h-14 rounded-full bg-surface-container-lowest/20 backdrop-blur-md flex items-center justify-center text-on-primary transition-all duration-300 group-hover:scale-110 group-hover:bg-surface group-hover:text-primary shadow-lg">
+<span class="material-symbols-outlined text-3xl translate-x-0.5">play_arrow</span>
+</div>
+</div>
+<div class="relative z-10 p-space-md space-y-space-xs mt-auto">
+<div class="inline-block bg-surface-container-lowest/15 backdrop-blur-md px-2 py-0.5 rounded text-surface font-label-sm text-label-sm">
+            01:05 • Bağ &amp; Taş Mimari
+          </div>
+<div>
+<div class="text-surface font-headline-sm text-headline-sm leading-snug font-medium line-clamp-1">
+              Urla Kekliktepe Taş Konak
+            </div>
+<p class="text-surface-dim font-body-sm text-body-sm mt-0.5">
+              İzmir / Urla • 4+1 • 290 m²
+            </p>
+</div>
+<div class="pt-1 flex items-baseline justify-between">
+<span class="text-surface font-headline-md text-headline-md tracking-tight">26.500.000 ₺</span>
+</div>
+<a class="w-full mt-2 inline-flex items-center justify-center gap-2 bg-primary-container/90 hover:bg-primary-container text-on-primary font-label-md text-label-md py-2.5 px-4 rounded-xl backdrop-blur-md shadow-md transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-base">chat</span>
+<span>Danışmana Yaz</span>
+</a>
+</div>
+</article>
+<!-- Video Card 5: Kaş Kalkan Çukurbağ -->
+<article class="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col bg-primary aspect-[9/16]">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105" data-alt="Vertical composition of an ultra-modern cantilevered villa in Kaş Antalya, cliffside dramatic view of turquoise Mediterranean waters, minimalist glass railings, warm cedar wood slat accents, sunset glow reflecting off glass." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD9HIHpEyw1rOiUsKSbVcrmqrwxxEIJBiRjjcJMePsXesKgtVNc-cmIImhzZwXDbU55V0MoH_S-66NqW161BosFF7Totp54qSrQPsi-4oMiYKD1_VeutijIrk7CXfxggpbo5zn9u7qIbR1wt58JL1a7w-coU0VhH1-aO_9EQH9O7ToiGADWTga_TrLTSHCOKoW11wWE8gFSpka6jIePS6g1RFPYqb3OyPsvuiHZkOHV')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/30 to-black/20 pointer-events-none"></div>
+<div class="relative z-10 p-space-md flex items-start justify-between w-full">
+<div class="flex items-center gap-1.5">
+<span class="bg-secondary text-on-secondary px-2.5 py-0.5 rounded-full font-label-sm text-label-sm shadow-sm tracking-wide">Satılık</span>
+<span class="bg-primary/80 backdrop-blur-md text-surface px-2 py-0.5 rounded-full font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">videocam</span> 4K
+            </span>
+</div>
+<span class="bg-primary/70 backdrop-blur-md text-surface/90 px-2 py-0.5 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[13px]">visibility</span> 15.3K
+          </span>
+</div>
+<div class="relative z-10 my-auto flex justify-center items-center pointer-events-none">
+<div class="w-14 h-14 rounded-full bg-surface-container-lowest/20 backdrop-blur-md flex items-center justify-center text-on-primary transition-all duration-300 group-hover:scale-110 group-hover:bg-surface group-hover:text-primary shadow-lg">
+<span class="material-symbols-outlined text-3xl translate-x-0.5">play_arrow</span>
+</div>
+</div>
+<div class="relative z-10 p-space-md space-y-space-xs mt-auto">
+<div class="inline-block bg-surface-container-lowest/15 backdrop-blur-md px-2 py-0.5 rounded text-surface font-label-sm text-label-sm">
+            00:58 • Yamaç &amp; Deniz
+          </div>
+<div>
+<div class="text-surface font-headline-sm text-headline-sm leading-snug font-medium line-clamp-1">
+              Kaş Yarımada Panoramik Rezidans
+            </div>
+<p class="text-surface-dim font-body-sm text-body-sm mt-0.5">
+              Antalya / Kaş • 3+1 • 210 m²
+            </p>
+</div>
+<div class="pt-1 flex items-baseline justify-between">
+<span class="text-surface font-headline-md text-headline-md tracking-tight">19.750.000 ₺</span>
+</div>
+<a class="w-full mt-2 inline-flex items-center justify-center gap-2 bg-primary-container/90 hover:bg-primary-container text-on-primary font-label-md text-label-md py-2.5 px-4 rounded-xl backdrop-blur-md shadow-md transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-base">chat</span>
+<span>WhatsApp ile İletişime Geç</span>
+</a>
+</div>
+</article>
+<!-- Video Card 6: Bebek Sahil Yalısı Dairesi -->
+<article class="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col bg-primary aspect-[9/16]">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105" data-alt="Vertical cinematic view looking out from an ultra-prime waterfront historical mansion in Bebek Istanbul, direct sea level view of the Bosporus, soft pastel morning lighting, custom brass fixtures and limestone mantelpiece." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuALhywj8UEDWlUXRvVJJnPfC-KHFCkWGqvhyVp9tWVGXpmnuhaTrEU5jNsCKTh3GrV1C6NtRoZkhV26m1uu2OvwrBBbYM-44reRjnrTd3XSBkUJoDhWxhU4pS5n19xg6V6bQTPt3GFzkMQo6hgOIodCuB3zAa1XNt6sE-oxZxkIrnc__IefdVeXh4tsPszX1IautZI3O6T2H_ZW5QE-F3KFIRxNGQlbjBjPHezOIe1K')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/30 to-black/20 pointer-events-none"></div>
+<div class="relative z-10 p-space-md flex items-start justify-between w-full">
+<div class="flex items-center gap-1.5">
+<span class="bg-surface text-primary px-2.5 py-0.5 rounded-full font-label-sm text-label-sm shadow-sm tracking-wide">Kiralık</span>
+<span class="bg-primary/80 backdrop-blur-md text-surface px-2 py-0.5 rounded-full font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">videocam</span> 4K
+            </span>
+</div>
+<span class="bg-primary/70 backdrop-blur-md text-surface/90 px-2 py-0.5 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[13px]">visibility</span> 41.9K
+          </span>
+</div>
+<div class="relative z-10 my-auto flex justify-center items-center pointer-events-none">
+<div class="w-14 h-14 rounded-full bg-surface-container-lowest/20 backdrop-blur-md flex items-center justify-center text-on-primary transition-all duration-300 group-hover:scale-110 group-hover:bg-surface group-hover:text-primary shadow-lg">
+<span class="material-symbols-outlined text-3xl translate-x-0.5">play_arrow</span>
+</div>
+</div>
+<div class="relative z-10 p-space-md space-y-space-xs mt-auto">
+<div class="inline-block bg-surface-container-lowest/15 backdrop-blur-md px-2 py-0.5 rounded text-surface font-label-sm text-label-sm">
+            01:20 • Sıfır Yalı Dairesi
+          </div>
+<div>
+<div class="text-surface font-headline-sm text-headline-sm leading-snug font-medium line-clamp-1">
+              Bebek Sahil Prestij Dairesi
+            </div>
+<p class="text-surface-dim font-body-sm text-body-sm mt-0.5">
+              İstanbul / Beşiktaş • 4+1 • 260 m²
+            </p>
+</div>
+<div class="pt-1 flex items-baseline justify-between">
+<span class="text-surface font-headline-md text-headline-md tracking-tight">160.000 ₺<span class="font-body-sm text-body-sm text-surface-dim">/ay</span></span>
+</div>
+<a class="w-full mt-2 inline-flex items-center justify-center gap-2 bg-primary-container/90 hover:bg-primary-container text-on-primary font-label-md text-label-md py-2.5 px-4 rounded-xl backdrop-blur-md shadow-md transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-base">chat</span>
+<span>Danışmana Yaz</span>
+</a>
+</div>
+</article>
+<!-- Video Card 7: Göktürk Müstakil Bahçeli -->
+<article class="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col bg-primary aspect-[9/16]">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105" data-alt="Vertical modern architectural video frame of a private secluded villa in Göktürk Istanbul surrounded by lush green pine forests, floor-to-ceiling glass pavilions, warm timber decking, minimalist garden lighting." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAyzFtTEEQtEJ-hYNZutpPK_mMIjVg8qJPgrKL3f73KmzaymV9YKETxSnAqUu67jJaBtT-2FPvj6ZHul0wajErE8oKhopk0iz1yByG-els7EW7vD3VVSjgXCs8B1U3DAJPtM5M4P9maOBn1PeVXQ-x0IAjU6Q39PlFQqjln0ovy61CwjSOeXhGIhSbu_2UNEYw1nJhKgRXp80XsFXLaznPjehPhqOK2hH2f3lgkxnPX')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/30 to-black/20 pointer-events-none"></div>
+<div class="relative z-10 p-space-md flex items-start justify-between w-full">
+<div class="flex items-center gap-1.5">
+<span class="bg-secondary text-on-secondary px-2.5 py-0.5 rounded-full font-label-sm text-label-sm shadow-sm tracking-wide">Satılık</span>
+<span class="bg-primary/80 backdrop-blur-md text-surface px-2 py-0.5 rounded-full font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">videocam</span> 4K
+            </span>
+</div>
+<span class="bg-primary/70 backdrop-blur-md text-surface/90 px-2 py-0.5 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[13px]">visibility</span> 9.8K
+          </span>
+</div>
+<div class="relative z-10 my-auto flex justify-center items-center pointer-events-none">
+<div class="w-14 h-14 rounded-full bg-surface-container-lowest/20 backdrop-blur-md flex items-center justify-center text-on-primary transition-all duration-300 group-hover:scale-110 group-hover:bg-surface group-hover:text-primary shadow-lg">
+<span class="material-symbols-outlined text-3xl translate-x-0.5">play_arrow</span>
+</div>
+</div>
+<div class="relative z-10 p-space-md space-y-space-xs mt-auto">
+<div class="inline-block bg-surface-container-lowest/15 backdrop-blur-md px-2 py-0.5 rounded text-surface font-label-sm text-label-sm">
+            00:49 • Orman Cepheli
+          </div>
+<div>
+<div class="text-surface font-headline-sm text-headline-sm leading-snug font-medium line-clamp-1">
+              Göktürk Müstakil Bahçeli Konut
+            </div>
+<p class="text-surface-dim font-body-sm text-body-sm mt-0.5">
+              İstanbul / Eyüpsultan • 4+2 • 340 m²
+            </p>
+</div>
+<div class="pt-1 flex items-baseline justify-between">
+<span class="text-surface font-headline-md text-headline-md tracking-tight">32.000.000 ₺</span>
+</div>
+<a class="w-full mt-2 inline-flex items-center justify-center gap-2 bg-primary-container/90 hover:bg-primary-container text-on-primary font-label-md text-label-md py-2.5 px-4 rounded-xl backdrop-blur-md shadow-md transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-base">chat</span>
+<span>WhatsApp ile İletişime Geç</span>
+</a>
+</div>
+</article>
+<!-- Video Card 8: Alaçatı Butik Bahçeli Taş Ev -->
+<article class="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col bg-primary aspect-[9/16]">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105" data-alt="Vertical cinematic portrait of a charming stone cottage in Alaçatı Çeşme, cyan painted wooden window shutters, vibrant bougainvillea flowers spilling over cobblestones, bespoke interior courtyard with plunge pool, soft warm sun." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDLxJD99CTUzD-Mk1NfhHr_FYuEMpJqAsjLQMDJP4zBto0PxZmaxCppZZDzlNtmsXHHVXFiuqnaNov3S9bv8Q6H1zf97RfzVzQbc4h8EnLdo-gPu_Pz0y9PEd0Km0bwU9AKR74oqXb_N0kjk_x0SI-Ul3Un5U_uuIccsQ7z86_EIjeoXNtDGU1yoOaacrXEcQ8srHTMXCctgO39dyvSXUui5d3OsWhaiu_anEHPe1MH')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/30 to-black/20 pointer-events-none"></div>
+<div class="relative z-10 p-space-md flex items-start justify-between w-full">
+<div class="flex items-center gap-1.5">
+<span class="bg-secondary text-on-secondary px-2.5 py-0.5 rounded-full font-label-sm text-label-sm shadow-sm tracking-wide">Satılık</span>
+<span class="bg-primary/80 backdrop-blur-md text-surface px-2 py-0.5 rounded-full font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">videocam</span> 4K
+            </span>
+</div>
+<span class="bg-primary/70 backdrop-blur-md text-surface/90 px-2 py-0.5 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[13px]">visibility</span> 21.2K
+          </span>
+</div>
+<div class="relative z-10 my-auto flex justify-center items-center pointer-events-none">
+<div class="w-14 h-14 rounded-full bg-surface-container-lowest/20 backdrop-blur-md flex items-center justify-center text-on-primary transition-all duration-300 group-hover:scale-110 group-hover:bg-surface group-hover:text-primary shadow-lg">
+<span class="material-symbols-outlined text-3xl translate-x-0.5">play_arrow</span>
+</div>
+</div>
+<div class="relative z-10 p-space-md space-y-space-xs mt-auto">
+<div class="inline-block bg-surface-container-lowest/15 backdrop-blur-md px-2 py-0.5 rounded text-surface font-label-sm text-label-sm">
+            01:02 • Havuzlu Avlu
+          </div>
+<div>
+<div class="text-surface font-headline-sm text-headline-sm leading-snug font-medium line-clamp-1">
+              Alaçatı Köyiçi Avlulu Taş Villa
+            </div>
+<p class="text-surface-dim font-body-sm text-body-sm mt-0.5">
+              İzmir / Çeşme • 3+1 • 185 m²
+            </p>
+</div>
+<div class="pt-1 flex items-baseline justify-between">
+<span class="text-surface font-headline-md text-headline-md tracking-tight">21.800.000 ₺</span>
+</div>
+<a class="w-full mt-2 inline-flex items-center justify-center gap-2 bg-primary-container/90 hover:bg-primary-container text-on-primary font-label-md text-label-md py-2.5 px-4 rounded-xl backdrop-blur-md shadow-md transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-base">chat</span>
+<span>Danışmana Yaz</span>
+</a>
+</div>
+</article>
+</div>
+<!-- Architectural Quote & Load More Section -->
+<div class="mt-space-xl pt-space-lg flex flex-col items-center justify-center text-center space-y-space-md">
+<div class="max-w-md">
+<p class="font-headline-sm text-headline-sm text-primary italic">
+          "Bir gayrimenkulü anlamak, ışığın odalar arasındaki geçişine tanık olmaktır."
+        </p>
+<span class="block mt-1 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
+          Mekansal Video Arşivi
+        </span>
+</div>
+<!-- Action Load More -->
+<button class="inline-flex items-center gap-2 bg-surface-container-lowest hover:bg-surface text-primary font-label-md text-label-md px-8 py-3.5 rounded-full shadow-sm hover:shadow transition-all duration-200" id="loadMoreBtn">
+<span class="material-symbols-outlined text-lg">autorenew</span>
+<span>Daha Fazla Video Göster (12/128)</span>
+</button>
+</div>
+</main>
+<!-- Video Showcase Live Experience Modal (Interactive preview overlay) -->
+<div class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-xl flex items-center justify-center p-4" id="videoModal">
+<div class="relative w-full max-w-sm aspect-[9/16] bg-primary rounded-2xl overflow-hidden shadow-2xl flex flex-col justify-between p-6">
+<button class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-surface/20 text-surface flex items-center justify-center hover:bg-surface hover:text-primary transition-colors" id="closeModalBtn">
+<span class="material-symbols-outlined text-xl">close</span>
+</button>
+<div class="relative z-10 pt-4 flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-secondary animate-ping"></span>
+<span class="text-surface font-label-sm text-label-sm uppercase tracking-wider" id="modalCategory">Önizleme Yayını</span>
+</div>
+<div class="relative z-10 my-auto text-center space-y-3">
+<div class="w-16 h-16 rounded-full bg-surface-container-lowest/30 backdrop-blur-md mx-auto flex items-center justify-center text-surface">
+<span class="material-symbols-outlined text-4xl">play_circle</span>
+</div>
+<p class="text-surface-dim font-body-sm text-body-sm">Sinematik 4K Yüksek Çözünürlüklü Tur Yükleniyor...</p>
+</div>
+<div class="relative z-10 space-y-2">
+<h3 class="font-headline-sm text-headline-sm text-surface" id="modalTitle">Mülk Başlığı</h3>
+<p class="font-headline-md text-headline-md text-secondary" id="modalPrice">Fiyat Bilgisi</p>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Filter Chip Interactions
+  document.querySelectorAll('.chip-filter').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.chip-filter').forEach(b => {
+        b.classList.remove('bg-primary', 'text-on-primary');
+        b.classList.add('bg-surface-container-lowest', 'text-on-surface-variant');
+      });
+      this.classList.remove('bg-surface-container-lowest', 'text-on-surface-variant');
+      this.classList.add('bg-primary', 'text-on-primary');
+    });
+  });
+
+  document.querySelectorAll('.chip-room').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.chip-room').forEach(b => {
+        b.classList.remove('bg-primary', 'text-on-primary');
+        b.classList.add('bg-surface-container-lowest', 'text-on-surface-variant');
+      });
+      this.classList.remove('bg-surface-container-lowest', 'text-on-surface-variant');
+      this.classList.add('bg-primary', 'text-on-primary');
+    });
+  });
+
+  document.querySelectorAll('.filter-type-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.filter-type-btn').forEach(b => {
+        b.classList.remove('bg-primary-container', 'text-on-primary', 'shadow-sm');
+        b.classList.add('text-on-surface-variant');
+      });
+      this.classList.remove('text-on-surface-variant');
+      this.classList.add('bg-primary-container', 'text-on-primary', 'shadow-sm');
+    });
+  });
+
+  // Modal Interactive Triggers on Video Cards
+  const videoModal = document.getElementById('videoModal');
+  const closeModalBtn = document.getElementById('closeModalBtn');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalPrice = document.getElementById('modalPrice');
+
+  document.querySelectorAll('article').forEach(card => {
+    card.addEventListener('click', (e) => {
+      // Don't trigger if clicked on the direct contact button
+      if (e.target.closest('a')) return;
+      
+      const title = card.querySelector('.font-headline-sm')?.innerText || 'Özel Portföy';
+      const price = card.querySelector('.font-headline-md')?.innerText || '';
+
+      modalTitle.innerText = title;
+      modalPrice.innerText = price;
+      videoModal.classList.remove('hidden');
+    });
+  });
+
+  closeModalBtn.addEventListener('click', () => {
+    videoModal.classList.add('hidden');
+  });
+
+  videoModal.addEventListener('click', (e) => {
+    if (e.target === videoModal) {
+      videoModal.classList.add('hidden');
+    }
+  });
+
+  // Load More Button Interaction
+  const loadMoreBtn = document.getElementById('loadMoreBtn');
+  if (loadMoreBtn) {
+    loadMoreBtn.addEventListener('click', () => {
+      loadMoreBtn.innerHTML = '<span class="material-symbols-outlined text-lg animate-spin">progress_activity</span><span>Yükleniyor...</span>';
+      setTimeout(() => {
+        loadMoreBtn.innerHTML = '<span class="material-symbols-outlined text-lg">check</span><span>Tüm Vitrin Turları Yüklendi</span>';
+        loadMoreBtn.classList.add('opacity-75', 'pointer-events-none');
+      }, 900);
+    });
+  }
+</script></main><footer class="w-full bg-surface-container-low"><div class="max-w-[1360px] mx-auto px-gutter-mobile lg:px-margin py-space-xl"><div class="grid grid-cols-1 md:grid-cols-4 gap-space-xl pb-space-xl"><div class="space-y-space-md"><div class="flex items-center gap-space-sm"><img alt="Emlak Platformu Logo" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrCv0F-0ZQ4fkVeyuIw77gU9LiipvW0Robysh67G7lSPZ6JslcYm8YpYjHC1m161BjRhcnX3IWyfPlqoZu1kMwTvgquEZZLK6YG4K5yp9WcI5e7D2FfEGCXHip1rMN7TCquDQHs599YTxczxRf4aJb3QMMD32J3hdNZDOi0xGC6wnHQuqGgFQkXboNOi0av-3KxZdJO5Rj2UET26Taz5FunU8TNqghfyHhiiE9pm0zNn"/><span class="font-headline-sm text-headline-sm text-primary">Emlak Platformu</span></div><p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">Yüksek performanslı gayrimenkul danışmanları ve butik ofisler için yeni nesil portföy, vitrin ve mimari pazarlama ekosistemi.</p></div><div><h4 class="font-label-md text-label-md text-primary uppercase tracking-wider mb-space-md">Platform</h4><ul class="space-y-space-sm"><li class="font-body-sm text-body-sm text-on-surface-variant">Portföy Yönetimi</li><li class="font-body-sm text-body-sm text-on-surface-variant">Yapay Zeka Video Stüdyosu</li><li class="font-body-sm text-body-sm text-on-surface-variant">Baskı &amp; Dijital Broşür</li><li class="font-body-sm text-body-sm text-on-surface-variant">Müşteri CRM</li></ul></div><div><h4 class="font-label-md text-label-md text-primary uppercase tracking-wider mb-space-md">Kaynaklar</h4><ul class="space-y-space-sm"><li class="font-body-sm text-body-sm text-on-surface-variant">Mimari Şablonlar</li><li class="font-body-sm text-body-sm text-on-surface-variant">Gayrimenkul Trend Raporu</li><li class="font-body-sm text-body-sm text-on-surface-variant">Entegrasyonlar</li><li class="font-body-sm text-body-sm text-on-surface-variant">API &amp; Geliştirici</li></ul></div><div><h4 class="font-label-md text-label-md text-primary uppercase tracking-wider mb-space-md">İletişim</h4><p class="font-body-sm text-body-sm text-on-surface-variant mb-space-sm">Nişantaşı, Teşvikiye Cad. No: 42<br/>Şişli, İstanbul</p><p class="font-body-sm text-body-sm text-on-surface-variant">destek@emlakplatformu.com</p></div></div><div class="pt-space-lg flex flex-col md:flex-row items-center justify-between gap-space-md"><p class="font-body-sm text-body-sm text-on-surface-variant">© 2025 Emlak Platformu. Tüm hakları saklıdır.</p><div class="flex items-center gap-space-lg"><span class="font-label-sm text-label-sm text-on-surface-variant">Gizlilik Politikası</span><span class="font-label-sm text-label-sm text-on-surface-variant">Kullanım Koşulları</span><span class="font-label-sm text-label-sm text-on-surface-variant">KVKK Aydınlatma Metni</span></div></div></div></footer></body></html>

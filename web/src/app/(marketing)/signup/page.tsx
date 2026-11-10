@@ -124,7 +124,7 @@ export default function SignupPage() {
         <div className="mt-2 flex flex-col gap-2 sm:flex-row">
           <Link
             href="/login"
-            className="inline-flex flex-1 items-center justify-center rounded-leaf bg-ink-900 px-4 py-2.5 font-medium text-white hover:bg-ink-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-600"
+            className="inline-flex min-h-11 flex-1 items-center justify-center rounded-lg bg-ink-900 px-4 py-2.5 font-medium text-white hover:bg-ink-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-600"
           >
             Giriş yap
           </Link>

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 import { parseFilters } from "@/lib/showcase-ui/filters";
-import { STOCK } from "@/lib/stock-images";
 
 import { ShowcaseClient } from "./showcase-client";
 
@@ -21,28 +20,21 @@ export default async function ShowcasePage({
   const filters = parseFilters(await searchParams);
 
   return (
-    <main className="flex-1 bg-cream-50 text-charcoal">
-      {/* Ana sayfa ilk ekranının kısa hali: fotoğraf (süs, CSS arka plan) + ince dev başlık. */}
-      <header className="relative isolate flex min-h-[46svh] flex-col justify-end overflow-hidden bg-ink-900 text-cream-50">
-        <div aria-hidden="true" className="absolute inset-0 -z-10">
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url("${STOCK.heroLiving.src(1800)}")` }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-ink-900 via-ink-900/60 to-ink-900/20" />
-        </div>
-        <div className="mx-auto w-full max-w-6xl px-4 pt-24 pb-10 md:px-6 md:pb-14">
-          <p className="font-body text-xs font-medium tracking-[0.2em] text-cream-50/70 uppercase">Videolu vitrin</p>
-          <h1 className="mt-3 max-w-4xl font-display text-[2.5rem] leading-[1] font-light tracking-[-0.045em] text-balance md:text-7xl">
-            Evi gezmeden önce <em className="accent">videosunu</em> izleyin.
+    <main className="flex-1 bg-cream-50 text-ink-900">
+      {/* Stitch "Gayrimenkul Video Vitrini": açık başlık bandı, kısa başlık + tek satır; videolar sahnede. */}
+      <header className="border-b border-panel-line bg-gradient-to-b from-panel-muted/60 to-cream-50">
+        <div className="panel-enter mx-auto w-full max-w-6xl px-4 pt-10 pb-6 md:px-6 md:pt-14 md:pb-8">
+          <p className="inline-flex items-center gap-1.5 rounded-full bg-panel-accent-soft px-2.5 py-1 font-body text-[0.6875rem] font-semibold tracking-[0.08em] text-terracotta-700 uppercase">
+            <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-terracotta-600" />
+            Videolu vitrin
+          </p>
+          <h1 className="mt-3 font-display text-[2rem] leading-tight tracking-[-0.02em] md:text-5xl">
+            Evi gezmeden önce <em className="font-display italic">videosunu</em> izleyin.
           </h1>
-          <p className="mt-4 max-w-xl font-body text-cream-50/80">
-            Emlakçıların editörlerimizle hazırladığı videolu ilanlar. Beğendiğinizde doğrudan WhatsApp&apos;tan yazın.
+          <p className="mt-2 max-w-xl font-body text-sm text-charcoal/70 md:text-base">
+            Beğendiğiniz ilan için doğrudan WhatsApp&apos;tan yazın.
           </p>
         </div>
-        <p className="absolute bottom-2 left-4 font-body text-[10px] text-cream-50/50 md:right-3 md:left-auto">
-          Fotoğraf: {STOCK.heroLiving.credit}
-        </p>
       </header>
       <ShowcaseClient initialFilters={filters} />
     </main>

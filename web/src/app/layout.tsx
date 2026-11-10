@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Inter, Inter_Tight, Instrument_Serif } from "next/font/google";
+import { Geist, Geist_Mono, Inter, Inter_Tight, Instrument_Serif, Lora } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -31,6 +31,15 @@ const inter = Inter({
   subsets: ["latin", "latin-ext"],
 });
 
+// Sıcak Editorial başlık fontu: tanıtım sayfaları ve emlakçı paneli ([data-panel-theme="editorial"]).
+const lora = Lora({
+  variable: "--font-lora",
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Emlak Platformu",
   description:
@@ -42,7 +51,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="tr"
-      className={`${geistSans.variable} ${geistMono.variable} ${interTight.variable} ${instrumentSerif.variable} ${inter.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${interTight.variable} ${instrumentSerif.variable} ${inter.variable} ${lora.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

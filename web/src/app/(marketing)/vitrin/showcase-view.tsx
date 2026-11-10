@@ -134,11 +134,11 @@ export function ShowcaseView({ service, initialFilters }: Props) {
       >
         <fieldset className="flex flex-col gap-1">
           <legend className={label}>İşlem</legend>
-          <div className="mt-1 inline-flex rounded-md border border-charcoal/15 p-0.5">
+          <div className="mt-1 inline-flex rounded-full border border-panel-line bg-panel-surface p-0.5">
             {DEAL_OPTIONS.map((o) => (
               <label
                 key={o.label}
-                className="cursor-pointer rounded px-3 py-1.5 text-sm has-checked:bg-ink-900 has-checked:text-cream-50 has-focus-visible:outline-2 has-focus-visible:outline-terracotta-600"
+                className="cursor-pointer rounded px-3 py-1.5 text-sm has-checked:bg-panel-deep has-checked:text-cream-50 has-focus-visible:outline-2 has-focus-visible:outline-terracotta-600"
               >
                 <input
                   type="radio"
@@ -257,16 +257,9 @@ export function ShowcaseView({ service, initialFilters }: Props) {
         )}
 
         {state.status === "loading" && (
-          <ul aria-hidden="true" className="grid animate-pulse gap-5 motion-reduce:animate-none sm:grid-cols-2 lg:grid-cols-3">
+          <ul aria-hidden="true" className="grid grid-cols-2 gap-3 md:gap-5 lg:grid-cols-4">
             {Array.from({ length: 6 }, (_, i) => (
-              <li key={i} className="overflow-hidden rounded-leaf border border-charcoal/10 bg-white">
-                <div className="aspect-video bg-mist-200" />
-                <div className="flex flex-col gap-2 p-4">
-                  <div className="h-5 w-28 rounded bg-mist-200" />
-                  <div className="h-4 w-full rounded bg-mist-200/70" />
-                  <div className="h-4 w-1/2 rounded bg-mist-200/70" />
-                </div>
-              </li>
+              <li key={i} className="panel-skeleton aspect-[9/16] rounded-xl" />
             ))}
           </ul>
         )}
@@ -298,7 +291,7 @@ export function ShowcaseView({ service, initialFilters }: Props) {
 
         {state.status === "ready" && state.items.length > 0 && (
           <>
-            <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <ul className="grid grid-cols-2 gap-3 md:gap-5 lg:grid-cols-4">
               {state.items.map((item) => (
                 <li key={item.id} className="flex">
                   <ShowcaseCard item={item} />

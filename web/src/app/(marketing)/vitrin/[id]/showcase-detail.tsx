@@ -114,7 +114,7 @@ export function ShowcaseDetail({ item, similar, pageUrl }: Props) {
           <h2 id="similar" className="font-display text-2xl font-normal tracking-[-0.03em]">
             Benzer ilanlar
           </h2>
-          <ul className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="mt-4 grid grid-cols-2 gap-3 md:gap-5 lg:grid-cols-4">
             {similar.map((s) => (
               <li key={s.id} className="flex">
                 <ShowcaseCard item={s} />

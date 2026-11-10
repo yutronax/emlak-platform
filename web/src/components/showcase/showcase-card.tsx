@@ -35,31 +35,53 @@ export function Poster({ item, className = "" }: { item: ShowcaseItem; className
   );
 }
 
+// Stitch "Gayrimenkul Video Vitrini" kartı: dikey (9:16) koyu kart, poster tam boy, bilgiler alttaki
+// gölge geçişinin üstünde. Dikey video formatını vitrinde de hissettirir. Detay sayfası Poster'ı ayrıca kullanır.
 export function ShowcaseCard({ item }: { item: ShowcaseItem }) {
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-leaf border border-charcoal/10 bg-white font-body text-charcoal transition-shadow focus-within:ring-2 focus-within:ring-terracotta-600 hover:shadow-[0_16px_40px_-20px_rgb(16_37_63/0.35)]">
-      <Poster item={item} />
-      <div className="flex flex-1 flex-col gap-1.5 p-4">
-        <div className="flex items-center justify-between gap-2">
-          <p className="font-display text-2xl font-light tracking-[-0.035em] tabular-nums">
-            {formatShowcasePrice(item.priceMinor, item.deal)}
-          </p>
-          <span className="rounded-leaf bg-stone-200 px-2.5 py-0.5 text-xs font-medium text-charcoal/75">
-            {DEAL_LABEL[item.deal]}
-          </span>
-        </div>
-        <h3 className="line-clamp-2 text-sm font-medium">
+    <article className="group relative flex aspect-[9/16] w-full flex-col justify-end overflow-hidden rounded-xl bg-panel-deep font-body text-cream-50 shadow-[0_8px_24px_rgb(38_51_45/14%)] transition-shadow focus-within:ring-2 focus-within:ring-terracotta-600 hover:shadow-[0_16px_40px_rgb(38_51_45/24%)]">
+      <div aria-hidden="true" className={`absolute inset-0 ${tone(item.id)}`}>
+        {item.posterUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element -- harici CDN posteri; boyut bilinmiyor
+          <img
+            src={item.posterUrl}
+            alt=""
+            className="panel-media-zoom h-full w-full object-cover"
+          />
+        ) : (
+          <span className="absolute inset-x-0 top-1/3 px-4 font-display text-5xl text-white/15">{item.district}</span>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-panel-deep via-panel-deep/45 to-transparent" />
+        <span className="absolute top-1/2 left-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/25 pl-0.5 text-lg text-white backdrop-blur-sm">
+          ▶
+        </span>
+      </div>
+
+      <div className="absolute inset-x-3 top-3 flex items-center justify-between gap-2">
+        <span
+          className={`rounded-full px-2 py-0.5 text-[0.6875rem] font-semibold ${
+            item.deal === "kiralik" ? "bg-cream-50 text-ink-900" : "bg-terracotta-600 text-white"
+          }`}
+        >
+          {DEAL_LABEL[item.deal]}
+        </span>
+        <span className="rounded-full bg-panel-deep/70 px-2 py-0.5 text-[0.6875rem] text-white tabular-nums">
+          <span className="sr-only">Video süresi </span>
+          {formatDuration(item.durationSec)}
+        </span>
+      </div>
+
+      <div className="relative flex flex-col gap-1 p-4">
+        <h3 className="line-clamp-2 font-display text-lg leading-snug">
           {/* Kartın tamamı tıklanabilir: bağlantı kartı kaplayan sözde öğeyle genişler. */}
           <Link href={`/vitrin/${item.id}`} className="outline-none after:absolute after:inset-0 after:content-['']">
             {item.title}
           </Link>
         </h3>
-        <p className="text-sm text-charcoal/60">
-          {item.district}, {item.city}
+        <p className="text-xs text-cream-50/75">
+          {item.district}, {item.city} · {item.rooms} · {item.areaM2} m²
         </p>
-        <p className="mt-auto border-t border-charcoal/10 pt-3 text-sm text-charcoal/60">
-          {item.rooms} · {item.areaM2} m²
-        </p>
+        <p className="mt-1 font-display text-2xl tabular-nums">{formatShowcasePrice(item.priceMinor, item.deal)}</p>
       </div>
     </article>
   );

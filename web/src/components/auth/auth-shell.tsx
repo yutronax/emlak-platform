@@ -22,28 +22,38 @@ export const brandTexture = {
 
 const photo = STOCK.facadeBalconies;
 
-// Stellar tarzı bölünmüş düzen: solda tam boy fotoğraf + mesaj, sağda krem zeminde form.
+// Stitch "Giriş Yap & Kayıt Ol" düzeni: solda üstü terakota geçişli beyaz form kartı, sağda yuvarlak
+// köşeli fotoğraf kartı (mesaj altta). Mobilde form önce gelir, fotoğraf kartı kısa bir şerit olur.
+// Stitch'teki uydurma istatistik ve yorum kartları alınmadı.
 // Fotoğraf süs olduğundan <img> değil, aria-hidden katmanda CSS arka planı.
 export function AuthShell({ eyebrow, pitch, children }: AuthShellProps) {
   return (
-    <main className="grid flex-1 bg-cream-50 text-charcoal lg:min-h-[calc(100svh-57px)] lg:grid-cols-2">
-      <section className="relative isolate flex min-h-[240px] flex-col justify-end overflow-hidden bg-ink-900 px-4 pt-16 pb-6 text-cream-50 md:px-10 md:pb-10 lg:min-h-0">
-        <div data-auth-decor aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 select-none">
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url("${photo.src(1400)}")` }}
+    <main className="flex-1 bg-cream-50 text-ink-900">
+      <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 py-8 md:px-6 md:py-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-stretch">
+        <div className="auth-card-enter relative overflow-hidden rounded-xl border border-panel-line bg-panel-surface px-5 pt-8 pb-6 shadow-[0_4px_16px_rgb(38_51_45/5%)] md:px-10 md:pt-10 md:pb-8">
+          <span
+            aria-hidden="true"
+            className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-panel-deep via-terracotta-600 to-panel-line"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-ink-900 via-ink-900/70 to-ink-900/25" />
+          <div className="mx-auto w-full max-w-md">{children}</div>
         </div>
-        <p className="font-body text-xs font-medium tracking-[0.2em] text-cream-50/70 uppercase">{eyebrow}</p>
-        <div className="mt-3 max-w-xl font-display text-[2rem] leading-[1.02] font-light tracking-[-0.04em] text-balance md:text-5xl lg:text-6xl">
-          {pitch}
-        </div>
-        <p className="mt-6 font-body text-[10px] text-cream-50/50">Fotoğraf: {photo.credit}</p>
-      </section>
 
-      <div className="flex justify-center px-4 py-10 md:px-10 md:py-14 lg:items-center">
-        <div className="auth-card-enter w-full max-w-md">{children}</div>
+        <section className="relative isolate order-first flex min-h-[180px] flex-col justify-end overflow-hidden rounded-xl bg-panel-deep p-5 text-cream-50 md:p-8 lg:order-none lg:min-h-[520px]">
+          <div data-auth-decor aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 select-none">
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: `url("${photo.src(1400)}")` }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-panel-deep via-panel-deep/60 to-panel-deep/10" />
+          </div>
+          <p className="font-body text-[0.6875rem] font-semibold tracking-[0.12em] text-cream-50/75 uppercase">
+            {eyebrow}
+          </p>
+          <div className="mt-2 max-w-md font-display text-2xl leading-tight tracking-[-0.01em] text-balance md:text-3xl">
+            {pitch}
+          </div>
+          <p className="mt-4 font-body text-[10px] text-cream-50/50">Fotoğraf: {photo.credit}</p>
+        </section>
       </div>
     </main>
   );
