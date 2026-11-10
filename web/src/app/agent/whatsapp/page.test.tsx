@@ -13,6 +13,12 @@ import { WaPanel } from "./wa-panel";
 // EML-106 / AC-11: NEXT_PUBLIC_WA_LINK_ENABLED yoksa sayfa gizli (notFound).
 // Oturum yoksa /login'e yönlendirilir.
 
+// connection() test ortamında istek kapsamı olmadan atar; dashboard testleriyle aynı mock.
+vi.mock("next/server", async (orig) => ({
+  ...(await orig<typeof import("next/server")>()),
+  connection: vi.fn(async () => {}),
+}));
+
 vi.mock("@/lib/supabase/server", () => ({
   createClient: vi.fn(),
 }));

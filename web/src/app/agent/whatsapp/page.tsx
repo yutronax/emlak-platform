@@ -1,6 +1,7 @@
 import { PanelTransition } from "@/components/app-shell/panel-transition";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { connection } from "next/server";
 
 import { createClient } from "@/lib/supabase/server";
 import { getMyWaGroups } from "@/lib/whatsapp/groups";
@@ -18,9 +19,9 @@ export default async function WhatsAppPage() {
     notFound();
   }
 
-  // createClient() cookies() okur: istek-zamanlı (dinamik) işaretleme getUser()'dan (Date.now)
-  // önce gerçekleşir. Bu yüzden ayrı connection() çağrısına gerek yoktur (admin layout'taki
-  // gibi next/server mock'u olmayan test ortamında da çalışır).
+  // getUser() Date.now() kullanır; cookies() okuması tek başına prerender'ı durdurmadı (dev'de
+  // "unstable value Date.now()" hatası). Dashboard ve fiyatlar gibi önce istek-zamanlı işaretlenir.
+  await connection();
   const supabase = await createClient();
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) {
