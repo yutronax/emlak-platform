@@ -54,6 +54,28 @@ const trustItems: { title: string; tag?: string; body: string }[] = [
   },
 ];
 
+// Reklam videosu örnekleri (dikey 9:16). Süreler dosyalardan ölçüldü (ffprobe).
+const SAMPLE_VIDEOS = [
+  {
+    src: "/videos/ornek-ilan.mp4",
+    poster: "/videos/ornek-ilan-kapak.jpg",
+    badge: "Örnek",
+    label: "Örnek ilan videosu: dikey, 27 saniye, müzikli, stok görüntülerle",
+  },
+  {
+    src: "/videos/ornek-galeri.mp4",
+    poster: "/videos/ornek-galeri-kapak.jpg",
+    badge: "Galeri",
+    label: "İMZA Gayrimenkul için galeri tarzı ilan videosu: dikey, 25 saniye, müzikli",
+  },
+  {
+    src: "/videos/ornek-daire.mp4",
+    poster: "/videos/ornek-daire-kapak.jpg",
+    badge: "Ev turu",
+    label: "İMZA Gayrimenkul için ev turu ilan videosu: dikey, 18 saniye, müzikli",
+  },
+];
+
 const videoOptions = [
   { title: "Fotoğraf yükleyin", body: "İlanınızın fotoğraflarını gönderin, biz videoya çeviririz.", price: "750 TL" },
   { title: "Kendi çektiğiniz videoyu gönderin", body: "Telefonla çektiğiniz ham videoyu yükleyin.", price: "750 TL" },
@@ -198,27 +220,33 @@ export default function LandingPage() {
                 Video siparişi ver
               </Link>
             </div>
-            {/* Örnek: stok görüntülerle hazırlanmış, gerçek bir ilan değil (kaynaklar public/images/CREDITS.md). */}
-            <figure className="mt-4 flex max-w-[280px] flex-col gap-3">
-              <div className="relative overflow-hidden rounded-leaf bg-ink-900">
-                <span className="absolute top-3 left-3 z-10 rounded-leaf bg-cream-50 px-2 py-0.5 font-body text-xs font-medium text-ink-900">
-                  Örnek video
-                </span>
-                <video
-                  controls
-                  playsInline
-                  preload="none"
-                  poster="/videos/ornek-ilan-kapak.jpg"
-                  width={720}
-                  height={1280}
-                  className="aspect-[9/16] h-auto w-full"
-                  aria-label="Örnek ilan videosu: dikey, 27 saniye, müzikli"
-                >
-                  <source src="/videos/ornek-ilan.mp4" type="video/mp4" />
-                </video>
-              </div>
+            {/* Örnekler: ilki stok görüntülerle (kaynaklar public/images/CREDITS.md); diğer ikisi
+                İMZA Gayrimenkul'ün gerçek bir ilanı için hazırlandı, izinle gösteriliyor (fiyat/telefon gizli). */}
+            <figure className="mt-4 flex w-full max-w-[560px] flex-col gap-3">
+              <ul className="grid grid-cols-3 gap-2 md:gap-3">
+                {SAMPLE_VIDEOS.map((v) => (
+                  <li key={v.src} className="relative overflow-hidden rounded-leaf bg-ink-900">
+                    <span className="absolute top-2 left-2 z-10 rounded-leaf bg-cream-50 px-1.5 py-0.5 font-body text-[0.6875rem] font-medium text-ink-900">
+                      {v.badge}
+                    </span>
+                    <video
+                      controls
+                      playsInline
+                      preload="none"
+                      poster={v.poster}
+                      width={720}
+                      height={1280}
+                      className="aspect-[9/16] h-auto w-full"
+                      aria-label={v.label}
+                    >
+                      <source src={v.src} type="video/mp4" />
+                    </video>
+                  </li>
+                ))}
+              </ul>
               <figcaption className="font-body text-xs text-charcoal/60">
-                Stok görüntülerle hazırlanmış örnektir; gösterilen ilan gerçek değildir.
+                İlk video stok görüntülerle hazırlanmış örnektir. Diğer ikisi İMZA Gayrimenkul &amp; Yatırım&apos;ın
+                gerçek bir ilanı için hazırlandı ve izinle gösteriliyor; fiyat ve telefon gizlenmiştir.
               </figcaption>
             </figure>
           </div>
