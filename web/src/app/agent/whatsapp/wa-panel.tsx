@@ -280,9 +280,36 @@ export function WaPanel({ initialStatus, consentAccepted, groups }: WaPanelProps
             {status.status === "connected" ? "Bağlı" : status.status === "qr" || status.status === "pending" ? "Bağlanıyor" : "Bağlı değil"}
           </span>
         </div>
-        <p className="text-xs text-charcoal/70">
-          {!consent ? "Adım 1 / 3 · Risk onayı" : status.status === "connected" ? "Adım 3 / 3 · Grupları seç" : "Adım 2 / 3 · QR ile bağlan"}
-        </p>
+        {/* Stitch adım çubuğu: tamamlanan adım onay işaretli, etkin adım koyu, sıradaki soluk. */}
+        <ol aria-label="Bağlantı adımları" className="mt-3 grid grid-cols-3 gap-2">
+          {(["Risk onayı", "QR ile bağlan", "Grupları seç"] as const).map((label, i) => {
+            const current = !consent ? 0 : status.status === "connected" ? 2 : 1;
+            const state = i < current ? "done" : i === current ? "active" : "next";
+            return (
+              <li
+                key={label}
+                aria-current={state === "active" ? "step" : undefined}
+                className="flex items-center gap-2 rounded-lg border border-panel-line bg-panel-surface px-2.5 py-2"
+              >
+                <span
+                  aria-hidden="true"
+                  className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
+                    state === "done"
+                      ? "bg-moss-700/15 text-moss-700"
+                      : state === "active"
+                        ? "bg-panel-deep text-cream-50"
+                        : "bg-panel-muted text-charcoal/50"
+                  }`}
+                >
+                  {state === "done" ? "✓" : i + 1}
+                </span>
+                <span className={`text-xs leading-tight ${state === "next" ? "text-charcoal/50" : "font-medium text-ink-900"}`}>
+                  {label}
+                </span>
+              </li>
+            );
+          })}
+        </ol>
       </div>
 
       {!consent && (

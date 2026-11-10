@@ -302,21 +302,36 @@ export default async function AgentDashboardPage({
           {/* Kapsayıcı kendisi saydamlıktan başlamaz: kartlar zaten kendi girişini yapar, üst üste
               binen iki fade ilk kareyi gereğinden fazla silikleştirir. Yalnız sonuç satırı girer. */}
           {/* Sonuçlar önce: filtreler kapalı bir panelde, uygulananlar kapsül olarak dışarıda. */}
-          <div className="panel-enter flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 [--enter-delay:40ms] [--motion-enter:240ms] border-b border-stone-200 pb-3">
-            <p className="text-sm font-semibold">
-              {listings.feed.ok ? `Bu sayfada ${listings.feed.items.length} ilan` : "Sonuçlar yüklenemedi"}
-            </p>
+          {/* Stitch "İlan Havuzu" özet kutuları — yalnız gerçek veri (uydurma oran/ortalama yok). */}
+          <ul className="panel-enter grid grid-cols-2 gap-3 [--enter-delay:40ms] [--motion-enter:240ms] md:grid-cols-3">
+            <li className="rounded-xl border border-panel-line bg-panel-surface px-4 py-3">
+              <p className="text-[0.6875rem] font-semibold tracking-[0.08em] text-charcoal/60 uppercase">Sonuçlar</p>
+              <p className="mt-1 font-display text-xl">
+                {listings.feed.ok ? `Bu sayfada ${listings.feed.items.length} ilan` : "Sonuçlar yüklenemedi"}
+              </p>
+            </li>
             {listings.feed.ok && listings.feed.limit !== null && (
-              <p className="flex flex-wrap items-center gap-x-3 text-sm text-charcoal/75">
-                <span className="tabular-nums">{`Bugün ${listings.feed.openToday}/${listings.feed.limit} ilan açık`}</span>
-                {(listings.feed.lockedCount === null || listings.feed.lockedCount > 0) && (
-                  <Link href="/pricing" className="font-medium text-terracotta-700 underline-offset-4 hover:underline">
+              <li className="rounded-xl border border-panel-line bg-panel-surface px-4 py-3">
+                <p className="text-[0.6875rem] font-semibold tracking-[0.08em] text-charcoal/60 uppercase">Günlük hak</p>
+                <p className="mt-1 font-display text-xl tabular-nums">
+                  {`Bugün ${listings.feed.openToday}/${listings.feed.limit} ilan açık`}
+                </p>
+              </li>
+            )}
+            {listings.feed.ok &&
+              listings.feed.limit !== null &&
+              (listings.feed.lockedCount === null || listings.feed.lockedCount > 0) && (
+                <li className="col-span-2 flex items-center justify-between gap-3 rounded-xl bg-panel-deep px-4 py-3 text-cream-50 md:col-span-1">
+                  <p className="text-sm text-cream-50/80">Daha fazla ilanı açın</p>
+                  <Link
+                    href="/pricing"
+                    className="inline-flex min-h-11 items-center rounded-full bg-terracotta-600 px-4 text-sm font-semibold text-white hover:bg-terracotta-700"
+                  >
                     Planı yükselt
                   </Link>
-                )}
-              </p>
-            )}
-          </div>
+                </li>
+              )}
+          </ul>
 
           <details className="panel-details group rounded-xl border border-stone-200 bg-transparent open:bg-panel-surface">
             <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm font-medium [&::-webkit-details-marker]:hidden">
@@ -399,7 +414,7 @@ export default async function AgentDashboardPage({
             )}
 
             {listings.feed.ok && listings.feed.items.length > 0 && (
-              <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {listings.feed.items.map((listing, index) => (
                   <ListingCard key={listing.id} listing={listing} now={now} index={index} />
                 ))}
