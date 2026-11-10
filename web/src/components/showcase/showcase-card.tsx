@@ -3,6 +3,8 @@ import Link from "next/link";
 import { DEAL_LABEL, formatDuration, formatShowcasePrice } from "@/lib/showcase-ui/format";
 import type { ShowcaseItem } from "@/lib/showcase-ui/types";
 
+import { HoverVideo } from "./hover-video";
+
 // Poster yokken: id'den türetilen marka tonunda zemin + ilçe baş harfleri. Gerçek poster gelince <img>.
 const TONES = ["bg-ink-900", "bg-moss-700", "bg-terracotta-700", "bg-slate-500"];
 const tone = (id: string) => TONES[[...id].reduce((s, c) => s + c.charCodeAt(0), 0) % TONES.length];
@@ -41,7 +43,10 @@ export function ShowcaseCard({ item }: { item: ShowcaseItem }) {
   return (
     <article className="group relative flex aspect-[9/16] w-full flex-col justify-end overflow-hidden rounded-xl bg-panel-deep font-body text-cream-50 shadow-[0_8px_24px_rgb(38_51_45/14%)] transition-shadow focus-within:ring-2 focus-within:ring-terracotta-600 hover:shadow-[0_16px_40px_rgb(38_51_45/24%)]">
       <div aria-hidden="true" className={`absolute inset-0 ${tone(item.id)}`}>
-        {item.posterUrl ? (
+        {item.videoUrl ? (
+          // Fare üstündeyken oynayan, ayrılınca başa saran sessiz önizleme.
+          <HoverVideo src={item.videoUrl} poster={item.posterUrl} />
+        ) : item.posterUrl ? (
           // eslint-disable-next-line @next/next/no-img-element -- harici CDN posteri; boyut bilinmiyor
           <img
             src={item.posterUrl}
@@ -52,7 +57,7 @@ export function ShowcaseCard({ item }: { item: ShowcaseItem }) {
           <span className="absolute inset-x-0 top-1/3 px-4 font-display text-5xl text-white/15">{item.district}</span>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-panel-deep via-panel-deep/45 to-transparent" />
-        <span className="absolute top-1/2 left-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/25 pl-0.5 text-lg text-white backdrop-blur-sm">
+        <span className="absolute top-1/2 left-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/25 pl-0.5 text-lg text-white backdrop-blur-sm transition-opacity group-hover:opacity-0 group-focus-within:opacity-0">
           ▶
         </span>
       </div>

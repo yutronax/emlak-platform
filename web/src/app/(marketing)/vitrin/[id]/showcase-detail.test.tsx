@@ -47,7 +47,7 @@ describe("ShowcaseDetail", () => {
   });
 
   it("video yoksa 'Video hazırlanıyor'; varsa kontrollü video", () => {
-    const { rerender, container } = render(<ShowcaseDetail item={item} similar={[]} pageUrl="u" />);
+    const { rerender, container } = render(<ShowcaseDetail item={{ ...item, videoUrl: null }} similar={[]} pageUrl="u" />);
     expect(screen.getByText("Video hazırlanıyor")).toBeInTheDocument();
     expect(container.querySelector("video")).toBeNull();
 

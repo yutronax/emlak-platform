@@ -4,6 +4,8 @@ import type { ShowcaseFilters, ShowcaseItem, ShowcaseService } from "./types";
 const A = { name: "Karşıyaka Sahil Gayrimenkul", phone: "+905321234567" };
 const B = { name: "Bodrum Mavi Emlak", phone: "+905551112233" };
 
+// a1–a7: video-calisma çıktılarının sessiz 9:16 önizlemeleri (public/videos/vitrin). İlk beşi
+// İMZA Gayrimenkul'ün gerçek ilan çekimlerinden, izinle; ilan metinleri mock.
 function item(id: string, p: Partial<ShowcaseItem> & Pick<ShowcaseItem, "title" | "deal" | "priceMinor" | "city" | "district" | "rooms" | "areaM2">): ShowcaseItem {
   return {
     id,
@@ -22,13 +24,13 @@ function item(id: string, p: Partial<ShowcaseItem> & Pick<ShowcaseItem, "title" 
 }
 
 export const SHOWCASE_FIXTURE: ShowcaseItem[] = [
-  item("a1", { title: "Deniz manzaralı, yeni yapılmış site içinde geniş balkonlu 3+1 daire", deal: "satilik", priceMinor: 845_000_000, city: "İzmir", district: "Karşıyaka", rooms: "3+1", areaM2: 135, publishedAt: "2026-10-31T09:00:00Z" }),
-  item("a2", { title: "Metroya 2 dakika eşyalı 1+1", deal: "kiralik", priceMinor: 2_200_000, city: "İzmir", district: "Bornova", rooms: "1+1", areaM2: 55, durationSec: 45, publishedAt: "2026-10-30T15:00:00Z" }),
-  item("a3", { title: "Bahçeli müstakil villa, özel havuz", deal: "satilik", priceMinor: 2_450_000_000, city: "Muğla", district: "Bodrum", rooms: "4+1", areaM2: 260, floor: "Bahçe katı", buildingAge: 3, heating: "Yerden ısıtma", agent: B, durationSec: 124, publishedAt: "2026-10-29T10:00:00Z" }),
-  item("a4", { title: "Öğrenciye uygun 2+1", deal: "kiralik", priceMinor: 1_750_000, city: "İzmir", district: "Buca", rooms: "2+1", areaM2: 90, buildingAge: 22, heating: null, publishedAt: "2026-10-28T10:00:00Z" }),
-  item("a5", { title: "Yalıkavak'ta marina manzaralı rezidans dairesi", deal: "satilik", priceMinor: 1_350_000_000, city: "Muğla", district: "Bodrum", rooms: "2+1", areaM2: 110, agent: B, publishedAt: "2026-10-27T10:00:00Z" }),
-  item("a6", { title: "Merkezi konumda ofis kullanımına uygun 3+1", deal: "kiralik", priceMinor: 3_800_000, city: "İzmir", district: "Konak", rooms: "3+1", areaM2: 140, floor: null, buildingAge: null, publishedAt: "2026-10-26T10:00:00Z" }),
-  item("a7", { title: "Kordon'a yürüme mesafesinde 2+1", deal: "satilik", priceMinor: 615_000_000, city: "İzmir", district: "Alsancak", rooms: "2+1", areaM2: 95, publishedAt: "2026-10-25T10:00:00Z" }),
+  item("a1", { title: "Deniz manzaralı, yeni yapılmış site içinde geniş balkonlu 3+1 daire", deal: "satilik", priceMinor: 845_000_000, city: "İzmir", district: "Karşıyaka", rooms: "3+1", areaM2: 135, posterUrl: "/videos/vitrin/v1.jpg", videoUrl: "/videos/vitrin/v1.mp4", durationSec: 30, publishedAt: "2026-10-31T09:00:00Z" }),
+  item("a2", { title: "Metroya 2 dakika eşyalı 1+1", deal: "kiralik", priceMinor: 2_200_000, city: "İzmir", district: "Bornova", rooms: "1+1", areaM2: 55, posterUrl: "/videos/vitrin/v2.jpg", videoUrl: "/videos/vitrin/v2.mp4", durationSec: 28, publishedAt: "2026-10-30T15:00:00Z" }),
+  item("a3", { title: "Bahçeli müstakil villa, özel havuz", deal: "satilik", priceMinor: 2_450_000_000, city: "Muğla", district: "Bodrum", rooms: "4+1", areaM2: 260, floor: "Bahçe katı", buildingAge: 3, heating: "Yerden ısıtma", agent: B, posterUrl: "/videos/vitrin/v3.jpg", videoUrl: "/videos/vitrin/v3.mp4", durationSec: 17, publishedAt: "2026-10-29T10:00:00Z" }),
+  item("a4", { title: "Öğrenciye uygun 2+1", deal: "kiralik", priceMinor: 1_750_000, city: "İzmir", district: "Buca", rooms: "2+1", areaM2: 90, buildingAge: 22, heating: null, posterUrl: "/videos/vitrin/v4.jpg", videoUrl: "/videos/vitrin/v4.mp4", durationSec: 22, publishedAt: "2026-10-28T10:00:00Z" }),
+  item("a5", { title: "Yalıkavak'ta marina manzaralı rezidans dairesi", deal: "satilik", priceMinor: 1_350_000_000, city: "Muğla", district: "Bodrum", rooms: "2+1", areaM2: 110, agent: B, posterUrl: "/videos/vitrin/v5.jpg", videoUrl: "/videos/vitrin/v5.mp4", durationSec: 22, publishedAt: "2026-10-27T10:00:00Z" }),
+  item("a6", { title: "Merkezi konumda ofis kullanımına uygun 3+1", deal: "kiralik", priceMinor: 3_800_000, city: "İzmir", district: "Konak", rooms: "3+1", areaM2: 140, floor: null, buildingAge: null, posterUrl: "/videos/vitrin/v6.jpg", videoUrl: "/videos/vitrin/v6.mp4", durationSec: 25, publishedAt: "2026-10-26T10:00:00Z" }),
+  item("a7", { title: "Kordon'a yürüme mesafesinde 2+1", deal: "satilik", priceMinor: 615_000_000, city: "İzmir", district: "Alsancak", rooms: "2+1", areaM2: 95, posterUrl: "/videos/vitrin/v7.jpg", videoUrl: "/videos/vitrin/v7.mp4", durationSec: 18, publishedAt: "2026-10-25T10:00:00Z" }),
   item("a8", { title: "Taş ev, restore edilmiş", deal: "satilik", priceMinor: 1_120_000_000, city: "Muğla", district: "Datça", rooms: "3+1", areaM2: 150, agent: B, publishedAt: "2026-10-24T10:00:00Z" }),
   item("a9", { title: "Yeni binada sıfır 1+1", deal: "kiralik", priceMinor: 1_950_000, city: "Ankara", district: "Çankaya", rooms: "1+1", areaM2: 60, publishedAt: "2026-10-23T10:00:00Z" }),
   item("a10", { title: "Geniş aileler için 5+2 dubleks", deal: "satilik", priceMinor: 990_000_000, city: "Ankara", district: "Yenimahalle", rooms: "5+2", areaM2: 240, publishedAt: "2026-10-22T10:00:00Z" }),
