@@ -67,12 +67,42 @@ function priceText(price: number | null): string {
 }
 
 const inputClass =
-  "min-h-12 rounded-md border border-mist-200 bg-panel-surface px-3 py-2 text-base focus-visible:outline-2 focus-visible:outline-ink-900";
+  "min-h-12 rounded-lg border border-panel-line bg-panel-muted/40 px-3 py-2 text-base transition-colors focus-visible:bg-panel-surface focus-visible:outline-2 focus-visible:outline-ink-900";
 
 const labelClass = "text-sm font-medium";
 
 const buttonLinkClass =
-  "inline-flex min-h-12 w-full items-center justify-center rounded-leaf bg-ink-900 px-4 py-2 font-medium text-white hover:bg-ink-800";
+  "inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-terracotta-600 px-4 py-2 font-semibold text-white hover:bg-terracotta-700";
+
+const STEP_LABELS: Record<Step, string> = {
+  service: "Hizmet",
+  property: "Mülk",
+  files: "Dosyalar",
+  summary: "Özet",
+};
+
+// Stitch önerisi: sihirbazın üstünde adım çubuğu. Yerinde çekimde dosya adımı yoktur.
+function StepBar({ step, steps }: { step: Step; steps: Step[] }) {
+  const current = steps.indexOf(step);
+  return (
+    <ol aria-label="Sipariş adımları" className="grid gap-2" style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))` }}>
+      {steps.map((s, i) => {
+        const state = i < current ? "done" : i === current ? "active" : "next";
+        return (
+          <li key={s} aria-current={state === "active" ? "step" : undefined} className="flex flex-col gap-1.5">
+            <span
+              aria-hidden="true"
+              className={`h-1 rounded-full ${state === "next" ? "bg-panel-line" : state === "done" ? "bg-moss-700" : "bg-terracotta-600"}`}
+            />
+            <span className={`text-xs ${state === "next" ? "text-charcoal/50" : "font-medium text-ink-900"}`}>
+              {i + 1}. {STEP_LABELS[s]}
+            </span>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
 
 function SummaryRow({ label, value }: { label: string; value: string }) {
   return (
@@ -83,13 +113,14 @@ function SummaryRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-export function OrderWizard({ services }: { services: ServiceOption[] }) {
+// initialTitle: ilan kartındaki "video sipariş et" bağlantısından gelen başlık (mülk adımına hazır dolar).
+export function OrderWizard({ services, initialTitle = "" }: { services: ServiceOption[]; initialTitle?: string }) {
   const router = useRouter();
   const options = services.filter((service) => SERVICE_CODES.includes(service.code));
 
   const [step, setStep] = useState<Step>("service");
   const [serviceCode, setServiceCode] = useState<ServiceCode | null>(null);
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState(initialTitle.slice(0, 120));
   const [address, setAddress] = useState("");
   const [onsiteTime, setOnsiteTime] = useState("");
   const [orderId, setOrderId] = useState<string | null>(null);
@@ -139,8 +170,11 @@ export function OrderWizard({ services }: { services: ServiceOption[] }) {
     router.push(`/agent/videos/${orderId}`);
   }
 
+  const steps: Step[] = isOnsite ? ["service", "property", "summary"] : ["service", "property", "files", "summary"];
+
   return (
     <div className="flex flex-col gap-6">
+      <StepBar step={step} steps={steps} />
       {step === "service" && (
         <section className="flex flex-col gap-5">
           <h2 className="font-display text-xl font-normal tracking-[-0.03em]">Hangi hizmeti istiyorsunuz?</h2>
@@ -154,7 +188,7 @@ export function OrderWizard({ services }: { services: ServiceOption[] }) {
                   role="radio"
                   aria-checked={checked}
                   onClick={() => setServiceCode(service.code)}
-                  className={`flex min-h-24 flex-col gap-2 rounded-xl border-2 bg-panel-surface p-5 text-left ${checked ? "border-terracotta-700" : "border-mist-200"}`}
+                  className={`flex min-h-24 flex-col gap-2 rounded-xl border-2 bg-panel-surface p-5 text-left ${checked ? "border-terracotta-600 shadow-[0_8px_24px_rgb(38_51_45/8%)]" : "border-panel-line hover:border-panel-line-strong"}`}
                 >
                   <span className="font-display text-lg font-normal tracking-[-0.03em]">{service.name}</span>
                   <span className="text-sm text-slate-500">
@@ -283,7 +317,7 @@ export function OrderWizard({ services }: { services: ServiceOption[] }) {
       {step === "summary" && selected && (
         <section className="flex flex-col gap-5">
           <h2 className="font-display text-xl font-normal tracking-[-0.03em]">Özet</h2>
-          <dl className="flex flex-col gap-4 rounded-xl border border-mist-200 bg-panel-surface p-5">
+          <dl className="flex flex-col gap-4 rounded-xl border border-panel-line bg-panel-surface p-5">
             <SummaryRow label="Hizmet" value={selected.name} />
             <SummaryRow label="Mülk" value={title} />
             <SummaryRow label="Adres" value={address} />

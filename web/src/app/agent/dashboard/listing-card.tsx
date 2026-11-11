@@ -7,6 +7,7 @@ import {
   formatLocation,
   formatPrice,
 } from "@/lib/listings-feed/format";
+import { ListingDetail } from "./listing-detail";
 import type { FeedItem, LockedFeedRow, OpenFeedRow } from "@/lib/listings-feed/query";
 
 // index: listedeki sıra; yalnız ilk altı kart sırayla (stagger) girer, gerisi gecikmesiz görünür.
@@ -49,10 +50,14 @@ const lockIcon = (
 );
 
 // Stitch "İlan Havuzu" kartı: üstte görsel bandı, altta fiyat > başlık > haplar > konum/zaman > kaynak,
-// en altta tek gerçek eylem: bu ilan için dikey video siparişi. Görsel olmadığından bant dürüst bir
-// mimari yer tutucu; Stitch'teki "Detay", favori ve "doğrulandı" rozetleri karşılığı olmadığı için yok.
+// en altta eylemler: bu ilan için dikey video siparişi (başlık sihirbaza hazır gider) ve ayrıntı penceresi.
+// Görsel olmadığından bant dürüst bir mimari yer tutucu; favori ve "doğrulandı" rozetleri karşılığı olmadığı için yok.
 // Fiyat yoksa eksiklik cümlesi en büyük metin olmaz; sakin ikincil metne iner.
 function OpenListingCard({ listing, now, enter }: { listing: OpenFeedRow; now: Date; enter: Enter }) {
+  const title = listing.title || "Başlıksız ilan";
+  const videoHref = listing.title
+    ? `/agent/videos/new?baslik=${encodeURIComponent(listing.title.slice(0, 120))}`
+    : "/agent/videos/new";
   return (
     <li
       style={enter?.style}
@@ -93,10 +98,10 @@ function OpenListingCard({ listing, now, enter }: { listing: OpenFeedRow; now: D
           <span>{formatArrival(listing.created_at, now)}</span>
         </div>
         <p className="mt-1 truncate text-xs text-charcoal/65">{formatGroup(listing.source_group_name)}</p>
-        <div className="mt-auto pt-4">
+        <div className="mt-auto flex gap-2 pt-4">
           <Link
-            href="/agent/videos/new"
-            className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-terracotta-600 px-4 text-sm font-semibold text-white hover:bg-terracotta-700"
+            href={videoHref}
+            className="flex min-h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-terracotta-600 px-4 text-sm font-semibold text-white hover:bg-terracotta-700"
           >
             <svg
               aria-hidden="true"
@@ -112,6 +117,20 @@ function OpenListingCard({ listing, now, enter }: { listing: OpenFeedRow; now: D
             </svg>
             9:16 video sipariş et
           </Link>
+          <ListingDetail
+            info={{
+              price: formatPrice(listing.price, listing.currency),
+              hasPrice: listing.price !== null,
+              title,
+              rooms: listing.rooms,
+              area: listing.area_m2 === null ? null : `${listing.area_m2} m²`,
+              location: formatLocation(listing.city, listing.district),
+              arrival: formatArrival(listing.created_at, now),
+              group: formatGroup(listing.source_group_name),
+              own: Boolean(listing.owner_agent_id),
+              videoHref,
+            }}
+          />
         </div>
       </div>
     </li>
