@@ -5,6 +5,10 @@ import { createClient, createServiceRoleClient } from "@/lib/supabase/server";
 
 const RATE_LIMIT_WINDOW_MS = 10_000;
 const RATE_LIMIT_MAX_REQUESTS = 10;
+// NOT (güvenlik raporu bulgu 1): bu rate limit bellek içi ve DAĞITIK DEĞİL — yalnız bu sunucu
+// sürecinde geçerli. Vercel gibi çok örnekli ortamda her örneğin kendi sayacı olur, istek
+// dağıtılarak sınır aşılabilir. Kalıcı çözüm: Redis/Upstash veya CDN/WAF katmanında
+// kullanıcı+IP+rota anahtarıyla limit. Şu an caydırıcı/temel koruma olarak tutuluyor.
 const recentRequests = new Map<string, number[]>();
 
 function isRateLimited(userId: string): boolean {

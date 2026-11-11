@@ -1,4 +1,16 @@
 @import "tailwindcss";
+@import "./fonts.css";
+
+/* Fontlar self-host (public/fonts, bulgu 4): build Google Fonts'a bağlı değil.
+   next/font/google'ın ürettiği --font-* değişkenlerinin karşılığı burada tanımlı. */
+:root {
+  --font-inter: "Inter", system-ui, sans-serif;
+  --font-inter-tight: "Inter Tight", system-ui, sans-serif;
+  --font-instrument-serif: "Instrument Serif", Georgia, serif;
+  --font-lora: "Lora", Georgia, serif;
+  --font-geist-sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-geist-mono: ui-monospace, "Cascadia Code", "Consolas", monospace;
+}
 
 :root {
   --background: #ffffff;

@@ -401,12 +401,21 @@ export async function removeAsset(orderId: string, assetId: string): Promise<Act
     return fail("INTERNAL_ERROR");
   }
 
-  const { error: removeError } = await admin.storage
-    .from(ASSET_BUCKET)
-    .remove([asset.storage_path]);
+  // DB satırı (tek referans) silindi: kullanıcının eylemi başarılı. Storage silmesi bir kez yeniden
+  // denenir; yine de başarısızsa dosya yetim kalır (bulgu 2). Bu durumda INTERNAL_ERROR dönmek
+  // yanıltıcı olur (kayıt zaten gitti) — bunun yerine yetim yolu greplenebilir biçimde loglayıp
+  // başarı döneriz; periyodik temizlik bu logdan/bucket taramasından yetimleri siler.
+  let removeError = (await admin.storage.from(ASSET_BUCKET).remove([asset.storage_path])).error;
   if (removeError) {
-    console.error("Dosya silinemedi", removeError);
-    return fail("INTERNAL_ERROR");
+    removeError = (await admin.storage.from(ASSET_BUCKET).remove([asset.storage_path])).error;
+  }
+  if (removeError) {
+    console.error("video_asset_orphan", {
+      bucket: ASSET_BUCKET,
+      storage_path: asset.storage_path,
+      order_id: order.id,
+      reason: removeError.message,
+    });
   }
 
   revalidatePath(`/agent/videos/${order.id}`);

@@ -158,6 +158,7 @@ const h = vi.hoisted(() => {
         },
         remove: async (paths: string[]) => {
           calls.remove(bucket, paths);
+          if (state.removeFails) return { data: null, error: { message: "storage down" } };
           for (const p of paths) objects.delete(`${bucket}/${p}`);
           return { data: [], error: null };
         },
@@ -688,6 +689,21 @@ describe("removeAsset", () => {
 
     expect(result).toMatchObject({ ok: false, error: "INVALID_STATE" });
     expect(h.calls.remove).not.toHaveBeenCalled();
+  });
+
+  it("Storage silmesi sürekli başarısızsa satır yine silinir, ok döner ve yetim loglanır (bulgu 2)", async () => {
+    const orderId = seedOrder();
+    const assetId = seedAsset(orderId, "photo");
+    h.state.removeFails = true;
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    const result = await removeAsset(orderId, assetId);
+
+    expect(result).toEqual({ ok: true });
+    expect(assetsOf(orderId)).toHaveLength(0);
+    expect(h.calls.remove).toHaveBeenCalledTimes(2); // bir yeniden deneme
+    expect(errorSpy).toHaveBeenCalledWith("video_asset_orphan", expect.objectContaining({ order_id: orderId }));
+    errorSpy.mockRestore();
   });
 });
 

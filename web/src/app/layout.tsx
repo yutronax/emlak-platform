@@ -1,44 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Inter, Inter_Tight, Instrument_Serif, Lora } from "next/font/google";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-// Türkçe ğ/ş/ı latin-ext alt kümesinde; yalnız "latin" ile yedek fonta düşer.
-const interTight = Inter_Tight({
-  variable: "--font-inter-tight",
-  subsets: ["latin", "latin-ext"],
-  weight: ["300", "400", "500", "600"],
-});
-
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
-  subsets: ["latin", "latin-ext"],
-  weight: "400",
-  style: ["normal", "italic"],
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin", "latin-ext"],
-});
-
-// Sıcak Editorial başlık fontu: tanıtım sayfaları ve emlakçı paneli ([data-panel-theme="editorial"]).
-const lora = Lora({
-  variable: "--font-lora",
-  subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "Emlak Platformu",
@@ -47,12 +8,11 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
 };
 
+// Fontlar self-host edilir (public/fonts, src/app/fonts.css); next/font/google kullanılmaz,
+// böylece üretim derlemesi Google Fonts erişimine bağlı değildir (bulgu 4).
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="tr"
-      className={`${geistSans.variable} ${geistMono.variable} ${interTight.variable} ${instrumentSerif.variable} ${inter.variable} ${lora.variable} h-full antialiased`}
-    >
+    <html lang="tr" className="h-full antialiased">
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
