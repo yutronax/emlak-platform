@@ -39,6 +39,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     { href: "/admin/listings", label: "İlanlar" },
     { href: "/admin/videos", label: "Videolar" },
     { href: "/admin/agents", label: "Emlakçılar" },
+    { href: "/admin/support", label: "Destek" },
   ];
 
   return (
