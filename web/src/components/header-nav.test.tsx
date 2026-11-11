@@ -64,14 +64,13 @@ describe("HeaderNav", () => {
     expect(screen.getByRole("link", { name: "Kayıt Ol" })).toBeInTheDocument();
   });
 
-  // AC-2 (Critical): aktif gösterge yalnız renge dayanmaz — font-semibold + alt çizgi.
-  it("aktif linkin className'i font-semibold ve underline içerir", () => {
+  // AC-2 (Critical): aktif gösterge yalnız renge dayanmaz — kalıcı kutucuk (bg) + font-semibold; çizgi yok.
+  it("aktif linkin className'i kutucuk (bg-panel-muted) ve font-semibold içerir, underline içermez", () => {
     mockPathname.mockReturnValue("/pricing");
     render(<HeaderNav />);
 
-    expect(screen.getByRole("link", { name: "Fiyatlar" })).toHaveClass(
-      "font-semibold",
-      "underline",
-    );
+    const link = screen.getByRole("link", { name: "Fiyatlar" });
+    expect(link).toHaveClass("font-semibold", "bg-panel-muted");
+    expect(link.className).not.toContain("underline");
   });
 });

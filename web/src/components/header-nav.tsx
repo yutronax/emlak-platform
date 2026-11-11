@@ -9,8 +9,11 @@ import { createClient } from "@/lib/supabase/client";
 
 const navText = "text-[15px] md:text-base";
 
-// Aktif sayfa göstergesi: renk tek başına değil; kalın yazı + alt çizgi.
-const activeClass = "font-semibold underline underline-offset-4 decoration-2";
+// Metin linkleri: alt çizgi yok; üstüne gelince/odakta kutucuk (zemin dolgusu).
+const navLink =
+  "whitespace-nowrap rounded-lg px-3 py-1.5 transition-colors hover:bg-panel-muted focus-visible:bg-panel-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900";
+// Aktif sayfa: renk tek başına değil; kalıcı kutucuk + kalın yazı (çizgi değil).
+const activeClass = "bg-panel-muted font-semibold text-ink-900";
 
 // 320px'te tek satır: logo + "Giriş" metin linki + küçük "Kayıt Ol". Hamburger yok.
 // "Fiyatlar" yalnız md+ ekranda görünür; mobilde sayfa içi CTA'lar yeterli.
@@ -49,7 +52,7 @@ export function HeaderNav() {
         <Link
           href="/pricing"
           aria-current={pricingActive ? "page" : undefined}
-          className={`hidden whitespace-nowrap hover:underline md:inline ${pricingActive ? activeClass : ""}`}
+          className={`hidden md:inline ${navLink} ${pricingActive ? activeClass : ""}`}
         >
           Fiyatlar
         </Link>
@@ -68,16 +71,13 @@ export function HeaderNav() {
       <Link
         href="/pricing"
         aria-current={pricingActive ? "page" : undefined}
-        className={`hidden whitespace-nowrap hover:underline md:inline ${pricingActive ? activeClass : ""}`}
+        className={`hidden md:inline ${navLink} ${pricingActive ? activeClass : ""}`}
       >
         Fiyatlar
       </Link>
 
       {!loginActive && (
-        <Link
-          href="/login"
-          className="whitespace-nowrap px-1 py-1 hover:underline"
-        >
+        <Link href="/login" className={`${navLink} ${loginActive ? activeClass : ""}`}>
           Giriş
         </Link>
       )}

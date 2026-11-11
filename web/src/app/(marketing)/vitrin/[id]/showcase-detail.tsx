@@ -1,6 +1,8 @@
 import Link from "next/link";
 
 import { Poster, ShowcaseCard } from "@/components/showcase/showcase-card";
+
+import { ShowcaseVideo } from "./showcase-video";
 import { DEAL_LABEL, formatShowcasePrice, telHref, whatsappHref } from "@/lib/showcase-ui/format";
 import type { ShowcaseItem } from "@/lib/showcase-ui/types";
 
@@ -33,16 +35,11 @@ export function ShowcaseDetail({ item, similar, pageUrl }: Props) {
 
       <div className="mt-4 grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="min-w-0">
-          <div className="overflow-hidden rounded-leaf bg-ink-900">
+          {/* Vitrin videoları 9:16 dikey; oynatıcı dikey çerçevede, ortalanmış. object-contain: dikey
+              olmayan bir video gelse bile kırpılmadan sığar. İndirme kapalı (controlsList + sağ tık). */}
+          <div className="mx-auto overflow-hidden rounded-leaf bg-panel-deep sm:max-w-sm">
             {item.videoUrl ? (
-              <video
-                src={item.videoUrl}
-                poster={item.posterUrl ?? undefined}
-                controls
-                playsInline
-                preload="metadata"
-                className="aspect-video w-full bg-ink-900"
-              />
+              <ShowcaseVideo src={item.videoUrl} poster={item.posterUrl ?? undefined} />
             ) : (
               <div className="relative">
                 <Poster item={item} />
