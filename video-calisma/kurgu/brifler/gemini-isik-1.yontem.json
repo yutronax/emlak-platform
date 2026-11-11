@@ -1,0 +1,176 @@
+{
+  "model": "gemini-2.5-flash",
+  "parcalar": [
+    {
+      "etiket": "KLIP 578540",
+      "mekan": "Açık plan mutfak ve yaşam alanı",
+      "kalite": 9,
+      "kamera": "Sağa doğru geniş açı pan",
+      "kullanim": "Evin modern, açık konseptini ve ilk katın ferahlığını sergilemek için ideal bir açılış"
+    },
+    {
+      "etiket": "KLIP 578543",
+      "mekan": "Geniş arka bahçe ve veranda",
+      "kalite": 9,
+      "kamera": "Alçak açıdan ileri doğru yavaş hareket",
+      "kullanim": "Dış mekanın yeşil doğasını ve geniş teras alanını vurguluyor, iç-dış bağlantısını gösteriyor"
+    },
+    {
+      "etiket": "KLIP 578544",
+      "mekan": "Giriş holü, merdiven ve yemek alanı",
+      "kalite": 8,
+      "kamera": "Sol-yukarı doğru yavaş pan ve yükselme",
+      "kullanim": "Evin yüksek tavanlarını, modern merdiven tasarımını ve zarif yemek alanını bir arada sunuyor"
+    },
+    {
+      "etiket": "KLIP 578546",
+      "mekan": "Uzun koridor ve ana yaşam alanı",
+      "kalite": 9,
+      "kamera": "Alçak açıdan başlayıp yükselerek ileri doğru hareket",
+      "kullanim": "Evin genişliğini, ferahlığını ve gün ışığı alan yapısını dinamik bir perspektifle gösteriyor"
+    },
+    {
+      "etiket": "KLIP 578549",
+      "mekan": "Eğlence odası ve bar",
+      "kalite": 9,
+      "kamera": "Sağa pan ile başlayıp bara doğru ileri hareket",
+      "kullanim": "Evin sosyal ve eğlenceye yönelik özel alanını, modern bar tasarımını ve bilardo masasını tanıtıyor"
+    },
+    {
+      "etiket": "KLIP 578550",
+      "mekan": "Yatak odası ve balkon",
+      "kalite": 9,
+      "kamera": "Yataktan başlayıp sağa doğru yavaş pan",
+      "kullanim": "Yatak odasının konforunu, lüks yatak başlığını ve özel balkon erişimini vurguluyor"
+    },
+    {
+      "etiket": "KLIP 578551",
+      "mekan": "Modern banyo",
+      "kalite": 9,
+      "kamera": "İleri doğru hareket edip etrafı tarama",
+      "kullanim": "Evin spa benzeri, modern banyosunu, küveti ve cam duşu ayrıntılı olarak gösteriyor"
+    },
+    {
+      "etiket": "KLIP 578552",
+      "mekan": "Yemek ve oturma odası",
+      "kalite": 9,
+      "kamera": "İleri doğru yavaş hareketle odalar arası geçiş",
+      "kullanim": "Açık planın işlevselliğini ve iç tasarımın uyumunu farklı bir açıdan sunuyor, genişliği pekiştiriyor"
+    }
+  ],
+  "hikaye": "Bu film, modern mimarinin zarafetiyle tasarlanmış, ferah ve aydınlık bir evin hikayesini anlatıyor. Geniş iç mekanlardan yemyeşil dış mekanlara, özel eğlence alanlarından lüks dinlenme köşelerine kadar, bu evde yaşamın her anı için bir alan bulunuyor. Gün ışığının her köşeyi aydınlattığı, şık detaylarla donatılmış bu yaşam alanı, izleyiciye huzurlu ve sofistike bir deneyim vaat ediyor.",
+  "planlar": [
+    {
+      "etiket": "KLIP 578540",
+      "baslangic_sn": 2,
+      "neden": "Açık mutfak ve yaşam alanının ferahlığını göstermek için en uygun nokta."
+    },
+    {
+      "etiket": "KLIP 578543",
+      "baslangic_sn": 50,
+      "neden": "Dış mekanın güzelliğini ve terasın davetkar atmosferini en iyi yansıtan kısım."
+    },
+    {
+      "etiket": "KLIP 578544",
+      "baslangic_sn": 105,
+      "neden": "Evin giriş holü, merdiven ve yemek alanının birleşimini, genel mimariyi öne çıkarıyor."
+    },
+    {
+      "etiket": "KLIP 578546",
+      "baslangic_sn": 130,
+      "neden": "Evin uzunlamasına genişliğini ve genel ışık alımını en iyi gösteren plan."
+    },
+    {
+      "etiket": "KLIP 578549",
+      "baslangic_sn": 220,
+      "neden": "Bar ve eğlence alanının detaylarını, sosyal yaşam alanının kalitesini gösteriyor."
+    },
+    {
+      "etiket": "KLIP 578550",
+      "baslangic_sn": 241,
+      "neden": "Yatak odasının konforunu ve manzara bağlantısını vurgulayan net bir kare."
+    },
+    {
+      "etiket": "KLIP 578551",
+      "baslangic_sn": 248,
+      "neden": "Banyonun modern tasarımını ve lüks hissini en iyi yansıtan bölge."
+    },
+    {
+      "etiket": "KLIP 578552",
+      "baslangic_sn": 315,
+      "neden": "Yemek ve oturma odasının farklı bir açıyla, aydınlık ve davetkar atmosferini gösteriyor."
+    }
+  ],
+  "plan_suresi_sn": 3.2,
+  "gecisler": [
+    {
+      "ad": "Geometrik Parlama Geçişi",
+      "yontem": "KLIP 578540'ın son 0.5 saniyesinde kamera hareketini hızlandırarak bir hız rampası oluştur. Ardından, ekranın sol üst köşesinden başlayıp sağ alta doğru çapraz bir parlak ışık süzmesiyle (lens flare efekti içeren, hafif buzlu cam dokusunda) KLIP 578543'e geçiş yap. Geçiş sırasında eski görüntü bu parlaklıkta çözülüp yerini yeni görüntüye bırakırken ses, kısa ve parlak bir \"vınlama\" efektiyle güçlendirilecek.",
+      "ses": "Parlak vınlama ve hava akışı"
+    },
+    {
+      "ad": "Yerden Göğe Yükseliş",
+      "yontem": "KLIP 578543'ün son 0.5 saniyesinde görüntüyü hızlıca yere yaklaştırarak ve hızlandırarak bir rampalama uygula. Ardından, zemin hızla ekranı kaplayıp tamamen beyaza bürünürken, yeni görüntü KLIP 578544 hızla yukarıdan aşağı doğru kayarak belirsin, adeta bir zeminden başka bir kata ışınlanmış gibi bir etki yarat. Ses, derin bir 'gümleme' ve ardından hafif bir 'yükseliş' ambiyansı içerecek.",
+      "ses": "Derin gümleme ve hafif yükseliş"
+    },
+    {
+      "ad": "Aynalı Çözülme",
+      "yontem": "KLIP 578544'ün son 0.5 saniyesinde kamera hareketini hızlandır. Ardından görüntü, bir anlığına buzlu cam veya ayna yüzeyinden yansımış gibi hızla bulanıklaşsın ve hafifçe renkleri dağılsın. Bu bulanıklık hızla KLIP 578546'nın net görüntüsüne dönüşürken, eski görüntünün yansıması yeni görüntünün üzerine hafifçe 'silinir' gibi kaybolsun. Ses, pürüzsüz bir 'kayma' ve 'titreşim' efektiyle desteklenecek.",
+      "ses": "Pürüzsüz kayma ve hafif titreşim"
+    },
+    {
+      "ad": "Kapı Eşiği Işıltısı",
+      "yontem": "KLIP 578546'nın son 0.5 saniyesinde kamera, bir kapı eşiğine doğru hızlanarak bir rampalama yapsın. Kapı eşiğinden geçerken, görüntü merkezden dışa doğru yayılan yumuşak, sıcak bir ışıltıyla aydınlansın ve bu ışıltı KLIP 578549'un başlangıcına doğru yavaşça dağılarak yeni mekanı ortaya çıkarsın. Ses, kapı açılma hissi veren 'hafif tıklama' ve 'yumuşak yankı' içerecek.",
+      "ses": "Hafif tıklama ve yumuşak yankı"
+    },
+    {
+      "ad": "Panoramik Dönüş",
+      "yontem": "KLIP 578549'un son 0.5 saniyesinde sağa doğru yapılan pan hareketini hızlandır. Ardından görüntü, çok kısa bir an için dikey eksende hızla döner gibi bir efekle yatay olarak bulanıklaşsın ve KLIP 578550'ye girerken bu dönüş ve bulanıklık hızla ortadan kalksın, kameranın yeni mekana girerken aynı sağa doğru hareketini sürdürdüğü hissi verilsin. Ses, hızlı bir 'dönme' ve 'fısıltı' efektiyle geçişi hissettirecek.",
+      "ses": "Hızlı dönme ve fısıltı"
+    },
+    {
+      "ad": "Pencere Kare Geçişi",
+      "yontem": "KLIP 578550'nin son 0.5 saniyesinde görüntü, bir pencere veya çerçeve içinden bakıyormuş gibi, kademeli olarak küçülerek merkezde bir dikdörtgen pencere formu oluşturmaya başlasın. Bu pencere formu hızla KLIP 578551'in görüntüsünü ortaya çıkarmak üzere büyüsün, sanki bir odadan diğerine bir pencere açılmış gibi. Ses, hafif bir 'açılma' ve 'cam sesi' ilüzyonu içerecek.",
+      "ses": "Hafif açılma ve cam sesi"
+    },
+    {
+      "ad": "Dokulu Kaydırma",
+      "yontem": "KLIP 578551'in son 0.5 saniyesinde kamera hareketini hızlandır. Ardından, banyo yüzeylerindeki mermer veya fayans dokusundan ilham alan soyut, pürüzsüz bir doku efekti, ekranın sağ altından sol üstüne doğru akarak yeni görüntü KLIP 578552'yi pürüzsüzce ortaya çıkarsın. Dokunun kenarları hafifçe parlaklık vurgusuna sahip olacak. Ses, akışkan bir 'su' veya 'ipek' kaydırma sesiyle desteklenecek.",
+      "ses": "Akışkan kaydırma ve hafif hışırtı"
+    }
+  ],
+  "isik_renk": "Tüm film boyunca renk paleti, modern ve ferah bir atmosfer yaratmak için doğal tonları koruyacak, ancak hafifçe canlandırılmış ve berraklaştırılmış olacak. Genel kontrast 1.08, doygunluk 1.03 seviyesine çıkarılacak. Renk dengesi ayarları: Kırmızı tonlarda (highlights) hafif bir pozitiflik (+0.02), yeşil tonlarda (highlights) çok hafif bir pozitiflik (+0.01), mavi tonlarda (highlights) hafif bir negatiflik (-0.01). Kırmızı gölgelerde (-0.01), yeşil gölgelerde (+0.01) ve mavi gölgelerde (+0.02) ayarlamalarla daha derin ve net gölgeler elde edilecek. Eğriler (curves) ise '0/0 0.2/0.18 0.4/0.4 0.6/0.63 0.8/0.85 1/1' şeklinde ayarlanarak genel parlaklık ve kontrast dağılımı optimize edilecek, böylece aydınlık alanlar parlayacak ve koyu alanlar detaylarını koruyacak.",
+  "isik_efektleri": "Güneş ışığının iç mekanlara vurduğu anlarda (özellikle KLIP 578546 ve KLIP 578552'de pencerelerden giren ışıkta), hafif ve estetik lens parlamaları (subtle lens flares) kullanılacak. Mutfak ve bar alanlarındaki sarkıt lambaların etrafında (KLIP 578540 ve KLIP 578549), yumuşak, difüze bir parlama efekti (soft glow) uygulanarak ambiyans sıcaklığı artırılacak. KLIP 578548 gibi daha kapalı koridorlarda ise, koridor sonundaki ışık kaynağının parlaması güçlendirilerek derinlik hissi vurgulanacak.",
+  "acilis": "Film, tamamen siyahlama ile başlayacak. İlk saniyenin ortasında, ekranın merkezinde çok küçük, sıcak beyaz bir ışık noktası belirip hızla genişlemeye başlayacak ve bu parlaklık yavaşça dağılarak KLIP 578540'ın ana görüntüsünü yumuşak bir şekilde ortaya çıkaracak. Geçiş yaklaşık 1.5 saniye sürecek ve sessizce başlayıp müziğin girişini karşılayacak.",
+  "kapanis": "Son plan olan KLIP 578552'nin bitimine doğru, görüntü kademeli olarak soluklaşarak tamamen parlak bir beyaza dönecek. Bu saf beyaz üzerinde, evin logosu (yer tutucu olarak 'YERİNDE GÖRÜN' metni), iletişim bilgisi (örneğin '05XX XXX XX XX') ve 'MÜZİK: Kevin MacLeod (incompetech.com) · CC BY 4.0' kredileri, minimalist ve zarif bir sans-serif fontuyla, siyah renkte, merkezin biraz yukarısında ve hizalı bir şekilde pürüzsüzce belirecek. Kapanış kartı 3 saniye ekranda kalacak ve ardından logo ve metinler yavaşça kaybolurken ekran tekrar siyaha dönecek. Geçiş sırasında müzik hafifçe yükselip sonra kademeli olarak azalacak.",
+  "yazi": {
+    "gorunum": "Yazı tipi 'Lato Bold' veya benzeri temiz, modern bir sans-serif olacak. Boyut 64px, renk beyaz olacak. Yazılar ekranın üst orta kısmında, ortalanmış şekilde yer alacak, alt kısmı asla kaplamayacak.",
+    "animasyon": "Başlıklar, hafif bir parlama efektiyle merkeze doğru yavaşça zoom yaparak belirecek ve aynı şekilde yavaşça geri zoom yaparak kaybolacak. Her başlık yaklaşık 2 saniye ekranda kalacak ve geçişlerdeki hız rampalarının ritmine uyum sağlayacak."
+  },
+  "basliklar": [
+    {
+      "plan_no": 0,
+      "metin": "MODERN YAŞAM ALANI"
+    },
+    {
+      "plan_no": 2,
+      "metin": "DIŞ MEKAN KEYFİ"
+    },
+    {
+      "plan_no": 4,
+      "metin": "ZARAFET VE KONFOR"
+    },
+    {
+      "plan_no": 6,
+      "metin": "SİZE ÖZEL"
+    }
+  ],
+  "muzik": {
+    "tarif": "Kurumsal lüks emlak temasına uygun, orta tempo (~100 BPM), piyano ve yaylı enstrümanların ağırlıkta olduğu, hafif ritmik öğeler içeren, güven veren ve sofistike bir atmosfer sağlayan bir parça. Modern bir yaşam tarzını yansıtmalı.",
+    "secim": "luxury-real-estate.mp3",
+    "baslangic_sn": 0,
+    "neden": "Katalogdaki 'luxury-real-estate.mp3' parçası, istenen 'kurumsal lüks emlak, orta tempo, piyano + yaylı + hafif ritim, güven veren' tanımına mükemmel uyuyor. Evin modern ve lüks atmosferini en iyi şekilde destekleyecektir. Filmdeki hareketli kamera açıları ve şık mekanlar ile uyumlu dinamik bir ritme sahip."
+  },
+  "seslendirme_metni": "Bu eşsiz evde modern lüks ve konfor bir araya geliyor. Ferah yaşam alanları, gurme mutfak ve özel eğlence odası. Sakin bahçesi ve şık teraslarıyla hayallerinizdeki yaşamı burada bulun. Her detayda kalite ve zarafet.",
+  "gerekce": "Bu evin tanıtımında modern lüks ve ferahlık anahtar temalardır. Seçilen planlar, evin açık mimarisini, doğal ışıkla olan etkileşimini, dış mekanla bağlantısını ve özel yaşam/eğlence alanlarını kapsayıcı bir şekilde gösteriyor. Her planın 3.2 saniyelik süresi, izleyicinin mekanı anlamasına yetecek ancak tempoyu düşürmeyecek dinamik bir akış sağlıyor. Hız rampaları ve özgün geçişler, videoya enerji katarken, kamera hareketlerinin yönüne uygun geçişler akıcılığı artırıyor. 'Geometrik Parlama' ve 'Yerden Göğe Yükseliş' gibi geçişler evin modern ve sürprizli yapısını yansıtırken, 'Aynalı Çözülme' ve 'Dokulu Kaydırma' gibi geçişler evin iç mekanlarındaki zarif yüzeylere ve tasarım detaylarına gönderme yapıyor. 'Kapı Eşiği Işıltısı' ve 'Pencere Kare Geçişi', odalar arasındaki geçişleri daha anlamlı ve estetik kılıyor. Belirlenen ışık ve renk ayarları, evin temiz, modern estetiğini ve bol ışık alan yapısını en iyi şekilde vurgulayarak, sıcak ve davetkar bir his yaratıyor. Başlıklar, evin temel özelliklerini kısa ve akılda kalıcı bir şekilde özetlerken, seslendirme metni evin genel atmosferini ve sunduğu yaşam kalitesini vurguluyor. Seçilen müzik, bu lüks ve modern temayı kusursuzca tamamlayarak izleyicide güven ve beğeni uyandırıyor."
+}

@@ -1,0 +1,234 @@
+{
+  "model": "gemini-2.5-flash",
+  "parcalar": [
+    {
+      "etiket": "KLIP 614406",
+      "mekan": "Yemek Alanı/Oturma Odası",
+      "kalite": 9,
+      "kamera": "Sabit, hafif geniş açı",
+      "kullanim": "Açıkhava planını ve oturma odası bağlantısını gösteren ana plan"
+    },
+    {
+      "etiket": "KLIP 614407",
+      "mekan": "Yemek Alanı/Mutfak",
+      "kalite": 9,
+      "kamera": "Orta çekim, hafif kaydırma",
+      "kullanim": "Yemek sandalyeleri ve mutfak detaylarının modern tasarımını vurgulayan plan"
+    },
+    {
+      "etiket": "KLIP 614409",
+      "mekan": "Oturma Odası Detayı",
+      "kalite": 8,
+      "kamera": "Yakın çekim, sığ alan derinliği",
+      "kullanim": "Yeşil bitki ile doğal bir dokunuş ve yaşam alanı atmosferi ekleyen detay plan"
+    },
+    {
+      "etiket": "KLIP 614410",
+      "mekan": "Yemek Alanı/Oturma Odası",
+      "kalite": 9,
+      "kamera": "Sabit, orta çekim",
+      "kullanim": "Açılış montajında dinamik bir giriş için hızlı kesit"
+    },
+    {
+      "etiket": "KLIP 614415",
+      "mekan": "Yemek Alanı",
+      "kalite": 9,
+      "kamera": "Sabit, masa seviyesi çekim",
+      "kullanim": "Vazoyu yerleştiren el ile evdeki canlılığı ve insan dokunuşunu vurgulayan plan"
+    },
+    {
+      "etiket": "KLIP 614417",
+      "mekan": "Yemek Alanı/Mutfak",
+      "kalite": 9,
+      "kamera": "Sabit, hafif geniş açı",
+      "kullanim": "Mutfak ve yemek alanının pencerelerle aydınlığını gösteren plan"
+    },
+    {
+      "etiket": "KLIP 614419",
+      "mekan": "Oturma Odası Detayı",
+      "kalite": 8,
+      "kamera": "Yakın çekim, sığ alan derinliği",
+      "kullanim": "Oturma alanına geçişi yumuşatan, estetik bir detay planı"
+    },
+    {
+      "etiket": "KLIP 614420",
+      "mekan": "Yemek Alanı",
+      "kalite": 9,
+      "kamera": "Orta çekim, masa seviyesi",
+      "kullanim": "Masa ve vazo kompozisyonunu, mobilya kalitesini vurgulayan detay plan"
+    },
+    {
+      "etiket": "KLIP 614421",
+      "mekan": "Mutfak/Yemek Alanı",
+      "kalite": 9,
+      "kamera": "Sabit, orta çekim",
+      "kullanim": "Sandalyeleri düzelten kişi ile evin yaşanmışlığını ve düzenini gösteren plan"
+    },
+    {
+      "etiket": "KLIP 614529",
+      "mekan": "Oturma Odası",
+      "kalite": 9,
+      "kamera": "Geniş açı, sabit",
+      "kullanim": "Oturma odasının genel atmosferini ve büyük pencerelerini sunan ana plan"
+    },
+    {
+      "etiket": "KLIP 614541",
+      "mekan": "Mutfak/Yemek Alanı",
+      "kalite": 9,
+      "kamera": "Geniş açı, sabit",
+      "kullanim": "Mutfak ve yemek alanını bir bütün olarak gösteren kapanış planı"
+    }
+  ],
+  "edit_turu": "Ritmik ve Dinamik Kolaj (Kırılan Kalıplar: (1) oda oda sıralı tur, (2) her plan tam ekran tek görüntü, (5) plan başına ~2–3 sn eşit ritim, (6) yumuşak geçişlerle akış, (3) üstte küçük başlık, (4) sakin seslendirme)",
+  "hikaye": "Bu video, bir evin durağan bir tanıtımından ziyade, modern yaşamın enerjisini ve evin sunduğu dinamik atmosferi kutlayan, keskin ve ritmik bir görsel deneyim sunar. Mekanlar arasındaki akış, geleneksel bir tur yerine, estetik detaylar ve yaşam hissiyatı üzerine odaklanır.",
+  "planlar": [
+    {
+      "etiket": "KLIP 614406",
+      "baslangic_sn": 0.0,
+      "neden": "Açılış montajında ekranın sol yarısında hızlı zoom ile vase odak."
+    },
+    {
+      "etiket": "KLIP 614529",
+      "baslangic_sn": 0.0,
+      "neden": "Açılış montajında ekranın sağ yarısında eş zamanlı olarak açılan dinamik geniş plan."
+    },
+    {
+      "etiket": "KLIP 614407",
+      "baslangic_sn": 0.0,
+      "neden": "Açılış montajında tam ekran kısa flash ile sandalye detayı."
+    },
+    {
+      "etiket": "KLIP 614541",
+      "baslangic_sn": 0.0,
+      "neden": "Açılış montajında tam ekran kısa flash ile geniş mutfak/yemek alanı."
+    },
+    {
+      "etiket": "KLIP 614410",
+      "baslangic_sn": 0.0,
+      "neden": "Açılış montajının sonu, ana akışa geçişi sağlayan modern iç mekan vurgusu."
+    },
+    {
+      "etiket": "KLIP 614406",
+      "baslangic_sn": 2.0,
+      "neden": "Açıkhava planını ve oturma odası bağlantısını gösteren ilk geniş ana plan."
+    },
+    {
+      "etiket": "KLIP 614417",
+      "baslangic_sn": 3.0,
+      "neden": "Mutfak ve yemek alanının pencerelerle aydınlığını vurgulamak."
+    },
+    {
+      "etiket": "KLIP 614407",
+      "baslangic_sn": 3.0,
+      "neden": "Yemek sandalyelerinin ve vazo detayının modern tasarımını öne çıkarmak."
+    },
+    {
+      "etiket": "KLIP 614409",
+      "baslangic_sn": 1.0,
+      "neden": "Yeşil bitki ile doğal bir dokunuş eklemek."
+    },
+    {
+      "etiket": "KLIP 614420",
+      "baslangic_sn": 1.0,
+      "neden": "Masa ve vazo kompozisyonunu daha yakından göstermek, mobilya kalitesini vurgulamak."
+    },
+    {
+      "etiket": "KLIP 614415",
+      "baslangic_sn": 3.0,
+      "neden": "Canlılık ve kullanım hissi katmak için vazoyu yerleştiren el (insan etkileşimi)."
+    },
+    {
+      "etiket": "KLIP 614419",
+      "baslangic_sn": 2.0,
+      "neden": "Oturma alanına geçişi yumuşatacak estetik bir detay."
+    },
+    {
+      "etiket": "KLIP 614529",
+      "baslangic_sn": 1.0,
+      "neden": "Oturma odasının genel atmosferini ve büyük pencerelerini sunmak."
+    },
+    {
+      "etiket": "KLIP 614421",
+      "baslangic_sn": 2.0,
+      "neden": "Evin yaşanmışlığını ve düzenini gösteren, sandalyeleri düzelten kişi (insan etkileşimi)."
+    },
+    {
+      "etiket": "KLIP 614541",
+      "baslangic_sn": 1.0,
+      "neden": "Mutfak ve yemek alanını bir bütün olarak gösteren kapanış planı."
+    }
+  ],
+  "plan_suresi_sn": "Dinamik ve müziğe senkronize. Hızlı montajlar için 0.5-1.5 saniye, ana planlar için 2.5-4.0 saniye aralığında değişecek.",
+  "gecisler": [
+    {
+      "ad": "Hızlı Mozaik Büyüme",
+      "yontem": "Açılış montajında kullanılacak. Bir sonraki sahne, ekranın merkezinden dışarı doğru hızlı bir şekilde mozaik benzeri parçalar halinde patlayarak büyüyecek ve kendini gösterecek.",
+      "ses": "Hızlı, kısa, yükselen bir synth darbesi"
+    },
+    {
+      "ad": "Parçalı Kaydırma",
+      "yontem": "Ana geçişlerde kullanılacak. Ekran, dikey veya yatay olarak 2-3 şeride bölünecek ve bu şeritler zıt yönlerde hızla kayarak bir sonraki klibi ortaya çıkaracak.",
+      "ses": "Keskin, kısa bir 'whoosh' sesi"
+    },
+    {
+      "ad": "Işık Kırılması",
+      "yontem": "Dinamik ve vurgulanacak anlarda kullanılacak. Çok kısa, yoğun bir beyaz ışık patlamasıyla görüntü adeta prizmatik renklere ayrılacak ve hemen ardından yeni klip belirecek.",
+      "ses": "Yüksek frekanslı, anlık bir 'shimmer' veya 'glitch' sesi"
+    },
+    {
+      "ad": "Keskin Geçiş",
+      "yontem": "Müzik vuruşlarına senkronize, direkt kesmelerle anlık geçişler.",
+      "ses": "Müzik ritmine uygun, keskin bir ses efekti veya müziğin vurucu anı"
+    }
+  ],
+  "isik_renk": "Tüm film boyunca, evin doğal aydınlığına vurgu yapan ancak modern ve dinamik bir his veren renk paleti kullanılacak. Kontrast ve doygunluk hafifçe artırılarak görsellerin 'pop' yapması sağlanacak, sıcak tonlar korunacak ancak aşırıya kaçılmayacak. Genel ayarlar: eq=contrast=1.1:saturation=1.15:brightness=0.05,curves=all='0/0 0.5/0.5 1/1.05',colorbalance=rs=0.05:gs=0.03:bs=0.02 olacak.",
+  "isik_efektleri": "Açılışta 'Hızlı Mozaik Büyüme' geçişiyle birlikte kısa ve yoğun ışık patlamaları kullanılacak. KLIP 614415'te vazoyu yerleştirirken elin üzerinde anlık, yumuşak bir odak ışığı parlaması ile bu an vurgulanacak. Kapanışta, son planın ardından, logo kartına geçişte sahne hafifçe karartılıp renkleri soldurulacak, huzurlu bir bitiş sağlanacak.",
+  "acilis": "Film, siyah ekrandan 'Hızlı Mozaik Büyüme' geçişiyle patlayarak açılacak. İlk 3 saniye boyunca, farklı klipler (KLIP 614406, KLIP 614529, KLIP 614407, KLIP 614541, KLIP 614410) arasında çok hızlı kesmelerle (her biri yaklaşık 0.5-1 saniye) dinamik bir montaj oluşturulacak. Bu hızlı montaj, büyük, kinetik başlıklarla (YAŞAM, TARZ, ŞİMDİ) desteklenecek ve izleyiciye ilk andan itibaren 'bu farklı' mesajını verecek.",
+  "kapanis": "Son plan (KLIP 614541) yaklaşık 4 saniye sürecek. Bu esnada kamera yavaşça zoom-out yaparken, ekranın ortasına büyük, parlak bir 'YERİNDE GÖRÜN' yazısı belirecek. Ardından bu yazı hızla küçülüp ekranın sağ alt köşesine kayarken, logonun kendisi merkezde, stilize edilmiş bir parlama efektiyle belirip sabitlenecek. Telefon numarası yer tutucusu ve krediler logonun altında, zarif bir kaydırma animasyonuyla görünecek. Görüntü, müziğin yavaşça solmasıyla birlikte son planın kademeli olarak siyaha dönüşmesiyle kapanacak.",
+  "yazi": {
+    "gorunum": "Başlıklar için 'Oswald ExtraLight' (veya benzeri ince ve uzun sans-serif) kullanılacak. Kısa ve vurgulu kelimeler için 200px'e kadar büyük font boyutu, açıklayıcı metinler için 'Montserrat SemiBold' ile 80px font boyutu tercih edilecek. Tüm yazılar beyaz (0xFFFFFF), hafif siyah gölgeli (shadowcolor=black@0.7:shadowx=2:shadowy=2) olacak. Konumları statik olmayıp, her planın kompozisyonuna göre dinamik olarak ekranın farklı bölgelerinde (orta, sol, sağ, köşeler) yer alacak.",
+    "animasyon": "Başlıklar, ekranın farklı noktalarından (örneğin sol üstten, sağ alttan) hızla içeri doğru kayarak, hafif bir 'spring' (yaylanma) efektiyle yerleşecek ve aynı şekilde hızla dışarı doğru kayarak kaybolacak. Büyük başlıklar (örn: YAŞAM) belirirken harfleri ayrı ayrı gelerek bir araya gelecek veya hafif bir rotasyonla dönecek. Animasyon süreleri kısa ve müziğin ritmine uygun olacak (0.3-0.6 saniye arası giriş/çıkış)."
+  },
+  "basliklar": [
+    {
+      "plan_no": 0,
+      "metin": "YAŞAM"
+    },
+    {
+      "plan_no": 0,
+      "metin": "TARZ"
+    },
+    {
+      "plan_no": 0,
+      "metin": "ŞİMDİ"
+    },
+    {
+      "plan_no": 5,
+      "metin": "MODERN İLHAM"
+    },
+    {
+      "plan_no": 8,
+      "metin": "FERAH MEKANLAR"
+    },
+    {
+      "plan_no": 11,
+      "metin": "DİNAMİK YAŞAM"
+    },
+    {
+      "plan_no": 13,
+      "metin": "HER AN ÖZEL"
+    },
+    {
+      "plan_no": 15,
+      "metin": "SİZİN YENİ EVİNİZ"
+    }
+  ],
+  "muzik": {
+    "tarif": "Bu film için ideal müzik, hafif elektronik/indie tınılara sahip, orta-hızlı ve modern bir ritme sahip olmalı. Minimalist synth öğeleri ve dinamik vuruşlar, videonun hızlı kurgusunu ve kinetik tipografisini desteklemeli. Enerjik ve davetkar bir ruh hali sunmalı.",
+    "secim": "wallpaper.mp3",
+    "baslangic_sn": 0,
+    "neden": "Katalogdaki 'wallpaper.mp3' müziği, istenen 'hafif elektronik/indie, orta-hızlı, modern, minimal, ritmik synth' tarifine birebir uyuyor. Bu seçim, müşterinin 'radikal mod' talebine uygun, enerjik ve dinamik bir atmosfer yaratmaya yardımcı olacak."
+  },
+  "seslendirme_metni": "Hayatınızı baştan yazın. Ferah mekanlar, modern dokunuşlar. Burada her an özel. Sizin yeni eviniz. Keşfedin.",
+  "gerekce": "Bu video, müşterinin 'birbirinin aynısı' şikayetine radikal bir yanıt olarak tasarlandı. Önceki videoların altı temel kalıbını (oda oda sıralı tur, tek ekran, küçük başlık, sakin seslendirme, eşit ritim, yumuşak geçişler) bilinçli olarak kırdım. 'Ritmik ve Dinamik Kolaj' edit türü ile lineer olmayan bir akış, bölünmüş ekranlar ve çoklu pencere kullanımları (kalıp 1 ve 2 kırıldı), plan sürelerinde müziğe senkronize, değişken bir ritim (kalıp 5 kırıldı) ve keskin, enerjik geçişler (kalıp 6 kırıldı) tercih ettim. Büyük, kinetik tipografi (kalıp 3 kırıldı) videonun ana görsel unsurlarından biri haline geldi. Seslendirme, sakin bir anlatıdan ziyade, kısa, vurucu ve özgüvenli cümlelerle mekanın ruhunu yansıtıyor (kalıp 4 kırıldı). KLIP 614415 ve KLIP 614421'deki insan etkileşimi, evin yaşanmışlığını vurgulayarak dinamik hikayeyi destekliyor ve bu tür tanıtımlarda genellikle kaçınılan 'insan' öğesini bilinçli bir stilistik seçim olarak kullanıyor. 'wallpaper.mp3' müziği, bu hızlı ve modern akışa mükemmel bir ritim ve enerji katıyor. Sonuç, izleyiciyi ilk saniyeden yakalayacak, dinamik ve akılda kalıcı bir tanıtım filmi."
+}

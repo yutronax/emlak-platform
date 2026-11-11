@@ -1,0 +1,128 @@
+{
+  "ad": "gemini-yeni-tur-1",
+  "planlar": [
+    [
+      "varliklar/pexels-yeni/7614529.mp4",
+      0
+    ],
+    [
+      "varliklar/pexels-yeni/7614406.mp4",
+      0.5
+    ],
+    [
+      "varliklar/pexels-yeni/7614410.mp4",
+      0
+    ],
+    [
+      "varliklar/pexels-yeni/7614419.mp4",
+      0
+    ],
+    [
+      "varliklar/pexels-yeni/7614417.mp4",
+      0
+    ],
+    [
+      "varliklar/pexels-yeni/7614541.mp4",
+      0
+    ]
+  ],
+  "vurus": 8,
+  "rampa": 0.3,
+  "harman": 0.3333,
+  "font": "georgia",
+  "renk_filtre": "eq=contrast=1.04:saturation=0.94,curves=all='0/0.0706 0.5/0.51 1/0.98',colorbalance=rs=-0.018:gs=0.012:bs=0.022:rm=0.025:gm=0.012:bm=-0.018",
+  "yazi_filtre": "drawtext=fontfile='{FONT}':text='{metin}':fontsize=52:fontcolor=0xF2EFE9:shadowcolor=black@0.9:shadowx=2:shadowy=3:x=120:y=120:enable='between(t,{t0},{t1})'",
+  "muzik": "muzik/luxury-real-estate.mp3",
+  "muzik_bas": 0,
+  "yazilar": [
+    [
+      0,
+      "DO?AL I?IK"
+    ],
+    [
+      1,
+      "RAFINELIK VE HARMON?"
+    ],
+    [
+      3,
+      "HUZURLU DETAYLAR"
+    ],
+    [
+      5,
+      "MODERN MIMARI"
+    ]
+  ],
+  "alt_bant": "?NZA ? ?RNEK KURGU",
+  "seslendirme_bas": 1.0,
+  "tekrar_izin": true,
+  "gecisler": [
+    {
+      "ad": "Optik Odak D?zlemi Kaymas?",
+      "giden": "gblur=sigma=5",
+      "gelen": "gblur=sigma=3",
+      "harman": "A*P+B*(1-P)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 0.7,
+        "ses": 0.1
+      }
+    },
+    {
+      "ad": "Yatay S?cak I??k Dalgalanmas?",
+      "giden": "null",
+      "gelen": "null",
+      "harman": "if(lt(X/W,1-P),B,A)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 0.7,
+        "ses": 0.1
+      }
+    },
+    {
+      "ad": "Mikro Pan Segment Ge?i?i",
+      "giden": "null",
+      "gelen": "null",
+      "harman": "A*P+B*(1-P)+0.001",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 0.7,
+        "ses": 0.1
+      }
+    },
+    {
+      "ad": "Sinematik Karart?l? Mercek S?z?lmesi",
+      "giden": "null",
+      "gelen": "null",
+      "harman": "(A*P+B*(1-P))*(0.2+0.8*abs(2*P-1))",
+      "ses": {
+        "tur": "vurus",
+        "oran": 0.7,
+        "ses": 0.1
+      }
+    },
+    {
+      "ad": "Derinlik B?l?nmesi",
+      "giden": "null",
+      "gelen": "null",
+      "harman": "if(lt(Y/H,1-P),B,A)",
+      "ses": {
+        "tur": "vurus",
+        "oran": 0.7,
+        "ses": 0.1
+      }
+    }
+  ],
+  "uygulama": {
+    "nihai_betik": "kurgu/projeler/yatay/gemini-yeni-tur-1/son_dokunus.py",
+    "plan_suresi_sn": 3.4,
+    "acilis": "0.8 sn siyah, yumu?ak oval a??lma",
+    "kapanis": "dikey ???k perdesi, ?ampanya zeminli logolu kart",
+    "isik_efektleri": [
+      "614417 45 derece ???k huzmesi",
+      "614410 hafif vazo mercek par?lt?s?"
+    ],
+    "yazi": "0.4 sn harf harf, 2 sn sabit, 0.4 sn fade",
+    "not": "Nihai render dura?an h?zda ?zel FFmpeg beti?i ile yap?l?r. vurus alan? motor uyumlulu?u i?indir."
+  },
+  "seslendirme": "varliklar/yz/gemini-yeni-tur-1_seslendirme.wav"
+}

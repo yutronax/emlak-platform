@@ -1,0 +1,144 @@
+{
+  "planlar": [
+    [
+      "varliklar/pexels-kindel/7578540.mp4",
+      0.0
+    ],
+    [
+      "varliklar/pexels-kindel/7578542.mp4",
+      36000.0
+    ],
+    [
+      "varliklar/pexels-kindel/7578543.mp4",
+      48000.0
+    ],
+    [
+      "varliklar/pexels-kindel/7578544.mp4",
+      103000.0
+    ],
+    [
+      "varliklar/pexels-kindel/7578547.mp4",
+      147000.0
+    ],
+    [
+      "varliklar/pexels-kindel/7578549.mp4",
+      216000.0
+    ],
+    [
+      "varliklar/pexels-kindel/7578550.mp4",
+      240000.0
+    ],
+    [
+      "varliklar/pexels-kindel/7578551.mp4",
+      256000.0
+    ]
+  ],
+  "vurus": 7,
+  "rampa": 0.3,
+  "gecisler": [
+    {
+      "ad": "Radial Açılış",
+      "giden": "scale=w='{W}*(1+0.08*{p})':h='{H}*(1+0.08*{p})':eval=frame,crop={W}:{H}",
+      "gelen": "scale=w='{W}*(1+0.08*{p})':h='{H}*(1+0.08*{p})':eval=frame,crop={W}:{H}",
+      "harman": "if(hypot(X-W/2,Y-H/2) < P*hypot(W/2,H/2),B,A)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 1.1,
+        "ses": 0.35
+      }
+    },
+    {
+      "ad": "Dikey Silme",
+      "giden": "eq=contrast='1+0.3*{p}':brightness='0.1*{p}'",
+      "gelen": "eq=contrast='1+0.3*{p}':brightness='0.1*{p}'",
+      "harman": "if(abs(X-W/2) < W/2*P,B,A)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 1.0,
+        "ses": 0.4
+      }
+    },
+    {
+      "ad": "Yükselen Geçiş",
+      "giden": "crop={W}:{H}:0:'{H}*0.05*{p}'",
+      "gelen": "crop={W}:{H}:0:'-{H}*0.05*{p}'",
+      "harman": "if(Y > H*(1-P),B,A)",
+      "ses": {
+        "tur": "vurus",
+        "oran": 1.3,
+        "ses": 0.5
+      }
+    },
+    {
+      "ad": "Yumuşak Bulanıklık",
+      "giden": "gblur=sigma='10*{p}'",
+      "gelen": "gblur=sigma='10*{p}'",
+      "harman": "if(mod(X+Y,30) < P*30,B,A)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 0.9,
+        "ses": 0.3
+      }
+    },
+    {
+      "ad": "Kareli Geçiş",
+      "giden": "rotate=a='0.04*{p}':ow={W}:oh={H}",
+      "gelen": "rotate=a='-0.04*{p}':ow={W}:oh={H}",
+      "harman": "if(mod(X,50) < P*50,B,A)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 0.95,
+        "ses": 0.45
+      }
+    },
+    {
+      "ad": "Işınsal Geçiş",
+      "giden": "eq=saturation='1-0.5*{p}'",
+      "gelen": "eq=saturation='1-0.5*{p}'",
+      "harman": "if(hypot(X-W/2,Y-H/2) < W/2*(1-P),A,B)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 1.05,
+        "ses": 0.4
+      }
+    },
+    {
+      "ad": "Yatay Akış",
+      "giden": "crop={W}:{H}:'{W}*0.05*{p}':0",
+      "gelen": "crop={W}:{H}:'-{W}*0.05*{p}':0",
+      "harman": "if(X < W*P,B,A)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 0.8,
+        "ses": 0.35
+      }
+    }
+  ],
+  "renk_filtre": "curves=preset=increase_contrast,eq=gamma=1.05:saturation=1.1:contrast=1.05,colortemperature=temperature=5500:mix=0.1,vignette=angle=PI/6,unsharp=5:5:0.8:5:5:0.0",
+  "yazi_filtre": "drawtext=fontfile='{FONT}':text='{metin}':fontcolor=white:fontsize=80:x='(w-text_w)/2':y='h/2-120':borderw=2:bordercolor=black:alpha='min(1, (t-{t0})*2-0.5)*min(1, ({t1}-t)*2-0.5)':enable='between(t,{t0},{t1})'",
+  "font": "bahnschrift",
+  "yazilar": [
+    [
+      0,
+      "Açık Yaşam Alanı"
+    ],
+    [
+      2,
+      "Geniş Bahçe"
+    ],
+    [
+      4,
+      "Mimarinin İncisi"
+    ],
+    [
+      5,
+      "Eğlence Köşesi"
+    ]
+  ],
+  "ad": "gemini-serbest-1",
+  "alt_bant": "İNZA · ÖRNEK KURGU",
+  "harman": 0.3333333333333333,
+  "not": "Yaratıcı kararlar ve efekt kodu: gemini-3.5-flash (kurgu/yonetmen.py)",
+  "seslendirme": "varliklar/yz/gemini-serbest-1_seslendirme.wav",
+  "seslendirme_bas": 4.152
+}

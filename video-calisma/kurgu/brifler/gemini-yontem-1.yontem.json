@@ -1,0 +1,196 @@
+{
+  "model": "gemini-3.5-flash",
+  "parcalar": [
+    {
+      "etiket": "KLIP 578540",
+      "mekan": "Açık Mutfak ve Yaşam Alanı",
+      "kalite": 9,
+      "kamera": "İç mekandan bahçeye kaydırma",
+      "kullanim": "Mutfak adası geniş açı"
+    },
+    {
+      "etiket": "KLIP 578541",
+      "mekan": "Arka Bahçe ve Veranda",
+      "kalite": 8,
+      "kamera": "Dış alanda ileryen pan",
+      "kullanim": "Açık hava şöminesi geçişi"
+    },
+    {
+      "etiket": "KLIP 578542",
+      "mekan": "Yemek Alanı ve Veranda Geçişi",
+      "kalite": 7,
+      "kamera": "İçeriden dışarıya süzülme",
+      "kullanim": "Pas geçildi"
+    },
+    {
+      "etiket": "KLIP 578543",
+      "mekan": "Arka Bahçe Yemek Alanı",
+      "kalite": 8,
+      "kamera": "Çim alandan verandaya yaklaşma",
+      "kullanim": "Pas geçildi"
+    },
+    {
+      "etiket": "KLIP 578544",
+      "mekan": "Giriş ve Merdiven Holü",
+      "kalite": 10,
+      "kamera": "Yukarı doğru süzülen açı",
+      "kullanim": "Giriş ve mimari detaylar"
+    },
+    {
+      "etiket": "KLIP 578545",
+      "mekan": "Şömineli Oturma Odası",
+      "kalite": 8,
+      "kamera": "Duvar arkasından açılan pan",
+      "kullanim": "Pas geçildi"
+    },
+    {
+      "etiket": "KLIP 578546",
+      "mekan": "Geniş Salon ve Yemek Alanı",
+      "kalite": 9,
+      "kamera": "Alçak açı ileri kaydırma",
+      "kullanim": "Pas geçildi"
+    },
+    {
+      "etiket": "KLIP 578547",
+      "mekan": "Koridor ve Galeri Boşluğu",
+      "kalite": 8,
+      "kamera": "İleri doğru aks kaydırma",
+      "kullanim": "Pas geçildi"
+    },
+    {
+      "etiket": "KLIP 578548",
+      "mekan": "Üst Kat Koridor",
+      "kalite": 7,
+      "kamera": "Düz koridor ilerleme",
+      "kullanim": "Pas geçildi"
+    },
+    {
+      "etiket": "KLIP 578549",
+      "mekan": "Eğlence Odası ve Bar",
+      "kalite": 9,
+      "kamera": "Sörf tahtasından bara kayış",
+      "kullanim": "Sosyal alan tanıtımı"
+    },
+    {
+      "etiket": "KLIP 578550",
+      "mekan": "Ebeveyn Yatak Odası",
+      "kalite": 9,
+      "kamera": "Balkona doğru pan",
+      "kullanim": "Güneş ışıklı yatak odası"
+    },
+    {
+      "etiket": "KLIP 578551",
+      "mekan": "Ebeveyn Banyosu",
+      "kalite": 10,
+      "kamera": "Küvete doğru yumuşak yaklaşma",
+      "kullanim": "Lüks banyo detayı"
+    },
+    {
+      "etiket": "KLIP 578552",
+      "mekan": "Yemek Masası ve Avize",
+      "kalite": 8,
+      "kamera": "Masaya yaklaşan açı",
+      "kullanim": "Pas geçildi"
+    },
+    {
+      "etiket": "KLIP 578553",
+      "mekan": "Konsol ve Aydınlatma",
+      "kalite": 7,
+      "kamera": "Duvar detayına kayma",
+      "kullanim": "Pas geçildi"
+    },
+    {
+      "etiket": "KLIP 578554",
+      "mekan": "Tasarım Koltuklar",
+      "kalite": 8,
+      "kamera": "Alçak açıdan salona geçiş",
+      "kullanim": "Pas geçildi"
+    }
+  ],
+  "hikaye": "Görkemli mimari girişten başlayıp, modern yaşam alanları ve lüks banyodan huzurlu açık hava verendasına uzanan akıcı bir yaşam deneyimi.",
+  "planlar": [
+    {
+      "etiket": "KLIP 578544",
+      "baslangic_sn": 4,
+      "neden": "Yüksek tavan ve ahşap kirişli etkileyici giriş mimarisini vurgular."
+    },
+    {
+      "etiket": "KLIP 578540",
+      "baslangic_sn": 5,
+      "neden": "Aydınlık ve ferah açık plan mutfak-yaşam alanını sergiler."
+    },
+    {
+      "etiket": "KLIP 578549",
+      "baslangic_sn": 6,
+      "neden": "Modern ıslak bar ve oyun alanıyla sosyal yaşamı öne çıkarır."
+    },
+    {
+      "etiket": "KLIP 578550",
+      "baslangic_sn": 0,
+      "neden": "Gün batımı ışığında ebeveyn süiti atmosferi sunar."
+    },
+    {
+      "etiket": "KLIP 578551",
+      "baslangic_sn": 2,
+      "neden": "Özel tasarım bağımsız küvet ve lüks banyo kaplamalarını gösterir."
+    },
+    {
+      "etiket": "KLIP 578541",
+      "baslangic_sn": 12,
+      "neden": "Şömineli veranda ve dış mekan konforuyla kapanış yapar."
+    }
+  ],
+  "plan_suresi_sn": 3.0,
+  "gecisler": [
+    {
+      "ad": "Işık Parlamalı İleri İtme",
+      "yontem": "Giriş planının sonunda parlaklık %40 artar, hızlanarak mutfak tezgahına dikey zoom ile bağlanır.",
+      "ses": "Yükselen vakum ve hafif çınlama"
+    },
+    {
+      "ad": "Yatay Mat Geçişi",
+      "yontem": "Mutfak adasından sağa hızlı kayma hareketi, bar tezgahının sol kenarıyla eşleşerek açılır.",
+      "ses": "Derin rüzgar kayması"
+    },
+    {
+      "ad": "Odak Bulanıklığı Flu",
+      "yontem": "Bar görüntüsü hafifçe bulanıklaşarak yatak odasının sıcak gün batımı ışığına yumuşakça çözünür.",
+      "ses": "Yumuşak piyano yankısı"
+    },
+    {
+      "ad": "Cam Yansıması Kayması",
+      "yontem": "Yatak odası camından banyonun duş camı paneline şeffaf katman çakışmasıyla geçilir.",
+      "ses": "Su çınlaması efekti"
+    },
+    {
+      "ad": "Işık Süzülmesi Kesmesi",
+      "yontem": "Banyo penceresinden gelen dik ışık ekranı kaplar ve veranda dış mekan gölgelerine açılır.",
+      "ses": "Derin bas odaklaması"
+    }
+  ],
+  "isik_renk": "Yüksek kontrastlı doğal doygunluk. Sıcak ahşap ve beyaz tonları öne çıkaran, parlak alanlarda hafif altın sarısı tonlama.",
+  "yazi": {
+    "gorunum": "Zarif Klasik Serif font, 48pt, Mat Altın rengi, ekranın üst orta kısmında ortalanmış.",
+    "animasyon": "Ortadan ikiye doğru genişleyerek belirir, hafif saydamlaşarak kaybolur."
+  },
+  "basliklar": [
+    {
+      "plan_no": 0,
+      "metin": "EŞSİZ MİMARİ"
+    },
+    {
+      "plan_no": 1,
+      "metin": "FERAH YAŞAM"
+    },
+    {
+      "plan_no": 3,
+      "metin": "ÖZEL TASARIM SÜİT"
+    },
+    {
+      "plan_no": 5,
+      "metin": "AÇIK HAVA KEYFİ"
+    }
+  ],
+  "seslendirme_metni": "Yüksek tavanlı modern mimari, ferah yaşam alanları ve eşsiz detaylar. Lüks konforu ve açık hava keyfini bir arada sunan özel bir yaşam alanı.",
+  "gerekce": "Tasarım detaylarını öne çıkaran akıcı plan sırası, evin mimari hacmini ve doğal ışık kalitesini en etkileyici şekilde sergiler."
+}

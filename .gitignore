@@ -11,4 +11,21 @@ scraper/data/
 supabase/.temp/
 *.log
 
-video-calisma/
+# video-calisma: sadece kurgu betikleri ve notlar takip edilir; medya, çıktılar, ham/gerçek veriler hariç
+video-calisma/*
+!video-calisma/*.py
+!video-calisma/*.md
+!video-calisma/kurgu/
+video-calisma/kurgu/projeler/
+!video-calisma/arastirma/
+!video-calisma/capcut/
+video-calisma/capcut/*
+!video-calisma/capcut/*.py
+!video-calisma/muzik/
+video-calisma/muzik/*
+!video-calisma/muzik/katalog.json
+video-calisma/**/*.jpg
+video-calisma/**/*.png
+video-calisma/**/*.mp4
+video-calisma/**/*.wav
+video-calisma/**/*.mp3

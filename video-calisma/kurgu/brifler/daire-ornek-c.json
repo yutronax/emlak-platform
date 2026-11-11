@@ -1,0 +1,104 @@
+{
+  "ad": "daire-ornek-c",
+  "sablon": "ilan_turu",
+  "varyant": "C",
+  "not": "Hareketli varyant: kısa planlar, velocity rampası, pull-in geçiş, zıplayan kart, ara çekimler. Fiyat/telefon MOCK.",
+  "baslik": [
+    "ŞEHRE BAKAN",
+    "YENİ DAİRE"
+  ],
+  "isik_ler": [
+    5.4,
+    12.6
+  ],
+  "planlar": [
+    {
+      "src": "capcut/medya5/video11.mp4",
+      "bas": 0.2,
+      "vurus": 4,
+      "konu": "alt",
+      "z0": 1.12,
+      "z1": 1.0,
+      "hiz": 0.8
+    },
+    {
+      "src": "capcut/medya5/video1.mp4",
+      "bas": 0.2,
+      "rampa": true,
+      "vurus": 4,
+      "konu": "orta",
+      "z1": 1.06,
+      "kirp_ust": 0.08,
+      "yazi": "Balkona açılan salon"
+    },
+    {
+      "src": "capcut/medya2/salon.jpg",
+      "vurus": 3,
+      "konu": "orta",
+      "kirp_ust": 0.08,
+      "yazi": "Aydınlık salon"
+    },
+    {
+      "src": "capcut/medya2/koridor.jpg",
+      "vurus": 2,
+      "konu": "orta",
+      "z0": 1.15,
+      "z1": 1.05
+    },
+    {
+      "src": "capcut/medya5/video5.mp4",
+      "bas": 0.3,
+      "rampa": true,
+      "vurus": 5,
+      "konu": "orta",
+      "yazi": "Geniş hol"
+    },
+    {
+      "src": "capcut/medya5/video3.mp4",
+      "bas": 0.5,
+      "hiz": 0.7,
+      "vurus": 3,
+      "konu": "orta",
+      "yazi": "Pencereli oda"
+    },
+    {
+      "src": "capcut/medya2/oda2.jpg",
+      "vurus": 2,
+      "konu": "orta",
+      "z0": 1.15,
+      "z1": 1.05
+    },
+    {
+      "src": "capcut/medya5/video9.mp4",
+      "bas": 0.6,
+      "hiz": 0.6,
+      "vurus": 4,
+      "konu": "alt",
+      "parlak": 0.06,
+      "yazi": "Şık banyo"
+    },
+    {
+      "src": "capcut/medya2/manzara.jpg",
+      "vurus": 2,
+      "konu": "alt",
+      "z0": 1.15,
+      "z1": 1.05
+    },
+    {
+      "src": "capcut/medya5/video6.mp4",
+      "bas": 0.0,
+      "rampa": true,
+      "vurus": 5,
+      "konu": "alt",
+      "yazi": "Şehre bakan balkon",
+      "kirp_alt": 0.12
+    }
+  ],
+  "kapanis": {
+    "src": "capcut/medya2/balkon.jpg",
+    "vurus": 9,
+    "fiyat": "X.XXX.XXX TL",
+    "cagri": "YERİNDE GÖRÜN",
+    "tel": "0 (5XX) XXX XX XX"
+  }
+}

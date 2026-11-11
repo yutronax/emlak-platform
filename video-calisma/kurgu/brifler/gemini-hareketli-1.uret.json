@@ -1,0 +1,115 @@
+{
+  "ad": "gemini-hareketli-1",
+  "planlar": [
+    [
+      "varliklar/pexels-kindel/7578543.mp4",
+      2.5
+    ],
+    [
+      "varliklar/pexels-kindel/7578544.mp4",
+      3
+    ],
+    [
+      "varliklar/pexels-kindel/7578540.mp4",
+      5
+    ],
+    [
+      "varliklar/pexels-kindel/7578549.mp4",
+      13
+    ],
+    [
+      "varliklar/pexels-kindel/7578550.mp4",
+      1
+    ],
+    [
+      "varliklar/pexels-kindel/7578546.mp4",
+      14.5
+    ]
+  ],
+  "vurus": 5,
+  "rampa": 0.3,
+  "harman": 0.3333,
+  "font": "segoe_kalin",
+  "muzik": "muzik/wallpaper.mp3",
+  "muzik_bas": 8,
+  "alt_bant": "İNZA · ÖRNEK KURGU",
+  "yazilar": [
+    [
+      0,
+      "MODERN MİMARİ"
+    ],
+    [
+      1,
+      "YÜKSEK HACİM"
+    ],
+    [
+      3,
+      "ÖZEL KULÜP ALANI"
+    ],
+    [
+      5,
+      "IŞIK DOLU YAŞAM"
+    ]
+  ],
+  "renk_filtre": "curves=all='0/0 0.15/0.12 0.5/0.52 0.85/0.89 1/1',eq=contrast=1.05:saturation=1.09,colorbalance=rs=-0.025:bs=0.035:rh=0.035:bh=-0.025",
+  "yazi_filtre": "sendcmd=f='title{t0}.cmd',drawbox=x=1170:y=85:w=660:h=100:color=0x252525@0.78:t=fill:enable='between(t,{t0},{t1})',drawtext@title{t0}=fontfile='{FONT}':text='{metin}':fontsize=46:fontcolor=white:shadowcolor=black@0.8:shadowx=2:shadowy=2:x=1200:y=111:enable='between(t,{t0},{t1})'",
+  "gecisler": [
+    {
+      "ad": "Hızlı İleri Whip-Zoom",
+      "giden": "scale=w='trunc({W}*(1+0.65*{p})/2)*2':h='trunc({H}*(1+0.65*{p})/2)*2':eval=frame,crop={W}:{H}:(iw-ow)/2:(ih-oh)/2",
+      "gelen": "scale=w='trunc({W}*(1+0.65*{p})/2)*2':h='trunc({H}*(1+0.65*{p})/2)*2':eval=frame,crop={W}:{H}:(iw-ow)/2:(ih-oh)/2",
+      "harman": "A*P+B*(1-P)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 1.45,
+        "ses": 0.65
+      }
+    },
+    {
+      "ad": "Kolon Arkası Keskin Pan",
+      "giden": "scale=2880:1620,crop={W}:{H}:x='480+450*{p}':y=270",
+      "gelen": "scale=2880:1620,crop={W}:{H}:x='480-450*{p}':y=270",
+      "harman": "if(lt(X/W,1-P),B,A)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 1.8,
+        "ses": 0.55
+      }
+    },
+    {
+      "ad": "Açısal Sürüklenme",
+      "giden": "scale=2880:1620,rotate=a='0.13*{p}':ow=2880:oh=1620,crop={W}:{H}:480:'270-220*{p}'",
+      "gelen": "scale=2880:1620,rotate=a='-0.13*{p}':ow=2880:oh=1620,crop={W}:{H}:480:'270+220*{p}'",
+      "harman": "if(lt((X/W+Y/H)/2,1-P),B,A)",
+      "ses": {
+        "tur": "vurus",
+        "oran": 0.72,
+        "ses": 0.65
+      }
+    },
+    {
+      "ad": "Işık Patlamalı Sıçrama",
+      "giden": "eq=brightness='0.65*{p}':eval=frame",
+      "gelen": "eq=brightness='0.65*{p}':eval=frame",
+      "harman": "clip(A*P+B*(1-P)+100*sin(PI*P),0,255)",
+      "ses": {
+        "tur": "vurus",
+        "oran": 1.8,
+        "ses": 0.48
+      }
+    },
+    {
+      "ad": "Yatay Akışlı Kesim",
+      "giden": "scale=2880:1620,crop={W}:{H}:x='480+450*{p}':y=270",
+      "gelen": "scale=2880:1620,crop={W}:{H}:x='480-450*{p}':y=270",
+      "harman": "A*pow(P,2)+B*(1-pow(P,2))",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 1.05,
+        "ses": 0.6
+      }
+    }
+  ],
+  "seslendirme_bas": 0.5,
+  "seslendirme": "varliklar/yz/gemini-hareketli-1_seslendirme.wav"
+}

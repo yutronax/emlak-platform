@@ -1,0 +1,177 @@
+{
+  "model": "gemini-3.5-flash",
+  "parcalar": [
+    {
+      "etiket": "KLIP 614406",
+      "mekan": "Yemek Alanı ve Salon",
+      "kalite": 9,
+      "kamera": "Sabit geniş açı, derinlikli mekan birleşimi",
+      "kullanim": "Yemek masası odağıyla genel mekan algısını sunmak için mükemmel"
+    },
+    {
+      "etiket": "KLIP 614407",
+      "mekan": "Yemek Sandalyeleri ve Mutfak Detayı",
+      "kalite": 8,
+      "kamera": "Orta açı, hafif alçak perspektif",
+      "kullanim": "Doku ve mobilya kalitesini göstermek için uygun"
+    },
+    {
+      "etiket": "KLIP 614409",
+      "mekan": "Salon Ve Bitki Detayı",
+      "kalite": 8,
+      "kamera": "Ön plan fluluğu içeren yakın plan",
+      "kullanim": "Katmanlı derinlik ve yaşam hissi katmak için elverişli"
+    },
+    {
+      "etiket": "KLIP 614410",
+      "mekan": "Yemek Masası Vazosu ve Arka Plan Salon",
+      "kalite": 9,
+      "kamera": "Sığ alan derinliği ile yakın plan",
+      "kullanim": "Aksesuar ve tasarım detaylarını vurgulamak için harika"
+    },
+    {
+      "etiket": "KLIP 614415",
+      "mekan": "Yemek Masası",
+      "kalite": 5,
+      "kamera": "İnsan eli müdahalesi içeren plan",
+      "kullanim": "İnsan unsuru barındırdığı için elendi"
+    },
+    {
+      "etiket": "KLIP 614417",
+      "mekan": "Pencere Kenarı Ahşap Jaluzi ve Bitki",
+      "kalite": 9,
+      "kamera": "Çapraz mimari perspektif kaydırma",
+      "kullanim": "Doğal ışık süzülmesini ve pencere dokusunu öne çıkarmak için ideal"
+    },
+    {
+      "etiket": "KLIP 614419",
+      "mekan": "Salon Oturma Grubu ve Sehpa",
+      "kalite": 9,
+      "kamera": "Odak kaydırmalı sıcak ortam çekimi",
+      "kullanim": "Konforlu dinlenme alanını ve mum detaylarını sergilemek için çok iyi"
+    },
+    {
+      "etiket": "KLIP 614420",
+      "mekan": "Yemek Masası Düzlemi",
+      "kalite": 8,
+      "kamera": "Alçak açı masa çizgisi",
+      "kullanim": "Mutfak geçişi için ara doku planı"
+    },
+    {
+      "etiket": "KLIP 614421",
+      "mekan": "Yemek Alanı ve Mutfak",
+      "kalite": 5,
+      "kamera": "İnsan hareketi barındıran çekim",
+      "kullanim": "İnsan görüntüsü içerdiği için kullanılmadı"
+    },
+    {
+      "etiket": "KLIP 614529",
+      "mekan": "Salon Genel Görünüm ve TV Duvarı",
+      "kalite": 10,
+      "kamera": "Panoramik geniş açı, ışık dolu atmosfer",
+      "kullanim": "Mekanın büyüklüğünü ve ferahlığını gösteren en güçlü açılış planı"
+    },
+    {
+      "etiket": "KLIP 614541",
+      "mekan": "Mutfak ve Yemek Alanı Uyum Görünümü",
+      "kalite": 10,
+      "kamera": "Dengeli simetrik orta-geniş açı",
+      "kullanim": "Açık plan mutfak bütünlüğünü ve modern ankastre sistemleri vurucu şekilde sunar"
+    }
+  ],
+  "hikaye": "Geleneksel hız rampalı dinamik turların aksine, bu kurguda 'Nordic Minimalist Meditasyon' konsepti benimsenmiştir. Işık oyunları, katmanlı alan derinliği ve durağan zarafet ön plana çıkarılarak izleyicide huzurlu, rafine bir lüks yaşam hissi uyandırılır.",
+  "planlar": [
+    {
+      "etiket": "KLIP 614529",
+      "baslangic_sn": 0.0,
+      "neden": "Geniş pencere cephesi ve TV alanıyla dairenin yüksek ışık potansiyelini ilk anda izleyiciye hissettirir."
+    },
+    {
+      "etiket": "KLIP 614406",
+      "baslangic_sn": 0.5,
+      "neden": "Salondan yemek alanına bakışla mekanlar arası kesintisiz mimari akışı sağlar."
+    },
+    {
+      "etiket": "KLIP 614410",
+      "baslangic_sn": 0.0,
+      "neden": "Tasarım vazonun ince detaylarına odaklanarak premium malzeme kalitesini vurgular."
+    },
+    {
+      "etiket": "KLIP 614419",
+      "baslangic_sn": 0.0,
+      "neden": "Soft renklerdeki koltuk, mumlar ve sehpa detayıyla salonun dingin dinlenme atmosferini sergiler."
+    },
+    {
+      "etiket": "KLIP 614417",
+      "baslangic_sn": 0.0,
+      "neden": "Tuğla dokulu duvar ve ahşap jaluzilerden süzülen doğal gün ışığı katmanını öne çıkarır."
+    },
+    {
+      "etiket": "KLIP 614541",
+      "baslangic_sn": 0.0,
+      "neden": "Mutfak ve yemek alanının kusursuz geometrik uyumuyla prestijli bir final sunar."
+    }
+  ],
+  "plan_suresi_sn": 3.4,
+  "gecisler": [
+    {
+      "ad": "Optik Odak Düzlemi Kayması",
+      "yontem": "Görüntü son 0.4 saniyede hafifçe bulanıklaşıp diyafram açıklığı efekti yaratır, sonraki plan odaktan netliğe doğru yumuşakça belirir.",
+      "ses": "Derin rüzgar süzülmesi ve hafif organik atmosfer vuruşu"
+    },
+    {
+      "ad": "Yatay Sıcak Işık Dalgalanması",
+      "yontem": "Soldan sağa doğru organik bir güneş parlaması şeridi geçer, kesim noktası bu ışık hüzmesinin tam merkezinde gerçekleşir.",
+      "ses": "Yumuşak optik çınlama sesi"
+    },
+    {
+      "ad": "Mikro Pan Segment Geçişi",
+      "yontem": "Kamera mikro seviyede sağa doğru milimetrik kayarken, 0.3 saniyede mikro hareket iziyle yeni plana akış sağlanır.",
+      "ses": "İnce kadife kayma efekti"
+    },
+    {
+      "ad": "Sinematik Karartılı Mercek Süzülmesi",
+      "yontem": "Köşelerden merkeze doğru içbükey bir karartı gölgesi genişler ve 0.2 saniye içinde bir sonraki planın aydınlığına açılır.",
+      "ses": "Derin bas tonlu yumuşak rezonans"
+    },
+    {
+      "ad": "Derinlik Bölünmesi",
+      "yontem": "Ön plandaki flulu nesne ekranı kaplarken arkadaki katman dikey bir çözünmeyle sonraki mekanın derinliğine evrilir.",
+      "ses": "Hafif piyano pedalı yankısı"
+    }
+  ],
+  "isik_renk": "İskandinav film stüdyosu estetiği: Siyahlar hafif kırılmış (#121212 seviyesinde), gölgeler hafif soğuk turkuaz, orta tonlar sıcak şampanya rengine ayarlanmıştır. Kontrast 1.04, doygunluk 0.94 tutularak mat ve sofistike bir atmosfer elde edilir.",
+  "isik_efektleri": "Pencere planında (KLIP 614417) jaluzilerden içeri 45 derecelik doğal ışık süzmesi efekti uygulanır; odak planında (KLIP 614410) vazonun üzerine hafif bir mercek parıltısı (lens flare) dokundurulur.",
+  "acilis": "Tamamen karanlık ekrandan (0.8 saniye) merkeze doğru yumuşakça genleşen oval bir dairesel maskedeyle salonun ferah görüntüsüne açılış yapılır.",
+  "kapanis": "Son plan olan mutfak görünümünden dikey bir ışık perdesiyle mat şampanya tonlarında arkaplana geçilir. Logolu kapanış kartı ekranın ortasında belirir.",
+  "yazi": {
+    "gorunum": "Yazı tipi 'Playfair Display' (Serif), boyut 52px, renk mat şampanya (#F2EFE9). Konum ekranın sol üst kısmında (x=120, y=120), altında ince 1px şeffaf çizgi ayracıyla.",
+    "animasyon": "Yazı harf harf soldan sağa daktilo inceliğinde belirir (0.4s), 2 saniye sabit kalır ve saydamlaşarak (opacity fade out) kaybolur."
+  },
+  "basliklar": [
+    {
+      "plan_no": 0,
+      "metin": "DOĞAL IŞIK"
+    },
+    {
+      "plan_no": 1,
+      "metin": "RAFINELIK VE HARMONİ"
+    },
+    {
+      "plan_no": 3,
+      "metin": "HUZURLU DETAYLAR"
+    },
+    {
+      "plan_no": 5,
+      "metin": "MODERN MIMARI"
+    }
+  ],
+  "muzik": {
+    "tarif": "Yavaş-orta tempoda (80 BPM), dingin piyano akorları ve derin ambient yaylı katmanları barındıran lüks, huzurlu sinematik müzik.",
+    "secim": "luxury-real-estate.mp3",
+    "baslangic_sn": 0.0,
+    "neden": "Mekanın dingin, kaliteli ve çağdaş mimarisini zarif piyano tonlarıyla mükemmel şekilde tamamlar."
+  },
+  "seslendirme_metni": "Genç ve ferah bir mimari anlayış, doğal gün ışığıyla buluşuyor. Şık detaylar, konforlu yaşam alanları ve modern çizgilere sahip bu özel evde dinginliğin keyfini çıkarın.",
+  "gerekce": "Evdeki pastel tonlar, ahşap jaluziler ve kaliteli mobilya seçimleri hızlı kurgulardan ziyade yavaş, detay odaklı bir anlatımı hak ediyor. Seçilen İskandinav renk paleti ve zarif serif tipografi dairenin premium segment algısını yükseltmektedir."
+}

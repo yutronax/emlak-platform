@@ -1,0 +1,85 @@
+{
+    "ad":  "yatay-pexels-v5",
+    "not":  "Geçiş motoru v2: kademeli hız eğrisi + kare harmanı hareket izi + xfade bağlayıcı. Pexels / Kindel Media demo (İNZA ilanı değil). Kurallar: her tip bir kez, aynı aile yan yana yok.",
+    "rampa":  0.4,
+    "yavas":  0.8,
+    "egri":  [
+                 1.5,
+                 3.0,
+                 5.0,
+                 8.0
+             ],
+    "alt_bant":  "İNZA · ÖRNEK KURGU",
+    "planlar":  [
+                    [
+                        "varliklar/pexels-kindel/7578541.mp4",
+                        2.0
+                    ],
+                    [
+                        "varliklar/pexels-kindel/7578543.mp4",
+                        1.0
+                    ],
+                    [
+                        "varliklar/pexels-kindel/7578547.mp4",
+                        3.0
+                    ],
+                    [
+                        "varliklar/pexels-kindel/7578544.mp4",
+                        1.0
+                    ],
+                    [
+                        "varliklar/pexels-kindel/7578542.mp4",
+                        6.0
+                    ],
+                    [
+                        "varliklar/pexels-kindel/7578540.mp4",
+                        1.0
+                    ],
+                    [
+                        "varliklar/pexels-kindel/7578550.mp4",
+                        11.0
+                    ],
+                    [
+                        "varliklar/pexels-kindel/7578553.mp4",
+                        1.0
+                    ],
+                    [
+                        "varliklar/pexels-kindel/7578551.mp4",
+                        2.0
+                    ]
+                ],
+    "gecisler":  [
+                     "whip_sag",
+                     "kesme",
+                     "flas",
+                     "whip_yukari",
+                     "itme",
+                     "donme",
+                     "sarsinti",
+                     "whip_sol"
+                 ],
+    "renk":  "film",
+    "yazilar":  [
+                    [
+                        0,
+                        "MODERN VİLLA"
+                    ],
+                    [
+                        3,
+                        "AÇIK PLAN YAŞAM"
+                    ],
+                    [
+                        5,
+                        "GÜN BOYU IŞIK"
+                    ],
+                    [
+                        6,
+                        "SPA BANYO"
+                    ]
+                ],
+    "seslendirme":  "varliklar/yz/v3_seslendirme.wav",
+    "seslendirme_bas":  10,
+    "vurus":  7,
+    "harman":  0.33333333333333331,
+    "yazi_stili":  "cizgi"
+}

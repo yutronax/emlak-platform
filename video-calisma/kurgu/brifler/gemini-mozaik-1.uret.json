@@ -1,0 +1,138 @@
+{
+  "ad": "gemini-mozaik-1",
+  "vurus": 7,
+  "rampa": 0.3,
+  "harman": 0.3333,
+  "yavas": 1,
+  "egri": [
+    1,
+    1,
+    1,
+    1
+  ],
+  "alt_bant": "İNZA · ÖRNEK KURGU",
+  "font": "segoe_kalin",
+  "muzik": "muzik/luxury-real-estate.mp3",
+  "muzik_bas": 0,
+  "seslendirme_bas": 0.5,
+  "planlar": [
+    [
+      "varliklar/pexels-kindel/7578540.mp4",
+      0
+    ],
+    [
+      "varliklar/pexels-kindel/7578542.mp4",
+      0.38
+    ],
+    [
+      "varliklar/pexels-kindel/7578544.mp4",
+      1.04
+    ],
+    [
+      "varliklar/pexels-kindel/7578546.mp4",
+      1.35
+    ],
+    [
+      "varliklar/pexels-kindel/7578549.mp4",
+      2.2
+    ],
+    [
+      "varliklar/pexels-kindel/7578550.mp4",
+      2.4
+    ],
+    [
+      "varliklar/pexels-kindel/7578551.mp4",
+      2.56
+    ]
+  ],
+  "gecisler": [
+    {
+      "ad": "Hafif Parlama",
+      "giden": "eq=brightness='0.22*{p}':eval=frame",
+      "gelen": "eq=brightness='0.22*{p}':eval=frame",
+      "harman": "min(255,A*P+B*(1-P)+55*sin(PI*P))",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 1.1,
+        "ses": 0.15
+      }
+    },
+    {
+      "ad": "Çözülen Sütun",
+      "giden": "null",
+      "gelen": "null",
+      "harman": "A*(1-clip((1-P)*W-X+20,0,40)/40)+B*clip((1-P)*W-X+20,0,40)/40",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 0.8,
+        "ses": 0.15
+      }
+    },
+    {
+      "ad": "Perde Hareketi",
+      "giden": "null",
+      "gelen": "null",
+      "harman": "if(lt(Y,H*(1-P)),B,A)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 1.2,
+        "ses": 0.14
+      }
+    },
+    {
+      "ad": "Yavaş Döngüsel Çözülme",
+      "giden": "null",
+      "gelen": "null",
+      "harman": "A*(1-clip(((1-P)*sqrt(W*W+H*H)/2-sqrt((X-W/2)*(X-W/2)+(Y-H/2)*(Y-H/2))+30)/60,0,1))+B*clip(((1-P)*sqrt(W*W+H*H)/2-sqrt((X-W/2)*(X-W/2)+(Y-H/2)*(Y-H/2))+30)/60,0,1)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 0.5,
+        "ses": 0.12
+      }
+    },
+    {
+      "ad": "Kapı İçinden Zoom",
+      "giden": "scale=w='1920*(1+0.7*{p})':h='1080*(1+0.7*{p})':eval=frame,crop=1920:1080",
+      "gelen": "scale=w='1920*(1+0.4*{p})':h='1080*(1+0.4*{p})':eval=frame,crop=1920:1080",
+      "harman": "A*P*P+B*(1-P*P)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 1.4,
+        "ses": 0.18
+      }
+    },
+    {
+      "ad": "Şeffaf Bulanıklık Geçişi",
+      "giden": "gblur=sigma=9",
+      "gelen": "gblur=sigma=1",
+      "harman": "A*P+B*(1-P)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 1.8,
+        "ses": 0.08
+      }
+    }
+  ],
+  "renk_filtre": "eq=contrast=1.05:saturation=1.03,curves=all='0/0.015 0.15/0.17 0.75/0.75 1/0.97',colorbalance=rh=0.012:bh=-0.012",
+  "yazi_filtre": "drawtext=fontfile='{FONT}':text='{metin}':fontsize=64:fontcolor=white:borderw=2:bordercolor=black@0.6:shadowcolor=black@0.9:shadowx=0:shadowy=4:x='(w-tw)/2+18*sin(PI*(clip(min((t-{t0})/0.5,({t1}-t)/0.4),0,1)))':y='150+60*pow(1-(clip(min((t-{t0})/0.5,({t1}-t)/0.4),0,1)),2)':alpha='clip(min((t-{t0})/0.5,({t1}-t)/0.4),0,1)':enable='between(t,{t0},{t1})'",
+  "yazilar": [
+    [
+      0,
+      "SOFİSTİKE YAŞAM"
+    ],
+    [
+      2,
+      "GENİŞ ALANLAR"
+    ],
+    [
+      3,
+      "ÖZEL BAHÇE"
+    ],
+    [
+      6,
+      "LÜKS DETAYLAR"
+    ]
+  ],
+  "tekrar_izin": true,
+  "seslendirme": "varliklar/yz/gemini-mozaik-1_seslendirme.wav"
+}

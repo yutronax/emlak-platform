@@ -1,0 +1,20 @@
+{
+  "ad": "yatay-pexels",
+  "not": "Pexels / Kindel Media ham klipleri (aynı ev, 1080p30, ücretsiz lisans). Demo: İNZA ilanı DEĞİL. Tur 2: Gemini önerisiyle fiziksel tur sırası (dış→giriş→salon→mutfak→yatak→detay→banyo) ve KURAL: aynı geçiş arka arkaya yok (yatay_rampa.py denetler).",
+  "hizli": 6.0,
+  "yavas": 0.8,
+  "rampa": 0.2,
+  "alt_bant": "İNZA · ÖRNEK KURGU",
+  "planlar": [
+    ["varliklar/pexels-kindel/7578541.mp4", 2.0, null],
+    ["varliklar/pexels-kindel/7578543.mp4", 1.0, null],
+    ["varliklar/pexels-kindel/7578547.mp4", 3.0, null],
+    ["varliklar/pexels-kindel/7578544.mp4", 1.0, null],
+    ["varliklar/pexels-kindel/7578542.mp4", 6.5, null],
+    ["varliklar/pexels-kindel/7578540.mp4", 1.0, null],
+    ["varliklar/pexels-kindel/7578550.mp4", 11.5, null],
+    ["varliklar/pexels-kindel/7578553.mp4", 1.0, null],
+    ["varliklar/pexels-kindel/7578551.mp4", 2.0, null]
+  ],
+  "gecisler": ["whip_sag", "itme", "flas", "whip_yukari", "itme", "donme", "kesme", "flas"]
+}

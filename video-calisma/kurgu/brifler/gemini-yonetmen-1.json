@@ -1,0 +1,67 @@
+{
+  "planlar": [
+    [
+      "varliklar/pexels-kindel/7578546.mp4",
+      5.0
+    ],
+    [
+      "varliklar/pexels-kindel/7578540.mp4",
+      4.0
+    ],
+    [
+      "varliklar/pexels-kindel/7578552.mp4",
+      2.0
+    ],
+    [
+      "varliklar/pexels-kindel/7578549.mp4",
+      5.0
+    ],
+    [
+      "varliklar/pexels-kindel/7578550.mp4",
+      1.0
+    ],
+    [
+      "varliklar/pexels-kindel/7578551.mp4",
+      4.0
+    ],
+    [
+      "varliklar/pexels-kindel/7578543.mp4",
+      2.0
+    ]
+  ],
+  "gecisler": [
+    "itme",
+    "flas",
+    "whip_sag",
+    "donme",
+    "sarsinti",
+    "kesme"
+  ],
+  "vurus": 6,
+  "renk": "sicak",
+  "yazi_stili": "cizgi",
+  "font": "segoe_kalin",
+  "yazilar": [
+    [
+      0,
+      "FERAH YAŞAM ALANI"
+    ],
+    [
+      1,
+      "MODERN ADA MUTFAK"
+    ],
+    [
+      4,
+      "AYDINLIK YATAK ODASI"
+    ],
+    [
+      6,
+      "KEYİFLİ BAHÇE TERASI"
+    ]
+  ],
+  "rampa": 0.35,
+  "ad": "gemini-yonetmen-1",
+  "alt_bant": "İNZA · ÖRNEK KURGU",
+  "harman": 0.3333333333333333,
+  "not": "Yaratıcı kararlar: gemini-flash-latest (kurgu/yonetmen.py)"
+}

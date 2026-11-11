@@ -1,0 +1,121 @@
+{
+  "ad": "gemini-yontem-1",
+  "vurus": 7,
+  "rampa": 0.3,
+  "harman": 0.3333,
+  "font": "georgia",
+  "alt_bant": "İNZA · ÖRNEK KURGU",
+  "seslendirme_bas": 0.5,
+  "planlar": [
+    [
+      "varliklar/pexels-kindel/7578544.mp4",
+      4
+    ],
+    [
+      "varliklar/pexels-kindel/7578540.mp4",
+      5
+    ],
+    [
+      "varliklar/pexels-kindel/7578549.mp4",
+      6
+    ],
+    [
+      "varliklar/pexels-kindel/7578550.mp4",
+      0
+    ],
+    [
+      "varliklar/pexels-kindel/7578551.mp4",
+      2
+    ],
+    [
+      "varliklar/pexels-kindel/7578541.mp4",
+      12
+    ]
+  ],
+  "gecisler": [
+    {
+      "ad": "Işık Parlamalı İleri İtme",
+      "giden": "scale=w='ceil({W}*(1+0.24*{p})/2)*2':h='ceil({H}*(1+0.38*{p})/2)*2':eval=frame,crop={W}:{H}:(iw-ow)/2:(ih-oh)/2,eq=brightness='0.4*{p}':eval=frame",
+      "gelen": "scale=w='ceil({W}*(1+0.24*{p})/2)*2':h='ceil({H}*(1+0.38*{p})/2)*2':eval=frame,crop={W}:{H}:(iw-ow)/2:(ih-oh)/2,eq=brightness='0.4*{p}':eval=frame",
+      "harman": "A*P+B*(1-P)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 0.85,
+        "ses": 0.45
+      }
+    },
+    {
+      "ad": "Yatay Mat Geçişi",
+      "giden": "scale=2304:1296,crop={W}:{H}:x='192+192*{p}':y=108",
+      "gelen": "scale=2304:1296,crop={W}:{H}:x='192-192*{p}':y=108",
+      "harman": "if(lt(X/W,1-P),B,A)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 0.7,
+        "ses": 0.5
+      }
+    },
+    {
+      "ad": "Odak Bulanıklığı Flu",
+      "giden": "gblur=sigma=9",
+      "gelen": "gblur=sigma=5",
+      "harman": "A*pow(P,1.2)+B*(1-pow(P,1.2))",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 1.6,
+        "ses": 0.12
+      }
+    },
+    {
+      "ad": "Cam Yansıması Kayması",
+      "giden": "scale=2112:1188,crop={W}:{H}:x='96+96*{p}':y=54,eq=contrast=0.94:brightness=0.035",
+      "gelen": "scale=2112:1188,crop={W}:{H}:x='96-96*{p}':y=54",
+      "harman": "A*P+B*(1-P)+18*sin(PI*P)*exp(-pow((X/W-(1-P))*8,2))",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 1.9,
+        "ses": 0.18
+      }
+    },
+    {
+      "ad": "Işık Süzülmesi Kesmesi",
+      "giden": "eq=brightness='0.06*{p}':saturation='1-0.18*{p}':eval=frame",
+      "gelen": "eq=brightness='0.04*{p}':saturation='1-0.12*{p}':eval=frame",
+      "harman": "(A*P+B*(1-P))*(1-(0.82*pow(sin(PI*P),1.2)*exp(-0.5*(pow((X/W-0.54)/(0.08+0.72*sin(PI*P)),2)+pow((Y/H-0.36)/(0.22+0.85*sin(PI*P)),2)))))+if(eq(PLANE,0),235,128)*(0.82*pow(sin(PI*P),1.2)*exp(-0.5*(pow((X/W-0.54)/(0.08+0.72*sin(PI*P)),2)+pow((Y/H-0.36)/(0.22+0.85*sin(PI*P)),2))))",
+      "ses": {
+        "tur": "vurus",
+        "oran": 0.65,
+        "ses": 0.5
+      }
+    }
+  ],
+  "renk_filtre": "eq=contrast=1.10:saturation=1.05,colorbalance=rh=0.045:gh=0.02:bh=-0.035",
+  "yazi_filtre": "drawtext=fontfile='{FONT}':text='{metin}':fontsize=84:fontcolor=0xB59A63:borderw=2:bordercolor=0x17130D@0.95:shadowcolor=black@0.9:shadowx=3:shadowy=4:x=(w-tw)/2:y=110:alpha='min(1,max(0,(t-{t0})/0.35))*min(1,max(0,({t1}-t)/0.4))':enable='between(t,{t0},{t1})'",
+  "yazilar": [
+    [
+      0,
+      "EŞSİZ MİMARİ"
+    ],
+    [
+      1,
+      "FERAH YAŞAM"
+    ],
+    [
+      3,
+      "ÖZEL TASARIM SÜİT"
+    ],
+    [
+      5,
+      "AÇIK HAVA KEYFİ"
+    ]
+  ],
+  "uygulama_notlari": [
+    "48 pt = 64 px (96 dpi); Georgia.",
+    "Title center-out reveal approximated by centered alpha fade.",
+    "Piano, water and chime approximated with engine whoosh/impact samples.",
+    "Object alignment approximated in screen coordinates.",
+    "Engine closing card retained in full.",
+    "Engine adds fixed body zoom, slow motion and base grade."
+  ],
+  "seslendirme": "varliklar/yz/gemini-yontem-1_seslendirme.wav"
+}

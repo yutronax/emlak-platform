@@ -1,0 +1,159 @@
+{
+  "model": "gemini-2.5-flash",
+  "parcalar": [
+    {
+      "etiket": "KLIP 578540",
+      "mekan": "Açık Plan Mutfak ve Oturma Odası",
+      "kalite": 9,
+      "kamera": "İleri doğru yavaşça hareket eden bir sabit kamera, mutfaktan oturma odasına ve dışarıya doğru açıyı genişletiyor.",
+      "kullanim": "İlk plan olarak evin genel açık plan düzenini ve ferahlığını tanıtmak için kullanılacak. Mutfak ve yaşam alanının doğal geçişini vurgulayacak."
+    },
+    {
+      "etiket": "KLIP 578542",
+      "mekan": "Yemek Alanı ve Kapalı Teras",
+      "kalite": 9,
+      "kamera": "Yemek masasından teras kapısına doğru yürüyen, dış mekana odaklanan bir kamera hareketi.",
+      "kullanim": "İç mekandan dış mekan yaşamına sorunsuz geçişi göstermek ve dış mekana açılan geniş kapıların işlevselliğini sergilemek için kullanılacak."
+    },
+    {
+      "etiket": "KLIP 578544",
+      "mekan": "Giriş Holü ve Merdiven",
+      "kalite": 9,
+      "kamera": "Girişten yukarı doğru çıkan merdivenlere odaklanan geniş açılı bir hareket.",
+      "kullanim": "Evin yüksek tavanlarını, modern merdiven tasarımını ve genel ferah giriş atmosferini vurgulamak için kullanılacak."
+    },
+    {
+      "etiket": "KLIP 578546",
+      "mekan": "Ana Oturma Odası",
+      "kalite": 9,
+      "kamera": "Alçak bir açıdan, oturma odasının geniş pencerelerine ve aydınlık ortamına doğru ilerleyen bir hareket.",
+      "kullanim": "Oturma odasının doğal ışık alımını, modern dekorasyonunu ve dışarıdaki manzara ile bağlantısını göstermek için kullanılacak."
+    },
+    {
+      "etiket": "KLIP 578549",
+      "mekan": "Eğlence Odası ve Bar",
+      "kalite": 8,
+      "kamera": "Bilardo masasından bara doğru ilerleyen, detaya odaklanan bir kamera hareketi.",
+      "kullanim": "Evin özel eğlence alanını ve lüks barını tanıtmak, misafir ağırlama potansiyelini vurgulamak için kullanılacak."
+    },
+    {
+      "etiket": "KLIP 578550",
+      "mekan": "Ebeveyn Yatak Odası",
+      "kalite": 8,
+      "kamera": "Yatak odası yatağının yanından başlayıp, geniş pencere ve balkona doğru yavaşça kayan bir hareket.",
+      "kullanim": "Yatak odasının konforunu, genişliğini ve manzaralı balkon erişimini sergilemek için kullanılacak."
+    },
+    {
+      "etiket": "KLIP 578551",
+      "mekan": "Ebeveyn Banyo",
+      "kalite": 8,
+      "kamera": "Banyonun lavabo kısmından başlayıp, küvete ve geniş duşa doğru yavaşça panoramik bir hareket.",
+      "kullanim": "Lüks ve modern banyo tasarımını, ayrı küvet ve duş alanlarını vurgulamak için kullanılacak."
+    }
+  ],
+  "hikaye": "Bu video, modern ve lüks bir yaşam tarzını sergilemek üzere tasarlandı. Açık konsept yaşam alanlarından başlayarak, evin sunduğu ferahlığı ve doğal ışıkla olan bağlantısını ön plana çıkaracak. Dış mekan ile iç mekan arasındaki uyumu vurguladıktan sonra, evin özel eğlence ve dinlenme alanlarına geçiş yapılacak. Son olarak, özel yatak odası ve lüks banyo ile evin sunduğu konfor ve şıklık tamamlanacak. Her plan, sakin ve davetkar bir atmosfer sunarak izleyiciye evin içinde gezinme hissi verecek.",
+  "planlar": [
+    {
+      "etiket": "KLIP 578540",
+      "baslangic_sn": 0.0,
+      "neden": "Evin ana yaşam alanının genişliğini ve açık konseptini göstermek için ideal bir başlangıç."
+    },
+    {
+      "etiket": "KLIP 578542",
+      "baslangic_sn": 0.38,
+      "neden": "Yemek alanının doğrudan dış mekana açılan bağlantısını vurgulayarak iç-dış yaşam akışını sergilemek."
+    },
+    {
+      "etiket": "KLIP 578544",
+      "baslangic_sn": 1.04,
+      "neden": "Evin mimari detaylarını, yüksek tavanlarını ve şık merdiven tasarımını tanıtmak."
+    },
+    {
+      "etiket": "KLIP 578546",
+      "baslangic_sn": 1.35,
+      "neden": "Geniş pencereleri ve doğal ışıkla dolu ana oturma alanının ferahlığını göstermek."
+    },
+    {
+      "etiket": "KLIP 578549",
+      "baslangic_sn": 2.2,
+      "neden": "Evin eğlence potansiyelini, modern bar ve bilardo masası ile vurgulamak."
+    },
+    {
+      "etiket": "KLIP 578550",
+      "baslangic_sn": 2.4,
+      "neden": "Ebeveyn yatak odasının lüksünü, balkon erişimi ve genişliği ile tanıtmak."
+    },
+    {
+      "etiket": "KLIP 578551",
+      "baslangic_sn": 2.56,
+      "neden": "Ebeveyn banyonun modern tasarımını, küvet ve duş detaylarını sergilemek."
+    }
+  ],
+  "plan_suresi_sn": 3.0,
+  "gecisler": [
+    {
+      "ad": "Hafif Parlama",
+      "yontem": "KLIP 578540'dan KLIP 578542'ye geçişte, bir anlık yavaşça artan ve azalan beyaz bir parlama efekti kullanılacak. Parlama, sanki yeni bir alana geçerken gözün ışığa adaptasyonu gibi bir his verecek.",
+      "ses": "Hafif, yumuşak bir 'swish' sesi, parlama efektiyle eş zamanlı olarak yükselecek ve azalacak."
+    },
+    {
+      "ad": "Çözülen Sütun",
+      "yontem": "KLIP 578542'den KLIP 578544'e geçişte, KLIP 578542'deki dikey beyaz duvar veya sütunlardan biri, sahneyi yavaşça yatayda silerek yeni sahneyi (KLIP 578544'ün girişi) ortaya çıkaracak. Geçiş, pürüzsüz ve dikey bir hareketle olacak.",
+      "ses": "Uzayan, hafifçe yankılanan, minimalist bir 'whoosh' sesi."
+    },
+    {
+      "ad": "Perde Hareketi",
+      "yontem": "KLIP 578544'ten KLIP 578546'ya geçişte, KLIP 578544'ün üst kısmından aşağı doğru inen bir 'perde' hareketiyle KLIP 578546'nın sahnesi açığa çıkacak. Bu, yukarı çıkan merdiven kamerasının devamı gibi bir akış sağlayacak.",
+      "ses": "Kısa, hafif bir 'swoop' sesi, perdenin açılması hissini pekiştirecek."
+    },
+    {
+      "ad": "Yavaş Döngüsel Çözülme",
+      "yontem": "KLIP 578546'dan KLIP 578549'a geçişte, görüntü merkezden dışa doğru yavaşça dairesel bir şekilde çözülerek bir sonraki sahneye geçecek. Bu, sanki yeni bir odaya dönerken etrafı tarıyormuş gibi bir etki yaratacak.",
+      "ses": "Düşük frekanslı, döngüsel bir 'hum' sesi, hareketle birlikte yavaşça yükselecek ve kaybolacak."
+    },
+    {
+      "ad": "Kapı İçinden Zoom",
+      "yontem": "KLIP 578549'dan KLIP 578550'ye geçişte, KLIP 578549'daki bir kapı çerçevesine hızla zoom yapılacak ve bu kapı çerçevesi, KLIP 578550'nin başlangıcı olan yatak odasına doğru açılıp içine giriliyormuş hissi verecek.",
+      "ses": "Kısa, net bir 'klik' sesi ve ardından hafif bir rüzgar sesi, kapının açılması hissini verecek."
+    },
+    {
+      "ad": "Şeffaf Bulanıklık Geçişi",
+      "yontem": "KLIP 578550'den KLIP 578551'e geçişte, KLIP 578550'nin görüntüsü yavaşça bulanıklaşacak ve hafif bir saydamlıkla KLIP 578551'in net görüntüsünün üzerine binecek, ardından önceki görüntü tamamen kaybolacak. Geçiş, odadan banyoya yumuşak bir akış sağlayacak.",
+      "ses": "Narin, su damlası benzeri bir ses efekti, banyonun ambiyansını çağrıştıracak."
+    }
+  ],
+  "isik_renk": "Tüm film boyunca, evin doğal aydınlığını ön plana çıkaracak, sıcak tonlara vurgu yapan ancak modern beyaz dengesini koruyan bir renk paleti kullanılacak. Renkler canlı ancak abartısız olacak, mekanların ferah ve davetkar hissi güçlendirilecek. Genel kontrast 1.05, doygunluk 1.03 seviyesinde tutulacak, gölgeler hafifçe açılıp parlak alanlar korunarak dinamik bir görünüm sağlanacak.",
+  "isik_efektleri": "Filmin genelinde, güneşin vurduğu pencerelerden gelen doğal ışık süzmeleri belirli anlarda (özellikle KLIP 578546 ve KLIP 578550'de) hafifçe vurgulanarak mekanın canlılığını artıracak. Bu süzmeler, lens parlaması efektleriyle desteklenecek ancak abartılmayacak. Özellikle gün batımına yakın çekimlerde (KLIP 578550), ışıklar altın rengi bir parlaklıkla vurgulanacak.",
+  "acilis": "Filmin ilk saniyesinde, ekran siyaha yakın koyu bir tondan başlayacak ve hafif bir lens parlaması eşliğinde yavaşça evin açık mutfak/oturma planına (KLIP 578540) doğru 0.7 saniye içinde aydınlanacak. Sanki ev yavaşça uykudan uyanıyor gibi, dingin ve davetkar bir başlangıç olacak.",
+  "kapanis": "Son plan (KLIP 578551) sona ererken, görüntü yavaşça bulanıklaşacak ve ardından beyaz bir ışık patlamasıyla 0.5 saniye içinde tamamen beyaza bürünecek. Bu beyazlık, yavaşça yerini evin logosu, 'YERİNDE GÖRÜN' yazısı, bir telefon yer tutucusu ve alttaki kredilerin yer aldığı modern, minimalist bir kapanış kartına bırakacak. Kart, sade ve zarif animasyonlarla yukarıdan aşağıya doğru zarifçe 1 saniye içinde kayarak belirecek ve ekranda 3 saniye sabit kalıp yavaşça 0.8 saniye içinde siyaha çözülecek.",
+  "yazi": {
+    "gorunum": "Yazı tipi 'Montserrat Bold', boyut 64px, renk beyaz. Yazılar ekranın üst orta kısmında, ortalanmış şekilde yer alacak, alt kısmı asla kaplamayacak ve görüntüyü boğmayacak.",
+    "animasyon": "Yazılar, ekrana zarif bir yay çizerek aşağıdan yukarıya doğru 0.5 saniyede süzülerek belirecek ve aynı yay üzerinde geri süzülerek 0.4 saniyede kaybolacak. Belirirken hafif, dağılmış bir ışık parlaması efekti eşlik edecek."
+  },
+  "basliklar": [
+    {
+      "plan_no": 0,
+      "metin": "SOFİSTİKE YAŞAM"
+    },
+    {
+      "plan_no": 2,
+      "metin": "GENİŞ ALANLAR"
+    },
+    {
+      "plan_no": 3,
+      "metin": "ÖZEL BAHÇE"
+    },
+    {
+      "plan_no": 6,
+      "metin": "LÜKS DETAYLAR"
+    }
+  ],
+  "muzik": {
+    "tarif": "Bu film için ideal müzik: kurumsal lüks emlak, orta tempo (~100 BPM), piyano ve yaylılar baskın, hafif ritimlerle güven veren ve ferah bir ruh hali yaratan.",
+    "secim": "luxury-real-estate.mp3",
+    "baslangic_sn": 0.0,
+    "neden": "Verilen müzik kataloğundaki 'luxury-real-estate.mp3' tarifi, evin lüks ve modern atmosferine en uygun melodiyi ve ritmi sunuyor. Piyano ve yaylılar, zarafeti ve konforu vurgularken, orta temposu dinamik ama dingin bir his veriyor."
+  },
+  "seslendirme_metni": "Bu modern evde sofistike yaşamın tadını çıkarın. Geniş açık plan alanları, doğal ışıkla buluşuyor. Özel bahçesi ve dinlenme alanlarıyla huzurlu anlar sizi bekliyor. Şık detaylarla bezeli bu evde her köşe bir konfor vaadi.",
+  "gerekce": "Bu video, evin açık konsept yaşam alanlarını, doğal ışıkla olan güçlü bağını ve lüks detaylarını vurgulayarak, modern ve sofistike bir yaşam tarzı arayan hedef kitleye hitap etmek üzere tasarlandı. Plan seçimleri, evin akışını ve önemli özelliklerini (mutfak, yaşam alanları, dış mekan, ana yatak odası/banyo, eğlence odası) mantıksal bir sırayla sunuyor. Her geçişin özgün ve akıcı olması, video boyunca izleyicinin ilgisini canlı tutmayı ve mekanlar arasında pürüzsüz bir bağlantı kurmayı amaçlıyor. Işık ve renk düzenlemesi, evin ferah ve davetkar atmosferini güçlendirirken, yazı stili ve animasyonları modern estetiği tamamlıyor ve bilgilendirici mesajı nazikçe iletiyor. Müşterinin 'tüm odaların önizlemesi' fikri, dinamik geçişler ve akıcı kamera hareketleriyle evin genel genişliğini ve bağlantılı yapısını sürekli hissettirerek yorumlandı. Seçilen müzik, evin lüks imajını pekiştirirken, özel açılış ve kapanış sekansları videoya unutulmaz bir başlangıç ve bitiş sağlıyor."
+}

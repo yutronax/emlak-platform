@@ -1,0 +1,193 @@
+{
+  "ad": "gemini-isik-1",
+  "planlar": [
+    [
+      "varliklar/pexels-kindel/7578540.mp4",
+      2
+    ],
+    [
+      "varliklar/pexels-kindel/7578543.mp4",
+      9.817
+    ],
+    [
+      "varliklar/pexels-kindel/7578544.mp4",
+      6.147
+    ],
+    [
+      "varliklar/pexels-kindel/7578546.mp4",
+      15.448
+    ],
+    [
+      "varliklar/pexels-kindel/7578549.mp4",
+      18.35
+    ],
+    [
+      "varliklar/pexels-kindel/7578550.mp4",
+      10.542
+    ],
+    [
+      "varliklar/pexels-kindel/7578551.mp4",
+      10.115
+    ],
+    [
+      "varliklar/pexels-kindel/7578552.mp4",
+      6.745
+    ]
+  ],
+  "vurus": 7,
+  "rampa": 0.3,
+  "harman": 0.3333,
+  "font": "segoe_kalin",
+  "alt_bant": "İNZA · ÖRNEK KURGU",
+  "muzik": "muzik/luxury-real-estate.mp3",
+  "muzik_bas": 0,
+  "yazilar": [
+    [
+      0,
+      "MODERN YAŞAM ALANI"
+    ],
+    [
+      2,
+      "DIŞ MEKAN KEYFİ"
+    ],
+    [
+      4,
+      "ZARAFET VE KONFOR"
+    ],
+    [
+      6,
+      "SİZE ÖZEL"
+    ]
+  ],
+  "yazi_filtre": "drawtext=fontfile='{FONT}':text='{metin}':fontsize='64*(0.95+0.05*sin(PI*clip((t-{t0})/2,0,1)))':fontcolor=white:borderw=2:bordercolor=black@0.7:shadowcolor=black@0.8:shadowx=2:shadowy=3:x=(w-tw)/2:y=130:alpha='min(1,min((t-{t0})/0.3,({t0}+2-t)/0.3))':enable='between(t,{t0},{t0}+2)'",
+  "renk_filtre": "eq=contrast=1.08:saturation=1.03,colorbalance=rh=0.02:gh=0.01:bh=-0.01:rs=-0.01:gs=0.01:bs=0.02,curves=all='0/0 0.2/0.18 0.4/0.4 0.6/0.63 0.8/0.85 1/1'",
+  "gecisler": [
+    {
+      "ad": "Geometrik Parlama Geçişi",
+      "giden": "eq=brightness='0.25*{p}':eval=frame,gblur=sigma=2",
+      "gelen": "gblur=sigma=2",
+      "harman": "min(255,A*P+B*(1-P)+90*exp(-pow((X/W+Y/H)/2-(1-P),2)/0.015)*sin(PI*P))",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 1.3,
+        "ses": 0.35
+      }
+    },
+    {
+      "ad": "Yerden Göğe Yükseliş",
+      "giden": "scale=2304:1296,crop={W}:{H}:192:y='108+108*{p}',eq=brightness='0.4*{p}':eval=frame",
+      "gelen": "scale=2304:1296,crop={W}:{H}:192:y='108-108*{p}'",
+      "harman": "min(255,A*P+B*(1-P)+180*sin(PI*P))",
+      "ses": {
+        "tur": "vurus",
+        "oran": 0.8,
+        "ses": 0.35
+      }
+    },
+    {
+      "ad": "Aynalı Çözülme",
+      "giden": "gblur=sigma=12,colorchannelmixer=rr=1.02:bb=0.98",
+      "gelen": "gblur=sigma=3",
+      "harman": "A*P*P+B*(1-P*P)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 0.95,
+        "ses": 0.35
+      }
+    },
+    {
+      "ad": "Kapı Eşiği Işıltısı",
+      "giden": "eq=brightness='0.28*{p}':eval=frame",
+      "gelen": "eq=brightness='0.18*{p}':eval=frame",
+      "harman": "min(255,A*P+B*(1-P)+100*sin(PI*P)*exp(-4*(pow(X/W-0.5,2)+pow(Y/H-0.5,2))))",
+      "ses": {
+        "tur": "vurus",
+        "oran": 1.1,
+        "ses": 0.35
+      }
+    },
+    {
+      "ad": "Panoramik Dönüş",
+      "giden": "scale=2304:1296,crop={W}:{H}:x='192+192*{p}':y=108,boxblur=12:1",
+      "gelen": "scale=2304:1296,crop={W}:{H}:x='192-192*{p}':y=108,boxblur=6:1",
+      "harman": "if(lt(X/W,1-P),B,A)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 1.4,
+        "ses": 0.35
+      }
+    },
+    {
+      "ad": "Pencere Kare Geçişi",
+      "giden": "scale=1728:972,pad={W}:{H}:(ow-iw)/2:(oh-ih)/2:color=white",
+      "gelen": "null",
+      "harman": "if(lt(max(abs(X/W-0.5)*2,abs(Y/H-0.5)*2),1-P),B,A)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 1.2,
+        "ses": 0.35
+      }
+    },
+    {
+      "ad": "Dokulu Kaydırma",
+      "giden": "gblur=sigma=3,eq=brightness='0.12*{p}':eval=frame",
+      "gelen": "gblur=sigma=1",
+      "harman": "if(lt((X/W+Y/H)/2+0.025*sin(X/38+Y/71),1-P),B,A)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 0.9,
+        "ses": 0.35
+      }
+    }
+  ],
+  "teknik_esleme": [
+    {
+      "etiket": "KLIP 578540",
+      "istenen": 2,
+      "uygulanan": 2,
+      "kaynak_suresi": 15.68
+    },
+    {
+      "etiket": "KLIP 578543",
+      "istenen": 50,
+      "uygulanan": 9.817,
+      "kaynak_suresi": 15.316667
+    },
+    {
+      "etiket": "KLIP 578544",
+      "istenen": 105,
+      "uygulanan": 6.147,
+      "kaynak_suresi": 11.646667
+    },
+    {
+      "etiket": "KLIP 578546",
+      "istenen": 130,
+      "uygulanan": 15.448,
+      "kaynak_suresi": 20.948333
+    },
+    {
+      "etiket": "KLIP 578549",
+      "istenen": 220,
+      "uygulanan": 18.35,
+      "kaynak_suresi": 23.85
+    },
+    {
+      "etiket": "KLIP 578550",
+      "istenen": 241,
+      "uygulanan": 10.542,
+      "kaynak_suresi": 16.041667
+    },
+    {
+      "etiket": "KLIP 578551",
+      "istenen": 248,
+      "uygulanan": 10.115,
+      "kaynak_suresi": 15.615
+    },
+    {
+      "etiket": "KLIP 578552",
+      "istenen": 315,
+      "uygulanan": 6.745,
+      "kaynak_suresi": 12.245
+    }
+  ]
+}

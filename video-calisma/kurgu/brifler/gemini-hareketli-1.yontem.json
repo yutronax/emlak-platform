@@ -1,0 +1,202 @@
+{
+  "model": "gemini-flash-latest",
+  "parcalar": [
+    {
+      "etiket": "KLIP 578540",
+      "mekan": "Mutfak ve ada tezgah",
+      "kalite": 8,
+      "kamera": "Geniş açı ileri akıcı kaydırma",
+      "kullanim": "Modern mutfak ve açık plan yaşam alanını göstermek için ideal"
+    },
+    {
+      "etiket": "KLIP 578541",
+      "mekan": "Arka veranda ve dış mekan şöminesi",
+      "kalite": 8,
+      "kamera": "Güneşe doğru ileri kaydırma ve lens parlaması",
+      "kullanim": "Açık hava dinlenme köşesi"
+    },
+    {
+      "etiket": "KLIP 578542",
+      "mekan": "Yemek alanı ve dış veranda bağlantısı",
+      "kalite": 7,
+      "kamera": "İleri süzülme",
+      "kullanim": "İç-dış mekan akışını vurgulama"
+    },
+    {
+      "etiket": "KLIP 578543",
+      "mekan": "Arka bahçe ve müstakil villa cephesi",
+      "kalite": 9,
+      "kamera": "Geniş açı bahçeden eve doğru hızlı süzülme",
+      "kullanim": "Dinamik dış mekan açılışı"
+    },
+    {
+      "etiket": "KLIP 578544",
+      "mekan": "Galeri boşluğu, ahşap kirişler ve merdiven",
+      "kalite": 9,
+      "kamera": "Aşağıdan yukarıya hacim gösteren ileri hareket",
+      "kullanim": "Evin mimari yüksekliğini ve ferahlığını sergileme"
+    },
+    {
+      "etiket": "KLIP 578545",
+      "mekan": "Dokulu duvar ardından salon açılışı",
+      "kalite": 7,
+      "kamera": "Duvar arkasından reveal",
+      "kullanim": "Alternatif salon açılışı"
+    },
+    {
+      "etiket": "KLIP 578546",
+      "mekan": "Alt açıdan boydan boya salon ve şömine",
+      "kalite": 8,
+      "kamera": "Zemine yakın hızlı süzülme ve yükselme",
+      "kullanim": "Enerjik zemin perspektifi"
+    },
+    {
+      "etiket": "KLIP 578547",
+      "mekan": "Geniş koridor ve iç mekan turu",
+      "kalite": 7,
+      "kamera": "Kesintisiz ileri yürüyüş",
+      "kullanim": "Mekanlar arası geçiş aksı"
+    },
+    {
+      "etiket": "KLIP 578548",
+      "mekan": "Üst kat koridoru",
+      "kalite": 6,
+      "kamera": "Dar alanda ileri hareket",
+      "kullanim": "Gereksiz dar açı, elenebilir"
+    },
+    {
+      "etiket": "KLIP 578549",
+      "mekan": "Eğlence odası, bilardo ve bar tezgahı",
+      "kalite": 9,
+      "kamera": "Bar tezgahı üzerinden kavisli dinamik süzülüş",
+      "kullanim": "Sosyal yaşam ve eğlence alanını vurgulama"
+    },
+    {
+      "etiket": "KLIP 578550",
+      "mekan": "Ebeveyn yatak odası ve banyo girişi",
+      "kalite": 9,
+      "kamera": "Yatak ve balkondan lüks banyoya akıcı geçiş",
+      "kullanim": "Özel süit konforu"
+    },
+    {
+      "etiket": "KLIP 578551",
+      "mekan": "Bağımsız küvet ve cam duş",
+      "kalite": 8,
+      "kamera": "Küvete doğru yakınlaşma",
+      "kullanim": "Spa benzeri banyo detayı"
+    },
+    {
+      "etiket": "KLIP 578552",
+      "mekan": "Cam yemek masası ve modern avize",
+      "kalite": 8,
+      "kamera": "Masaya doğru alçak süzülme",
+      "kullanim": "Yemek alanı detayı"
+    },
+    {
+      "etiket": "KLIP 578553",
+      "mekan": "Konsol ve heykelsi aydınlatma",
+      "kalite": 7,
+      "kamera": "Duvara yakınlaşma",
+      "kullanim": "Detay planı"
+    },
+    {
+      "etiket": "KLIP 578554",
+      "mekan": "Deri koltuklar ve sehpa",
+      "kalite": 8,
+      "kamera": "Yere yakın geniş açı kaydırma",
+      "kullanim": "Oturma grubu perspektifi"
+    }
+  ],
+  "hikaye": "Dinamik bir ritimle bahçeden başlayan tur; evin yüksek tavanlı heybetli mimarisine, sosyal bar ve bilardo salonuna, şık ada mutfağına ve son olarak gün ışığı alan ebeveyn süitine odaklanarak modern ve enerjik bir yaşam tarzını sergiler.",
+  "planlar": [
+    {
+      "etiket": "KLIP 578543",
+      "baslangic_sn": 2.5,
+      "neden": "Geniş bahçe ve çağdaş cepheyi enerjik bir ileri akışla açmak için."
+    },
+    {
+      "etiket": "KLIP 578544",
+      "baslangic_sn": 3.0,
+      "neden": "Yüksek tavanlı galeri boşluğu ve merdivenle hacim hissini patlatmak için."
+    },
+    {
+      "etiket": "KLIP 578540",
+      "baslangic_sn": 5.0,
+      "neden": "Geniş mermer ada ve fonksiyonel mutfak hattını hareketli tempoda göstermek için."
+    },
+    {
+      "etiket": "KLIP 578549",
+      "baslangic_sn": 13.0,
+      "neden": "Evin parti ve hobi potansiyelini simgeleyen bar ve bilardo alanını tanıtmak için."
+    },
+    {
+      "etiket": "KLIP 578550",
+      "baslangic_sn": 1.0,
+      "neden": "Güneş alan yatak odasından cam kaplı lüks banyoya akıcı bir geçiş sunmak için."
+    },
+    {
+      "etiket": "KLIP 578546",
+      "baslangic_sn": 14.5,
+      "neden": "Aydınlık pencereler, modern şömine ve oturma alanıyla ferah ve etkileyici bir final yapmak için."
+    }
+  ],
+  "plan_suresi_sn": 2.4,
+  "gecisler": [
+    {
+      "ad": "Hızlı İleri Whip-Zoom",
+      "yontem": "Bahçeden eve doğru giderken son karelerde görüntü hızla ileri doğru patlar, galeri salonunun kirişleri arasından içeri fırlar.",
+      "ses": "Yırtıcı hava sesi (whoosh-snap)"
+    },
+    {
+      "ad": "Kolon Arkası Keskin Pan",
+      "yontem": "Merdiven sütunu kadrajın solundan hızla geçerken kamera sağa savrulur ve mutfak tezgahının parlak mermerine sertçe oturur.",
+      "ses": "Hızlı sürtünme ve metalik klik tınısı"
+    },
+    {
+      "ad": "Açısal Sürüklenme",
+      "yontem": "Mutfaktaki ileri hareket birdenbire bar bankosunun kavisli kenarına dikey açı kaymasıyla bağlanır.",
+      "ses": "Derin bas darbesi ve bas teli tınlaması"
+    },
+    {
+      "ad": "Işık Patlamalı Sıçrama",
+      "yontem": "Barın loş ortamından yatak odasının balkonundan giren güçlü gün ışığı huzmesine flaş etkisiyle bağlanır.",
+      "ses": "Tiz zil çınlaması ve yumuşak darbe"
+    },
+    {
+      "ad": "Yatay Akışlı Kesim",
+      "yontem": "Banyonun cam kapısından salondaki boydan boya camlara doğru yatay eksende ivmelenerek kayar ve ferah oturma grubunda durur.",
+      "ses": "Rüzgar akımı ve tok final vuruşu"
+    }
+  ],
+  "isik_renk": "Canlı, modern İskandinav parlaklığı: Saf beyazlar, doygun doğal ahşap tonları, derinleştirilmiş siyah pencereler; hafif soğuk gölgeler ve sıcak güneş patlamalarıyla yüksek kontrastlı temiz bir enerji.",
+  "yazi": {
+    "gorunum": "Modern monospaced/grotesk sans yazı tipi, kalın harfler, sağ üst köşede kompakt yarı saydam koyu gri kart içinde neon beyaz metin",
+    "animasyon": "Harfler daktilo hızıyla anında belirip sonra sağa doğru hızlıca silinerek kaybolur"
+  },
+  "basliklar": [
+    {
+      "plan_no": 0,
+      "metin": "MODERN MİMARİ"
+    },
+    {
+      "plan_no": 1,
+      "metin": "YÜKSEK HACİM"
+    },
+    {
+      "plan_no": 3,
+      "metin": "ÖZEL KULÜP ALANI"
+    },
+    {
+      "plan_no": 5,
+      "metin": "IŞIK DOLU YAŞAM"
+    }
+  ],
+  "muzik": {
+    "tarif": "Modern, enerjik, tempolu synth ve ritmik bas yürüyüşü içeren elektronik indie altyapı (~115-120 BPM)",
+    "secim": "wallpaper.mp3",
+    "baslangic_sn": 8.0,
+    "neden": "Müşterinin hareketli ve enerjik isteğine tam oturan modern bas yürüyüşü ve pozitif ritmi sayesinde evi genç ve dinamik gösterir."
+  },
+  "seslendirme_metni": "Güneşin ve mimarinin mükemmel uyumu. Geniş galeri tavanları, özel hobi alanları ve ferah yaşam alanlarıyla enerjisi yüksek bir konfor sizi bekliyor.",
+  "gerekce": "Müşterinin enerjik vizyonuna cevap vermek adına durağan planlar yerine kamera hareketinin hiç durmadığı dinamik bölümler seçildi. Klip süreleri 2.4 saniye tutularak müzikle senkronize, modern ve tempolu bir kurgu dili kuruldu."
+}

@@ -1,0 +1,72 @@
+{
+  "ad": "daire-ornek-t2",
+  "sablon": "ilan_turu",
+  "not": "gerçek_veri_2 dairesi. Fiyat/telefon MOCK. konu = öznenin ekrandaki yeri (ust/orta/alt) → altyazı karşı bandda.",
+  "baslik": [
+    "BALKONA AÇILAN",
+    "SALON"
+  ],
+  "isik_t": 7.2,
+  "planlar": [
+    {
+      "src": "capcut/medya5/video1.mp4",
+      "bas": 0.2,
+      "hiz": 0.6,
+      "vurus": 4,
+      "konu": "orta",
+      "z0": 1.1,
+      "z1": 1.0,
+      "kirp_ust": 0.08
+    },
+    {
+      "src": "capcut/medya2/salon.jpg",
+      "vurus": 4,
+      "konu": "orta",
+      "yazi": "Gün ışığı alan geniş salon",
+      "kirp_ust": 0.08
+    },
+    {
+      "src": "capcut/medya5/video5.mp4",
+      "bas": 0.8,
+      "hiz": 0.8,
+      "vurus": 4,
+      "konu": "orta",
+      "gecis": "kay",
+      "yazi": "Odaları bağlayan hol"
+    },
+    {
+      "src": "capcut/medya5/video3.mp4",
+      "bas": 0.5,
+      "hiz": 0.6,
+      "vurus": 5,
+      "konu": "orta",
+      "yazi": "Geniş pencereli oda"
+    },
+    {
+      "src": "capcut/medya5/video9.mp4",
+      "bas": 0.6,
+      "hiz": 0.6,
+      "vurus": 4,
+      "konu": "alt",
+      "gecis": "kay",
+      "yazi": "Cam duşakabinli banyo",
+      "parlak": 0.06
+    },
+    {
+      "src": "capcut/medya5/video6.mp4",
+      "bas": 0.0,
+      "hiz": 0.7,
+      "vurus": 5,
+      "konu": "alt",
+      "gecis": "kay",
+      "yazi": "Şehre bakan balkon"
+    }
+  ],
+  "kapanis": {
+    "src": "capcut/medya2/balkon.jpg",
+    "vurus": 9,
+    "fiyat": "X.XXX.XXX TL",
+    "cagri": "YERİNDE GÖRÜN",
+    "tel": "0 (5XX) XXX XX XX"
+  }
+}

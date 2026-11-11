@@ -1,0 +1,455 @@
+[
+  {
+    "ad": "yatay-pexels-v3",
+    "renk": "sicak",
+    "yazi_stili": "kayan",
+    "muzik": "muzik/luxury-real-estate.mp3"
+  },
+  {
+    "ad": "yatay-pexels-v4",
+    "renk": "sicak",
+    "yazi_stili": "kayan",
+    "muzik": "muzik/luxury-real-estate.mp3"
+  },
+  {
+    "ad": "yatay-pexels-v5",
+    "renk": "film",
+    "yazi_stili": "cizgi",
+    "muzik": "muzik/luxury-real-estate.mp3",
+    "gecisler": [
+      "whip_sag",
+      "kesme",
+      "flas",
+      "whip_yukari",
+      "itme",
+      "donme",
+      "sarsinti",
+      "whip_sol"
+    ]
+  },
+  {
+    "ad": "sablon-soguk-daktilo",
+    "renk": "soguk",
+    "yazi_stili": "daktilo",
+    "muzik": "muzik/luxury-real-estate.mp3",
+    "gecisler": [
+      "itme",
+      "whip_sag",
+      "flas",
+      "donme",
+      "whip_yukari",
+      "sarsinti",
+      "whip_sol",
+      "kesme"
+    ]
+  },
+  {
+    "ad": "sablon-yumusak-dev",
+    "renk": "yumusak",
+    "yazi_stili": "dev",
+    "muzik": "muzik/luxury-real-estate.mp3",
+    "gecisler": [
+      "donme",
+      "whip_sol",
+      "kesme",
+      "itme",
+      "sarsinti",
+      "whip_yukari",
+      "flas",
+      "whip_sag"
+    ]
+  },
+  {
+    "ad": "gemini-yonetmen-1",
+    "renk": "sicak",
+    "yazi_stili": "cizgi",
+    "muzik": "muzik/luxury-real-estate.mp3",
+    "gecisler": [
+      "itme",
+      "flas",
+      "whip_sag",
+      "donme",
+      "sarsinti",
+      "kesme"
+    ]
+  },
+  {
+    "ad": "gemini-yontem-1",
+    "renk": "eq=contrast=1.10:saturation=1.05,colorbalance=rh=0.045:gh=0.02:bh=-0.035",
+    "yazi_stili": "drawtext=fontfile='{FONT}':text='{metin}':fontsize=84:fontcolor=0xB59A63:borderw=2:bordercolor=0x17130D@0.95:shadowcolor=black@0.9:shadowx=3:shadowy=4:x=(w-tw)/2:y=110:alpha='min(1,max(0,(t-{t0})/0.35))*min(1,max(0,({t1}-t)/0.4))':enable='between(t,{t0},{t1})'",
+    "muzik": "muzik/luxury-real-estate.mp3",
+    "gecisler": [
+      {
+        "ad": "Işık Parlamalı İleri İtme",
+        "giden": "scale=w='ceil({W}*(1+0.24*{p})/2)*2':h='ceil({H}*(1+0.38*{p})/2)*2':eval=frame,crop={W}:{H}:(iw-ow)/2:(ih-oh)/2,eq=brightness='0.4*{p}':eval=frame",
+        "gelen": "scale=w='ceil({W}*(1+0.24*{p})/2)*2':h='ceil({H}*(1+0.38*{p})/2)*2':eval=frame,crop={W}:{H}:(iw-ow)/2:(ih-oh)/2,eq=brightness='0.4*{p}':eval=frame",
+        "harman": "A*P+B*(1-P)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 0.85,
+          "ses": 0.45
+        }
+      },
+      {
+        "ad": "Yatay Mat Geçişi",
+        "giden": "scale=2304:1296,crop={W}:{H}:x='192+192*{p}':y=108",
+        "gelen": "scale=2304:1296,crop={W}:{H}:x='192-192*{p}':y=108",
+        "harman": "if(lt(X/W,1-P),B,A)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 0.7,
+          "ses": 0.5
+        }
+      },
+      {
+        "ad": "Odak Bulanıklığı Flu",
+        "giden": "gblur=sigma=9",
+        "gelen": "gblur=sigma=5",
+        "harman": "A*pow(P,1.2)+B*(1-pow(P,1.2))",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.6,
+          "ses": 0.12
+        }
+      },
+      {
+        "ad": "Cam Yansıması Kayması",
+        "giden": "scale=2112:1188,crop={W}:{H}:x='96+96*{p}':y=54,eq=contrast=0.94:brightness=0.035",
+        "gelen": "scale=2112:1188,crop={W}:{H}:x='96-96*{p}':y=54",
+        "harman": "A*P+B*(1-P)+18*sin(PI*P)*exp(-pow((X/W-(1-P))*8,2))",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.9,
+          "ses": 0.18
+        }
+      },
+      {
+        "ad": "Işık Süzülmesi Kesmesi",
+        "giden": "eq=brightness='0.06*{p}':saturation='1-0.18*{p}':eval=frame",
+        "gelen": "eq=brightness='0.04*{p}':saturation='1-0.12*{p}':eval=frame",
+        "harman": "(A*P+B*(1-P))*(1-(0.82*pow(sin(PI*P),1.2)*exp(-0.5*(pow((X/W-0.54)/(0.08+0.72*sin(PI*P)),2)+pow((Y/H-0.36)/(0.22+0.85*sin(PI*P)),2)))))+if(eq(PLANE,0),235,128)*(0.82*pow(sin(PI*P),1.2)*exp(-0.5*(pow((X/W-0.54)/(0.08+0.72*sin(PI*P)),2)+pow((Y/H-0.36)/(0.22+0.85*sin(PI*P)),2))))",
+        "ses": {
+          "tur": "vurus",
+          "oran": 0.65,
+          "ses": 0.5
+        }
+      }
+    ]
+  },
+  {
+    "ad": "gemini-hareketli-1",
+    "renk": "curves=all='0/0 0.15/0.12 0.5/0.52 0.85/0.89 1/1',eq=contrast=1.05:saturation=1.09,colorbalance=rs=-0.025:bs=0.035:rh=0.035:bh=-0.025",
+    "yazi_stili": "sendcmd=f='title{t0}.cmd',drawbox=x=1170:y=85:w=660:h=100:color=0x252525@0.78:t=fill:enable='between(t,{t0},{t1})',drawtext@title{t0}=fontfile='{FONT}':text='{metin}':fontsize=46:fontcolor=white:shadowcolor=black@0.8:shadowx=2:shadowy=2:x=1200:y=111:enable='between(t,{t0},{t1})'",
+    "muzik": "muzik/wallpaper.mp3",
+    "gecisler": [
+      {
+        "ad": "Hızlı İleri Whip-Zoom",
+        "giden": "scale=w='trunc({W}*(1+0.65*{p})/2)*2':h='trunc({H}*(1+0.65*{p})/2)*2':eval=frame,crop={W}:{H}:(iw-ow)/2:(ih-oh)/2",
+        "gelen": "scale=w='trunc({W}*(1+0.65*{p})/2)*2':h='trunc({H}*(1+0.65*{p})/2)*2':eval=frame,crop={W}:{H}:(iw-ow)/2:(ih-oh)/2",
+        "harman": "A*P+B*(1-P)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.45,
+          "ses": 0.65
+        }
+      },
+      {
+        "ad": "Kolon Arkası Keskin Pan",
+        "giden": "scale=2880:1620,crop={W}:{H}:x='480+450*{p}':y=270",
+        "gelen": "scale=2880:1620,crop={W}:{H}:x='480-450*{p}':y=270",
+        "harman": "if(lt(X/W,1-P),B,A)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.8,
+          "ses": 0.55
+        }
+      },
+      {
+        "ad": "Açısal Sürüklenme",
+        "giden": "scale=2880:1620,rotate=a='0.13*{p}':ow=2880:oh=1620,crop={W}:{H}:480:'270-220*{p}'",
+        "gelen": "scale=2880:1620,rotate=a='-0.13*{p}':ow=2880:oh=1620,crop={W}:{H}:480:'270+220*{p}'",
+        "harman": "if(lt((X/W+Y/H)/2,1-P),B,A)",
+        "ses": {
+          "tur": "vurus",
+          "oran": 0.72,
+          "ses": 0.65
+        }
+      },
+      {
+        "ad": "Işık Patlamalı Sıçrama",
+        "giden": "eq=brightness='0.65*{p}':eval=frame",
+        "gelen": "eq=brightness='0.65*{p}':eval=frame",
+        "harman": "clip(A*P+B*(1-P)+100*sin(PI*P),0,255)",
+        "ses": {
+          "tur": "vurus",
+          "oran": 1.8,
+          "ses": 0.48
+        }
+      },
+      {
+        "ad": "Yatay Akışlı Kesim",
+        "giden": "scale=2880:1620,crop={W}:{H}:x='480+450*{p}':y=270",
+        "gelen": "scale=2880:1620,crop={W}:{H}:x='480-450*{p}':y=270",
+        "harman": "A*pow(P,2)+B*(1-pow(P,2))",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.05,
+          "ses": 0.6
+        }
+      }
+    ]
+  },
+  {
+    "ad": "gemini-isik-1",
+    "renk": "eq=contrast=1.08:saturation=1.03,colorbalance=rh=0.02:gh=0.01:bh=-0.01:rs=-0.01:gs=0.01:bs=0.02,curves=all='0/0 0.2/0.18 0.4/0.4 0.6/0.63 0.8/0.85 1/1'",
+    "yazi_stili": "drawtext=fontfile='{FONT}':text='{metin}':fontsize='64*(0.95+0.05*sin(PI*clip((t-{t0})/2,0,1)))':fontcolor=white:borderw=2:bordercolor=black@0.7:shadowcolor=black@0.8:shadowx=2:shadowy=3:x=(w-tw)/2:y=130:alpha='min(1,min((t-{t0})/0.3,({t0}+2-t)/0.3))':enable='between(t,{t0},{t0}+2)'",
+    "muzik": "muzik/luxury-real-estate.mp3",
+    "gecisler": [
+      {
+        "ad": "Geometrik Parlama Geçişi",
+        "giden": "eq=brightness='0.25*{p}':eval=frame,gblur=sigma=2",
+        "gelen": "gblur=sigma=2",
+        "harman": "min(255,A*P+B*(1-P)+90*exp(-pow((X/W+Y/H)/2-(1-P),2)/0.015)*sin(PI*P))",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.3,
+          "ses": 0.35
+        }
+      },
+      {
+        "ad": "Yerden Göğe Yükseliş",
+        "giden": "scale=2304:1296,crop={W}:{H}:192:y='108+108*{p}',eq=brightness='0.4*{p}':eval=frame",
+        "gelen": "scale=2304:1296,crop={W}:{H}:192:y='108-108*{p}'",
+        "harman": "min(255,A*P+B*(1-P)+180*sin(PI*P))",
+        "ses": {
+          "tur": "vurus",
+          "oran": 0.8,
+          "ses": 0.35
+        }
+      },
+      {
+        "ad": "Aynalı Çözülme",
+        "giden": "gblur=sigma=12,colorchannelmixer=rr=1.02:bb=0.98",
+        "gelen": "gblur=sigma=3",
+        "harman": "A*P*P+B*(1-P*P)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 0.95,
+          "ses": 0.35
+        }
+      },
+      {
+        "ad": "Kapı Eşiği Işıltısı",
+        "giden": "eq=brightness='0.28*{p}':eval=frame",
+        "gelen": "eq=brightness='0.18*{p}':eval=frame",
+        "harman": "min(255,A*P+B*(1-P)+100*sin(PI*P)*exp(-4*(pow(X/W-0.5,2)+pow(Y/H-0.5,2))))",
+        "ses": {
+          "tur": "vurus",
+          "oran": 1.1,
+          "ses": 0.35
+        }
+      },
+      {
+        "ad": "Panoramik Dönüş",
+        "giden": "scale=2304:1296,crop={W}:{H}:x='192+192*{p}':y=108,boxblur=12:1",
+        "gelen": "scale=2304:1296,crop={W}:{H}:x='192-192*{p}':y=108,boxblur=6:1",
+        "harman": "if(lt(X/W,1-P),B,A)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.4,
+          "ses": 0.35
+        }
+      },
+      {
+        "ad": "Pencere Kare Geçişi",
+        "giden": "scale=1728:972,pad={W}:{H}:(ow-iw)/2:(oh-ih)/2:color=white",
+        "gelen": "null",
+        "harman": "if(lt(max(abs(X/W-0.5)*2,abs(Y/H-0.5)*2),1-P),B,A)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.2,
+          "ses": 0.35
+        }
+      },
+      {
+        "ad": "Dokulu Kaydırma",
+        "giden": "gblur=sigma=3,eq=brightness='0.12*{p}':eval=frame",
+        "gelen": "gblur=sigma=1",
+        "harman": "if(lt((X/W+Y/H)/2+0.025*sin(X/38+Y/71),1-P),B,A)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 0.9,
+          "ses": 0.35
+        }
+      }
+    ],
+    "yontem_ozet": {
+      "isik": "Tüm film boyunca renk paleti, modern ve ferah bir atmosfer yaratmak için doğal tonları koruyacak, ancak hafifçe canlandırılmış ve berraklaştırılmış olacak. Genel kontrast 1.08, doygunluk 1.03 seviyesi",
+      "yazi": {
+        "gorunum": "Yazı tipi 'Lato Bold' veya benzeri temiz, modern bir sans-serif olacak. Boyut 64px, renk beyaz olacak. Yazılar ekranın üst orta kısmında, ortalanmış şekilde yer alacak, alt kısmı asla kaplamayacak.",
+        "animasyon": "Başlıklar, hafif bir parlama efektiyle merkeze doğru yavaşça zoom yaparak belirecek ve aynı şekilde yavaşça geri zoom yaparak kaybolacak. Her başlık yaklaşık 2 saniye ekranda kalacak ve geçişlerdeki hız rampalarının ritmine uyum sağlayacak."
+      },
+      "gecisler": [
+        "Geometrik Parlama Geçişi",
+        "Yerden Göğe Yükseliş",
+        "Aynalı Çözülme",
+        "Kapı Eşiği Işıltısı",
+        "Panoramik Dönüş",
+        "Pencere Kare Geçişi",
+        "Dokulu Kaydırma"
+      ]
+    }
+  },
+  {
+    "ad": "gemini-mozaik-1",
+    "renk": "eq=contrast=1.05:saturation=1.03,curves=all='0/0.015 0.15/0.17 0.75/0.75 1/0.97',colorbalance=rh=0.012:bh=-0.012",
+    "yazi_stili": "drawtext=fontfile='{FONT}':text='{metin}':fontsize=64:fontcolor=white:borderw=2:bordercolor=black@0.6:shadowcolor=black@0.9:shadowx=0:shadowy=4:x='(w-tw)/2+18*sin(PI*(clip(min((t-{t0})/0.5,({t1}-t)/0.4),0,1)))':y='150+60*pow(1-(clip(min((t-{t0})/0.5,({t1}-t)/0.4),0,1)),2)':alpha='clip(min((t-{t0})/0.5,({t1}-t)/0.4),0,1)':enable='between(t,{t0},{t1})'",
+    "muzik": "muzik/luxury-real-estate.mp3",
+    "gecisler": [
+      {
+        "ad": "Hafif Parlama",
+        "giden": "eq=brightness='0.22*{p}':eval=frame",
+        "gelen": "eq=brightness='0.22*{p}':eval=frame",
+        "harman": "min(255,A*P+B*(1-P)+55*sin(PI*P))",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.1,
+          "ses": 0.15
+        }
+      },
+      {
+        "ad": "Çözülen Sütun",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "A*(1-clip((1-P)*W-X+20,0,40)/40)+B*clip((1-P)*W-X+20,0,40)/40",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 0.8,
+          "ses": 0.15
+        }
+      },
+      {
+        "ad": "Perde Hareketi",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(lt(Y,H*(1-P)),B,A)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.2,
+          "ses": 0.14
+        }
+      },
+      {
+        "ad": "Yavaş Döngüsel Çözülme",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "A*(1-clip(((1-P)*sqrt(W*W+H*H)/2-sqrt((X-W/2)*(X-W/2)+(Y-H/2)*(Y-H/2))+30)/60,0,1))+B*clip(((1-P)*sqrt(W*W+H*H)/2-sqrt((X-W/2)*(X-W/2)+(Y-H/2)*(Y-H/2))+30)/60,0,1)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 0.5,
+          "ses": 0.12
+        }
+      },
+      {
+        "ad": "Kapı İçinden Zoom",
+        "giden": "scale=w='1920*(1+0.7*{p})':h='1080*(1+0.7*{p})':eval=frame,crop=1920:1080",
+        "gelen": "scale=w='1920*(1+0.4*{p})':h='1080*(1+0.4*{p})':eval=frame,crop=1920:1080",
+        "harman": "A*P*P+B*(1-P*P)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.4,
+          "ses": 0.18
+        }
+      },
+      {
+        "ad": "Şeffaf Bulanıklık Geçişi",
+        "giden": "gblur=sigma=9",
+        "gelen": "gblur=sigma=1",
+        "harman": "A*P+B*(1-P)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.8,
+          "ses": 0.08
+        }
+      }
+    ],
+    "yontem_ozet": {
+      "isik": "Tüm film boyunca, evin doğal aydınlığını ön plana çıkaracak, sıcak tonlara vurgu yapan ancak modern beyaz dengesini koruyan bir renk paleti kullanılacak. Renkler canlı ancak abartısız olacak, mekanlar",
+      "yazi": {
+        "gorunum": "Yazı tipi 'Montserrat Bold', boyut 64px, renk beyaz. Yazılar ekranın üst orta kısmında, ortalanmış şekilde yer alacak, alt kısmı asla kaplamayacak ve görüntüyü boğmayacak.",
+        "animasyon": "Yazılar, ekrana zarif bir yay çizerek aşağıdan yukarıya doğru 0.5 saniyede süzülerek belirecek ve aynı yay üzerinde geri süzülerek 0.4 saniyede kaybolacak. Belirirken hafif, dağılmış bir ışık parlaması efekti eşlik edecek."
+      },
+      "gecisler": [
+        "Hafif Parlama",
+        "Çözülen Sütun",
+        "Perde Hareketi",
+        "Yavaş Döngüsel Çözülme",
+        "Kapı İçinden Zoom",
+        "Şeffaf Bulanıklık Geçişi"
+      ]
+    }
+  },
+  {
+    "ad": "gemini-yeni-tur-1",
+    "renk": "eq=contrast=1.04:saturation=0.94,curves=all='0/0.0706 0.5/0.51 1/0.98',colorbalance=rs=-0.018:gs=0.012:bs=0.022:rm=0.025:gm=0.012:bm=-0.018",
+    "yazi_stili": "drawtext=fontfile='{FONT}':text='{metin}':fontsize=52:fontcolor=0xF2EFE9:shadowcolor=black@0.9:shadowx=2:shadowy=3:x=120:y=120:enable='between(t,{t0},{t1})'",
+    "muzik": "muzik/luxury-real-estate.mp3",
+    "gecisler": [
+      {
+        "ad": "Optik Odak D?zlemi Kaymas?",
+        "giden": "gblur=sigma=5",
+        "gelen": "gblur=sigma=3",
+        "harman": "A*P+B*(1-P)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 0.7,
+          "ses": 0.1
+        }
+      },
+      {
+        "ad": "Yatay S?cak I??k Dalgalanmas?",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(lt(X/W,1-P),B,A)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 0.7,
+          "ses": 0.1
+        }
+      },
+      {
+        "ad": "Mikro Pan Segment Ge?i?i",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "A*P+B*(1-P)+0.001",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 0.7,
+          "ses": 0.1
+        }
+      },
+      {
+        "ad": "Sinematik Karart?l? Mercek S?z?lmesi",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "(A*P+B*(1-P))*(0.2+0.8*abs(2*P-1))",
+        "ses": {
+          "tur": "vurus",
+          "oran": 0.7,
+          "ses": 0.1
+        }
+      },
+      {
+        "ad": "Derinlik B?l?nmesi",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(lt(Y/H,1-P),B,A)",
+        "ses": {
+          "tur": "vurus",
+          "oran": 0.7,
+          "ses": 0.1
+        }
+      }
+    ]
+  }
+]

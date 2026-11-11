@@ -1,0 +1,164 @@
+{
+  "ad": "gemini-yeni-tur-1",
+  "planlar": [
+    [
+      "varliklar/pexels-yeni/7614529.mp4",
+      0
+    ],
+    [
+      "varliklar/pexels-yeni/7614406.mp4",
+      0.5
+    ],
+    [
+      "varliklar/pexels-yeni/7614410.mp4",
+      0
+    ],
+    [
+      "varliklar/pexels-yeni/7614419.mp4",
+      0
+    ],
+    [
+      "varliklar/pexels-yeni/7614417.mp4",
+      0
+    ],
+    [
+      "varliklar/pexels-yeni/7614541.mp4",
+      0
+    ]
+  ],
+  "vurus": 8,
+  "rampa": 0.3,
+  "harman": 0.3333,
+  "font": "georgia",
+  "renk_filtre": "eq=contrast=1.04:saturation=0.94,curves=all='0/0.0706 0.5/0.51 1/0.98',colorbalance=rs=-0.018:gs=0.012:bs=0.022:rm=0.025:gm=0.012:bm=-0.018",
+  "yazi_filtre": "drawbox=x=104:y=104:w=1100:h=100:color=black@0.28:t=fill:enable='between(t,{t0},{t0}+2.8)',drawtext=fontfile='{FONT}':text='{metin}':fontsize=52:fontcolor=0xF2EFE9:shadowcolor=black@0.9:shadowx=2:shadowy=3:x=120:y=120:alpha='min(1,({t0}+2.8-t)/0.4)':enable='between(t,{t0},{t0}+2.8)',drawbox=x=120:y=186:w=600:h=1:color=0xF2EFE9@0.5:t=fill:enable='between(t,{t0},{t0}+2.8)'",
+  "muzik": "muzik/luxury-real-estate.mp3",
+  "muzik_bas": 0,
+  "yazilar": [
+    [
+      0,
+      "DOĞAL IŞIK"
+    ],
+    [
+      1,
+      "RAFINELIK VE HARMONİ"
+    ],
+    [
+      3,
+      "HUZURLU DETAYLAR"
+    ],
+    [
+      5,
+      "MODERN MIMARI"
+    ]
+  ],
+  "alt_bant": "İNZA · ÖRNEK KURGU",
+  "seslendirme_bas": 1.0,
+  "tekrar_izin": true,
+  "gecisler": [
+    {
+      "ad": "Optik Odak Düzlemi Kayması",
+      "giden": "gblur=sigma=5",
+      "gelen": "gblur=sigma=3",
+      "harman": "A*P+B*(1-P)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 0.7,
+        "ses": 0.1
+      }
+    },
+    {
+      "ad": "Yatay Sıcak Işık Dalgalanması",
+      "giden": "eq=brightness='0.03*{p}':eval=frame",
+      "gelen": "eq=brightness='0.03*{p}':eval=frame",
+      "harman": "if(lt(abs(X/W-(1-P)),0.09),min(255,(A*P+B*(1-P))*1.12+12),if(lt(X/W,1-P),B,A))",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 0.7,
+        "ses": 0.1
+      }
+    },
+    {
+      "ad": "Mikro Pan Segment Geçişi",
+      "giden": "scale=1936:1088,crop={W}:{H}:x='8+8*{p}':y=4,tmix=frames=2",
+      "gelen": "null",
+      "harman": "A*P+B*(1-P)+0.00001",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 0.7,
+        "ses": 0.1
+      }
+    },
+    {
+      "ad": "Sinematik Karartılı Mercek Süzülmesi",
+      "giden": "null",
+      "gelen": "null",
+      "harman": "(A*P+B*(1-P))*(0.12+0.88*clip((abs(2*P-1)-0.35*sqrt(pow((X-W/2)/(W/2),2)+pow((Y-H/2)/(H/2),2)))*2,0,1))",
+      "ses": {
+        "tur": "vurus",
+        "oran": 0.7,
+        "ses": 0.1
+      }
+    },
+    {
+      "ad": "Derinlik Bölünmesi",
+      "giden": "gblur=sigma=9",
+      "gelen": "null",
+      "harman": "if(lt(Y/H,1-P),B,A)",
+      "ses": {
+        "tur": "vurus",
+        "oran": 0.7,
+        "ses": 0.1
+      }
+    }
+  ],
+  "uygulama": {
+    "nihai_betik": "kurgu/projeler/yatay/gemini-yeni-tur-1/son_dokunus.py",
+    "plan_suresi_sn": 3.4,
+    "gecis_sureleri_sn": [
+      0.4,
+      0.4,
+      0.3,
+      0.2,
+      0.4
+    ],
+    "yazi": "0.4 sn harf harf, 2 sn sabit, 0.4 sn fade",
+    "font": "Georgia Regular, izin verilen serif font ailesi",
+    "yaklasimlar": [
+      "Derinlik haritası bulunmadığı için ön plan örtülmesi 2B bulanıklık ve dikey maskeyle yaklaştırıldı.",
+      "Işık huzmesi ve mercek parıltısı yumuşak optik maskelerle uygulandı.",
+      "SFX tarifleri düşük seviyeli sentezlenmiş rüzgar, çınlama, kayma, bas rezonansı ve pedal benzeri tonlarla yaklaştırıldı.",
+      "Seçilen müzik aynen korundu. Katalog yaklaşık 100 BPM, tarif 80 BPM."
+    ],
+    "motor_notu": "İstenen uret.py komutu çalıştırıldı. Nihai video sabit hızdaki özel FFmpeg betiğiyle oluşturuldu.",
+    "yazi_notu": "Harf harf açılma nihai betikte uygulanır. Motorun yazi_filtre şablonu tam metni gösterir."
+  },
+  "acilis": {
+    "siyah_sn": 0.8,
+    "maske": "merkezden genleşen yumuşak oval",
+    "acilma_sn": 0.8
+  },
+  "kapanis": {
+    "sure_sn": 3.6,
+    "gecis": "dikey ışık perdesi",
+    "zemin": "#E6DCCB",
+    "icerik": [
+      "marka/inza-logo-saydam.png",
+      "YERİNDE GÖRÜN",
+      "0 (5XX) XXX XX XX",
+      "Seslendirme yapay zekâ ile üretildi",
+      "Görüntüler · Pexels / Kindel Media"
+    ]
+  },
+  "isik_efektleri": [
+    {
+      "plan_no": 2,
+      "efekt": "vazo üzerine hafif sıcak mercek parıltısı"
+    },
+    {
+      "plan_no": 4,
+      "efekt": "45 derece yumuşak sıcak ışık huzmesi"
+    }
+  ],
+  "seslendirme_metni": "Genç ve ferah bir mimari anlayış, doğal gün ışığıyla buluşuyor. Şık detaylar, konforlu yaşam alanları ve modern çizgilere sahip bu özel evde dinginliğin keyfini çıkarın."
+}
