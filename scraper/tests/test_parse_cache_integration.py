@@ -221,6 +221,26 @@ def _description_echo_side_effect(model, contents):
     return response
 
 
+@pytest.fixture(autouse=True)
+def _cache_client_reset_and_sync_submit(monkeypatch):
+    """Önbellek istemcisini her testte sıfırlar; arka plan işleri senkron çalışır (F5 sözleşmesi)."""
+    import concurrent.futures
+
+    import parser as parser_mod
+
+    def sync_submit(fn, *args, **kwargs):
+        future = concurrent.futures.Future()
+        try:
+            future.set_result(fn(*args, **kwargs))
+        except BaseException as exc:  # noqa: BLE001 - istisna Future'a taşınır
+            future.set_exception(exc)
+        return future
+
+    monkeypatch.setattr(parser_mod, "_CACHE_CLIENT", None, raising=False)
+    monkeypatch.setattr(parser_mod, "_submit", sync_submit, raising=False)
+    yield
+
+
 @pytest.fixture
 def markers():
     created = []

@@ -9,10 +9,12 @@ kısmi regex -> Gemini -> doğrulama -> önbelleğe yazım. Bayrak kapalıyken m
 Loglar içeriksizdir: mesaj, telefon, URL, hash ve model/sağlayıcı metni loglanmaz.
 """
 
+import concurrent.futures
 import json
 import logging
 import os
 import re
+import threading
 import time
 from datetime import datetime, timezone
 from typing import Any, Dict, Optional, Tuple
@@ -34,6 +36,13 @@ MODEL = "gemini-3.8-flash"
 CACHE_VERSION = "gemini-3.8-flash|schema-v1|parser-v1"
 FLAG_ENV = "GEMINI_PARSE_OPTIMIZATION_ENABLED"
 MAX_PERSISTED_BYTES = 8 * 1024
+READ_TIMEOUT_ENV = "PARSE_CACHE_READ_TIMEOUT_MS"
+DEFAULT_READ_TIMEOUT_MS = 600
+
+# Süreç başına tek, tembel kurulan önbellek istemcisi (kurulum hatası saklanmaz).
+_CACHE_CLIENT = None
+_CACHE_CLIENT_LOCK = threading.Lock()
+_EXECUTOR = concurrent.futures.ThreadPoolExecutor(max_workers=4, thread_name_prefix="parse-cache")
 
 SYSTEM_PROMPT = """Sen bir emlak ilanı ayrıştırma asistanısın. Sana WhatsApp grubundan
 gelen ham bir emlak ilanı metni verilecek. Görevin SADECE metinde açıkça yazılı
@@ -216,24 +225,57 @@ def _row_record(row: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     return None
 
 
+def _cache_client() -> Any:
+    global _CACHE_CLIENT
+    with _CACHE_CLIENT_LOCK:
+        if _CACHE_CLIENT is None:
+            _CACHE_CLIENT = supabase_client.get_client()
+        return _CACHE_CLIENT
+
+
+def _submit(fn: Any, *args: Any) -> concurrent.futures.Future:
+    return _EXECUTOR.submit(fn, *args)
+
+
+def _read_timeout_s() -> float:
+    try:
+        ms = int(os.getenv(READ_TIMEOUT_ENV, ""))
+    except ValueError:
+        ms = 0
+    if ms <= 0:
+        ms = DEFAULT_READ_TIMEOUT_MS
+    return ms / 1000
+
+
 def _db_delete(key: str) -> bool:
     try:
-        client = supabase_client.get_client()
+        client = _cache_client()
     except Exception:  # noqa: BLE001 - istemci kurulamadı, silme yapılamadı
         return False
     return supabase_client.delete_parse_cache(client, key)
 
 
-def _invalidate(key: str) -> None:
-    logger.warning("cache_invalid")
+def _background_delete(key: str) -> None:
     if not _db_delete(key):
         logger.warning("cache_error operation=delete")
+
+
+def _invalidate(key: str) -> None:
+    logger.warning("cache_invalid")
+    _submit(_background_delete, key)
+
+
+def _fetch_row(key: str) -> Optional[Dict[str, Any]]:
+    return supabase_client.get_parse_cache(_cache_client(), key)
 
 
 def _read_db_record(key: str) -> Optional[Tuple[Dict[str, Any], float]]:
     """Kalıcı önbellekten geçerli kaydı ve kalan TTL'yi (sn) döndürür; yoksa None."""
     try:
-        row = supabase_client.get_parse_cache(supabase_client.get_client(), key)
+        row = _submit(_fetch_row, key).result(timeout=_read_timeout_s())
+    except concurrent.futures.TimeoutError:
+        logger.warning("cache_error operation=read reason=timeout")
+        return None
     except Exception:  # noqa: BLE001 - okuma hatası: normal ayrıştırmaya devam
         logger.warning("cache_error operation=read")
         return None
@@ -276,22 +318,30 @@ def _too_large(parsed: Dict[str, Any]) -> bool:
 
 def _db_write(key: str, is_listing: bool, parsed: Optional[Dict[str, Any]], expires_at: str) -> bool:
     try:
-        client = supabase_client.get_client()
+        client = _cache_client()
     except Exception:  # noqa: BLE001 - istemci kurulamadı, yazım yapılmadı
         return False
     return supabase_client.put_parse_cache(client, key, is_listing, parsed, CACHE_VERSION, expires_at)
 
 
+def _persist(key: str, is_listing: bool, parsed: Optional[Dict[str, Any]], expires_at: str) -> None:
+    """Arka planda kalıcı yazım. Hata yalnız içeriksiz log olarak görünür, dışarı sızmaz."""
+    try:
+        if not _db_write(key, is_listing, parsed, expires_at):
+            logger.warning("cache_error operation=write")
+    except Exception:  # noqa: BLE001 - arka plan yazımı sonucu etkilemez
+        logger.warning("cache_error operation=write")
+
+
 def _store(key: str, is_listing: bool, parsed: Optional[Dict[str, Any]]) -> None:
-    """Sonucu LRU'ya ve kalıcı önbelleğe yazar. Kalıcı yazım hatası sonucu düşürmez."""
+    """LRU'ya senkron, kalıcı önbelleğe arka planda yazar. Kalıcı yazım hatası sonucu düşürmez."""
     parse_cache.put(key, is_listing, parsed)
     if parsed is not None and _too_large(parsed):
         logger.warning("cache_error operation=write reason=too_large")
         return
     ttl = parse_cache.POSITIVE_TTL_SECONDS if is_listing else parse_cache.NEGATIVE_TTL_SECONDS
     expires_at = datetime.fromtimestamp(time.time() + ttl, tz=timezone.utc).isoformat()
-    if not _db_write(key, is_listing, parsed, expires_at):
-        logger.warning("cache_error operation=write")
+    _submit(_persist, key, is_listing, parsed, expires_at)
 
 
 async def _parse_optimized(raw_text: str, key_manager: GeminiKeyManager) -> Optional[Dict[str, Any]]:

@@ -1,0 +1,136 @@
+{
+  "env": {
+    "model": "gemini-3.8-flash",
+    "python": "3.11.9",
+    "platform": "win32",
+    "cache_version": "bench-055eb55bdd",
+    "pause_between_calls_s": 0.4,
+    "gemini": "SAHTE (etiket tabanli, 600 ms)"
+  },
+  "dataset": {
+    "distinct_messages": 30,
+    "listings": 20,
+    "non_listings": 10,
+    "stream_len": 58,
+    "stream_distinct_normalized": 30,
+    "stream_repeat_rate_pct": 48.3,
+    "stream_listing_occurrences": 41
+  },
+  "prefilter": {
+    "false_negatives": [],
+    "false_negative_pct": 0.0,
+    "rejected_non_listings": [
+      "N02"
+    ]
+  },
+  "cleanup_deleted_rows": 60,
+  "calls": {
+    "temsili": {
+      "baseline": 58,
+      "optimized_cold": 30,
+      "reduction_pct": 48.3,
+      "optimized_warm": 0,
+      "optimized_restart": 0,
+      "rate_limited_baseline": 0,
+      "rate_limited_optimized": 0
+    },
+    "tekrarsiz": {
+      "baseline": 30,
+      "optimized": 30,
+      "reduction_pct": 0.0
+    }
+  },
+  "tokens": {
+    "baseline_in": 0,
+    "baseline_out": 0,
+    "optimized_in": 0,
+    "optimized_out": 0
+  },
+  "overhead_ms": {
+    "cold": {
+      "n": 58,
+      "p50": 237.8,
+      "p95": 607.6,
+      "max": 614.19,
+      "mean": 170.12
+    },
+    "cold_cache_miss_only": {
+      "n": 29,
+      "p50": 256.89,
+      "p95": 611.39,
+      "max": 614.19,
+      "mean": 331.16
+    },
+    "warm_lru": {
+      "n": 58,
+      "p50": 0.02,
+      "p95": 0.03,
+      "max": 0.08,
+      "mean": 0.02
+    },
+    "restart_supabase": {
+      "n": 58,
+      "p50": 227.27,
+      "p95": 307.88,
+      "max": 404.45,
+      "mean": 139.69
+    },
+    "gemini_wait_ms_baseline": {
+      "n": 58,
+      "p50": 600.59,
+      "p95": 607.38,
+      "max": 613.53,
+      "mean": 601.67
+    }
+  },
+  "memory": {
+    "tracemalloc_peak_kib_cold_run": 2943.1,
+    "lru_entries_after_restart": 30
+  },
+  "quality": {
+    "baseline": {
+      "is_listing": [
+        30,
+        30
+      ],
+      "price": [
+        18,
+        18
+      ],
+      "area_m2": [
+        10,
+        10
+      ],
+      "rooms": [
+        14,
+        14
+      ],
+      "errors": 0
+    },
+    "optimized": {
+      "is_listing": [
+        30,
+        30
+      ],
+      "price": [
+        18,
+        18
+      ],
+      "area_m2": [
+        10,
+        10
+      ],
+      "rooms": [
+        14,
+        14
+      ],
+      "errors": 0
+    },
+    "regressions_vs_baseline": [],
+    "improvements_vs_baseline": []
+  },
+  "errors": {
+    "baseline": [],
+    "optimized_cold": []
+  }
+}

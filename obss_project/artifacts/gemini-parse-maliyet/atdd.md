@@ -217,6 +217,8 @@ Değişen parser kodunda branch coverage ≥%90. Satır coverage tek başına ye
 
 Optimizasyonun eklediği normalizasyon, LRU, kalıcı cache erişimi, ön-eleme, regex, doğrulama ve cache yazım sürelerinin toplamı için p95 ≤100 ms. Gemini bekleme süresi ayrı ölçülür. Ortam, örnek sayısı ve sıcak/soğuk cache dağılımı raporda bulunur.
 
+**Gecikme düzeltmesi (F5, 2026-11-12, kullanıcı kararı "A: Gecikmeyi düşür")** — benchmark/RAPOR.md ek gecikme p95'i ~3 sn ölçtü (yeni Supabase istemcisi + senkron okuma/yazma). Kural: (1) önbellek işlemleri süreç başına tek, tembel kurulan Supabase istemcisini kullanır; kurulum hatası saklanmaz, sonraki çağrı yeniden dener; (2) kalıcı okuma `PARSE_CACHE_READ_TIMEOUT_MS` (varsayılan 600 — kullanıcı kararı, 300 ms'de yeniden başlatmada 30 mesajın 10'u ekstra Gemini çağrısına dönüyordu; geçersiz/≤0 değer varsayılana döner) ile sınırlıdır, aşılırsa `cache_error operation=read reason=timeout` loglanır ve ıska sayılır (ayrıştırma sürer); (3) kalıcı yazım ve geçersiz kayıt silme ayrıştırma yolundan çıkarılıp arka planda yapılır, hatası `cache_error operation=write|delete` loglanır ve sonucu etkilemez; LRU yazımı senkron kalır. 100 ms hedefi bu ağdan tek Supabase gidiş-dönüşüyle (~300 ms) karşılanamaz; yeni hedef ölçüm sonrası kullanıcıyla belirlenir.
+
 **Memory**
 
 Süreç başına LRU en fazla 1.000 kayıt. Bayt/MB hedefi tanımlanmamıştır. Benchmark tepe bellek kullanımını raporlar.

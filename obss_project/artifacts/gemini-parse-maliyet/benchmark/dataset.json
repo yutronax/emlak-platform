@@ -1,0 +1,39 @@
+{
+  "_not": "Sentetik, elle etiketlenmiş temsili WhatsApp emlak grubu mesajları. Gerçek kişi/telefon/ilan içermez (telefonlar 0555 000 00 xx biçiminde uydurma). Etiket: is_listing ve yalnız metinde AÇIKÇA yazan alanlar (price TRY tamsayı, area_m2, rooms). Alanı yazmayan/belirsiz olan mesajda o etiket yoktur ve doğrulukta sayılmaz.",
+  "messages": [
+    {"id": "L01", "is_listing": true, "price": 4250000, "area_m2": 120, "rooms": "3+1", "text": "SATILIK DAİRE\nKadıköy Moda'da 3+1, 120 m2, 4. kat, asansörlü\nFiyat: 4.250.000 TL\nBilgi: 0555 000 00 01"},
+    {"id": "L02", "is_listing": true, "price": 18500, "area_m2": 90, "rooms": "2+1", "text": "Kiralık 2+1 daire Ataşehir merkez, 90 m2, eşyasız, aidat dahil 18.500 TL. Görüşmek için yazın 🙏"},
+    {"id": "L03", "is_listing": true, "price": 2750000, "rooms": "1+1", "text": "🏠 Beylikdüzü Yakuplu 1+1 sıfır daire\n💰 2.750.000 TL\n📞 0555 000 00 02"},
+    {"id": "L04", "is_listing": true, "price": 7900000, "rooms": "4+1", "text": "Satılık villa, Çekmeköy, 4+1 bahçeli, net 180 m2 brüt 220 m2, 7.900.000 TL"},
+    {"id": "L05", "is_listing": true, "price": 32000, "area_m2": 140, "rooms": "3+1", "text": "Beşiktaş Levent kiralık 3+1 140 m2 site içi havuzlu 32.000 TL depozito 2 kira"},
+    {"id": "L06", "is_listing": true, "price": 1950000, "area_m2": 65, "text": "İlan no: 884512\nEsenyurt'ta 65 m2 stüdyo daire satılık, krediye uygun. 1.950.000 TL"},
+    {"id": "L07", "is_listing": true, "price": 12500000, "rooms": "3+1", "text": "SAHİBİNDEN değil, portföyümüzden: Bakırköy Ataköy 3+1 deniz manzaralı, fiyat 12.500.000 TL. Takas düşünülür."},
+    {"id": "L08", "is_listing": true, "price": 15000, "rooms": "1+1", "text": "kiralık 1+1 üsküdar 15 bin tl öğrenciye uygun eşyalı"},
+    {"id": "L09", "is_listing": true, "price": 3600000, "area_m2": 110, "text": "Pendik Kurtköy satılık arsa payı yüksek daire 110 m2 3.600.000 TL acil"},
+    {"id": "L10", "is_listing": true, "rooms": "2+1", "text": "Maltepe'de 2+1 satılık daire var, fiyat için özelden yazın"},
+    {"id": "L11", "is_listing": true, "price": 5400000, "area_m2": 135, "text": "Bahçelievler satılık 3+1+1 dubleks 135 m2, 5.400.000 TL, otoparklı"},
+    {"id": "L12", "is_listing": true, "price": 24000, "area_m2": 100, "rooms": "2+1", "text": "Şişli Mecidiyeköy 2+1 kiralık\n100 m2\n24.000 TL + aidat 1.500 TL"},
+    {"id": "L13", "is_listing": true, "price": 9750000, "rooms": "4+1", "text": "Sarıyer Tarabya 4+1 bahçe katı satılık 9.750.000 TL ilan no 55120"},
+    {"id": "L14", "is_listing": true, "price": 2300000, "area_m2": 300, "text": "Silivri'de 300 m2 imarlı arsa satılık 2.300.000 TL tapu hazır"},
+    {"id": "L15", "is_listing": true, "price": 45000, "area_m2": 250, "text": "Kiralık dükkan, Bağcılar ana cadde üzeri 250 m2, aylık 45.000 TL"},
+    {"id": "L16", "is_listing": true, "price": 6100000, "area_m2": 125, "rooms": "3+1", "text": "Ümraniye Çakmak satılık 3 + 1, 125 m2, 6.100.000 TL, site içinde"},
+    {"id": "L17", "is_listing": true, "price": 21000, "rooms": "2+1", "text": "Avcılar 2+1 kiralık daire 21.000 TL. Metrobüse 5 dk. www.ornek-emlak.test/ilan/123"},
+    {"id": "L18", "is_listing": true, "price": 3150000, "rooms": "2+1", "text": "Arnavutköy 2+1 sıfır bina satılık. Fiyat 3.150.000 TL. İletişim 0555 000 00 03"},
+    {"id": "L19", "is_listing": true, "text": "Kartal sahilde satılık daireler mevcut, detay için arayın"},
+    {"id": "L20", "is_listing": true, "price": 4800000, "rooms": "3+1", "text": "ACİL SATILIK!!! Zeytinburnu 3+1 4.800.000 TL pazarlık payı var"},
+    {"id": "N01", "is_listing": false, "text": "Günaydın"},
+    {"id": "N02", "is_listing": false, "text": "Teşekkürler"},
+    {"id": "N03", "is_listing": false, "text": "İyi akşamlar herkese"},
+    {"id": "N04", "is_listing": false, "text": "Kadıköy'de 2+1 kiralık arayan müşterim var, 20.000 TL'ye kadar. Elinde olan yazsın."},
+    {"id": "N05", "is_listing": false, "text": "Arkadaşlar yarınki toplantı saat 14:00'te ofiste"},
+    {"id": "N06", "is_listing": false, "text": "Hayırlı cumalar 🌹"},
+    {"id": "N07", "is_listing": false, "text": "Bu grupta reklam yasaktır, kurallara uymayan çıkarılacaktır."},
+    {"id": "N08", "is_listing": false, "text": "Tapu harcı bu yıl yüzde kaç biliyor olan var mı?"},
+    {"id": "N09", "is_listing": false, "text": "👍"},
+    {"id": "N10", "is_listing": false, "text": "Ok, döndüm size"}
+  ],
+  "stream_temsili": {
+    "_not": "Aynı ilanın birden çok gruba iletilmesi ve tekrar eden selamlaşmalar. 'ws' önekli kimlik, aynı mesajın yalnız boşluk/satır sonu farkıyla iletilmiş halidir (normalize tekrar). Sıra sabittir.",
+    "order": ["L01","N01","L02","L03","L01","N02","L04","L05","ws:L02","L06","N01","L07","L01","L08","N03","L09","L10","ws:L03","L11","N04","L12","L05","N02","L13","L14","N06","L15","ws:L01","L16","L17","N05","L18","L02","L19","L20","N01","L07","L12","N07","ws:L16","L04","N08","L13","N09","L18","N10","L01","L20","N02","L06","L09","N03","L17","L11","N01","L15","L14","N06"]
+  }
+}

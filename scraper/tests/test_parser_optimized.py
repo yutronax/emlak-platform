@@ -19,6 +19,7 @@ bayrağı henüz okumuyor; testler ImportError veya AssertionError ile başarıs
 """
 
 import asyncio
+import concurrent.futures
 import json
 import logging
 import re
@@ -31,6 +32,7 @@ import pytest
 
 import orchestrator
 from api_key_manager import GeminiKeyManager
+import parser as parser_mod
 from parser import SYSTEM_PROMPT, parse_listing_message
 
 FLAG = "GEMINI_PARSE_OPTIMIZATION_ENABLED"
@@ -1352,3 +1354,161 @@ def test_cache_row_huge_int_price_is_invalid_and_reparsed(monkeypatch, flag_on, 
     counters = _counters(caplog)
     assert counters["cache_invalid"] == 1
     assert counters["cache_miss"] == 1
+
+
+# ---------------------------------------------------------------------------
+# F5 gecikme düzeltmesi: süreç başına tek istemci, arka plan yazım, okuma zaman aşımı
+# Autouse fixture: önbellek işlemleri senkron sahte _submit ile çalışır; testler
+# gerçek _submit'i ancak zamanlama gerektiren testlerde geri koyar.
+# ---------------------------------------------------------------------------
+
+_REAL_SUBMIT = getattr(parser_mod, "_submit", None)
+
+
+def _sync_submit(fn, *args, **kwargs):
+    future = concurrent.futures.Future()
+    try:
+        future.set_result(fn(*args, **kwargs))
+    except BaseException as exc:  # noqa: BLE001 - istisna Future'a taşınır
+        future.set_exception(exc)
+    return future
+
+
+@pytest.fixture(autouse=True)
+def _cache_client_reset_and_sync_submit(monkeypatch):
+    monkeypatch.setattr(parser_mod, "_CACHE_CLIENT", None, raising=False)
+    monkeypatch.setattr(parser_mod, "_submit", _sync_submit, raising=False)
+    yield
+
+
+def _poll_until(predicate, timeout_s=2.0):
+    deadline = time.monotonic() + timeout_s
+    while time.monotonic() < deadline:
+        if predicate():
+            return True
+        time.sleep(0.05)
+    return predicate()
+
+
+def test_two_distinct_misses_use_single_cache_client_for_whole_process(monkeypatch, flag_on, genai, db):
+    manager = _manager(monkeypatch)
+    genai.Client.return_value = _client_returning(D_JSON)
+    get_client = MagicMock(name="get_client", return_value=db)
+
+    with patch("supabase_client.get_client", new=get_client):
+        assert _parse(_uid(PLAIN_TEXT), manager) == D
+        assert _parse(_uid("bu daire hala satılık mı"), manager) == D
+
+    assert get_client.call_count == 1
+    assert _db_write_attempted(db) is True
+
+
+def test_get_client_failure_logs_cache_error_and_next_op_reconnects(monkeypatch, flag_on, genai, db, caplog):
+    from parse_cache import clear
+
+    caplog.set_level(logging.DEBUG)
+    manager = _manager(monkeypatch)
+    genai.Client.return_value = _client_returning(D_JSON)
+    get_client = MagicMock(name="get_client", side_effect=[RuntimeError("client down"), db, db])
+    text = _uid(PLAIN_TEXT)
+
+    with patch("supabase_client.get_client", new=get_client):
+        assert _parse(text, manager) == D
+        assert genai.Client.call_count == 1
+        assert "cache_error" in caplog.text
+        # Okuma istemci kurulumunda başarısız oldu; yazım aynı süreçte istemciyi yeniden kurmayı denedi.
+        assert get_client.call_count == 2
+
+        clear()  # LRU boşalır; sonraki parse kalıcı okumaya gider
+        assert _parse(text, manager) == D
+
+    assert genai.Client.call_count == 2
+    assert get_client.call_count == 2
+
+
+def test_read_timeout_returns_miss_and_parse_continues_with_gemini(monkeypatch, flag_on, genai, db, caplog):
+    caplog.set_level(logging.DEBUG)
+    monkeypatch.setattr(parser_mod, "_submit", _REAL_SUBMIT, raising=False)
+    monkeypatch.setenv("PARSE_CACHE_READ_TIMEOUT_MS", "50")
+    manager = _manager(monkeypatch)
+    genai.Client.return_value = _client_returning(D_JSON)
+
+    def slow_get(client, key):
+        time.sleep(0.5)
+        return None
+
+    with patch("supabase_client.get_parse_cache", side_effect=slow_get):
+        started = time.monotonic()
+        result = _parse(_uid(PLAIN_TEXT), manager)
+        elapsed = time.monotonic() - started
+
+    assert result == D
+    assert genai.Client.call_count == 1
+    assert elapsed < 0.4
+    assert "cache_error operation=read reason=timeout" in caplog.text
+
+
+def test_background_write_does_not_block_parse_and_is_persisted_once(monkeypatch, flag_on, genai, db):
+    monkeypatch.setattr(parser_mod, "_submit", _REAL_SUBMIT, raising=False)
+    manager = _manager(monkeypatch)
+    genai.Client.return_value = _client_returning(D_JSON)
+    persisted = []
+
+    def slow_put(*args, **kwargs):
+        time.sleep(0.5)
+        persisted.append(args)
+        return True
+
+    with patch("supabase_client.put_parse_cache", side_effect=slow_put) as put:
+        started = time.monotonic()
+        result = _parse(_uid(PLAIN_TEXT), manager)
+        elapsed = time.monotonic() - started
+
+        assert result == D
+        assert elapsed < 0.4
+        assert _poll_until(lambda: len(persisted) == 1) is True
+
+    assert put.call_count == 1
+
+
+def test_background_write_error_is_logged_and_result_unaffected(monkeypatch, flag_on, genai, db, caplog):
+    caplog.set_level(logging.DEBUG)
+    monkeypatch.setattr(parser_mod, "_submit", _REAL_SUBMIT, raising=False)
+    manager = _manager(monkeypatch)
+    genai.Client.return_value = _client_returning(D_JSON)
+
+    with patch("supabase_client.put_parse_cache", side_effect=RuntimeError("db write down")) as put:
+        result = _parse(_uid(PLAIN_TEXT), manager)
+        assert result == D
+        assert _poll_until(lambda: "cache_error operation=write" in caplog.text) is True
+
+    assert put.call_count == 1
+
+
+@pytest.mark.parametrize("raw_timeout", ["abc", "0", "-5"])
+def test_invalid_read_timeout_env_falls_back_to_600ms_so_slow_read_hits(
+    monkeypatch, flag_on, genai, db, caplog, raw_timeout
+):
+    caplog.set_level(logging.DEBUG)
+    monkeypatch.setattr(parser_mod, "_submit", _REAL_SUBMIT, raising=False)
+    monkeypatch.setenv("PARSE_CACHE_READ_TIMEOUT_MS", raw_timeout)
+    manager = _manager(monkeypatch)
+    row = {
+        "key": "f" * 64,
+        "is_listing": True,
+        "parsed": D,
+        "version": "v1",
+        "created_at": "2026-01-01T00:00:00+00:00",
+        "expires_at": "2099-01-01T00:00:00+00:00",
+    }
+
+    def slow_get(client, key):
+        time.sleep(0.4)
+        return row
+
+    with patch("supabase_client.get_parse_cache", side_effect=slow_get):
+        result = _parse(_uid(PLAIN_TEXT), manager)
+
+    assert result == D
+    assert genai.Client.call_count == 0
+    assert "reason=timeout" not in caplog.text
