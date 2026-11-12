@@ -67,7 +67,7 @@ So that ilan kalitesi ve emlakçının mevcut akışı korunurken Gemini çağr�
 
 7. **AC-7 [Critical]** Given regex çıktısı, When mevcut deterministik kurallarla ilan niteliği ve tüm çıktı sözleşmesi doğrulanamıyorsa, Then Gemini yolu kullanılır. Üç kolay alanın bulunması tek başına `regex_only` için yeterli olmaz. Tam doğrulanabilir çıktı gerçekten üretilebiliyorsa `dict` döner, önbelleğe yazılır ve `regex_only` üretilir.
 
-8. **AC-8 [Critical]** Given regex ve Gemini aynı alan için çelişiyor veya ilan niteliğinde uyuşmazlık oluşuyor, When sonuç birleştirilir, Then `regex_conflict` üretilir ve mevcut tam ayrıştırma yoluna en fazla bir ek mantıksal çağrı yapılır. Ek çağrı, regex değerleri "bilinen alan" olarak dayatılmadan yapılan tam ayrıştırmadır ve çelişkiyi o çözer: doğrulanmış ilan için modelin `dict` sonucu (regex değerleriyle birleştirilmeden), doğrulanmış ilan olmayan sonuç için `None` döner. Ek tam çağrı başarısız olursa `None` döner ve hiçbir önbelleğe yazılmaz. (Red-team F1 sonrası güncellendi: regex yalnız ipucudur; ilan no gibi hatalı regex değeri geçerli ilanı düşürmemelidir.)
+8. **AC-8 [Critical]** Given Gemini ilk çağrıda ilan diyor ve regex ile aynı alan için çelişiyor, When sonuç birleştirilir, Then `regex_conflict` üretilir ve mevcut tam ayrıştırma yoluna en fazla bir ek mantıksal çağrı yapılır. Ek çağrı, regex değerleri "bilinen alan" olarak dayatılmadan yapılan tam ayrıştırmadır ve çelişkiyi o çözer: doğrulanmış ilan için modelin `dict` sonucu (regex değerleriyle birleştirilmeden), doğrulanmış ilan olmayan sonuç için `None` döner. Ek tam çağrı başarısız olursa `None` döner ve hiçbir önbelleğe yazılmaz. (Red-team F1 sonrası güncellendi: regex yalnız ipucudur; ilan no gibi hatalı regex değeri geçerli ilanı düşürmemelidir.)
 
 9. **AC-9 [Critical]** Given önbellek okuma, yazma, geçersiz kaydı silme veya temizleme hatası, When işlem yürütülür, Then hata mesajı düşürmez. Okuma hatasında normal ayrıştırma sürer, yazma hatasında doğrulanmış `dict` veya başarılı negatif `None` korunur. Mümkünse LRU kaydı tutulur. `cache_error{operation}` ve ilgili yolun sayaçları üretilir.
 
@@ -122,6 +122,8 @@ Sağlanan threat-model kararı bu belgeye işlendi, AC-S1–AC-S5 Acceptance Cri
 
 ## Davranış Sözleşmesi (hangi durumda ne döner)
 
+> **Talep mesajı kuralı (2026-11-12, kullanıcı kararı):** Benchmark, regex fiyat/oda bulup modelin "ilan değil" dediği talep mesajlarının ("arayan var mı") eski kuralda çelişki sayılıp 2 Gemini çağrısına mal olduğunu gösterdi. Yeni kural: modelin "ilan değil" kararı regex'e rağmen kabul edilir, ek çağrı yapılmaz; çelişki ek çağrısı yalnız model "ilan" deyip alan değerleri regex'le çeliştiğinde yapılır. Bedel: model gerçek bir ilanı ilk çağrıda "ilan değil" sayarsa regex kanıtı artık ikinci bir kontrol tetiklemez.
+
 Aşağıdaki `D`, somut Python dönüş örneğidir.
 
 ```python
@@ -154,7 +156,7 @@ Her satırdaki “Doğrudan tetikleme” gerçek koşulun testte oluşturulması
 | 9 | Geçerli negatif önbellek kaydı. Doğrudan tetikleme | `None` | Gemini çağrılmaz | `cache_hit{layer} +1` | AC-2, AC-4 |
 | 10 | TTL dolmuş veya sürümü eski kayıt. Her sürüm ve sınır zamanı doğrudan tetiklenir | Yeniden ayrıştırmaya göre `D` veya `None` | Eski kayıt kullanılmaz, başarılı sonuçla yenilenir | `cache_miss +1` ve kullanılan yolun sayaçları | AC-4, AC-S5 |
 | 11 | Başarılı parse sonrasında önbellek yazım hatası. Doğrudan tetikleme | `D` | İşleme devam edilir, mümkünse LRU tutulur | `cache_error{operation=write} +1` ve başarılı yolun sayaçları | AC-9 |
-| 12 | Gemini başarıyla `is_listing=false` döndürür. Doğrudan tetikleme | `None` | Negatif sonuç 24 saat önbelleğe alınır | `gemini_call +1`, `cache_miss +1` | AC-4, AC-12 |
+| 12 | Gemini başarıyla `is_listing=false` döndürür (regex alan çıkarmış olsa bile — ör. "2+1 arayan müşterim var, 20.000 TL'ye kadar" talep mesajı; ek çağrı YAPILMAZ). Doğrudan tetikleme | `None` | Negatif sonuç 24 saat önbelleğe alınır; tek Gemini çağrısı | `gemini_call +1`, `cache_miss +1` | AC-4, AC-12 |
 | 13 | Regex/Gemini çelişkisi; bilinen alan dayatılmadan yapılan ek tam ayrıştırma çözer (regex ile hâlâ farklı olsa da modelin doğrulanmış sonucu kazanır). Doğrudan tetikleme | Modelin doğrulanmış `D`'si (regex ile birleştirilmez) veya doğrulanmış ilan olmayan sonuç için `None` | En fazla bir ek tam ayrıştırma; ilan → pozitif, ilan değil → negatif önbellek | `regex_conflict +1`, her gerçek istekte `gemini_call +1` | AC-8 |
 | 14 | Çelişkide ek tam çağrı başarısızdır (hata/timeout/geçersiz çıktı). Doğrudan birleşik tetikleme | `None` | Önbelleğe yazılmaz | `regex_conflict +1`, çağrı sayaçları, `gemini_error` | AC-8, AC-10 |
 | 15 | Bayrak kapalı. Doğrudan tetikleme | Mevcut parser sonucuna göre `D` veya `None` | Üç optimizasyon atlanır | Mevcut operasyonel kayıtlar, içerik sızdırmayan hata logları | AC-16, AC-S3 |

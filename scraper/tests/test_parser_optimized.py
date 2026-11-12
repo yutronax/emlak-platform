@@ -583,16 +583,40 @@ def test_conflict_persisting_after_clean_reparse_model_result_wins(monkeypatch, 
     assert genai.Client.call_count == 2
 
 
-def test_conflict_resolved_as_non_listing_is_negatively_cached(monkeypatch, flag_on, genai, db):
+def test_first_not_listing_with_regex_fields_is_single_call_negatively_cached(monkeypatch, flag_on, genai, db):
+    """Talep mesajı kuralı: ilk çağrı is_listing=false ise regex alanlar olsa bile ek çağrı yok."""
     manager = _manager(monkeypatch)
-    genai.Client.side_effect = [_client_returning(NOT_LISTING_JSON), _client_returning(NOT_LISTING_JSON)]
+    genai.Client.return_value = _client_returning(NOT_LISTING_JSON)
     text = _uid(REGEX_TEXT)
 
     assert _parse(text, manager) is None
-    assert genai.Client.call_count == 2
+    assert genai.Client.call_count == 1
 
     assert _parse(text, manager) is None
-    assert genai.Client.call_count == 2
+    assert genai.Client.call_count == 1
+
+
+TALEP_TEXT = "Kadıköy'de 2+1 kiralık arayan müşterim var, 20.000 TL'ye kadar. Elinde olan yazsın."
+
+
+def test_talep_message_with_regex_fields_not_listing_single_call_no_conflict_log(
+    monkeypatch, flag_on, genai, db, caplog
+):
+    caplog.set_level(logging.DEBUG)
+    manager = _manager(monkeypatch)
+    genai.Client.return_value = _client_returning(NOT_LISTING_JSON)
+    text = _uid(TALEP_TEXT)
+
+    assert _parse(text, manager) is None
+    assert genai.Client.call_count == 1
+    assert _db_write_attempted(db) is True
+    counters = _counters(caplog)
+    assert counters["regex_partial"] == 1
+    assert counters["regex_conflict"] == 0
+
+    # Negatif önbellek isabeti: aynı metin ikinci kez Gemini çağırmadan None döner.
+    assert _parse(text, manager) is None
+    assert genai.Client.call_count == 1
 
 
 def test_multi_object_response_is_not_assigned_to_single_listing(monkeypatch, flag_on, genai, db):

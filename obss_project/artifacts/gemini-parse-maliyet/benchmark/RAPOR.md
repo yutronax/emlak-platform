@@ -60,3 +60,15 @@ Uygulanan: süreç başına tek önbellek istemcisi, kalıcı okumaya `PARSE_CAC
 - Çağrı azalması (%48,3) ve sonuç doğruluğu (sahte modelle) değişmedi; hata yok; benchmark satırları temizlendi.
 - **Karar (kullanıcı): varsayılan 600 ms** (maliyet önceliği). Gerçek sunucunun Supabase'e uzaklığı farklıysa env ile ayarlanır.
 - AC-20 durumu: gecikme hedefi (100 ms) hâlâ KALDI; hedefin kendisinin yeniden belirlenmesi gerekiyor. Kalite ölçümü Gemini kotası nedeniyle hâlâ AÇIK.
+
+## Talep mesajı kuralı sonrası (2026-11-12)
+Kural: modelin ilk "ilan değil" kararı regex alan bulmuş olsa bile kabul edilir, ek çağrı yok (atdd AC-8, sözleşme satır 12). Testler 355 geçti.
+
+| | Önce | Sonra |
+|---|---|---|
+| Temsili akış Gemini çağrısı | 30 (%48,3 azalma) | **29 (%50,0)** |
+| Tekrarsız akış Gemini çağrısı | 30 (%0) | **29 (%3,3)** |
+
+- Talep mesajı (N04) artık 1 çağrı. Ön-elemenin kazandırdığı çağrı artık götürülmüyor.
+- Kalite gerilemesi yok (sahte modelle), hata yok, benchmark satırları temizlendi.
+- Bu koşuda yeniden başlatma turunda 3 okuma 600 ms sınırını aştı (önceki 600 ms koşusunda 0); okuma yolu değişmediği için Supabase gecikme dalgalanması. 600 ms de her zaman yetmiyor; ağ yakınlığı (sunucu konumu) belirleyici.

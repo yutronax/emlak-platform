@@ -365,7 +365,7 @@ async def _parse_optimized(raw_text: str, key_manager: GeminiKeyManager) -> Opti
     if status == _ERROR:
         return None
 
-    if regex and (status == _NOT_LISTING or _conflicts(regex, model)):
+    if regex and status == _LISTING and _conflicts(regex, model):
         logger.info("regex_conflict")
         # Ek tam ayrıştırma: regex değerleri dayatılmaz; modelin doğrulanmış sonucu kazanır.
         status, model = await _ask_model(_build_prompt(raw_text, {}), key_manager)
