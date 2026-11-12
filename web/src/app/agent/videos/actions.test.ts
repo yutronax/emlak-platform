@@ -44,7 +44,8 @@ const h = vi.hoisted(() => {
   const state: {
     user: { id: string } | null;
     injectError: { table: string; op: string; message: string } | null;
-  } = { user: null, injectError: null };
+    removeFails: boolean;
+  } = { user: null, injectError: null, removeFails: false };
   const calls = {
     createSignedUploadUrl: vi.fn(),
     createSignedUrl: vi.fn(),
@@ -202,6 +203,7 @@ function resetDb() {
   for (const key of Object.keys(h.db)) delete h.db[key];
   h.objects.clear();
   h.state.injectError = null;
+  h.state.removeFails = false;
   h.db.video_services = [
     { code: "photos", name: "Fotoğraflardan video", price_minor_unit: 75000, currency: "TRY" },
     { code: "raw_video", name: "Kendi videonuzdan", price_minor_unit: 75000, currency: "TRY" },
