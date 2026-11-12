@@ -40,6 +40,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 logger = logging.getLogger("scraper.orchestrator")
 
 MAX_WORKERS = 10
+MAX_DRAIN_BYTES = 1024 * 1024
 # Kişisel yol (agentId'li payload) yalnız yerel sidecar'dan kabul edilir (red-team tur 3).
 LOOPBACK_ADDRESSES = frozenset({"127.0.0.1", "::1"})
 
@@ -215,8 +216,39 @@ def _parse_cache_purge_loop() -> None:
 
 
 class WebhookHandler(BaseHTTPRequestHandler):
+    # Soket zaman aşımı: yarım gövdede bağlantının asılı kalmasını önler.
+    timeout = 10
+
+    def _discard_body(self) -> None:
+        """Erken dönüşlerde (404/401) gövdeyi okuyup atar; okunmamış veri TCP RST riskini önler.
+
+        Gövde içeriği ve uzunluğu loglanmaz.
+        """
+        try:
+            length = int(self.headers.get("Content-Length", 0))
+        except (TypeError, ValueError):
+            length = 0
+        if length < 0:
+            length = 0
+        if length == 0:
+            return
+        if length > MAX_DRAIN_BYTES:
+            self.close_connection = True
+            return
+        try:
+            remaining = length
+            while remaining > 0:
+                chunk = self.rfile.read(remaining)
+                if not chunk:
+                    self.close_connection = True
+                    break
+                remaining -= len(chunk)
+        except (OSError, TimeoutError):
+            self.close_connection = True
+
     def do_POST(self) -> None:  # noqa: N802 - http.server API ismi
         if self.path != "/baileys-webhook":
+            self._discard_body()
             self.send_response(404)
             self.end_headers()
             return
@@ -225,6 +257,7 @@ class WebhookHandler(BaseHTTPRequestHandler):
         auth_header = self.headers.get("Authorization", "")
         token = auth_header[len("Bearer "):] if auth_header.startswith("Bearer ") else ""
         if not secret or not hmac.compare_digest(token, secret):
+            self._discard_body()
             body = json.dumps({"error": "unauthorized"}).encode("utf-8")
             self.send_response(401)
             self.send_header("WWW-Authenticate", "Bearer")

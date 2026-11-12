@@ -148,30 +148,47 @@ def test_ac_s2_token_comparison_uses_hmac_compare_digest(running_server):
     assert mocked.called
 
 
-def test_ac_s2_timing_does_not_leak_correct_vs_incorrect_token(running_server):
-    """Aynı uzunlukta doğru ve yanlış token ile çalıştırma süresi arasında
-    büyük bir sapma olmamalı (kaba bir timing-leak koruması kontrolü)."""
-    same_length_wrong = "x" * len(SECRET)
+def test_ac_s2_timing_near_and_far_wrong_tokens_are_indistinguishable(running_server):
+    """Her ikisi de REDDEDİLEN (401) token karşılaştırılır: doğru token 200 yoluna
+    girip iş yaptığı için dahil etmek yol farkını ölçer, zamanlama sızıntısını değil.
+    İstekler iç içe (tur sırası değişerek) gönderilir ve her token için en hızlı
+    %20'nin ortalaması alınır; Windows zamanlayıcı gürültüsü iki tarafa eşit dağılır
+    ve yalnız yavaş kuyruğu etkiler."""
+    near = SECRET[:-1] + ("x" if SECRET[-1] != "x" else "y")
+    far = ("y" if SECRET[0] != "y" else "z") * len(SECRET)
+    assert len(near) == len(far) == len(SECRET)
 
-    def timed_runs(token, n=25):
-        durations = []
-        for i in range(n):
+    rounds = 60
+    durations = {"near": [], "far": []}
+    statuses = {"near": [], "far": []}
+    tokens = {"near": near, "far": far}
+
+    for turn in range(rounds):
+        order = ("near", "far") if turn % 2 == 0 else ("far", "near")
+        for label in order:
             start = time.perf_counter()
-            running_server.post(
-                body=json.dumps({"id": f"timing-{token[:3]}-{i}"}).encode("utf-8"),
-                token=token,
+            status, _body, _headers = running_server.post(
+                body=json.dumps({"id": f"timing-{label}-{turn}"}).encode("utf-8"),
+                token=tokens[label],
             )
-            durations.append(time.perf_counter() - start)
-        durations.sort()
-        return durations[len(durations) // 2]
+            durations[label].append(time.perf_counter() - start)
+            statuses[label].append(status)
 
-    correct_median = timed_runs(SECRET)
-    wrong_median = timed_runs(same_length_wrong)
+    assert all(s == 401 for s in statuses["near"])
+    assert all(s == 401 for s in statuses["far"])
 
-    slower = max(correct_median, wrong_median)
-    faster = min(correct_median, wrong_median)
+    def fastest_20_percent_mean(values):
+        ordered = sorted(values)
+        head = ordered[: max(1, len(ordered) // 5)]
+        return sum(head) / len(head)
+
+    near_cost = fastest_20_percent_mean(durations["near"])
+    far_cost = fastest_20_percent_mean(durations["far"])
+
+    slower = max(near_cost, far_cost)
+    faster = min(near_cost, far_cost)
     assert faster > 0
-    assert slower / faster < 5
+    assert slower / faster < 3
 
 
 # ---------------------------------------------------------------------------
@@ -273,3 +290,97 @@ def test_ac7_custom_bind_host_is_used_when_env_set(monkeypatch):
             orchestrator.run()
 
     assert mocked_http_server.call_args[0][0] == ("0.0.0.0", 0)
+
+
+# ---------------------------------------------------------------------------
+# Erken dönüş + büyük gövde: okunmamış veri -> Windows'ta TCP RST riski
+# (do_POST 404/401 dallarında gövdeyi okumadan döner; bu testler düzeltme
+# gelene kadar KIRMIZI beklenir.)
+# ---------------------------------------------------------------------------
+
+_LARGE_BODY = b"x" * 262144
+_REPEAT_COUNT = 30
+
+
+def _assert_repeated_clean_responses(
+    running_server, *, path, token, expected_status, check_unauthorized_body
+):
+    """Büyük gövdeli isteği tekrar tekrar gönderir; her yanıt temiz olmalı."""
+    for i in range(_REPEAT_COUNT):
+        try:
+            status, resp_body, _headers = running_server.post(
+                path=path,
+                body=_LARGE_BODY,
+                token=token,
+            )
+        except (ConnectionAbortedError, ConnectionResetError, BrokenPipeError) as error:
+            pytest.fail(f"tekrar {i}: bağlantı koptu: {type(error).__name__}")
+        assert status == expected_status
+        if check_unauthorized_body:
+            assert json.loads(resp_body) == {"error": "unauthorized"}
+
+
+def test_unauthorized_with_large_body_always_returns_clean_401(running_server):
+    _assert_repeated_clean_responses(
+        running_server,
+        path="/baileys-webhook",
+        token=WRONG_SECRET,
+        expected_status=401,
+        check_unauthorized_body=True,
+    )
+
+
+def test_missing_token_with_large_body_always_returns_clean_401(running_server):
+    _assert_repeated_clean_responses(
+        running_server,
+        path="/baileys-webhook",
+        token=None,
+        expected_status=401,
+        check_unauthorized_body=True,
+    )
+
+
+def test_wrong_path_with_large_body_always_returns_clean_404(running_server):
+    _assert_repeated_clean_responses(
+        running_server,
+        path="/not-the-webhook",
+        token=SECRET,
+        expected_status=404,
+        check_unauthorized_body=False,
+    )
+
+
+def test_declared_oversized_body_on_early_return_does_not_hang(running_server):
+    """Content-Length 50 MiB bildirilir, gövde 1 KiB gönderilir. Sunucu
+    erken 401 dönse de asılı kalmamalı: ya 401 gelir ya da sunucu bağlantıyı
+    kapatır. Soket zaman aşımı (asılı kalma) FAIL sayılır."""
+    import socket
+
+    conn = http.client.HTTPConnection("127.0.0.1", running_server.port, timeout=5)
+    status = None
+    started = time.monotonic()
+    try:
+        conn.putrequest("POST", "/baileys-webhook")
+        conn.putheader("Authorization", f"Bearer {WRONG_SECRET}")
+        conn.putheader("Content-Length", str(50 * 1024 * 1024))
+        conn.endheaders()
+        conn.send(b"x" * 1024)
+        resp = conn.getresponse()
+        status = resp.status
+        resp.read()
+    except (socket.timeout, TimeoutError) as error:
+        pytest.fail(f"sunucu asılı kaldı (zaman aşımı): {type(error).__name__}")
+    except (
+        ConnectionAbortedError,
+        ConnectionResetError,
+        BrokenPipeError,
+        http.client.RemoteDisconnected,
+    ):
+        status = None  # sunucu bağlantıyı kapattı: kabul edilen sonuç
+    finally:
+        conn.close()
+    elapsed = time.monotonic() - started
+
+    assert elapsed < 8, f"istek çok uzun sürdü: {elapsed:.2f} sn"
+    if status is not None:
+        assert status == 401
