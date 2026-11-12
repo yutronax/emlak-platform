@@ -14,14 +14,25 @@ export async function AppShell({ children }: { children: ReactNode }) {
   const { data } = await supabase.auth.getUser();
 
   let suspended = false;
+  let name: string | null = null;
   if (data.user) {
-    const { data: agent } = await supabase.from("agents").select("suspended_at").eq("id", data.user.id).maybeSingle();
+    const { data: agent } = await supabase
+      .from("agents")
+      .select("suspended_at, contact_name, company_name")
+      .eq("id", data.user.id)
+      .maybeSingle();
     suspended = Boolean(agent?.suspended_at);
+    // Menüde yetkili adı, yoksa firma adı; ikisi de yoksa e-posta.
+    name = agent?.contact_name || agent?.company_name || null;
   }
 
   return (
     <div className="flex min-h-screen flex-col bg-cream-50">
-      <AppHeader email={data.user?.email ?? null} showProfile={!suspended && getProfileService() !== null} />
+      <AppHeader
+        email={data.user?.email ?? null}
+        name={name}
+        showProfile={!suspended && getProfileService() !== null}
+      />
       {suspended ? <SuspendedNotice /> : children}
     </div>
   );

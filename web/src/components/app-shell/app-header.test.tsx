@@ -18,16 +18,30 @@ afterEach(() => {
 });
 
 describe("AppHeader — bölüm gezinmesi", () => {
-  it("logo panele gider; üç bölüm bağlantısı var", () => {
+  it("logo ana sayfaya gider; panel bölümleri ve herkese açık vitrin bağlantısı var", () => {
     render(<AppHeader email="ayse@acme.com" showProfile />);
 
-    expect(screen.getByRole("link", { name: "Emlak Platformu" })).toHaveAttribute("href", "/agent/dashboard");
+    expect(screen.getByRole("link", { name: "Emlak Platformu" })).toHaveAttribute("href", "/");
     const nav = screen.getByRole("navigation", { name: "Panel bölümleri" });
     expect(within(nav).getAllByRole("link").map((l) => [l.textContent, l.getAttribute("href")])).toEqual([
       ["İlanlar", "/agent/dashboard"],
       ["WhatsApp", "/agent/whatsapp"],
       ["Videolar", "/agent/videos"],
+      ["Vitrin", "/vitrin"],
     ]);
+  });
+
+  it("ad verilmişse çubukta ve menüde e-posta yerine ad görünür", () => {
+    render(<AppHeader email="ayse@acme.com" name="Ayşe Yılmaz" showProfile />);
+
+    const trigger = screen.getByRole("button", { name: "Hesap menüsü (Ayşe Yılmaz)" });
+    expect(within(trigger).getByText("Ayşe Yılmaz")).toBeInTheDocument();
+    expect(within(trigger).getByText("A")).toBeInTheDocument();
+    expect(within(trigger).queryByText("ayse@acme.com")).toBeNull();
+    fireEvent.click(trigger);
+    const menu = screen.getByRole("menu");
+    expect(within(menu).getByText("Ayşe Yılmaz")).toBeInTheDocument();
+    expect(within(menu).getByText("ayse@acme.com")).toBeInTheDocument();
   });
 
   it("alt sayfada ilgili bölüm aria-current=page", () => {

@@ -108,9 +108,8 @@ describe("AgentVideosPage", () => {
 
     render(await Page());
 
-    expect(
-      screen.getByText(/Henüz video siparişiniz yok\. İlanınızın fotoğraflarını yükleyin/),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Henüz video siparişiniz yok.")).toBeInTheDocument();
+    expect(screen.getByText(/İlanınızın fotoğraflarını yükleyin/)).toBeInTheDocument();
     const links = screen.getAllByRole("link", { name: "Yeni video siparişi" });
     expect(links).toHaveLength(1);
     expect(links[0]).toHaveAttribute("href", "/agent/videos/new");
