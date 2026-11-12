@@ -72,3 +72,15 @@ Kural: modelin ilk "ilan değil" kararı regex alan bulmuş olsa bile kabul edil
 - Talep mesajı (N04) artık 1 çağrı. Ön-elemenin kazandırdığı çağrı artık götürülmüyor.
 - Kalite gerilemesi yok (sahte modelle), hata yok, benchmark satırları temizlendi.
 - Bu koşuda yeniden başlatma turunda 3 okuma 600 ms sınırını aştı (önceki 600 ms koşusunda 0); okuma yolu değişmediği için Supabase gecikme dalgalanması. 600 ms de her zaman yetmiyor; ağ yakınlığı (sunucu konumu) belirleyici.
+
+## Gecikme hedefi güncellendi (2026-11-12, kullanıcı kararı)
+Eski hedef ≤100 ms bu ağdan karşılanamıyordu (Supabase gidiş-dönüşü p50 ~306 ms). Yeni hedef (atdd Performance Target): ek gecikme p95 ≤ `PARSE_CACHE_READ_TIMEOUT_MS` + 50 ms (varsayılan **650 ms**), sıcak LRU isabetinde p95 ≤ **5 ms**. Gerekçe: kalıcı okuma tasarım gereği en fazla okuma sınırı kadar bekler, yazım yol dışında; 50 ms normalizasyon/regex/doğrulama payı.
+
+| 600 ms koşusu | Soğuk p95 | Soğuk ıska p95 | Yeniden başlatma p95 | Sıcak LRU p95 | Sonuç |
+|---|---|---|---|---|---|
+| timeout600 | 607,6 | 611,4 | 307,9 | 0,03 | GEÇTİ |
+| talep kuralı sonrası | 612,2 | 613,9 | 363,2 | 0,03 | GEÇTİ |
+
+En dar pay soğuk ıskada (~36 ms). Okuma sınırı env ile değiştirilirse hedef de onunla birlikte kayar.
+
+**AC-20 güncel durumu:** çağrı azalması %50,0 (koşullu: tekrar oranına bağlı) GEÇTİ · ön-eleme yanlış negatifi %0 GEÇTİ · branch coverage %93,8 GEÇTİ · gecikme (yeni hedef) GEÇTİ · **kalite AÇIK** (gerçek Gemini kotası). Bayrak kalite ölçümüne kadar kapalı.

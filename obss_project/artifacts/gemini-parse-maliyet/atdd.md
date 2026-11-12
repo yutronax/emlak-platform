@@ -4,7 +4,7 @@ jira_id: null
 threat_model: done
 priority: high
 coverage_target: 90
-performance_target: "Ek işlem gecikmesi p95 <=100 ms"
+performance_target: "Ek işlem gecikmesi p95 <= PARSE_CACHE_READ_TIMEOUT_MS + 50 ms (varsayılan 650 ms); sıcak LRU isabetinde p95 <= 5 ms"
 memory_target: "Süreç başına LRU en fazla 1000 kayıt"
 test_strategy:
   unit: 75
@@ -91,7 +91,7 @@ So that ilan kalitesi ve emlakçının mevcut akışı korunurken Gemini çağr�
 
 19. **AC-19 [High]** Given optimizasyon açık, When her ayrıştırma yolu çalışır, Then içeriksiz yapılandırılmış loglarda `cache_hit{layer}`, `cache_miss`, `cache_error{operation}`, `cache_invalid`, `prefilter_rejected`, `regex_partial`, `regex_only`, `gemini_call`, `gemini_error`, `regex_conflict` ve işlem süreleri bulunur. Bir tam aramada geçerli isabet yoksa bir `cache_miss` üretilir. Yeni sayaç tablosu oluşturulmaz.
 
-20. **AC-20 [High]** Given sabit, etiketli ve temsili tekrar içeren mesaj kümesi, When bayrak kapalı mevcut akış ve bayrak açık akış aynı sıralamayla karşılaştırılır, Then gerçek Gemini çağrısı en az %40 azalır, ön-eleme yanlış negatifi %0, ek işlem gecikmesi p95 ≤100 ms ve değişen parser kodunda branch coverage ≥%90 olur. Tekrar oranı ve sonuç kalitesi raporlanır.
+20. **AC-20 [High]** Given sabit, etiketli ve temsili tekrar içeren mesaj kümesi, When bayrak kapalı mevcut akış ve bayrak açık akış aynı sıralamayla karşılaştırılır, Then gerçek Gemini çağrısı en az %40 azalır, ön-eleme yanlış negatifi %0, ek işlem gecikmesi p95 ≤ okuma sınırı + 50 ms (varsayılan 650 ms) ve sıcak LRU isabetinde ≤5 ms ve değişen parser kodunda branch coverage ≥%90 olur. Tekrar oranı ve sonuç kalitesi raporlanır.
 
 21. **AC-S1 [Critical]** Given yeni kalıcı önbellek tablosu, When anon, authenticated ve servis rolüyle doğrudan erişim denenir, Then RLS açık ve anon/authenticated politikası bulunmayan tabloya yalnız servis rolü erişebilir. Anon/authenticated hiçbir önbellek satırı okuyamaz, ekleyemez, değiştiremez veya silemez.
 
@@ -217,9 +217,9 @@ Değişen parser kodunda branch coverage ≥%90. Satır coverage tek başına ye
 
 **Performance Target**
 
-Optimizasyonun eklediği normalizasyon, LRU, kalıcı cache erişimi, ön-eleme, regex, doğrulama ve cache yazım sürelerinin toplamı için p95 ≤100 ms. Gemini bekleme süresi ayrı ölçülür. Ortam, örnek sayısı ve sıcak/soğuk cache dağılımı raporda bulunur.
+Optimizasyonun eklediği normalizasyon, LRU, kalıcı cache erişimi, ön-eleme, regex, doğrulama ve cache yazım sürelerinin toplamı için p95 ≤ `PARSE_CACHE_READ_TIMEOUT_MS` + 50 ms (varsayılan 600 → **650 ms**); sıcak LRU isabetinde p95 ≤ **5 ms**. (2026-11-12 güncellendi, kullanıcı kararı: önceki ≤100 ms hedefi bu ağdan karşılanamıyordu — tek Supabase gidiş-dönüşü p50 ~306 ms. Yeni hedef tasarımdan gelir: kalıcı okuma en fazla okuma sınırı kadar bekler, yazım yol dışındadır; 50 ms normalizasyon/regex/doğrulama payıdır.). Gemini bekleme süresi ayrı ölçülür. Ortam, örnek sayısı ve sıcak/soğuk cache dağılımı raporda bulunur.
 
-**Gecikme düzeltmesi (F5, 2026-11-12, kullanıcı kararı "A: Gecikmeyi düşür")** — benchmark/RAPOR.md ek gecikme p95'i ~3 sn ölçtü (yeni Supabase istemcisi + senkron okuma/yazma). Kural: (1) önbellek işlemleri süreç başına tek, tembel kurulan Supabase istemcisini kullanır; kurulum hatası saklanmaz, sonraki çağrı yeniden dener; (2) kalıcı okuma `PARSE_CACHE_READ_TIMEOUT_MS` (varsayılan 600 — kullanıcı kararı, 300 ms'de yeniden başlatmada 30 mesajın 10'u ekstra Gemini çağrısına dönüyordu; geçersiz/≤0 değer varsayılana döner) ile sınırlıdır, aşılırsa `cache_error operation=read reason=timeout` loglanır ve ıska sayılır (ayrıştırma sürer); (3) kalıcı yazım ve geçersiz kayıt silme ayrıştırma yolundan çıkarılıp arka planda yapılır, hatası `cache_error operation=write|delete` loglanır ve sonucu etkilemez; LRU yazımı senkron kalır. 100 ms hedefi bu ağdan tek Supabase gidiş-dönüşüyle (~300 ms) karşılanamaz; yeni hedef ölçüm sonrası kullanıcıyla belirlenir.
+**Gecikme düzeltmesi (F5, 2026-11-12, kullanıcı kararı "A: Gecikmeyi düşür")** — benchmark/RAPOR.md ek gecikme p95'i ~3 sn ölçtü (yeni Supabase istemcisi + senkron okuma/yazma). Kural: (1) önbellek işlemleri süreç başına tek, tembel kurulan Supabase istemcisini kullanır; kurulum hatası saklanmaz, sonraki çağrı yeniden dener; (2) kalıcı okuma `PARSE_CACHE_READ_TIMEOUT_MS` (varsayılan 600 — kullanıcı kararı, 300 ms'de yeniden başlatmada 30 mesajın 10'u ekstra Gemini çağrısına dönüyordu; geçersiz/≤0 değer varsayılana döner) ile sınırlıdır, aşılırsa `cache_error operation=read reason=timeout` loglanır ve ıska sayılır (ayrıştırma sürer); (3) kalıcı yazım ve geçersiz kayıt silme ayrıştırma yolundan çıkarılıp arka planda yapılır, hatası `cache_error operation=write|delete` loglanır ve sonucu etkilemez; LRU yazımı senkron kalır. 100 ms hedefi bu ağdan tek Supabase gidiş-dönüşüyle (~300 ms) karşılanamadığı için Performance Target güncellendi (okuma sınırı + 50 ms).
 
 **Memory**
 

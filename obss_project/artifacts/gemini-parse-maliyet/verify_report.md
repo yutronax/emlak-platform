@@ -41,3 +41,6 @@ F1/F2/F2b/F3 düzeltildi, kırmızı→yeşil doğrulandı. Açık: F4 (AC-20 be
 
 ## F4 / AC-20 benchmark (2026-11-12) — ayrıntı: benchmark/RAPOR.md
 Çağrı azalması %48,3 (temsili akış, tekrar oranı %48,3; tekrarsızda %0) — GEÇTİ, koşullu. Ön-eleme yanlış negatifi %0 — GEÇTİ. Branch coverage %93,8 — GEÇTİ. Ek gecikme p95 soğuk 2.987 ms / yeniden başlatma 1.269 ms — **KALDI** (hedef 100 ms; Supabase gidiş-dönüşü ~300 ms, yeni istemci + sorgu ~900 ms). Kalite — ÖLÇÜLEMEDİ (Gemini kotası doldu; çağrı/gecikme ölçümü sahte modelle yapıldı). AC-20 karşılanmadı; bayrak kapalı kalmalı.
+
+## Gecikme hedefi güncellendi (2026-11-12)
+Yeni hedef: ek gecikme p95 ≤ okuma sınırı + 50 ms (varsayılan 650 ms), sıcak LRU p95 ≤ 5 ms. Ölçüm (600 ms): soğuk 612 ms, yeniden başlatma 363 ms, sıcak 0,03 ms — GEÇTİ. AC-20'de kalan tek açık: gerçek Gemini ile kalite ölçümü.
