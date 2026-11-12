@@ -25,7 +25,7 @@
 | 10 | ~~Checkout timeout sonrası reconciliation (cron/job) ekle~~ — **tamamlandı: EML-48** | Kayıt `pending` kalıyor, kullanıcı tekrar satın alamıyor | yeni: `web/src/lib/payments/` |
 | 11 | Webhook update hatasında `needs_review` durumunu gerçekten DB'ye yaz + admin uyarısı | Şu an sadece response body'de dönüyor, DB'de iz kalmıyor | `web/src/app/api/webhooks/payment/route.ts` |
 | 12 | ~~Kayıt (signup) + `agents` satırı oluşturma akışı~~ — **tamamlandı: EML-42** | `agents` tablosuna INSERT policy yok, oluşturan kod da yok | yeni: `web/src/app/signup/` |
-| 13 | `login` sonrası role-aware redirect (admin→/admin, emlakçı→/agent/dashboard) | Şu an herkes `/admin/listings`'e yönleniyor, admin değilse 404 | `web/src/app/login/actions.ts` |
+| 13 | ~~`login` sonrası role-aware redirect (admin→/admin, emlakçı→/agent/dashboard)~~ — **zaten kodda var** (2026-10-27 `frontend-sayfa-bilgisi/03-giris.md` yazılırken gerçek koddan doğrulandı: `login/actions.ts`, `agents.is_admin` okuyup `isAdmin ? "/admin/listings" : "/agent/dashboard"` redirect ediyor) — bu madde ne zaman kapandı belirsiz, muhtemelen EML-42 kapsamında eklenmiş | Bu madde güncel değildi | `web/src/app/(marketing)/login/actions.ts` |
 
 ### P2 — Orta (sağlamlaştırma / eksik test)
 | # | İş | Neden | Dosya |
@@ -58,7 +58,7 @@ P3'ten ÖNCE ele alınır — scraper çekirdek gelir akışı, video galerisi s
 | 32 | ~~`orchestrator.py::do_POST`'ta `json.loads` çağrısı etrafına try/except ekle~~ — **tamamlandı: EML-66** | Faz A'da canlı tespit edildi (2026-10-24) | EML-66 |
 | 33 | ~~`parser.py`'deki Gemini `generate_content` çağrısına timeout ekle~~ — **tamamlandı: EML-66** (`HttpOptions(timeout=30000)`) | Faz A'da canlı tespit edildi (2026-10-24) | EML-66 |
 | 34 | `test_verify_supabase.py::test_schema_required_tables_are_the_six_expected` eski 6-tablo setini bekliyor, P2-20'de eklenen `plans`/`payment_events` için güncellenmemiş — test güncellenmeli | Faz B verify'ında tespit edildi (2026-10-24), görevle ilgisiz pre-existing | - |
-| 29 | Faz C (opsiyonel): retry desteği, decrypt-failed log, risk log, grup adı zenginleştirme | Faz B sonrası değerlendirilir | - |
+| 29 | ~~Faz C (opsiyonel): decrypt-failed log, risk log, grup adı zenginleştirme~~ — **tamamlandı: EML-77** (retry/getMessage maddesi plan aşamasında kapsamdan çıkarıldı — Baileys bunu `enableRecentMessageCache` ile varsayılan olarak zaten çözüyor; 52/52 node + 13/13 python testi yeşil, red-team: approve-with-changes, 2/3 bulgu düzeltildi) | Tamamlandı | EML-77 |
 
 ### P3 — Faz 5 (henüz başlanmamış, iskelet — Scraper Üretim-Hazırlık bitene kadar beklemede)
 | # | İş | Dosya |
@@ -83,10 +83,10 @@ Her sayfa için: mevcut durum + "production-ready" sayılması için olmazsa olm
 - [ ] Boş durum (henüz video yoksa) mesajı
 
 ### `/login` — Giriş
-**Durum:** Çalışıyor ama tek yönlü (sadece admin redirect).
+**Durum:** Çalışıyor, rol-aware redirect VAR, tasarımı yenilendi (EML-80). Detay: `frontend-sayfa-bilgisi/03-giris.md`.
 **Olmazsa olmazlar:**
-- [ ] Role-aware redirect (admin → `/admin/listings`, emlakçı → `/agent/dashboard`)
-- [ ] Kayıt (signup) akışı + `agents` satırı otomatik oluşturma
+- [x] ~~Role-aware redirect~~ — kodda mevcut (2026-10-27 doğrulandı)
+- [x] ~~Kayıt (signup) akışı + `agents` satırı otomatik oluşturma~~ — EML-42
 - [ ] Şifre sıfırlama akışı
 - [ ] Çıkış (logout) butonu/akışı
 - [ ] Hatalı giriş mesajı (şu an var mı doğrulanmadı — kontrol edilmeli)

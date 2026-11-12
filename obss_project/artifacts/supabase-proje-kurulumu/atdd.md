@@ -1,6 +1,6 @@
 ---
 task_slug: supabase-proje-kurulumu
-jira_id: null
+jira_id: EML-6
 saga_task_id: null
 threat_model: not-applicable
 priority: high

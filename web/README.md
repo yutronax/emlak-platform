@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Emlak Platformu — Web
 
-## Getting Started
+Next.js 16 + React 19 + TypeScript. Son güncelleme: 31 Ekim 2026.
 
-First, run the development server:
+## Başlatma
 
-```bash
+```powershell
+npm ci
+Copy-Item ../.env.example .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Supabase ve ilgili özellik ayarlarını .env.local içinde doldurun. Yerel adres: http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Ekranlar
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Genel: /, /pricing, /login, /signup, /sifremi-unuttum, /sifre-yenile.
+- Bilgilendirme: /kvkk, /gizlilik, /kullanim-sartlari.
+- Emlakçı: /agent/dashboard, /agent/whatsapp, /agent/videos, /agent/videos/new, /agent/videos/[id].
+- Hesap: /account/subscription.
+- Admin: /admin/listings, /admin/videos, /admin/videos/[id].
 
-## Learn More
+WhatsApp sayfası için NEXT_PUBLIC_WA_LINK_ENABLED dolu olmalıdır. Kaynak dizindeki (marketing) route grubu URL'nin parçası değildir.
 
-To learn more about Next.js, take a look at the following resources:
+## Kontroller
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```powershell
+npm test
+npm run lint
+npx tsc --noEmit --incremental false
+npm run build
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+31 Ekim incelemesinde 82 dosyada 1.073 test geçti; TypeScript hatasız, ESLint 5 uyarı verdi. Build ve canlı entegrasyonlar bu incelemede çalıştırılmadı.
 
-## Deploy on Vercel
+Destek: **+90 531 840 77 44**, [WhatsApp](https://wa.me/905318407744). Tek kaynak: src/lib/contact.ts.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Ayrıntılı kurulum: [kök README](../README.md). Veri akışı: [mimari](../docs/ARCHITECTURE.md). Kod değişikliklerinde [AGENTS.md](AGENTS.md) talimatlarını izleyin.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

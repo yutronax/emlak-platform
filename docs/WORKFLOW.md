@@ -1,29 +1,31 @@
 # Ekip İş Akışı
 
-4 kişilik ekip (2 yazılımcı, 1 editör, 1 kameraman) arasındaki devir noktaları.
+Son güncelleme: 31 Ekim 2026.
 
-```mermaid
-flowchart LR
-    subgraph Saha
-        KAM["Kameraman: ev cekimi"]
-        EDI["Editor: video kurgu"]
-    end
-    subgraph Yazilim
-        DEV1["Gelistirici 1: scraper/backend"]
-        DEV2["Gelistirici 2: web/frontend"]
-    end
+## İlan akışı
 
-    KAM --> EDI
-    EDI -- "bitmis video dosyasi" --> DEV2
-    DEV1 -- "raw_listings verisi" --> DEV2
-    DEV2 -- "onay/red" --> ADMIN["Admin paneli"]
-    ADMIN -- "yayinlanan ilan/video" --> AGENT["Emlakci paneli"]
-```
+1. Emlakçı WhatsApp hesabını QR ile bağlar, gruplarını seçer.
+2. Sidecar mesajı worker'a iletir; kişisel yolda grup seçimi doğrulanır, Gemini ayrıştırması yapılır.
+3. Kişisel ilan DB kalite kararına göre onaylanır veya beklemeye alınır. Ortak ilanlar admin onayına gider.
+4. Admin /admin/listings üzerinden bekleyen ilanları inceler.
+5. Emlakçı /agent/dashboard üzerinden yetki ve plan limitleri içinde ilanları filtreler; okunmamış sayaç ve etkinleştirilmişse push bildirimi kullanır.
 
-**Devir noktaları**
-- Kameraman → Editör: ham çekim dosyası (format/süre standardı ekip içinde kararlaştırılmalı).
-- Editör → Geliştirici 2: bitmiş video dosyası + hangi mülke ait olduğu bilgisi (Faz 5'te `/admin/videos` üzerinden yükleme akışı kurulacak).
-- Geliştirici 1 → Geliştirici 2: `raw_listings` tablosu arayüzü (scraper backend yazar, web admin paneli okur) — ortak sözleşme şema dosyasında (`supabase/migrations/`).
-- Admin paneli → Emlakçı paneli: sadece onaylanmış, abonelik kontrolünden geçen veri.
+## Video hizmeti
 
-Görev kırılımı ve kimin hangi fazda ne yapacağı bu dosyada değil, ekibin kendi task panosunda (bkz. proje notları) tutulur — mimari burada sabit, iş dağılımı orada değişken.
+1. Emlakçı /agent/videos/new üzerinden hizmet seçer; kaynak yükler veya yerinde çekim adresi/zaman notu bırakır.
+2. Admin/editör /admin/videos ve sipariş detayından kuyruğu yönetir, gerektiğinde teklif verir.
+3. Emlakçı ödeme bekleyen siparişi öder; webhook sonucuyla sipariş hazırlanma durumuna geçer.
+4. Yerinde çekim gerekiyorsa kameraman kaynakları editöre verir; editör reklam videosunu hazırlar.
+5. Admin tamamlanan videoyu sipariş detayından yükler ve teslim eder. Emlakçı kendi sipariş ekranından videoya erişir.
+
+Kurgu insan eliyle yapılır. Mevcut admin ekranı yükleme ve teslimi destekler; bitmiş dosyanın geliştiriciye elle verilmesi gereken eski akış güncel değildir.
+
+## Teknik devir
+
+- Backend: webhook, ayrıştırma, oturum/grup yönetimi, dedup ve veri yazımı.
+- Web: hesap, ilan akışı, admin incelemesi, sipariş, ödeme ve teslim arayüzleri.
+- Ortak sözleşme: supabase/migrations/, RPC parametreleri ve Storage kuralları.
+- Destek: [WhatsApp +90 531 840 77 44](https://wa.me/905318407744); tek kaynak web/src/lib/contact.ts.
+
+Güncel görev atamaları iş panosunda tutulur. Tarihli artifact'ler geçmiş karar/test kanıtlarıdır; mevcut özellikler için [README](../README.md) ve [mimari](ARCHITECTURE.md) esas alınır.
+

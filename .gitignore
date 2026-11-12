@@ -29,3 +29,18 @@ video-calisma/**/*.png
 video-calisma/**/*.mp4
 video-calisma/**/*.wav
 video-calisma/**/*.mp3
+
+# Yerel araç ayarları ve geçici çıktılar
+.claude/
+.codex/
+.agents/
+output/
+.pytest_cache/
+scraper/.venv-verify/
+/tmp-page-*.png
+/full-tanim-page-*.png
+obss_project/artifacts/**/codex/*.err.txt
+.mcp.json
+# Başka sitelerin ve test hesabının ekran görüntüleri herkese açık repoya girmez
+obss_project/artifacts/panel-oturum-dogrulama/referans-kareler/
+obss_project/artifacts/panel-oturum-dogrulama/yeni/

@@ -1,112 +1,74 @@
 # Sistem Mimarisi
 
-## 1. Veri akışı: WhatsApp'tan onaylı ilana (Faz 1-3)
+Son güncelleme: 31 Ekim 2026. Kaynak kod envanteridir; canlı dağıtım doğrulaması değildir.
+
+## İlan akışı
 
 ```mermaid
 flowchart TD
-    WA["WhatsApp emlak gruplari"] --> SC["Baileys sidecar (Node.js)"]
-    SC -- "POST /baileys-webhook" --> ORCH["orchestrator.py (queue + thread pool)"]
-    ORCH --> PARSE["parser.py (Gemini)"]
-    PARSE --> QG["quality_gate.py"]
-    QG --> FP["fingerprint dedup"]
-    FP --> RAW[("raw_listings (Supabase)")]
-
-    ADMINLAYOUT["admin/layout.tsx (is_admin kontrolu)"] --> ADMIN["/admin/listings (Next.js)"]
-    ADMIN -- "select, RLS: is_admin" --> RAW
-    ADMIN -- "approve_raw_listing() RPC" --> LIST[("listings (Supabase)")]
-
-    AGENT["/agent/dashboard (Next.js)"] -- "select, RLS: subscriber" --> LIST
-
-    EDITOR["Editor: bitmis video"] -.Faz 5.-> ADMINV["/admin/videos"]
-    ADMINV -.Faz 5.-> STORAGE[("Supabase Storage")]
-    STORAGE -.Faz 5.-> PUBLIC["Public video galerisi"]
+    WA["WhatsApp grupları"] --> SC["Baileys: ortak ve kişisel oturumlar"]
+    SC --> PY["Yetkili webhook: Python worker"]
+    PY --> SEL["Kişisel yol: DB grup seçimi kontrolü"]
+    SEL --> AI["Gemini ayrıştırma"]
+    AI --> RPC["ingest_personal_listing: kalite, sahiplik, dedup"]
+    PY --> COMMON["Ortak yol: Gemini ve kalite kontrolü"]
+    COMMON --> RAW["raw_listings: pending"]
+    RAW --> ADMIN["Admin onayı"]
+    RPC --> DB["Supabase ilan verisi"]
+    ADMIN --> DB
+    DB --> FEED["feed_listings: erişim, günlük limit, filtreler"]
+    FEED --> PANEL["Emlakçı paneli"]
 ```
 
-**Notlar**
-- Kesikli oklar (Faz 5) henüz kurulmadı, planlanan akışı gösteriyor.
-- `approve_raw_listing()` / `reject_raw_listing()` Postgres fonksiyonları `SECURITY INVOKER` — admin yetkisi fonksiyon içinde değil, RLS politikalarında (`supabase/migrations/0002_admin_review.sql`).
-- Dedup üç katmanlı: Baileys sidecar'daki bellek-içi `_active_ids` seti, `fingerprint` kolonu üzerindeki (partial) unique index (`supabase/migrations/0007_raw_listings_fingerprint_unique.sql`), `raw_listings.source_message_id` üzerindeki unique index.
-- `admin/layout.tsx` ile `admin/listings/page.tsx`'in authz davranışı KASITLI olarak farklı: layout, admin olmayanı `notFound()` ile (kaynağın varlığını sızdırmadan) karşılar; page, kendi `requireAdmin()` kontrolünde oturumsuzu `/login`'e, admin-olmayanı `/agent/dashboard`'a yönlendirir — iki ayrı savunma katmanı (defense-in-depth), birbirinin yedeği.
+- scraper/sidecar/bridge.js: grup filtresi, grup adı önbelleği, en fazla 3 webhook gönderim denemesi.
+- scraper/sidecar/sessions/: kişisel QR, şifreli auth dosyaları, oturum yaşam döngüsü, grup senkronizasyonu, heartbeat.
+- scraper/orchestrator.py: 10 worker ve bellek kuyruğu; kişisel webhook istekleri yalnız loopback üzerinden kabul edilir.
+- Kişisel grup seçimi Gemini çağrısından önce DB'den doğrulanır. Kişisel kalite eşiği kararı DB RPC'sinde verilir. Ortak yol kayıtları admin onayına gönderir.
+- Dedup aktif mesaj seti ve DB mesaj/fingerprint kısıtlarıyla yapılır; kişisel kapsam migration 0024'te düzenlenir.
+- web/src/lib/listings-feed/: filtreler, 5 saniyelik sorgu zaman aşımı, okunmamış sayaç. Günlük limit ve kilitli alanların sınırlandırılması DB RPC'sindedir.
 
-## 2. Kimlik doğrulama ve rol yönlendirmesi
+## Kimlik ve yetki
 
-```mermaid
-flowchart TD
-    LOGINPAGE["/login (Next.js)"] -- "login() server action" --> AUTH["supabase.auth.signInWithPassword"]
-    AUTH -->|basarili| AGENTS_Q["agents.is_admin sorgusu"]
-    AGENTS_Q -->|is_admin=true| ADMIN_R["redirect /admin/listings"]
-    AGENTS_Q -->|is_admin=false/yok/hata| AGENT_R["redirect /agent/dashboard (pessimist fallback)"]
+Supabase Auth oturumu web/src/proxy.ts üzerinden yenilenir. Giriş rol sorgusuna göre admin veya emlakçı paneline yönlendirir; rol doğrulanamazsa emlakçı paneli seçilir.
 
-    SIGNUP["/signup (Next.js)"] -- "signUp() + ensureAgentRow()" --> AGENTS[("agents (Supabase)")]
-```
+Admin layout ve ilgili sayfa/action kontrolleri ayrı yetki denetimi yapar. RLS ve RPC grant'leri veritabanı katmanını korur. Service-role yalnız sunucudaki ayrıcalıklı işlemlerde kullanılır. Her RPC'nin güvenlik modu ve yetkileri kendi migration'ından kontrol edilmelidir.
 
-**Notlar**
-- `login()` (`web/src/app/login/actions.ts`) rol yönlendirmesinde **pessimist** davranır: `agents` sorgusu başarısız olursa (ağ hatası, satır yok) admin'e değil `/agent/dashboard`'a yönlendirir — yanlışlıkla admin paneline düşürmemek için.
-- `company_name` dolu bir `user_metadata` ile giriş yapan kullanıcı için `ensureAgentRow()` çağrılır (agent kaydı yoksa oluşturur); boşsa çağrılmaz.
-- `admin/layout.tsx` login akışından bağımsız, her `/admin/*` isteğinde kendi başına tekrar doğrular (savunma derinliği — bkz. bölüm 1 notu).
+## Video siparişi
 
-## 3. Abonelik ve ödeme (iyzico)
+Emlakçı fotoğraf, ham video veya yerinde çekim seçer. Kaynak dosyaları özel Storage'a yükler ya da adres/zaman notu girer. Admin teklif verir, kaynakları indirir ve insan eliyle hazırlanan videoyu yükleyip teslim eder.
 
-```mermaid
-flowchart TD
-    PRICING["/pricing (Next.js)"] --> CHECKOUT_BTN["Abone ol butonu"]
-    CHECKOUT_BTN -- "POST /api/subscriptions/checkout" --> CHECKOUT["checkout/route.ts"]
-    CHECKOUT -- "plans tablosundan fiyat oku (body'den DEĞİL)" --> PLANS[("plans (Supabase)")]
-    CHECKOUT -- "createCheckoutSession()" --> IYZICO["iyzico API"]
-    CHECKOUT -- "insert (pending)" --> SUBS[("subscriptions (Supabase)")]
+Durumlar: draft, quote_pending, awaiting_payment, payment_failed, in_progress, delivered, canceled. İzinli geçiş ve aktörler web/src/lib/video-orders/status.ts içindedir.
 
-    IYZICO -- "webhook" --> WEBHOOK["/api/webhooks/payment (route.ts)"]
-    WEBHOOK -- "imza dogrulama (timingSafeEqual)" --> WEBHOOK
-    WEBHOOK -- "insert (idempotent, 23505 yakalanir)" --> PAYEV[("payment_events (Supabase)")]
-    WEBHOOK -- "status guncelle (success/failed)" --> SUBS
-    WEBHOOK -.basarisiz fallback.-> NEEDS_REVIEW["needs_review + payment_events.processing_error"]
+Hammadde bucket'ı video-order-assets, teslim bucket'ı property-videos. Dosyalar özel erişim ve imzalı bağlantılarla sunulur. Tür/adet/boyut kuralları limits.ts ve Storage migration'larında bulunur.
 
-    CRON["Vercel Cron (saatlik)"] -- "GET /api/cron/reconcile-subscriptions (Bearer CRON_SECRET)" --> RECONCILE["reconcile-subscriptions/route.ts"]
-    RECONCILE -- "pending + 1 saatten eski -> needs_review" --> SUBS
+## Ödeme ve bildirim API'leri
 
-    ACCOUNT["/account/subscription (Next.js)"] -- "select, RLS: owner" --> SUBS
-```
-
-**Notlar**
-- Checkout rotası, istemciden gelen fiyatı asla kullanmaz — fiyat her zaman `plans` tablosundan okunur (manipülasyonu önlemek için).
-- Checkout rotasında kullanıcı bazlı in-memory rate-limit var (`RATE_LIMIT_MAX_REQUESTS=10` / 10s) — tek instance'ta geçerli, çoklu instance/serverless cold-start'ta sıfırlanabilir, bilinen bir sınırlama.
-- Webhook rotası `payment_events`'e idempotent insert yapar (aynı event tekrar gelirse 23505 ile yakalanıp duplicate olarak işaretlenir), sonra `subscriptions.status`'u günceller; update 0 satır etkilerse (satır bulunamadı/uyumsuz durum) `needs_review`'a düşer, bu da başarısız olursa `payment_events.processing_error=true` ile işaretlenip 500 döner (çok seviyeli fallback, `web/src/app/api/webhooks/payment/route.ts`).
-- `reconcile-subscriptions` cron job'u, webhook hiç gelmeyen (sağlayıcı tarafı sessiz kalan) `pending` kayıtları 1 saat sonra `needs_review`'a çekerek "sonsuza kadar pending kalma" riskini kapatır — `CRON_SECRET` ile korunur, secret tanımlı değilse `500 CONFIG_ERROR` döner (401 ile ayrıştırılır, "secret yanlış" ile "secret hiç yok" karışmaz).
-
-## Veritabanı şeması (migration geçmişi)
-| Migration | İçerik |
+| Rota | Görev |
 |---|---|
-| `0001_init.sql` | `agents`, `raw_listings`, `listings` temel şema + RLS |
-| `0002_admin_review.sql` | `approve_raw_listing()`/`reject_raw_listing()` RPC'leri (SECURITY INVOKER) |
-| `0003_subscriptions_payment.sql` | `plans`, `subscriptions`, `payment_events` tabloları |
-| `0004_fix_agents_self_update_rls.sql` | `agents` self-update RLS düzeltmesi |
-| `0008_payment_events_processing_error.sql` | `payment_events.processing_error` kolonu |
-| `0005_agents_immutable_columns.sql` | `agents`'ta değiştirilemez kolon kısıtı |
-| `0006_plans_sort_order.sql` | `plans.sort_order` kolonu |
-| `0009_agents_self_insert.sql` | `agents` self-insert RLS |
-| `0007_raw_listings_fingerprint_unique.sql` | `fingerprint` üzerinde partial unique index (dedup atomikleştirme) |
+| POST /api/subscriptions/checkout | Abonelik checkout |
+| GET/PATCH /api/subscriptions/[id] | Abonelik okuma/güncelleme |
+| POST /api/video-orders/[id]/checkout | Video ödemesi |
+| POST /api/webhooks/payment | İmza kontrolü, event tekilleştirme, ödeme sonucu |
+| GET /api/cron/reconcile-subscriptions | Saatlik: bir saatten eski pending abonelikleri needs_review yapar |
+| GET /api/cron/push | Her 5 dakikada web push kontrolü/gönderimi |
+| /auth/callback | Kimlik doğrulama callback'i |
 
-Not: `0004` ve `0006` numaraları iki farklı dosyada tekrar ediyor (sıralı numaralandırma disiplini bir noktada kaymış) — uygulama sırası dosya adına göre değil gerçek `supabase/migrations/` dizin listesine göre değerlendirilmeli, bu doküman sadece içerik envanteri verir.
+Cron programları web/vercel.json içindedir; Bearer CRON_SECRET ile korunur. Reconcile rotası secret yoksa 500, yanlışsa 401 döner. Ödeme adaptörü web/src/lib/payments/iyzico.ts, push kodu web/src/lib/push/ içindedir.
 
-## Sayfa/route envanteri (gerçek kod, 2026-10-23 itibarıyla)
-- `/` (`web/src/app/page.tsx`)
-- `/login` (`web/src/app/login/page.tsx` + `actions.ts`)
-- `/signup` (`web/src/app/signup/page.tsx`)
-- `/pricing` (`web/src/app/pricing/page.tsx`)
-- `/account/subscription` (`web/src/app/account/subscription/page.tsx`)
-- `/agent/dashboard` (`web/src/app/agent/dashboard/page.tsx`)
-- `/admin/listings` (`web/src/app/admin/listings/page.tsx`, `admin/layout.tsx` ile korunur)
-- `/admin/videos` (`web/src/app/admin/videos/page.tsx`, Faz 5 — planlanan akışın parçası, henüz storage/public galeri bağlantısı yok)
-- `POST /api/subscriptions/checkout`
-- `GET/PATCH /api/subscriptions/[id]`
-- `POST /api/webhooks/payment`
-- `GET /api/cron/reconcile-subscriptions`
+## Şema
 
-## scraper/ modül envanteri
-- `orchestrator.py` — queue + thread pool, mesaj işleme akışının merkezi.
-- `parser.py` — Gemini ile ham metni yapılandırılmış ilana çevirir (429 key rotasyonu, `GeminiKeyManager`).
-- `quality_gate.py` — kural-bazlı güven skoru (`score_listing`) + otomatik onay eşiği (`is_safe_to_auto_approve`).
-- `fingerprint.py` — normalize edilmiş alanlardan deterministik sha256 dedup anahtarı.
-- `supabase_client.py` — service-role REST çağrıları (RLS bypass), `insert_raw_listing` atomik 23505 yakalama deseni.
-- `api_key_manager.py` — Gemini key havuzu, round-robin + cooldown.
-- `sidecar/bridge.js` (Node.js) — Baileys WhatsApp köprüsü, grup filtresi (`isGroupJid`).
+| Migration grubu | İçerik |
+|---|---|
+| 0001–0002 | Temel şema, RLS ve admin review |
+| 0003–0010 | Abonelik/ödeme, agent korumaları, dedup, anonim plan okuma |
+| 0011–0015 | Video erişimi, grup adı, video siparişi ve dosya kısıtları |
+| 0016–0020 | İlan akışı, sayaçlar, RPC yetkileri, deneme/şartlar ve günlük limit |
+| 0021–0022 | Push abonelikleri ve endpoint kontrolü |
+| 0023–0024 | Kişisel WhatsApp, grup seçimi, kişisel ilanlar ve sayaçlar |
+
+*.down.sql dosyaları geri alma içindir; ileri migration olarak uygulanmamalıdır. Canlı uygulama geçmişi ayrıca kontrol edilmelidir.
+
+## Sınırlar
+
+Bellek kuyruğu kalıcı değildir ve kapasite sınırı yoktur. Checkout hız sınırı süreç bazlıdır. Yerel testler gerçek servis entegrasyonlarını ve canlı RLS/Storage davranışını tek başına doğrulamaz. Ekran envanteri, kurulum ve test kaydı için [README](../README.md).
+
