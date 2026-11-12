@@ -1,0 +1,17 @@
+VERDICT: block
+SUMMARY: F1 kapandı: ikinci çağrı regex yönlendirmesi olmadan yapılıyor ve şema doğrulamasından geçen model sonucu doğrudan kullanılıyor. F2 kısmen düzeldi ancak boşluklu birleşik oda ifadesinde açık; F3, F4 ve F5 açık. İnceleme ve hedefli Python doğrulamaları salt okunur yapıldı; suite ve canlı entegrasyon başarıları bildirilen sonuçlara dayanıyor.
+
+1. [medium/correctness] scraper/regex_extract.py::_ROOMS
+   ISSUE: F2 açık: bitişik '3+1+1' artık reddediliyor, ancak 'Satilik 3 + 1 + 1 daire' doğrudan çalıştırmada rooms='1+1' üretiyor. İlk eşleşme reddedildikten sonra motor birleşik ifadenin boşluktan sonraki kuyruğunu eşleştiriyor.
+   BETTER: Birleşik oda ifadesinin tamamını belirsiz say; boşluklu ve boşluksuz biçimlerde iç parçaların yeniden eşleşmesini engelle. Bu örneği regresyon kapsamına ekle.
+2. [medium/reliability] scraper/parse_schema.py::validate_parsed
+   ISSUE: F3 açık: validate_parsed({'is_listing': True, 'price': 10**400}) doğrudan çalıştırmada OverflowError fırlatıyor. Önceki reviewer_note içindeki public doğrulayıcının None döndürdüğü iddiası güncel kodda doğrulanmıyor. _ask_model ve _read_db_record içindeki şema doğrulamasını çevreleyen bir yakalama da bulunmuyor.
+   BETTER: Büyük tam sayıları float dönüşümüne zorlamadan değerlendir veya taşmayı kontrollü şema reddine çevir. Model yolunda schema_invalid, DB yolunda cache_invalid ve normal ayrıştırmaya devam davranışını doğrula.
+3. [high/test-gap] obss_project/artifacts/gemini-parse-maliyet/verify_report.md
+   ISSUE: F4 açık: gerçek Gemini çağrılarında en az %40 azalma, ek gecikme p95 ≤100 ms, kalite karşılaştırması ve değişen parser kodunda en az %90 branch coverage kanıtları yok. ATDD'nin istediği webhook E2E senaryoları da backend gerekçesiyle N/A bırakılmış.
+   BETTER: Etiketli temsili kümede bayrak açık/kapalı ölçümleri, tekrar oranını, tüm gerçek çağrıları, Gemini hariç ek süreleri ve kalite sonuçlarını raporla. Branch coverage ve belirtilen webhook senaryolarını doğrula.
+4. [medium/performance] scraper/parser.py::_read_db_record ve _db_write; scraper/supabase_client.py::get_client
+   ISSUE: F5 açık: her kalıcı önbellek işleminde create_client ile yeni istemci oluşturuluyor. Soğuk başarılı yolda senkron DB okuma ve yazma bulunuyor; plandaki bağlantı yeniden kullanımı ve kısa önbellek timeout'u uygulanmamış.
+   BETTER: Worker eşzamanlılığına uygun istemci/bağlantı yeniden kullanımı ve sınırlı önbellek timeout'u uygula. Soğuk önbellek ve DB arızasını gecikme ölçümüne dahil et.
+
+READY: {"atdd_satisfied": false, "tests_passed": true, "no_critical_findings": true, "scope_respected": true, "caveman_satisfied": true, "security_acceptable": true, "maintainability_acceptable": true, "no_blocking_risks": false}

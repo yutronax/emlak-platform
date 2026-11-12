@@ -1,0 +1,88 @@
+{
+  "task": "gemini-parse-maliyet",
+  "reviewed_at": "2026-11-12",
+  "summary": "Önbellek katmanları, RLS ve teknik hataların negatif önbellekten ayrılması uygulanmış. Çelişki çözümünün aynı yönlendirilmiş istemi tekrarlaması, regex doğruluğu ve eksik performans kanıtları kabul kriterlerinin tamamlanmasını engelliyor. İnceleme salt okunur gerçekleştirildi, testlerin başarı durumu verify_report.md üzerinden değerlendirildi.",
+  "findings": [
+    {
+      "severity": "high",
+      "category": "correctness",
+      "file": "scraper/parser.py::_parse_optimized",
+      "issue": "Regex/Gemini çelişkisinde ikinci çağrı aynı prompt ile yapılıyor. Prompt, tartışmalı regex değerlerini hâlâ kesin ve değiştirilmemesi gereken bilgiler olarak sunuyor. Regex hatalıysa modelin doğru değeri ikinci kez döndürmesi sonucun tamamen düşürülmesine yol açıyor.",
+      "better_approach": "Ek tam ayrıştırma çağrısını bilinen alan yönlendirmesi olmadan yap ve doğrulanmış tam sonucun çelişkiyi çözebilmesini sağla.",
+      "reason": "AC-8 ve Davranış Sözleşmesi satır 13 tam ayrıştırmayla çözüm istiyor. Mevcut test yalnız ikinci yanıtın regex değerine uyduğu durumu başarılı çözüm sayıyor.",
+      "source": "codex"
+    },
+    {
+      "severity": "medium",
+      "category": "correctness",
+      "file": "scraper/regex_extract.py::extract_fields",
+      "issue": "İlan numarası temizliği uygulanmamış ve oda deseni birleşik ifadelerin başını kesin sonuç kabul ediyor. Salt okunur çalıştırmada 'Ilan no: 123456 TL, satilik daire' fiyat 123456, 'Satilik 3+1+1 daire' oda '3+1' üretti.",
+      "better_approach": "İlan numarası bağlamlarını dışla ve oda eşleşmesinin ardından ek birleşik oda ifadesi bulunmadığını doğrula. Belirsiz ifadeleri modele bırak.",
+      "reason": "AC-6 yalnız açık ve tek anlamlı değerlerin çıkarılmasını, ilan numarasının fiyat olarak yorumlanmamasını gerektiriyor. Hatalı değerler güvenilir bilgi olarak modele aktarılıyor ve önbelleğe taşınabiliyor.",
+      "source": "codex"
+    },
+    {
+      "severity": "medium",
+      "category": "reliability",
+      "file": "scraper/parse_schema.py::_is_finite_number",
+      "issue": "math.isfinite çok büyük Python int değerlerinde OverflowError fırlatıyor. price=10**400 ile doğrudan doğrulama bu hatayı üretti. Model veya DB kaydından bu değer geldiğinde şema denetimi beklenen hata sonucunu döndüremiyor.",
+      "better_approach": "Tam sayıları float dönüşümüne zorlamadan doğrula veya taşmayı kontrollü şema reddine çevir. Model ve önbellek yollarında ilgili hata sayaçlarını koru.",
+      "reason": "AC-10/12 ve Davranış Sözleşmesi satır 8/17, geçersiz girdilerin kontrollü reddini gerektiriyor. DB doğrulamasındaki taşma normal ayrıştırmaya dönüşü de kesiyor.",
+      "source": "codex"
+    },
+    {
+      "severity": "high",
+      "category": "test-gap",
+      "file": "obss_project/artifacts/gemini-parse-maliyet/verify_report.md",
+      "issue": "AC-20 için Gemini çağrısında en az %40 azalma, ek gecikme p95 ≤100 ms, sonuç kalitesi ve en az %90 branch coverage ölçümleri raporlanmamış. Backend olduğu gerekçesiyle E2E kapısı N/A sayılmış, ancak ATDD webhook üzerinden E2E senaryoları istiyor.",
+      "better_approach": "Bayrak açık/kapalı temsili benchmark sonuçlarını, tekrar oranını, kalite karşılaştırmasını ve branch coverage çıktısını ekle. İstenen webhook senaryolarını doğrula.",
+      "reason": "Unit ve DB entegrasyon başarısı performans hedeflerini ve normal giriş noktasındaki davranışları kanıtlamıyor.",
+      "source": "codex"
+    },
+    {
+      "severity": "medium",
+      "category": "performance",
+      "file": "scraper/supabase_client.py::get_client",
+      "issue": "Her kalıcı önbellek işleminde yeni Supabase istemcisi oluşturuluyor. Cache miss yolunda okuma ve yazma için ayrı istemciler ve senkron ağ işlemleri var. Plandaki kısa önbellek timeout'u uygulanmamış.",
+      "better_approach": "Önbellek erişiminde bağlantı yeniden kullanımını ve kısa timeout'u uygula, hata ve soğuk önbellek yollarını gecikme ölçümüne dahil et.",
+      "reason": "Ek ağ işlemleri worker kapasitesini tüketiyor. Mevcut uygulamada p95 ≤100 ms hedefinin sağlandığını gösteren ölçüm bulunmuyor.",
+      "source": "codex"
+    }
+  ],
+  "strengths": [
+    "Migration RLS açıyor ve anon/authenticated için erişim politikası tanımlamıyor. Verify raporu canlı rol testlerinin geçtiğini bildiriyor.",
+    "Kalıcı payload ayrı ham mesaj, telefon, URL, grup veya kullanıcı alanı içermiyor. parsed.description içindeki kişisel veri ATDD'de açıkça kabul edilmiş.",
+    "Yakalanan Gemini timeout, ağ, JSON ve şema hataları önbelleğe yazılmadan dönüyor.",
+    "Kalıcı önbellek yazım hatası doğrulanmış sonucu koruyor ve LRU kaydı tutuluyor.",
+    "LRU kapasitesi kilitle korunuyor, sonuçlar derin kopyalanıyor ve DB isabetinde kalan TTL taşınıyor.",
+    "Kişisel grup seçimi parser ve önbellek erişiminden önce kontrol ediliyor."
+  ],
+  "risks": [
+    "Regex kaynaklı yanlış bilgiler ikinci model çağrısını da yönlendirerek geçerli ilanların düşmesine neden olabilir.",
+    "Temizlik scraper sürecine bağlı. Süreç kapalıyken fiziksel silme gecikir, okumadaki TTL denetimi kullanımını engeller.",
+    "Verify raporunun sonuç bölümünde migration ve entegrasyon hâlâ bekleyen işler olarak geçiyor, PASS tablosuyla tutarsızlık oluşturuyor.",
+    "Testler bu incelemede yeniden çalıştırılmadı. Yalnız dosya yazmayan hedefli doğrulama çağrıları çalıştırıldı."
+  ],
+  "caveman_review": {
+    "complexity": "medium",
+    "unnecessary_files": 0,
+    "unnecessary_helpers": 0,
+    "unnecessary_abstractions": 0
+  },
+  "scope_review": {
+    "matches_atdd": true,
+    "scope_expansion": false
+  },
+  "ready_to_commit": {
+    "atdd_satisfied": false,
+    "tests_passed": true,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": true,
+    "security_acceptable": true,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": false
+  },
+  "verdict": "block",
+  "reviewer_note": "CLI ajanı doğruladı: F2 (regex) her iki vaka da üretildi (price=123456, rooms=3+1) — gerçek. F3: _is_finite_number(10**400) OverflowError atıyor ANCAK validate_parsed üst sınırda None (temiz reddet) döndürüyor; public sözleşme korunuyor, helper kırılgan — şiddet pratikte low. F1/F4 incelendi, geçerli."
+}

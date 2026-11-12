@@ -16,6 +16,7 @@ import logging
 import os
 import sys
 import threading
+import time
 from concurrent.futures import ThreadPoolExecutor
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from queue import Queue
@@ -32,6 +33,7 @@ from supabase_client import (
     ingest_personal_listing,
     insert_raw_listing,
     is_group_selected,
+    purge_expired_parse_cache,
 )
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -198,6 +200,20 @@ def _background_worker_loop(executor: ThreadPoolExecutor) -> None:
         executor.submit(handle_message, payload)
 
 
+PARSE_CACHE_PURGE_INTERVAL_SECONDS = 60 * 60
+
+
+def _parse_cache_purge_loop() -> None:
+    """Süresi dolmuş parse_cache satırlarını başlangıçta ve saatlik siler. Hatada devam eder."""
+    while True:
+        try:
+            removed = purge_expired_parse_cache(get_client())
+            logger.info("parse_cache_purged count=%d", removed)
+        except Exception as error:  # noqa: BLE001 - temizlik arızası worker'ı düşürmez
+            logger.warning("cache_error operation=cleanup error=%s", type(error).__name__)
+        time.sleep(PARSE_CACHE_PURGE_INTERVAL_SECONDS)
+
+
 class WebhookHandler(BaseHTTPRequestHandler):
     def do_POST(self) -> None:  # noqa: N802 - http.server API ismi
         if self.path != "/baileys-webhook":
@@ -283,6 +299,9 @@ def run() -> None:
 
     worker_thread = threading.Thread(target=_background_worker_loop, args=(executor,), daemon=True)
     worker_thread.start()
+
+    purge_thread = threading.Thread(target=_parse_cache_purge_loop, daemon=True)
+    purge_thread.start()
 
     server = HTTPServer((host, port), WebhookHandler)
     logger.info("Scraper worker %s:%s/baileys-webhook adresinde dinliyor.", host, port)

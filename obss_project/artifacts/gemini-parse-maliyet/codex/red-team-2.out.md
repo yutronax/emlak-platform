@@ -1,0 +1,76 @@
+{
+  "task": "gemini-parse-maliyet",
+  "reviewed_at": "2026-11-12",
+  "summary": "F1 kapandı: ikinci çağrı regex yönlendirmesi olmadan yapılıyor ve şema doğrulamasından geçen model sonucu doğrudan kullanılıyor. F2 kısmen düzeldi ancak boşluklu birleşik oda ifadesinde açık; F3, F4 ve F5 açık. İnceleme ve hedefli Python doğrulamaları salt okunur yapıldı; suite ve canlı entegrasyon başarıları bildirilen sonuçlara dayanıyor.",
+  "findings": [
+    {
+      "severity": "medium",
+      "category": "correctness",
+      "file": "scraper/regex_extract.py::_ROOMS",
+      "issue": "F2 açık: bitişik '3+1+1' artık reddediliyor, ancak 'Satilik 3 + 1 + 1 daire' doğrudan çalıştırmada rooms='1+1' üretiyor. İlk eşleşme reddedildikten sonra motor birleşik ifadenin boşluktan sonraki kuyruğunu eşleştiriyor.",
+      "better_approach": "Birleşik oda ifadesinin tamamını belirsiz say; boşluklu ve boşluksuz biçimlerde iç parçaların yeniden eşleşmesini engelle. Bu örneği regresyon kapsamına ekle.",
+      "reason": "AC-6 yalnızca tek anlamlı oda değerlerini kabul ediyor. Yanlış kuyruk değeri kesin bilgi olarak modele aktarılabilir, null alanla birleştirilip pozitif önbelleğe yazılabilir."
+    },
+    {
+      "severity": "medium",
+      "category": "reliability",
+      "file": "scraper/parse_schema.py::validate_parsed",
+      "issue": "F3 açık: validate_parsed({'is_listing': True, 'price': 10**400}) doğrudan çalıştırmada OverflowError fırlatıyor. Önceki reviewer_note içindeki public doğrulayıcının None döndürdüğü iddiası güncel kodda doğrulanmıyor. _ask_model ve _read_db_record içindeki şema doğrulamasını çevreleyen bir yakalama da bulunmuyor.",
+      "better_approach": "Büyük tam sayıları float dönüşümüne zorlamadan değerlendir veya taşmayı kontrollü şema reddine çevir. Model yolunda schema_invalid, DB yolunda cache_invalid ve normal ayrıştırmaya devam davranışını doğrula.",
+      "reason": "Model girdisi parser'ın None sözleşmesini bozuyor; bozuk DB kaydı normal ayrıştırmayı engelliyor. AC-9/10/12 kapsamında kontrollü hata davranışı sağlanmıyor."
+    },
+    {
+      "severity": "high",
+      "category": "test-gap",
+      "file": "obss_project/artifacts/gemini-parse-maliyet/verify_report.md",
+      "issue": "F4 açık: gerçek Gemini çağrılarında en az %40 azalma, ek gecikme p95 ≤100 ms, kalite karşılaştırması ve değişen parser kodunda en az %90 branch coverage kanıtları yok. ATDD'nin istediği webhook E2E senaryoları da backend gerekçesiyle N/A bırakılmış.",
+      "better_approach": "Etiketli temsili kümede bayrak açık/kapalı ölçümleri, tekrar oranını, tüm gerçek çağrıları, Gemini hariç ek süreleri ve kalite sonuçlarını raporla. Branch coverage ve belirtilen webhook senaryolarını doğrula.",
+      "reason": "339 başarılı unit/regresyon testi ve 9 canlı DB testi, AC-20 performans ve kalite hedeflerini veya webhook üzerinden uçtan uca davranışı kanıtlamıyor."
+    },
+    {
+      "severity": "medium",
+      "category": "performance",
+      "file": "scraper/parser.py::_read_db_record ve _db_write; scraper/supabase_client.py::get_client",
+      "issue": "F5 açık: her kalıcı önbellek işleminde create_client ile yeni istemci oluşturuluyor. Soğuk başarılı yolda senkron DB okuma ve yazma bulunuyor; plandaki bağlantı yeniden kullanımı ve kısa önbellek timeout'u uygulanmamış.",
+      "better_approach": "Worker eşzamanlılığına uygun istemci/bağlantı yeniden kullanımı ve sınırlı önbellek timeout'u uygula. Soğuk önbellek ve DB arızasını gecikme ölçümüne dahil et.",
+      "reason": "Önbellek arızası exception olarak yakalansa bile önce ağ timeout'u bekleniyor. Worker kapasitesi ve ek gecikme hedefi açısından ölçülmemiş risk sürüyor."
+    }
+  ],
+  "strengths": [
+    "F1 kapandı: çelişki sonrası ikinci çağrı _build_prompt(raw_text, {}) kullanıyor; sonuç validate_parsed üzerinden geçiyor ve regex ile yeniden birleştirilmiyor.",
+    "İlk veya ikinci Gemini çağrısının yakalanan timeout, ağ, JSON ve şema hataları önbelleğe yazılmıyor; başarılı negatif sonuç ayrı tutuluyor.",
+    "Kalıcı önbellek yazma hatası doğrulanmış sonucu düşürmüyor; LRU kaydı korunuyor.",
+    "Migration RLS'yi etkinleştiriyor ve anon/authenticated politikası oluşturmuyor; bildirilen canlı rol testleri bunu destekliyor.",
+    "Payload ayrı ham mesaj, telefon, URL, grup veya kullanıcı alanı içermiyor. parsed.description içindeki kişisel veri güncel AC-S2 tarafından açıkça kabul ediliyor.",
+    "LRU kapasitesi kilitle korunuyor, sonuçlar derin kopyalanıyor ve DB isabetinde kalan TTL aktarılıyor.",
+    "Kişisel grup seçimi parser ve önbellek erişiminden önce denetleniyor."
+  ],
+  "risks": [
+    "Boşluklu birleşik oda ifadeleri yanlış kesin bilgiye ve kalıcı pozitif önbelleğe dönüşebilir.",
+    "Büyük tam sayı içeren DB kaydı, silinip normal ayrıştırmaya geçilmek yerine tekrar tekrar doğrulama hatası oluşturabilir.",
+    "Fiziksel temizlik scraper sürecine bağlı; süreç kapalıyken silme gecikir, okuma TTL kontrolü ise süresi dolan kaydın kullanılmasını engeller.",
+    "verify_report.md sonuç bölümü migration ve entegrasyonu hâlâ bekleyen işler olarak gösteriyor; PASS tablosu ve güncel kullanıcı bildirimiyle tutarsız.",
+    "Tam suite ve canlı Supabase testleri bu incelemede yeniden çalıştırılmadı."
+  ],
+  "caveman_review": {
+    "complexity": "medium",
+    "unnecessary_files": 0,
+    "unnecessary_helpers": 0,
+    "unnecessary_abstractions": 0
+  },
+  "scope_review": {
+    "matches_atdd": true,
+    "scope_expansion": false
+  },
+  "ready_to_commit": {
+    "atdd_satisfied": false,
+    "tests_passed": true,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": true,
+    "security_acceptable": true,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": false
+  },
+  "verdict": "block"
+}

@@ -8,6 +8,7 @@ worker'ın kendi sunucusunda/container'ında çalışır, tarayıcıya asla gön
 import logging
 import os
 import re
+from datetime import datetime, timezone
 from typing import Any, Dict, Optional, Tuple
 
 from postgrest.exceptions import APIError
@@ -16,6 +17,7 @@ from supabase import Client, create_client
 logger = logging.getLogger("scraper.supabase_client")
 
 UNIQUE_VIOLATION_CODE = "23505"
+PARSE_CACHE_TABLE = "parse_cache"
 # ingest_personal_listing dönüşü. "unselected": seçim DB'de yok; "not_connected": bağlantı yok
 # veya kesme istendi. İkisinde de hiçbir şey yazılmadı.
 # Sayaçların hepsi (personal_* ve threshold_fallback) DB tarafında, RPC içinde artırılır.
@@ -107,6 +109,57 @@ def ingest_personal_listing(client: Client, agent_id: str, record: Dict[str, Any
     if status not in PERSONAL_INGEST_STATUSES:
         raise ValueError("ingest_personal_listing beklenmeyen sonuç döndürdü")
     return status
+
+
+def get_parse_cache(client: Client, key: str) -> Optional[Dict[str, Any]]:
+    """parse_cache satırı ya da None. Sorgu hatası YUKARI FIRLATILIR (çağıran cache_error loglar)."""
+    result = (
+        client.table(PARSE_CACHE_TABLE)
+        .select("key,is_listing,parsed,version,created_at,expires_at")
+        .eq("key", key)
+        .limit(1)
+        .execute()
+    )
+    return result.data[0] if result.data else None
+
+
+def put_parse_cache(
+    client: Client,
+    key: str,
+    is_listing: bool,
+    parsed: Optional[Dict[str, Any]],
+    version: str,
+    expires_at: str,
+) -> bool:
+    """parse_cache'e upsert eder. Best-effort: hata yutulur, başarı bayrağı False döner."""
+    row = {
+        "key": key,
+        "is_listing": is_listing,
+        "parsed": parsed,
+        "version": version,
+        "expires_at": expires_at,
+    }
+    try:
+        client.table(PARSE_CACHE_TABLE).upsert(row, on_conflict="key").execute()
+    except Exception:  # noqa: BLE001 - önbellek yazımı hızlandırıcıdır; çağıran cache_error loglar
+        return False
+    return True
+
+
+def delete_parse_cache(client: Client, key: str) -> bool:
+    """Tek bir parse_cache satırını siler. Best-effort; başarı bayrağı döner."""
+    try:
+        client.table(PARSE_CACHE_TABLE).delete().eq("key", key).execute()
+    except Exception:  # noqa: BLE001 - çağıran cache_error loglar
+        return False
+    return True
+
+
+def purge_expired_parse_cache(client: Client) -> int:
+    """Süresi dolmuş parse_cache satırlarını siler. Dönüş: silinen satır sayısı. Hata yukarı fırlatılır."""
+    now = datetime.now(timezone.utc).isoformat()
+    result = client.table(PARSE_CACHE_TABLE).delete().lte("expires_at", now).execute()
+    return len(result.data or [])
 
 
 def bump_sidecar_counter(client: Client, key: str) -> bool:

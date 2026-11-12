@@ -1,0 +1,27 @@
+VERDICT: block
+
+1. [high/correctness] scraper/parser.py::_parse_optimized
+   ISSUE: Regex/Gemini çelişkisinde ikinci çağrı aynı prompt ile yapılıyor. Prompt, tartışmalı regex değerlerini hâlâ kesin ve değiştirilmemesi gereken bilgiler olarak sunuyor. Regex hatalıysa modelin doğru değeri ikinci kez döndürmesi sonucun tamamen düşürülmesine yol açıyor.
+   BETTER: Ek tam ayrıştırma çağrısını bilinen alan yönlendirmesi olmadan yap ve doğrulanmış tam sonucun çelişkiyi çözebilmesini sağla.
+   REASON: AC-8 ve Davranış Sözleşmesi satır 13 tam ayrıştırmayla çözüm istiyor. Mevcut test yalnız ikinci yanıtın regex değerine uyduğu durumu başarılı çözüm sayıyor.
+
+2. [medium/correctness] scraper/regex_extract.py::extract_fields
+   ISSUE: İlan numarası temizliği uygulanmamış ve oda deseni birleşik ifadelerin başını kesin sonuç kabul ediyor. Salt okunur çalıştırmada 'Ilan no: 123456 TL, satilik daire' fiyat 123456, 'Satilik 3+1+1 daire' oda '3+1' üretti.
+   BETTER: İlan numarası bağlamlarını dışla ve oda eşleşmesinin ardından ek birleşik oda ifadesi bulunmadığını doğrula. Belirsiz ifadeleri modele bırak.
+   REASON: AC-6 yalnız açık ve tek anlamlı değerlerin çıkarılmasını, ilan numarasının fiyat olarak yorumlanmamasını gerektiriyor. Hatalı değerler güvenilir bilgi olarak modele aktarılıyor ve önbelleğe taşınabiliyor.
+
+3. [medium/reliability] scraper/parse_schema.py::_is_finite_number
+   ISSUE: math.isfinite çok büyük Python int değerlerinde OverflowError fırlatıyor. price=10**400 ile doğrudan doğrulama bu hatayı üretti. Model veya DB kaydından bu değer geldiğinde şema denetimi beklenen hata sonucunu döndüremiyor.
+   BETTER: Tam sayıları float dönüşümüne zorlamadan doğrula veya taşmayı kontrollü şema reddine çevir. Model ve önbellek yollarında ilgili hata sayaçlarını koru.
+   REASON: AC-10/12 ve Davranış Sözleşmesi satır 8/17, geçersiz girdilerin kontrollü reddini gerektiriyor. DB doğrulamasındaki taşma normal ayrıştırmaya dönüşü de kesiyor.
+
+4. [high/test-gap] obss_project/artifacts/gemini-parse-maliyet/verify_report.md
+   ISSUE: AC-20 için Gemini çağrısında en az %40 azalma, ek gecikme p95 ≤100 ms, sonuç kalitesi ve en az %90 branch coverage ölçümleri raporlanmamış. Backend olduğu gerekçesiyle E2E kapısı N/A sayılmış, ancak ATDD webhook üzerinden E2E senaryoları istiyor.
+   BETTER: Bayrak açık/kapalı temsili benchmark sonuçlarını, tekrar oranını, kalite karşılaştırmasını ve branch coverage çıktısını ekle. İstenen webhook senaryolarını doğrula.
+   REASON: Unit ve DB entegrasyon başarısı performans hedeflerini ve normal giriş noktasındaki davranışları kanıtlamıyor.
+
+5. [medium/performance] scraper/supabase_client.py::get_client
+   ISSUE: Her kalıcı önbellek işleminde yeni Supabase istemcisi oluşturuluyor. Cache miss yolunda okuma ve yazma için ayrı istemciler ve senkron ağ işlemleri var. Plandaki kısa önbellek timeout'u uygulanmamış.
+   BETTER: Önbellek erişiminde bağlantı yeniden kullanımını ve kısa timeout'u uygula, hata ve soğuk önbellek yollarını gecikme ölçümüne dahil et.
+   REASON: Ek ağ işlemleri worker kapasitesini tüketiyor. Mevcut uygulamada p95 ≤100 ms hedefinin sağlandığını gösteren ölçüm bulunmuyor.
+
