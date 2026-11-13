@@ -15,6 +15,7 @@ import pytest
 
 import orchestrator
 import supabase_client
+from parser import ParseOutcome
 
 AGENT_A = "11111111-2222-4333-8444-555555555555"
 GROUP_JID = "120363000000000001@g.us"
@@ -31,6 +32,11 @@ def _payload(**overrides):
     }
     base.update(overrides)
     return base
+
+
+def _as_outcome(parsed):
+    """Eski parse dönüşü (dict / None) -> parse_listing_outcome sonucu."""
+    return ParseOutcome("not_listing") if parsed is None else ParseOutcome("listing", parsed)
 
 
 def _bump_calls(client):
@@ -88,7 +94,7 @@ _DEFAULT_PARSED = object()
 def _run(payload, *, parsed=_DEFAULT_PARSED, parse_side_effect=None, ingest_return="approved", ingest_side_effect=None):
     client = MagicMock(name="client")
     parse_value = {"ilce": "Kadıköy"} if parsed is _DEFAULT_PARSED else parsed  # None = parse "ilan değil"
-    parse = AsyncMock(return_value=parse_value)
+    parse = AsyncMock(return_value=_as_outcome(parse_value))
     if parse_side_effect is not None:
         parse.side_effect = parse_side_effect
     ingest = MagicMock(name="ingest_personal_listing")
@@ -99,7 +105,7 @@ def _run(payload, *, parsed=_DEFAULT_PARSED, parse_side_effect=None, ingest_retu
     patches = [
         patch("orchestrator.get_client", return_value=client),
         patch("orchestrator.get_default_manager", return_value=MagicMock()),
-        patch("orchestrator.parse_listing_message", new=parse),
+        patch("orchestrator.parse_listing_outcome", new=parse),
         patch("orchestrator.compute_fingerprint", return_value="fp-counter"),
         patch("orchestrator.score_listing", return_value=(0.9, [])),
         patch("orchestrator.ingest_personal_listing", new=ingest),
@@ -153,10 +159,10 @@ def test_counter_rpc_failure_does_not_change_outcome():
         client_holder["client"] = client
         return client
 
-    parse = AsyncMock(return_value=None)
+    parse = AsyncMock(return_value=_as_outcome(None))
     with patch("orchestrator.get_client", side_effect=_get_client), \
             patch("orchestrator.get_default_manager", return_value=MagicMock()), \
-            patch("orchestrator.parse_listing_message", new=parse):
+            patch("orchestrator.parse_listing_outcome", new=parse):
         outcome = orchestrator.handle_message(_payload())
     assert outcome == "personal_not_listing", "sayaç yazımı başarısızken sonuç değişmemeli"
     # RPC denendi (mock çağrıyı kaydeder), hata yutuldu.
@@ -213,8 +219,8 @@ def test_is_group_selected_propagates_query_error():
 def _run_selection(payload, *, selected=True, selection_side_effect=None, parse_return=None):
     """Seçim kontrolü + parse mock'u; handle_message sonucu, client ve parse mock'u döner."""
     client = MagicMock(name="client")
-    parse = AsyncMock(return_value=parse_return)
-    selection = MagicMock(name="is_group_selected", return_value=selected)
+    parse = AsyncMock(return_value=_as_outcome(parse_return))
+    selection =MagicMock(name="is_group_selected", return_value=selected)
     if selection_side_effect is not None:
         selection.side_effect = selection_side_effect
     ingest = MagicMock(name="ingest_personal_listing", return_value="approved")
@@ -222,7 +228,7 @@ def _run_selection(payload, *, selected=True, selection_side_effect=None, parse_
         patch("orchestrator.get_client", return_value=client),
         patch("orchestrator.get_default_manager", return_value=MagicMock()),
         patch("orchestrator.is_group_selected", new=selection),
-        patch("orchestrator.parse_listing_message", new=parse),
+        patch("orchestrator.parse_listing_outcome", new=parse),
         patch("orchestrator.compute_fingerprint", return_value="fp-sel"),
         patch("orchestrator.score_listing", return_value=(0.9, [])),
         patch("orchestrator.ingest_personal_listing", new=ingest),

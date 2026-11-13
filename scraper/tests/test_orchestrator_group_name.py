@@ -8,7 +8,7 @@ ZORUNLU mock-patch kuralı (test_orchestrator_dedup.py ile aynı): orchestrator.
 `from supabase_client import insert_raw_listing` ile import ediyor -> patch hedefi
 `orchestrator.insert_raw_listing` olmalı, `supabase_client.insert_raw_listing` DEĞİL.
 
-Not: parse_listing_message gerçekte async bir fonksiyon (handle_message bunu
+Not: parse_listing_outcome gerçekte async bir fonksiyon (handle_message bunu
 asyncio.run ile çalıştırıyor). Bu yüzden patch'te düz return_value yerine AsyncMock
 kullanılır; aksi halde asyncio.run bir dict üzerinde patlar ve insert hiç çağrılmaz.
 
@@ -19,6 +19,7 @@ record["source_group_name"] alanını yazmıyor.
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import orchestrator
+from parser import ParseOutcome
 
 GROUP_JID = "123@g.us"
 GROUP_NAME = "Kadıköy Emlak Grubu"
@@ -30,8 +31,8 @@ def _run_handle_message(payload):
         patch("orchestrator.get_client", return_value=MagicMock()),
         patch("orchestrator.get_default_manager", return_value=MagicMock()),
         patch(
-            "orchestrator.parse_listing_message",
-            new=AsyncMock(return_value={"ilce": "Kadıköy", "fiyat": 1000000}),
+            "orchestrator.parse_listing_outcome",
+            new=AsyncMock(return_value=ParseOutcome("listing", {"ilce": "Kadıköy", "fiyat": 1000000})),
         ),
         patch("orchestrator.compute_fingerprint", return_value="fp-group-test"),
         patch("orchestrator.fingerprint_exists", return_value=False),
