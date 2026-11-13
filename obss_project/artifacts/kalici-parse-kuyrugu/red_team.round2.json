@@ -1,0 +1,75 @@
+{
+  "task": "kalici-parse-kuyrugu",
+  "reviewed_at": "2026-11-13T13:42:10Z",
+  "summary": "Önceki bulguların kararları: 1 kapandı, 2 kapandı, 3 kapandı (AC-12'nin yeniden başlatmayla kurtarma sınırıyla), 4 kapandı (aynı dinleme adresi/port varsayımıyla), 5 kapandı, 6 açık (WAL temizliği gecikmeli ve sonucu denetlenmiyor), 7 açık (fiziksel yol çözülmüyor), 8 kapandı (önceki temel test boşlukları giderilmiş). Kalıcı kuyruk ve kapasite düzeltmeleri yerinde; kişisel parse yolunda beklenmeyen hatanın hâlâ nihai sonuç sayılması ve gizlilik garantilerindeki açıklıklar nedeniyle onay verilemiyor.",
+  "findings": [
+    {
+      "severity": "high",
+      "category": "reliability",
+      "file": "scraper/orchestrator.py:handle_message",
+      "issue": "Kişisel parse çağrısındaki genel except Exception, GeminiUnavailable dışındaki bütün hataları personal_parse_error sonucuna çeviriyor. Örneğin parse_listing_message içindeki key_manager.load_keys veya genai.Client kurulumu hata verirse process_entry normal dönüş görerek complete çağırıyor ve henüz işlenmemiş mesajı siliyor. Ortak yol aynı hatayı RetryableError olarak koruyor.",
+      "better_approach": "Yalnız doğrulanmış kalıcı parse sonuçlarını nihai kabul et; beklenmeyen exception'ları RetryableError olarak ilet. Gerçek kişisel handle_message üzerinden anahtar yükleme ve istemci kurulumu hatalarını sınayan testler ekle.",
+      "reason": "Kalıcı JSON/şema/sağlayıcı hataları parser tarafından zaten None olarak temsil ediliyor. Genel exception'ı nihai parse hatası saymak altyapı arızasında sessiz kayıp mekanizmasını kişisel yolda sürdürüyor.",
+      "source": "codex"
+    },
+    {
+      "severity": "medium",
+      "category": "security",
+      "file": "scraper/durable_queue.py:_assert_allowed_location",
+      "issue": "Yol kontrolü abspath ve normcase sonrasında yalnız metinsel önek karşılaştırıyor. Repo veya OneDrive'a yönlenen mevcut bir junction/sembolik bağ üzerinden verilen dış yol kabul ediliyor. Aynı konuma işaret eden UNC, sürücü eşlemesi veya genişletilmiş Windows yol gösterimleri de metinsel kökle eşleşmeyebilir.",
+      "better_approach": "Hedefi ve yasak kökleri fiziksel olarak çözümleyip karşılaştır; henüz oluşmamış hedefte mevcut üst dizini çözümle. Windows junction, sembolik bağ ve alternatif yol gösterimleri için test ekle.",
+      "reason": "normcase harf büyüklüğünü, ayraç sınırı da benzer isimli kardeş dizinleri doğru ele alıyor; ancak fiziksel konumu doğrulamıyor. AC-S7'nin metinsel normalizasyonu uygulanmış olsa da AC-S1'in repo ve OneDrive dışında saklama garantisi sağlanmıyor.",
+      "source": "codex"
+    },
+    {
+      "severity": "medium",
+      "category": "security",
+      "file": "scraper/durable_queue.py:complete, checkpoint; scraper/orchestrator.py:_parse_cache_purge_loop",
+      "issue": "secure_delete ana dosyadaki silinmiş hücreleri temizlese de önceki payload sürümleri WAL içinde checkpoint'e kadar kalabiliyor. Checkpoint yalnız başlangıçta ve saatlik çalışıyor; ayrıca wal_checkpoint(TRUNCATE) sonucundaki busy göstergesi incelenmediği için başka bağlantının engellediği temizleme başarılıymış gibi dönüyor. Test yalnız engelsiz, açıkça checkpoint çağrılan durumu doğruluyor.",
+      "better_approach": "Fiziksel kalıntı için izin verilen süreyi sözleşmede açıkça belirle; checkpoint sonucunu denetleyip başarısız temizliği yeniden dene ve içeriksiz görünür kıl. Complete sonrası checkpoint öncesini ve başka bağlantının checkpoint'i engellediği durumu test et.",
+      "reason": "AC-S6'nın PRAGMA ve saatlik çağrı şartları uygulanmış; ancak bunlar AC-S3'teki başarılı sonuçtan sonra ham metnin yerelde kalmaması iddiasını tek başına sağlamıyor. Önceki bulgu 6 tamamen kapanmış sayılmaz.",
+      "source": "codex"
+    }
+  ],
+  "strengths": [
+    "claim_due seçim ve durum değişimini tek bağlantı kilidi altında BEGIN IMMEDIATE transaction içinde yapıyor; normal eşzamanlı claim aynı kaydı iki çalışana vermiyor.",
+    "Kapasite claim öncesinde kilit altında rezerve ediliyor. Normal submit ve tamamlanma yollarında sayaç sızıntısı veya çift azaltma görünmüyor; WeakKeyDictionary etkin görev sürerken yerel güçlü kuyruk referansını kaybetmiyor.",
+    "Submit hatasında yalnız gönderilmeyen kayıtlar release ediliyor; normal akışta aynı kayıt için release ile complete yarışmıyor.",
+    "Ortak veritabanı hataları ve kişisel seçim/yazma hataları artık yeniden denemeye aktarılıyor; seçim hatasında Gemini çağrılmıyor.",
+    "run sırası bind, recover, worker başlatma ve serve_forever şeklinde; aynı portu alamayan ikinci süreç canlı claim'leri geri açmıyor.",
+    "Webhook kalıcı enqueue sonrasında 200, yazma hatasında içeriksiz 503 döndürüyor; backoff, failed durumu ve başlangıç kurtarması uygulanmış."
+  ],
+  "risks": [
+    "469 testin üç koşuda geçtiği kullanıcı tarafından bildirildi; bu salt okunur incelemede testler yeniden çalıştırılmadı.",
+    "Complete sonrasında aynı mesaj id'si yeniden kabul edilir. Fingerprint dedup yalnız aynı fingerprint'e ulaşan kayıtları karşılar; kesin tekrar koruması source_message_id benzersizliğinin ve kişisel RPC dedup kurallarının canlı veritabanında uygulanmasına bağlıdır. İlan olmayan mesajlar yeniden parse edilebilir.",
+    "Kuyruk anahtarı yalnız mesaj id'sidir. Aynı WhatsApp mesajı farklı agentId bağlamlarında teslim edilebiliyorsa bir kişisel teslimat diğerini bastırabilir; bu durumda AC-2'nin anahtar kapsamı da değiştirilmelidir.",
+    "RetryableError kalıcı veritabanı şema/kısıt hatalarını da beş kez dener. AC-10 kapsamında kabul edilebilir ve sınırlıdır; ancak kayıt sonunda failed olur, yedi günlük saklama sonrasında silinir. Operasyonel takip ve düzeltmeden sonra yeniden oynatma gerekir.",
+    "Complete, retry_later veya release başarısızlığında kayıt processing kalabilir; kapasite geri verilir fakat kayıt yeniden başlatmaya kadar ilerlemez. Complete/retry için bu AC-12'de açıkça kabul edilen sınırdır.",
+    "Bind koruması farklı port/adreslerle aynı SQLite dosyasını kullanan iki süreci engellemez; ikinci recover_processing canlı işleri tekrar pending yapabilir. Kullanım aynı kuyruk için tek süreçle sınırlandırılmalıdır.",
+    "process_entry kuyruğu submit anında taşımak yerine global inbox üzerinden alıyor. Çalışan görevler varken inbox değiştirilirse yanlış kuyrukta durum değişimi ve kapasite hesabı oluşabilir; normal run akışında inbox değişmiyor.",
+    "run dışında inbox None ise geçerli metinli webhook 503 queue_unavailable döndürür. dispatch_due hata verir; arka plan döngüsü bunu yakalayıp saniyelik uyarıyla bekler. Alternatif giriş noktası kuyruğu kurmalıdır.",
+    "claim_due için status/next_attempt_at indeksi bulunmuyor; büyük backlog sorgu ve sıralama maliyetini artırabilir. Saatlik temizlik de failed saklama sınırını yaklaşık bir saat aşabilir."
+  ],
+  "caveman_review": {
+    "complexity": "low",
+    "unnecessary_files": 0,
+    "unnecessary_helpers": 0,
+    "unnecessary_abstractions": 0
+  },
+  "scope_review": {
+    "matches_atdd": true,
+    "scope_expansion": false
+  },
+  "ready_to_commit": {
+    "atdd_satisfied": false,
+    "tests_passed": true,
+    "no_critical_findings": true,
+    "scope_respected": true,
+    "caveman_satisfied": true,
+    "security_acceptable": false,
+    "maintainability_acceptable": true,
+    "no_blocking_risks": false
+  },
+  "verdict": "block",
+  "round": 2
+}

@@ -9,6 +9,7 @@ Kapsam (ek testler; test_personal_ingest.py'deki mevcut assert'ler değiştirilm
 """
 
 import logging
+from contextlib import ExitStack
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -115,11 +116,26 @@ def _run(payload, *, parsed=_DEFAULT_PARSED, parse_side_effect=None, ingest_retu
     return outcome, client, ingest
 
 
-def test_parse_error_is_counted_via_rpc_and_returns_key():
-    with patch.object(orchestrator.logger, "exception"):
-        outcome, client, _ = _run(_payload(), parse_side_effect=RuntimeError("gemini down"))
-    assert outcome == "personal_parse_error"
+def test_parse_error_is_counted_via_rpc_and_raises_retryable(caplog):
+    """AC-14: GeminiUnavailable dışındaki parse hatası sayılır (personal_parse_error) ve RetryableError yükselir;
+    loglarda exception metni ve traceback yok."""
+    caplog.set_level(logging.DEBUG)
+    client = MagicMock(name="client")
+    parse = AsyncMock(side_effect=RuntimeError("gemini down"))
+    with ExitStack() as stack:
+        stack.enter_context(patch("orchestrator.get_client", return_value=client))
+        stack.enter_context(patch("orchestrator.get_default_manager", return_value=MagicMock()))
+        stack.enter_context(patch("orchestrator.parse_listing_message", new=parse))
+        stack.enter_context(patch("orchestrator.compute_fingerprint", return_value="fp-counter"))
+        stack.enter_context(patch("orchestrator.score_listing", return_value=(0.9, [])))
+        stack.enter_context(patch("orchestrator.ingest_personal_listing", return_value="approved"))
+        stack.enter_context(patch("orchestrator.insert_raw_listing", new=MagicMock(return_value=({"id": "r"}, True))))
+        with pytest.raises(orchestrator.RetryableError):
+            orchestrator.handle_message(_payload())
     assert _bump_calls(client) == ["personal_parse_error"]
+    assert "gemini down" not in caplog.text, "exception metni loglanmamalı"
+    assert "Traceback" not in caplog.text, "traceback loglanmamalı"
+    assert RAW_TEXT not in caplog.text, "mesaj metni loglanmamalı"
 
 
 def test_not_listing_is_counted_via_rpc():
@@ -129,10 +145,21 @@ def test_not_listing_is_counted_via_rpc():
     assert _bump_calls(client) == ["personal_not_listing"]
 
 
-def test_write_error_is_counted_via_rpc_when_ingest_raises():
-    with patch.object(orchestrator.logger, "exception"):
-        outcome, client, _ = _run(_payload(), ingest_side_effect=ConnectionError("net"))
-    assert outcome == "personal_write_error"
+def test_write_error_is_counted_via_rpc_and_raises_retryable():
+    """AC-10: yazma hatası sayılır (personal_write_error) ama kayıt silinmez: RetryableError yükselir."""
+    client = MagicMock(name="client")
+    ingest = MagicMock(name="ingest_personal_listing", side_effect=ConnectionError("net"))
+    with ExitStack() as stack:
+        stack.enter_context(patch("orchestrator.get_client", return_value=client))
+        stack.enter_context(patch("orchestrator.get_default_manager", return_value=MagicMock()))
+        stack.enter_context(patch("orchestrator.parse_listing_message",
+                                  new=AsyncMock(return_value={"ilce": "Kadıköy"})))
+        stack.enter_context(patch("orchestrator.compute_fingerprint", return_value="fp-counter"))
+        stack.enter_context(patch("orchestrator.score_listing", return_value=(0.9, [])))
+        stack.enter_context(patch("orchestrator.ingest_personal_listing", new=ingest))
+        stack.enter_context(patch("orchestrator.insert_raw_listing", new=MagicMock(return_value=({"id": "r"}, True))))
+        with pytest.raises(orchestrator.RetryableError):
+            orchestrator.handle_message(_payload())
     assert _bump_calls(client) == ["personal_write_error"]
 
 
@@ -247,19 +274,31 @@ def test_unselected_group_never_calls_parse_and_counts_once():
     assert _bump_calls(client) == ["personal_unselected"], "tek sayım: yalnız orchestrator bump'ı"
 
 
-def test_selection_query_error_never_calls_parse_and_counts_error_without_text(caplog):
+def test_selection_query_error_raises_retryable_without_parse_and_counts_error(caplog):
+    """AC-10 / AC-S5: seçim sorgusu hatası -> parse ÇAĞRILMAZ, sayaç artar, RetryableError yükselir;
+    log'da traceback ve exception metni (içerik) yok."""
     caplog.set_level(logging.DEBUG)
-    with patch.object(orchestrator.logger, "exception") as log_exc:
-        outcome, client, parse, ingest, _selection = _run_selection(
-            _payload(), selection_side_effect=RuntimeError(f"secret-db-detail {RAW_TEXT}")
-        )
-    assert outcome == "personal_selection_check_error"
+    client = MagicMock(name="client")
+    parse = AsyncMock(return_value=None)
+    ingest = MagicMock(name="ingest_personal_listing", return_value="approved")
+    selection = MagicMock(name="is_group_selected", side_effect=RuntimeError(f"secret-db-detail {RAW_TEXT}"))
+    with ExitStack() as stack:
+        stack.enter_context(patch("orchestrator.get_client", return_value=client))
+        stack.enter_context(patch("orchestrator.get_default_manager", return_value=MagicMock()))
+        stack.enter_context(patch("orchestrator.is_group_selected", new=selection))
+        stack.enter_context(patch("orchestrator.parse_listing_message", new=parse))
+        stack.enter_context(patch("orchestrator.compute_fingerprint", return_value="fp-sel"))
+        stack.enter_context(patch("orchestrator.score_listing", return_value=(0.9, [])))
+        stack.enter_context(patch("orchestrator.ingest_personal_listing", new=ingest))
+        stack.enter_context(patch("orchestrator.insert_raw_listing", new=MagicMock(return_value=({"id": "r"}, True))))
+        with pytest.raises(orchestrator.RetryableError):
+            orchestrator.handle_message(_payload())
     parse.assert_not_called()
     ingest.assert_not_called()
     assert _bump_calls(client) == ["personal_selection_check_error"]
     assert RAW_TEXT not in caplog.text, "metin loglanmamalı"
-    assert "secret-db-detail" not in caplog.text, "hata metni loglanmamalı"
-    assert log_exc.call_count == 0, "traceback (içerik taşıyabilir) loglanmamalı"
+    assert "secret-db-detail" not in caplog.text, "exception metni loglanmamalı"
+    assert "Traceback" not in caplog.text, "traceback loglanmamalı"
 
 
 def test_selected_group_still_parses_and_ingests():

@@ -25,9 +25,11 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 import orchestrator
+from durable_queue import DurableQueue
 
 SECRET = "test-secret-abcdefghijklmnop-1234567890"
 WRONG_SECRET = "wrong-secret-abcdefghijklmnop-0000000000"
+_EMPTY = {"pending": 0, "processing": 0, "failed": 0}
 
 
 # ---------------------------------------------------------------------------
@@ -59,19 +61,22 @@ class _RunningServer:
         self.server.server_close()
 
 
+@pytest.fixture(autouse=True)
+def inbox(monkeypatch, tmp_path):
+    """Kuyruk: her testte orchestrator.inbox tmp_path altında gerçek DurableQueue olur."""
+    queue = DurableQueue(str(tmp_path / "inbox.sqlite3"))
+    monkeypatch.setattr(orchestrator, "inbox", queue, raising=False)
+    return queue
+
+
 @pytest.fixture
 def running_server(monkeypatch):
     """BAILEYS_WEBHOOK_SECRET set edilmiş, rastgele portta gerçek HTTPServer.
 
-    message_queue ve _active_ids her testte temiz bir duruma sıfırlanır.
+    inbox her testte tmp_path'te temiz bir DurableQueue olarak kurulur (autouse).
     """
     monkeypatch.setenv("BAILEYS_WEBHOOK_SECRET", SECRET)
     monkeypatch.delenv("BAILEYS_WEBHOOK_HOST", raising=False)
-
-    import queue as queue_module
-
-    monkeypatch.setattr(orchestrator, "message_queue", queue_module.Queue())
-    monkeypatch.setattr(orchestrator, "_active_ids", set())
 
     server = HTTPServer(("127.0.0.1", 0), orchestrator.WebhookHandler)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
@@ -91,7 +96,7 @@ def test_ac1_valid_token_and_valid_json_returns_200_and_queues_payload(running_s
         token=SECRET,
     )
     assert status == 200
-    assert orchestrator.message_queue.qsize() == 1
+    assert orchestrator.inbox.counts() == {"pending": 1, "processing": 0, "failed": 0}
 
 
 # ---------------------------------------------------------------------------
@@ -106,7 +111,7 @@ def test_ac_s1_missing_authorization_header_returns_401(running_server):
     assert status == 401
     assert json.loads(body) == {"error": "unauthorized"}
     assert headers.get("WWW-Authenticate") == "Bearer"
-    assert orchestrator.message_queue.qsize() == 0
+    assert orchestrator.inbox.counts() == _EMPTY
 
 
 def test_ac_s1_wrong_token_returns_401(running_server):
@@ -117,7 +122,7 @@ def test_ac_s1_wrong_token_returns_401(running_server):
     assert status == 401
     assert json.loads(body) == {"error": "unauthorized"}
     assert headers.get("WWW-Authenticate") == "Bearer"
-    assert orchestrator.message_queue.qsize() == 0
+    assert orchestrator.inbox.counts() == _EMPTY
 
 
 def test_ac_s1_missing_and_wrong_token_give_identical_status_and_body(running_server):
@@ -242,6 +247,8 @@ def test_ac9_valid_token_with_invalid_json_returns_400(running_server):
 
 def test_ac_s5_run_without_secret_env_exits_before_starting_server(monkeypatch):
     monkeypatch.delenv("BAILEYS_WEBHOOK_SECRET", raising=False)
+    monkeypatch.setattr(orchestrator, "_background_worker_loop", lambda *a, **k: None)
+    monkeypatch.setattr(orchestrator, "_parse_cache_purge_loop", lambda *a, **k: None)
     with patch("orchestrator.HTTPServer") as mocked_http_server:
         with pytest.raises(SystemExit) as exc_info:
             orchestrator.run()
@@ -251,6 +258,8 @@ def test_ac_s5_run_without_secret_env_exits_before_starting_server(monkeypatch):
 
 def test_ac_s5_run_with_empty_secret_env_exits_before_starting_server(monkeypatch):
     monkeypatch.setenv("BAILEYS_WEBHOOK_SECRET", "")
+    monkeypatch.setattr(orchestrator, "_background_worker_loop", lambda *a, **k: None)
+    monkeypatch.setattr(orchestrator, "_parse_cache_purge_loop", lambda *a, **k: None)
     with patch("orchestrator.HTTPServer") as mocked_http_server:
         with pytest.raises(SystemExit) as exc_info:
             orchestrator.run()
@@ -266,6 +275,8 @@ def test_ac7_default_bind_host_is_127_0_0_1(monkeypatch):
     monkeypatch.setenv("BAILEYS_WEBHOOK_SECRET", SECRET)
     monkeypatch.delenv("BAILEYS_WEBHOOK_HOST", raising=False)
     monkeypatch.setenv("BAILEYS_WEBHOOK_PORT", "0")
+    monkeypatch.setattr(orchestrator, "_background_worker_loop", lambda *a, **k: None)
+    monkeypatch.setattr(orchestrator, "_parse_cache_purge_loop", lambda *a, **k: None)
 
     fake_server_instance = MagicMock()
     fake_server_instance.serve_forever.side_effect = KeyboardInterrupt()
@@ -281,6 +292,8 @@ def test_ac7_custom_bind_host_is_used_when_env_set(monkeypatch):
     monkeypatch.setenv("BAILEYS_WEBHOOK_SECRET", SECRET)
     monkeypatch.setenv("BAILEYS_WEBHOOK_HOST", "0.0.0.0")
     monkeypatch.setenv("BAILEYS_WEBHOOK_PORT", "0")
+    monkeypatch.setattr(orchestrator, "_background_worker_loop", lambda *a, **k: None)
+    monkeypatch.setattr(orchestrator, "_parse_cache_purge_loop", lambda *a, **k: None)
 
     fake_server_instance = MagicMock()
     fake_server_instance.serve_forever.side_effect = KeyboardInterrupt()

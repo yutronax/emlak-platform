@@ -43,6 +43,10 @@ DEFAULT_READ_TIMEOUT_MS = 600
 TRANSIENT_RETRY_DELAYS_S = (2.0, 6.0)
 _sleep = asyncio.sleep
 
+class GeminiUnavailable(Exception):
+    """Gemini geçici olarak ulaşılamıyor (3 deneme tükendi ya da tüm anahtarlar 429). Sonuç yoktur."""
+
+
 # Süreç başına tek, tembel kurulan önbellek istemcisi (kurulum hatası saklanmaz).
 _CACHE_CLIENT = None
 _CACHE_CLIENT_LOCK = threading.Lock()
@@ -147,11 +151,13 @@ async def _generate(contents: str, key_manager: GeminiKeyManager) -> Optional[st
                     await _sleep(TRANSIENT_RETRY_DELAYS_S[retries - 1])
                     continue
                 logger.error("gemini_error reason=%s", reason)
+                if _is_transient(exc):
+                    raise GeminiUnavailable()
                 return None
             return response.text or ""
 
     logger.error("Tüm Gemini key'leri tükendi (rate limit).")
-    return None
+    raise GeminiUnavailable()
 
 
 async def _parse_legacy(raw_text: str, key_manager: GeminiKeyManager) -> Optional[Dict[str, Any]]:
@@ -403,17 +409,26 @@ async def _parse_optimized(raw_text: str, key_manager: GeminiKeyManager) -> Opti
     return result
 
 
-async def parse_listing_message(raw_text: str, key_manager: GeminiKeyManager) -> Optional[Dict[str, Any]]:
+async def parse_listing_message(
+    raw_text: str, key_manager: GeminiKeyManager, *, raise_unavailable: bool = False
+) -> Optional[Dict[str, Any]]:
     """Ham WhatsApp mesajını yapılandırılmış ilan verisine çevirir.
 
     Dönüş: ilan değilse ya da doğrulanamıyorsa None, aksi halde tam sözleşmeli parsed dict.
     429 (rate limit) alınırsa key rotasyonu yapıp bir kez daha dener.
+    Geçici ulaşılamamada: raise_unavailable=True ise GeminiUnavailable fırlatır (kuyruk yeniden dener),
+    False ise None döner (varsayılan davranış).
     """
     key_manager.load_keys()
-    if not _optimization_enabled():
-        return await _parse_legacy(raw_text, key_manager)
+    try:
+        if not _optimization_enabled():
+            return await _parse_legacy(raw_text, key_manager)
 
-    started = time.monotonic()
-    result = await _parse_optimized(raw_text, key_manager)
-    logger.info("parse_timing ms=%.1f", (time.monotonic() - started) * 1000)
-    return result
+        started = time.monotonic()
+        result = await _parse_optimized(raw_text, key_manager)
+        logger.info("parse_timing ms=%.1f", (time.monotonic() - started) * 1000)
+        return result
+    except GeminiUnavailable:
+        if raise_unavailable:
+            raise
+        return None

@@ -216,16 +216,25 @@ def test_sender_number_is_not_persisted_in_personal_record():
 # Satır 8 + AC-S4 log: yazma hatası yutulur, içeriksiz loglanır, fallback YOK
 # ---------------------------------------------------------------------------
 
-def test_ingest_exception_is_swallowed_logged_without_content_and_counted(caplog):
+def _bump_keys(client):
+    return [
+        call.args[1]["p_key"]
+        for call in client.rpc.call_args_list
+        if call.args and call.args[0] == "bump_sidecar_counter"
+    ]
+
+
+def test_ingest_exception_raises_retryable_counts_write_error_and_logs_no_content(caplog):
+    """AC-10 / AC-S5: yazma hatası -> personal_write_error sayılır, RetryableError yükselir (kayıt silinmez).
+    Log'da traceback, exception metni, mesaj metni ve numara yok."""
     caplog.set_level(logging.DEBUG)
     with _Harness(score=0.9, ingest_side_effect=RuntimeError("db unavailable")) as h:
-        with patch.object(orchestrator.logger, "exception") as log_exc:
-            outcome = h.run(_payload())  # exception fırlatmamalı
+        with pytest.raises(orchestrator.RetryableError):
+            h.run(_payload())
 
-        assert outcome == "personal_write_error", "sayaç personal_write_error olmalı"
-        assert log_exc.call_count == 1, "hata logger.exception ile kayda geçmeli"
-        logged_args = log_exc.call_args.args
-        assert all(RAW_TEXT not in str(a) for a in logged_args), "log argümanlarında metin olmamalı"
+        assert _bump_keys(h.client) == ["personal_write_error"], "sayaç personal_write_error olmalı"
+        assert "Traceback" not in caplog.text, "traceback loglanmamalı"
+        assert "db unavailable" not in caplog.text, "exception metni loglanmamalı"
         assert RAW_TEXT not in caplog.text, "yakalanan log çıktısında metin olmamalı"
         assert "5321234512" not in caplog.text, "yakalanan log çıktısında numara olmamalı"
         assert SENDER_FULL not in caplog.text
@@ -236,18 +245,18 @@ def test_ingest_exception_does_not_fallback_to_common_insert():
     gibi kısmi durum oluşmaz; ortak insert_raw_listing ile FALLBACK YAPILMAZ."""
     rpc_error = APIError({"message": "rpc failed", "code": "XX000", "hint": None, "details": None})
     with _Harness(score=0.9, ingest_side_effect=rpc_error) as h:
-        with patch.object(orchestrator.logger, "exception"):
-            outcome = h.run(_payload())
+        with pytest.raises(orchestrator.RetryableError):
+            h.run(_payload())
 
         assert h.insert.call_count == 0, "RPC hatasında insert_raw_listing fallback çağrısı YAPILMAMALI"
-        assert outcome == "personal_write_error"
+        assert _bump_keys(h.client) == ["personal_write_error"]
 
 
-def test_ingest_connection_error_is_swallowed_not_raised_to_worker():
+def test_ingest_connection_error_raises_retryable_not_swallowed():
     with _Harness(score=0.9, ingest_side_effect=ConnectionError("network unreachable")) as h:
-        with patch.object(orchestrator.logger, "exception"):
-            outcome = h.run(_payload())  # worker thread'i düşürmemeli
-        assert outcome == "personal_write_error"
+        with pytest.raises(orchestrator.RetryableError):
+            h.run(_payload())  # kayıt kuyrukta kalmalı; sessiz yutulmamalı
+        assert _bump_keys(h.client) == ["personal_write_error"]
         assert h.insert.call_count == 0
 
 

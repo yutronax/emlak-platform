@@ -13,25 +13,28 @@ kurulur (BaseHTTPRequestHandler.__init__ atlanır; yalnız do_POST'un kullandı�
 
 import io
 import json
-import queue as queue_module
+import time
 from http.server import HTTPServer
 from unittest.mock import MagicMock, patch
 
 import pytest
 
 import orchestrator
+from durable_queue import DurableQueue
 from orchestrator import WebhookHandler
 
 SECRET = "test-secret-abcdefghijklmnop-1234567890"
 AGENT_A = "11111111-2222-4333-8444-555555555555"
 RAW_TEXT = "LOOPBACK-TEST-ICERIK 3+1 Kadıköy"
+_EMPTY = {"pending": 0, "processing": 0, "failed": 0}
 
 
 @pytest.fixture(autouse=True)
-def _clean_queue(monkeypatch):
+def _clean_queue(monkeypatch, tmp_path):
     monkeypatch.setenv("BAILEYS_WEBHOOK_SECRET", SECRET)
-    monkeypatch.setattr(orchestrator, "message_queue", queue_module.Queue())
-    monkeypatch.setattr(orchestrator, "_active_ids", set())
+    monkeypatch.setattr(
+        orchestrator, "inbox", DurableQueue(str(tmp_path / "inbox.sqlite3")), raising=False
+    )
 
 
 def _make_handler(payload: dict, client_address, token=SECRET):
@@ -78,8 +81,7 @@ def test_personal_payload_from_non_loopback_is_forbidden_and_not_processed(remot
 
     assert _response_status(handler) == 403
     assert json.loads(_response_body(handler)) == {"error": "forbidden"}
-    assert orchestrator.message_queue.qsize() == 0, "loopback dışı kişisel istek kuyruğa alınmamalı"
-    assert orchestrator._active_ids == set(), "dedup kümesine dokunulmamalı"
+    assert orchestrator.inbox.counts() == _EMPTY, "loopback dışı kişisel istek kuyruğa alınmamalı"
     handle.assert_not_called()
 
     logged = " ".join(str(c) for c in warn.call_args_list)
@@ -92,7 +94,7 @@ def test_forbidden_request_does_not_reach_worker_loop(monkeypatch):
     handler = _make_handler(_personal_payload(), ("10.0.0.5", 51234))
     with patch("orchestrator.handle_message") as handle:
         handler.do_POST()
-    assert orchestrator.message_queue.empty()
+    assert orchestrator.inbox.counts() == _EMPTY
     handle.assert_not_called()
 
 
@@ -107,8 +109,9 @@ def test_personal_payload_from_loopback_is_accepted_and_queued(loopback):
     handler.do_POST()
 
     assert _response_status(handler) == 200
-    assert orchestrator.message_queue.qsize() == 1
-    assert orchestrator.message_queue.get_nowait() == payload
+    assert orchestrator.inbox.counts()["pending"] == 1
+    claimed = orchestrator.inbox.claim_due(10, time.time() + 10**6)
+    assert [p for _, p in claimed] == [payload]
 
 
 # ---------------------------------------------------------------------------
@@ -122,7 +125,7 @@ def test_common_path_without_agent_id_is_unchanged_for_any_client(remote):
     handler.do_POST()
 
     assert _response_status(handler) == 200
-    assert orchestrator.message_queue.qsize() == 1
+    assert orchestrator.inbox.counts()["pending"] == 1
 
 
 # ---------------------------------------------------------------------------
@@ -154,4 +157,4 @@ def test_real_loopback_socket_with_agent_id_returns_200(monkeypatch):
         server.server_close()
 
     assert resp.status == 200
-    assert orchestrator.message_queue.qsize() == 1
+    assert orchestrator.inbox.counts()["pending"] == 1

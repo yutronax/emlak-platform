@@ -1084,7 +1084,9 @@ def test_unselected_group_with_warm_negative_cache_returns_personal_unselected(m
     assert genai.Client.call_count == 1
 
 
-def test_selection_query_error_with_warm_cache_never_reaches_parser(monkeypatch, flag_on, genai, db, caplog):
+def test_selection_query_error_with_warm_cache_raises_retryable_without_parser(monkeypatch, flag_on, genai, db, caplog):
+    """AC-10 / AC-S4: sıcak önbellek olsa bile seçim sorgusu hatasında Gemini/önbellek yolu çalışmaz;
+    RetryableError yükselir, sayaç artar, log'da exception metni ve mesaj metni yok."""
     caplog.set_level(logging.DEBUG)
     manager = _manager(monkeypatch)
     genai.Client.return_value = _client_returning(D_JSON)
@@ -1093,15 +1095,20 @@ def test_selection_query_error_with_warm_cache_never_reaches_parser(monkeypatch,
     assert genai.Client.call_count == 1
 
     rpc_before = len(db.rpc.call_args_list)
-    outcome, _sel, ingest = _handle(
-        payload, db, manager, selection_error=RuntimeError("secret-db-detail")
-    )
+    ingest = MagicMock(name="ingest_personal_listing", return_value="approved")
+    selection = MagicMock(name="is_group_selected", side_effect=RuntimeError("secret-db-detail"))
+    with patch("orchestrator.get_client", return_value=db), \
+            patch("orchestrator.get_default_manager", return_value=manager), \
+            patch("orchestrator.is_group_selected", new=selection), \
+            patch("orchestrator.ingest_personal_listing", new=ingest):
+        with pytest.raises(orchestrator.RetryableError):
+            orchestrator.handle_message(payload)
 
-    assert outcome == "personal_selection_check_error"
     assert genai.Client.call_count == 1
     assert ingest.call_count == 0
     assert _rpc_keys(db, rpc_before) == ["personal_selection_check_error"]
     assert "secret-db-detail" not in caplog.text
+    assert "Traceback" not in caplog.text
     assert payload["text"] not in caplog.text
 
 

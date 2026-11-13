@@ -14,15 +14,16 @@ payload'ını da kuyruğa koyuyor (Davranış Sözleşmesi #2: kuyruğa EKLENMEZ
 
 import http.client
 import json
-import queue as queue_module
 import threading
 from http.server import HTTPServer
 
 import pytest
 
 import orchestrator
+from durable_queue import DurableQueue
 
 SECRET = "test-secret-encoding-abcdefghijklmnop-987654"
+_EMPTY = {"pending": 0, "processing": 0, "failed": 0}
 
 
 class _RunningServer:
@@ -51,12 +52,13 @@ class _RunningServer:
 
 
 @pytest.fixture
-def running_server(monkeypatch):
+def running_server(monkeypatch, tmp_path):
     monkeypatch.setenv("BAILEYS_WEBHOOK_SECRET", SECRET)
     monkeypatch.delenv("BAILEYS_WEBHOOK_HOST", raising=False)
 
-    monkeypatch.setattr(orchestrator, "message_queue", queue_module.Queue())
-    monkeypatch.setattr(orchestrator, "_active_ids", set())
+    monkeypatch.setattr(
+        orchestrator, "inbox", DurableQueue(str(tmp_path / "inbox.sqlite3")), raising=False
+    )
 
     server = HTTPServer(("127.0.0.1", 0), orchestrator.WebhookHandler)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
@@ -101,7 +103,7 @@ def test_ac1_broken_utf8_body_does_not_crash_server_and_next_request_still_works
 def test_ac1_broken_utf8_body_is_not_enqueued(running_server):
     running_server.post_raw(b'\xff\xfe{"text":"x"}', token=SECRET)
 
-    assert orchestrator.message_queue.qsize() == 0
+    assert orchestrator.inbox.counts() == _EMPTY
 
 
 # ---------------------------------------------------------------------------
@@ -124,7 +126,7 @@ def test_ac2_valid_json_without_text_is_not_enqueued(running_server):
         token=SECRET,
     )
 
-    assert orchestrator.message_queue.qsize() == 0
+    assert orchestrator.inbox.counts() == _EMPTY
 
 
 def test_ac2_valid_json_with_empty_text_is_not_enqueued(running_server):
@@ -133,4 +135,4 @@ def test_ac2_valid_json_with_empty_text_is_not_enqueued(running_server):
         token=SECRET,
     )
 
-    assert orchestrator.message_queue.qsize() == 0
+    assert orchestrator.inbox.counts() == _EMPTY
