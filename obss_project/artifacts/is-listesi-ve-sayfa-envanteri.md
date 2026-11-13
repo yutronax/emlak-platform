@@ -1,5 +1,15 @@
 # Emlak Platform — İş Listesi, Sayfa Envanteri ve Olmazsa Olmazlar
 
+> **Son güncelleme: 2026-11-13.** Bölüm 1'deki açık maddeler kodla karşılaştırılarak güncellendi. **Bölüm 2 (sayfa envanteri) 2026-10-17 tarihlidir ve eskidir** — ör. çıkış (`app-header.tsx`) ve şifre sıfırlama (`/sifremi-unuttum`) kodda var. Bir kutuyu açık iş saymadan önce kodda doğrulayın.
+>
+> **2026-11-12/13'te kapananlar:** Gemini ayrıştırma maliyeti (önbellek + ön-eleme + regex, bayrak kapalı; `gemini-parse-maliyet/`), parse önbelleği gecikme düzeltmesi, talep mesajı çelişki kuralı, webhook 401/404 gövde boşaltma (Windows bağlantı sıfırlaması) ve sağlam zamanlama testi, genel iletişim linklerinin destek formuna bağlanması, `actions.test.ts` tip hatası ve sıraya bağımlı test.
+>
+> **Yeni açık işler:**
+> - Gemini kalite ölçümü (AC-20 son açık maddesi): kota açılınca `gemini-parse-maliyet/benchmark/bench.py` gerçek modda, çağrı tavanıyla (~60 çağrı). Bayrak (`GEMINI_PARSE_OPTIMIZATION_ENABLED`) bu ölçüme kadar kapalı.
+> - sahibinden portföy içe aktarma (dosya yöntemi, kurumsal emlak mağazaları): örnek dışa aktarma dosyası bekleniyor. API yöntemi sahibinden ile API Kullanımı sözleşmesi + EİDS entegrasyonu gerektirir (iş süreci).
+> - Scraper'ı gerçek WhatsApp gruplarıyla canlıya almak (canlıda yalnız 1 ilan işlenmiş).
+> - Gemini API kotası tek anahtarla ücretsiz katmanda; benchmark/yük işleri canlı anahtarı tüketmemeli.
+
 > Kaynak: `obss_project/artifacts/proje-dokumantasyonu.md` (2026-10-17, Opus ile çıkarıldı). Her madde o dokümandaki bir bulguya dayanır.
 
 ---
@@ -20,10 +30,10 @@
 |---|---|---|---|
 | 6 | ~~`/agent/dashboard`'a auth guard ekle~~ — **tamamlandı: EML-33** | Oturumsuz erişimde sayfa render oluyor | `web/src/app/agent/dashboard/page.tsx` |
 | 7 | ~~`/agent/dashboard`'a abone ilan akışını (listings) bağla~~ — **tamamlandı: EML-33** | Ana ürün değeri — RLS hazır ama hiçbir sayfa `listings` okumuyor | `web/src/app/agent/dashboard/page.tsx` |
-| 8 | Admin Server Action'larına (`approveListing`/`rejectListing`) uygulama seviyesi admin kontrolü ekle | Şu an tamamen RLS'e bağlı, risk #1 ile birleşince kritik | `web/src/app/admin/listings/actions.ts` |
+| 8 | ~~Admin Server Action'larına (`approveListing`/`rejectListing`) uygulama seviyesi admin kontrolü ekle~~ — **zaten kodda var** (2026-11-13 doğrulandı: `approveListing`/`rejectListing`/üçüncü action `requireAdmin()` çağırıyor) | Şu an tamamen RLS'e bağlı, risk #1 ile birleşince kritik | `web/src/app/admin/listings/actions.ts` |
 | 9 | ~~`account/subscription` sorgusuna status filtresi ekle (`.maybeSingle()` çoklu satırda patlıyor)~~ — **tamamlandı: EML-39** | Birden fazla subscription satırı (failed+active) varsa hata | `web/src/app/account/subscription/page.tsx` |
 | 10 | ~~Checkout timeout sonrası reconciliation (cron/job) ekle~~ — **tamamlandı: EML-48** | Kayıt `pending` kalıyor, kullanıcı tekrar satın alamıyor | yeni: `web/src/lib/payments/` |
-| 11 | Webhook update hatasında `needs_review` durumunu gerçekten DB'ye yaz + admin uyarısı | Şu an sadece response body'de dönüyor, DB'de iz kalmıyor | `web/src/app/api/webhooks/payment/route.ts` |
+| 11 | ~~Webhook update hatasında `needs_review` durumunu gerçekten DB'ye yaz + admin uyarısı~~ — **zaten kodda var** (2026-11-13 doğrulandı: `route.ts` `status: "needs_review"` yazıyor) | Şu an sadece response body'de dönüyor, DB'de iz kalmıyor | `web/src/app/api/webhooks/payment/route.ts` |
 | 12 | ~~Kayıt (signup) + `agents` satırı oluşturma akışı~~ — **tamamlandı: EML-42** | `agents` tablosuna INSERT policy yok, oluşturan kod da yok | yeni: `web/src/app/signup/` |
 | 13 | ~~`login` sonrası role-aware redirect (admin→/admin, emlakçı→/agent/dashboard)~~ — **zaten kodda var** (2026-10-27 `frontend-sayfa-bilgisi/03-giris.md` yazılırken gerçek koddan doğrulandı: `login/actions.ts`, `agents.is_admin` okuyup `isAdmin ? "/admin/listings" : "/agent/dashboard"` redirect ediyor) — bu madde ne zaman kapandı belirsiz, muhtemelen EML-42 kapsamında eklenmiş | Bu madde güncel değildi | `web/src/app/(marketing)/login/actions.ts` |
 
@@ -35,7 +45,7 @@
 | 16 | ~~Checkout route: 400/502/504/23505 senaryoları için test ekle~~ — **tamamlandı: EML-57** | Test yok | `web/src/app/api/subscriptions/checkout/route.test.ts` |
 | 17 | ~~Webhook route testine geçersiz imza (401) ve `PAYMENT_FAILED` senaryosu ekle~~ — **tamamlandı: EML-57** (401 zaten vardı, sadece PAYMENT_FAILED eklendi) | Şu an sadece unit (iyzico.test.ts) seviyesinde | `web/src/app/api/webhooks/payment/route.test.ts` |
 | 18 | ~~Fingerprint'i unique index yap veya insert'i atomik hale getir~~ — **tamamlandı: EML-54** | Paralel worker'lar aynı ilanı iki kez yazabiliyor | `supabase/migrations/`, `scraper/supabase_client.py` |
-| 19 | Sidecar'a grup filtresi ekle (DM'leri iletme) — **işleniyor: EML-51** | Kişisel veri Gemini'ye ve `raw_listings`'e sızabiliyor | `scraper/sidecar/bridge.js` |
+| 19 | ~~Sidecar'a grup filtresi ekle (DM'leri iletme) — **işleniyor: EML-51**~~ — **tamamlandı** (2026-11-13 doğrulandı: `bridge.js` `isGroupJid` ile yalnız `@g.us` iletiyor, DM'ler düşüyor) | Kişisel veri Gemini'ye ve `raw_listings`'e sızabiliyor | `scraper/sidecar/bridge.js` |
 | 20 | ~~`scripts/verify_supabase.py::REQUIRED_TABLES`'a `plans`/`payment_events` ekle~~ — **tamamlandı** | 0003 tabloları kontrol edilmiyor | `scraper/scripts/verify_supabase.py` |
 | 21 | ~~`.env.example`'a iyzico + `WEBHOOK_URL` değişkenlerini ekle~~ — **tamamlandı** | Yanlış yapılandırma riski | `.env.example` |
 | 22 | ~~`docs/ARCHITECTURE.md`'yi gerçek koda göre güncelle (agent/dashboard, ödeme akışı eksik)~~ — **tamamlandı: P2-22** (fast-track; abonelik/ödeme/webhook/cron/admin-layout akışları + sayfa/route/scraper envanteri eklendi) | Kod↔doc çelişkisi | `docs/ARCHITECTURE.md` |
@@ -57,7 +67,7 @@ P3'ten ÖNCE ele alınır — scraper çekirdek gelir akışı, video galerisi s
 | 28 | ~~Faz B: encoding-crash fix + Gemini timeout + işlenemeyen mesaj logu~~ — **tamamlandı (2026-10-24)**, EML-66, 19/19 test yeşil, red-team: approve. Reconnect disiplini zaten mevcuttu (kapsam dışı), Faz C'ye bırakıldı | Tamamlandı | EML-66 |
 | 32 | ~~`orchestrator.py::do_POST`'ta `json.loads` çağrısı etrafına try/except ekle~~ — **tamamlandı: EML-66** | Faz A'da canlı tespit edildi (2026-10-24) | EML-66 |
 | 33 | ~~`parser.py`'deki Gemini `generate_content` çağrısına timeout ekle~~ — **tamamlandı: EML-66** (`HttpOptions(timeout=30000)`) | Faz A'da canlı tespit edildi (2026-10-24) | EML-66 |
-| 34 | `test_verify_supabase.py::test_schema_required_tables_are_the_six_expected` eski 6-tablo setini bekliyor, P2-20'de eklenen `plans`/`payment_events` için güncellenmemiş — test güncellenmeli | Faz B verify'ında tespit edildi (2026-10-24), görevle ilgisiz pre-existing | - |
+| 34 | ~~`test_verify_supabase.py::test_schema_required_tables_are_the_six_expected` eski 6-tablo setini bekliyor, P2-20'de eklenen `plans`/`payment_events` için güncellenmemiş — test güncellenmeli~~ — **tamamlandı** (2026-11-13 doğrulandı: test artık `..._are_the_eight_expected`, `plans`/`payment_events` dahil) | Faz B verify'ında tespit edildi (2026-10-24), görevle ilgisiz pre-existing | - |
 | 29 | ~~Faz C (opsiyonel): decrypt-failed log, risk log, grup adı zenginleştirme~~ — **tamamlandı: EML-77** (retry/getMessage maddesi plan aşamasında kapsamdan çıkarıldı — Baileys bunu `enableRecentMessageCache` ile varsayılan olarak zaten çözüyor; 52/52 node + 13/13 python testi yeşil, red-team: approve-with-changes, 2/3 bulgu düzeltildi) | Tamamlandı | EML-77 |
 
 ### P3 — Faz 5 (henüz başlanmamış, iskelet — Scraper Üretim-Hazırlık bitene kadar beklemede)
