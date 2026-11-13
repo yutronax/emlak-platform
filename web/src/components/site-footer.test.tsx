@@ -1,11 +1,18 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
 import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { SUPPORT_WHATSAPP_DISPLAY, SUPPORT_WHATSAPP_URL } from "@/lib/contact";
+import { SUPPORT_WHATSAPP_DISPLAY } from "@/lib/contact";
+
+// Satır içi "Destek formu" butonu SupportDialog kullanır; sunucu action'ı test ortamında çağrılmaz.
+vi.mock("@/app/(marketing)/support/actions", () => ({
+  sendSupportMessage: vi.fn(),
+}));
 
 import { SiteFooter } from "./site-footer";
+
+const NUMBER_RE = new RegExp(SUPPORT_WHATSAPP_DISPLAY.replace(/\+/g, "\\+"));
 
 describe("SiteFooter", () => {
   afterEach(() => {
@@ -29,12 +36,33 @@ describe("SiteFooter", () => {
     );
   });
 
-  it("iletişim satırında destek WhatsApp numarası ve linki bulunur", () => {
+  it("iletişim satırında 'Destek formu' satır içi butonu bulunur; yüzen değildir", () => {
     render(<SiteFooter />);
 
-    const link = screen.getByRole("link", { name: SUPPORT_WHATSAPP_DISPLAY });
-    expect(link).toHaveAttribute("href", SUPPORT_WHATSAPP_URL);
-    expect(link).toHaveAttribute("target", "_blank");
-    expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    expect(screen.getByText(/İletişim:/)).toBeInTheDocument();
+    const button = screen.getByRole("button", { name: "Destek formu" });
+    expect(button).toHaveAttribute("type", "button");
+    expect(button).not.toHaveClass("fixed");
+  });
+
+  it("destek numarası düz metin olarak görünür ama bir link değildir", () => {
+    render(<SiteFooter />);
+
+    const number = screen.getByText(NUMBER_RE);
+    expect(number.closest("a")).toBeNull();
+  });
+
+  it("hiçbir link WhatsApp'a (wa.me) gitmez", () => {
+    const { container } = render(<SiteFooter />);
+
+    for (const a of Array.from(container.querySelectorAll("a[href]"))) {
+      expect(a.getAttribute("href")?.includes("wa.me")).toBe(false);
+    }
+  });
+
+  it("footer metninde WhatsApp adı geçmez", () => {
+    const { container } = render(<SiteFooter />);
+
+    expect(container.textContent ?? "").not.toMatch(/WhatsApp/);
   });
 });

@@ -8,6 +8,11 @@ import LandingPage from "./page";
 // Async sunucu bileşeni istemci render'ında askıya alınır; kendi testi showcase-preview.test.tsx'te.
 vi.mock("@/components/showcase/showcase-preview", () => ({ ShowcasePreview: () => null }));
 
+// SSS'deki satır içi destek butonu SupportDialog kullanır; sunucu action'ı test ortamında çağrılmaz.
+vi.mock("@/app/(marketing)/support/actions", () => ({
+  sendSupportMessage: vi.fn(),
+}));
+
 const GUVEN_BASLIK = "WhatsApp'ım güvende mi?";
 
 function guvenSection() {
@@ -64,5 +69,31 @@ describe("Landing (/) — WhatsApp güven bölümü (AC-9)", () => {
     expect(text).not.toContain("garanti");
     expect(text).not.toContain("%100");
     expect(text).not.toContain("ban olmaz");
+  });
+});
+
+describe("Landing (/) — SSS destek kanalı", () => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  // "Bir sorun yaşarsam?" cevabı (answer: null) fallback'i kullanır.
+  it("'Bir sorun yaşarsam?' cevabı WhatsApp'a değil destek formuna yönlendirir", () => {
+    render(<LandingPage />);
+
+    const details = screen.getByText("Bir sorun yaşarsam?").closest("details");
+    expect(details).not.toBeNull();
+    (details as HTMLDetailsElement).open = true;
+
+    expect(within(details as HTMLElement).getByText("Destek formundan bize yazın:")).toBeInTheDocument();
+    expect(within(details as HTMLElement).getByRole("button", { name: "Mesaj gönder" })).toBeInTheDocument();
+  });
+
+  it("sayfadaki hiçbir link WhatsApp'a (wa.me) gitmez", () => {
+    const { container } = render(<LandingPage />);
+
+    for (const a of Array.from(container.querySelectorAll("a[href]"))) {
+      expect(a.getAttribute("href")?.includes("wa.me")).toBe(false);
+    }
   });
 });

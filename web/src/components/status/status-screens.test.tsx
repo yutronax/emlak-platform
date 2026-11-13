@@ -5,9 +5,13 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import ErrorPage from "@/app/error";
 import NotFound from "@/app/not-found";
-import { SUPPORT_WHATSAPP_URL } from "@/lib/contact";
 
 import { PageSkeleton } from "./page-skeleton";
+
+// Hata ekranındaki satır içi destek butonu SupportDialog kullanır; sunucu action'ı test ortamında çağrılmaz.
+vi.mock("@/app/(marketing)/support/actions", () => ({
+  sendSupportMessage: vi.fn(),
+}));
 
 afterEach(() => {
   cleanup();
@@ -34,15 +38,18 @@ describe("NotFound (kök 404)", () => {
 });
 
 describe("ErrorPage (segment hata sınırı)", () => {
-  it("Tekrar dene retry'ı çağırır; destek bağlantısı WhatsApp'a gider", () => {
+  it("Tekrar dene retry'ı çağırır; destek aksiyonu 'bize yazın' satır içi butondur, WhatsApp'a gitmez", () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
     const retry = vi.fn();
-    render(<ErrorPage error={new Error("gizli ayrıntı")} retry={retry} />);
+    const { container } = render(<ErrorPage error={new Error("gizli ayrıntı")} retry={retry} />);
 
     fireEvent.click(screen.getByRole("button", { name: "Tekrar dene" }));
     expect(retry).toHaveBeenCalledTimes(1);
-    expect(screen.getByRole("link", { name: /WhatsApp/ })).toHaveAttribute("href", SUPPORT_WHATSAPP_URL);
+    expect(screen.getByRole("button", { name: "bize yazın" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Ana sayfa" })).toHaveAttribute("href", "/");
+    for (const a of Array.from(container.querySelectorAll("a[href]"))) {
+      expect(a.getAttribute("href")?.includes("wa.me")).toBe(false);
+    }
   });
 
   it("hata mesajını göstermez; digest varsa hata kodu olarak gösterir", () => {

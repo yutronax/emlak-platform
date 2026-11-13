@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-import { SUPPORT_WHATSAPP_URL } from "@/lib/contact";
+import { SupportDialog } from "@/components/support-dialog";
 
 import { primaryAction, secondaryAction, StatusScreen } from "./status-screen";
 
@@ -37,18 +37,15 @@ export function ErrorScreen({ error, retry }: { error: unknown; retry: () => voi
       }
     >
       <p>Sayfa yüklenirken beklenmeyen bir sorun oluştu. Tekrar deneyebilir ya da ana sayfaya dönebilirsiniz.</p>
-      <p className="mt-3 text-sm">
+      <div className="mt-3 text-sm">
         Sorun sürerse{" "}
-        <a
-          href={SUPPORT_WHATSAPP_URL}
-          target="_blank"
-          rel="noopener noreferrer"
+        <SupportDialog
+          variant="inline"
+          label="bize yazın"
           className="font-medium text-fog-50 underline underline-offset-4"
-        >
-          WhatsApp&apos;tan bize yazın
-        </a>
+        />
         .
-      </p>
+      </div>
       {digest && <p className="mt-3 font-mono text-xs text-fog-50/50">Hata kodu: {digest}</p>}
     </StatusScreen>
   );

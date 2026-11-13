@@ -4,9 +4,20 @@ import { useRef, useState } from "react";
 
 import { sendSupportMessage } from "@/app/(marketing)/support/actions";
 
-// "Destek" yüzen butonu: WhatsApp'a yönlendirmez, bir mesaj formu açar. Mesaj sunucuya kaydedilir,
+// "Destek" mesaj formu. Varsayılan (floating): sabit konumlu yüzen buton. inline: metin akışında
+// `label` yazılı bir buton (sayfa metninin içine gömmek için). Mesaj sunucuya kaydedilir,
 // admin panelinden okunur. Native <dialog>: odak hapsi, Escape ile kapanma, arka plan etkisizleşmesi.
-export function SupportDialog({ hideOnMobile = false }: { hideOnMobile?: boolean }) {
+export function SupportDialog({
+  hideOnMobile = false,
+  variant = "floating",
+  label = "Destek formu",
+  className,
+}: {
+  hideOnMobile?: boolean;
+  variant?: "floating" | "inline";
+  label?: string;
+  className?: string;
+}) {
   const ref = useRef<HTMLDialogElement>(null);
   const [state, setState] = useState<"idle" | "sending" | "sent">("idle");
   const [error, setError] = useState("");
@@ -35,17 +46,23 @@ export function SupportDialog({ hideOnMobile = false }: { hideOnMobile?: boolean
 
   return (
     <>
-      <button
-        type="button"
-        onClick={open}
-        aria-label="Destek"
-        className={`fixed right-4 bottom-4 z-50 ${hideOnMobile ? "hidden md:flex" : "flex"} h-12 w-12 flex-col items-center justify-center rounded-leaf bg-ink-900 text-white shadow-lg ring-2 ring-cream-50 transition-colors hover:bg-ink-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-600 md:h-auto md:w-auto md:flex-row md:gap-2 md:px-4 md:py-3`}
-      >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
-          <path d="M4 5h16v11H9l-5 4V5Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-        </svg>
-        <span className="hidden font-body text-sm font-medium md:inline">Destek</span>
-      </button>
+      {variant === "inline" ? (
+        <button type="button" onClick={open} className={className}>
+          {label}
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={open}
+          aria-label="Destek"
+          className={`fixed right-4 bottom-4 z-50 ${hideOnMobile ? "hidden md:flex" : "flex"} h-12 w-12 flex-col items-center justify-center rounded-leaf bg-ink-900 text-white shadow-lg ring-2 ring-cream-50 transition-colors hover:bg-ink-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-600 md:h-auto md:w-auto md:flex-row md:gap-2 md:px-4 md:py-3`}
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+            <path d="M4 5h16v11H9l-5 4V5Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+          </svg>
+          <span className="hidden font-body text-sm font-medium md:inline">Destek</span>
+        </button>
+      )}
 
       <dialog
         ref={ref}

@@ -1,6 +1,7 @@
 import Link from "next/link";
 
-import { SUPPORT_WHATSAPP_DISPLAY, SUPPORT_WHATSAPP_URL } from "@/lib/contact";
+import { SupportDialog } from "@/components/support-dialog";
+import { SUPPORT_WHATSAPP_DISPLAY } from "@/lib/contact";
 
 const linkClass = "text-white/80 hover:text-white";
 
@@ -8,17 +9,11 @@ export function SiteFooter() {
   return (
     <footer className="bg-ink-900 text-white">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-6 font-body md:px-6 text-sm">
-        <p>
-          İletişim WhatsApp:{" "}
-          <a
-            href={SUPPORT_WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={linkClass}
-          >
-            {SUPPORT_WHATSAPP_DISPLAY}
-          </a>
-        </p>
+        <div>
+          İletişim:{" "}
+          <SupportDialog variant="inline" label="Destek formu" className={linkClass} /> ·{" "}
+          {SUPPORT_WHATSAPP_DISPLAY}
+        </div>
         <nav className="flex flex-wrap gap-x-6 gap-y-2">
           <Link href="/gizlilik" className={linkClass}>
             Gizlilik Politikası

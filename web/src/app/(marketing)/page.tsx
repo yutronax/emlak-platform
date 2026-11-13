@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Suspense, type ReactNode } from "react";
 
 import { ShowcasePreview } from "@/components/showcase/showcase-preview";
-import { SUPPORT_WHATSAPP_DISPLAY, SUPPORT_WHATSAPP_URL } from "@/lib/contact";
+import { SupportDialog } from "@/components/support-dialog";
 import { srcSet, STOCK } from "@/lib/stock-images";
 
 // Tasarım: Stitch "Warm Editorial Estate" (obss_project/artifacts/stitch/, 2026-11-11), Sıcak Editorial tema.
@@ -306,21 +306,18 @@ export default function LandingPage() {
                     +
                   </span>
                 </summary>
-                <p className="px-5 pb-4 font-body text-sm text-charcoal/75">
+                <div className="px-5 pb-4 font-body text-sm text-charcoal/75">
                   {faq.answer ?? (
                     <>
-                      WhatsApp&apos;tan yazın:{" "}
-                      <a
-                        href={SUPPORT_WHATSAPP_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <span>Destek formundan bize yazın:</span>{" "}
+                      <SupportDialog
+                        variant="inline"
+                        label="Mesaj gönder"
                         className="font-medium text-ink-900 underline underline-offset-4"
-                      >
-                        {SUPPORT_WHATSAPP_DISPLAY}
-                      </a>
+                      />
                     </>
                   )}
-                </p>
+                </div>
               </details>
             ))}
           </div>
