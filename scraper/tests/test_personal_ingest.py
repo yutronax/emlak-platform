@@ -33,6 +33,7 @@ from postgrest.exceptions import APIError
 
 import orchestrator
 import supabase_client
+from parser import ParseOutcome
 
 AGENT_A = "11111111-2222-4333-8444-555555555555"
 SPOOF_OWNER = "66666666-7777-4888-8999-aaaaaaaaaaaa"
@@ -66,7 +67,7 @@ class _Harness:
     def __init__(self, *, parsed=None, score=0.9, ingest_return="approved",
                  ingest_side_effect=None, common_return=({"id": "row-1"}, True)):
         self.client = MagicMock(name="client")
-        self.parse = AsyncMock(return_value=_parsed() if parsed is None else parsed)
+        self.parse = AsyncMock(return_value=ParseOutcome("listing", _parsed() if parsed is None else parsed))
         self.ingest = MagicMock(name="ingest_personal_listing")
         if ingest_side_effect is not None:
             self.ingest.side_effect = ingest_side_effect
@@ -77,7 +78,7 @@ class _Harness:
         self._patches = [
             patch("orchestrator.get_client", return_value=self.client),
             patch("orchestrator.get_default_manager", return_value=MagicMock()),
-            patch("orchestrator.parse_listing_message", new=self.parse),
+            patch("orchestrator.parse_listing_outcome", new=self.parse),
             patch("orchestrator.compute_fingerprint", return_value=FINGERPRINT),
             patch("orchestrator.fingerprint_exists", return_value=False),
             patch("orchestrator.score_listing", return_value=(score, [])),
@@ -161,7 +162,7 @@ def test_without_agent_id_uses_common_path_and_not_personal_ingest():
 
 def test_parse_none_on_personal_message_writes_nothing_and_counts_not_listing():
     with _Harness(parsed=None) as h:
-        h.parse.return_value = None
+        h.parse.return_value = ParseOutcome("not_listing")
         outcome = h.run(_payload())
 
         assert h.ingest.call_count == 0, "parse None iken kişisel RPC çağrılmamalı"

@@ -19,6 +19,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 import orchestrator
+from parser import ParseOutcome
 
 PAYLOAD = {"id": "msg-dedup-1", "text": "örnek ilan metni", "group": "905551234567-1@g.us"}
 
@@ -30,7 +31,10 @@ def _patched_pipeline(*, inserted_result, fingerprint_already_exists=False):
     return (
         patch("orchestrator.get_client", return_value=MagicMock()),
         patch("orchestrator.get_default_manager", return_value=MagicMock()),
-        patch("orchestrator.parse_listing_message", return_value={"ilce": "Kadıköy", "fiyat": 1000000}),
+        patch(
+            "orchestrator.parse_listing_outcome",
+            return_value=ParseOutcome("listing", {"ilce": "Kadıköy", "fiyat": 1000000}),
+        ),
         patch("orchestrator.compute_fingerprint", return_value="fp-dedup-test"),
         patch("orchestrator.fingerprint_exists", return_value=fingerprint_already_exists),
         patch("orchestrator.score_listing", return_value=(0.8, [])),

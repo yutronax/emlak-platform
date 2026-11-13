@@ -18,6 +18,7 @@ const {
   messageText,
   MAX_GROUPS,
 } = require('./groups');
+const { createWebhookDelivery } = require('../webhook-delivery');
 
 const POLL_MS = 3000;
 const HEARTBEAT_MS = 30_000;
@@ -32,7 +33,6 @@ const BACKOFF_MAX_MS = 300_000;
 const DEFAULT_MAX_SESSIONS = 50;
 const GROUP_SYNC_MS = 6 * 60 * 60_000;
 const SELECTION_TTL_MS = 60_000;
-const WEBHOOK_MAX_ATTEMPTS = 3;
 
 // Baileys DisconnectReason değerleri (bağımlılık yüklemeden sabit).
 const LOGGED_OUT = 401;
@@ -92,6 +92,26 @@ class SessionManager {
     this._ticking = false;
     this.counters = { ticks: 0, reconnects: 0, terminated: 0 };
     this.msgCounters = createCounters();
+
+    // Ortak köprüyle aynı teslimat (timeout + backoff'lu sınırlı kuyruk). İçerik loglanmaz;
+    // düşen mesaj yalnız sayaçla (webhook_post_failed) ve sabit nedenle izlenir.
+    const { url, secret, fetchImpl } = webhook || {};
+    this.webhookDelivery = url && secret
+      ? createWebhookDelivery({
+        url,
+        secret,
+        fetchImpl,
+        now,
+        setTimeout: schedule,
+        clearTimeout: unschedule,
+        rnd,
+        logError: (msg) => console.error(`[wa] ${msg}`),
+        onFailed: ({ reason }) => {
+          bump(this.msgCounters, 'webhook_post_failed');
+          logError('webhook iletilemedi, mesaj düştü', { reason });
+        },
+      })
+      : null;
   }
 
   _iso(ms) {
@@ -102,7 +122,9 @@ class SessionManager {
     try {
       await fn();
     } catch (e) {
-      logError(`${label} hata`, { error: (e && (e.code || e.name)) || 'error' });
+      // DOMException (ör. fetch TimeoutError) sayısal code taşır; okunur olsun diye adı yazılır.
+      const code = e && typeof e.code === 'string' ? e.code : null;
+      logError(`${label} hata`, { error: code || (e && e.name) || 'error' });
     }
   }
 
@@ -152,6 +174,8 @@ class SessionManager {
 
   stop() {
     this.running = false;
+    // Bellekteki bekleyen webhook denemeleri bırakılır (KVKK: kapanışta diske yazılmaz).
+    if (this.webhookDelivery) this.webhookDelivery.clear();
     for (const s of this.sessions.values()) {
       if (s.sock) {
         try {
@@ -409,20 +433,22 @@ class SessionManager {
     s.retries = 0;
     const prev = s.status;
     s.status = 'connected';
-    await this.rest.update(s.agentId, {
+    // DB yazımı (ağ hatası/timeout) başarısız olsa da dinleyici AŞAĞIDA mutlaka bağlanır; aksi halde
+    // bağlı oturumun mesajları sessizce hiç iletilmezdi. Seçim önbelleği pesimist olduğundan güvenli.
+    await this._guard('bağlandı durumu', () => this.rest.update(s.agentId, {
       status: 'connected',
       phone_masked: maskPhone(sock.user && sock.user.id),
       qr: null,
       qr_expires_at: null,
       error_code: null,
       last_seen_at: this._iso(this.now()),
-    });
-    await this.rest.insertEvent(s.agentId, {
+    }));
+    await this._guard('bağlandı olayı', () => this.rest.insertEvent(s.agentId, {
       attempt_id: s.attemptId,
       from_status: prev,
       to_status: 'connected',
       error_code: null,
-    });
+    }));
     log('bağlandı', { agent_id: s.agentId });
     // EML-107: dinleyici bağlıyken HER gelen mesaj sınıflandırılır (seçim boş olsa bile); seçili
     // olmayan grup/DM yalnız sayaç artırır. Seçim yokluğu dinleyiciyi kapatmaz.
@@ -532,28 +558,12 @@ class SessionManager {
 
     const groupName = (s.groupNames && s.groupNames.get(remoteJid)) || null;
     const payload = { id: msg.key.id, text, group: remoteJid, groupName, agentId: s.agentId };
-    const ok = await this._postWebhook(payload);
-    if (!ok) bump(this.msgCounters, 'webhook_post_failed');
-  }
-
-  // Ortak köprünün (bridge.js) webhook desenine uyumlu: 3 deneme, bekleme yok. İçerik loglanmaz.
-  async _postWebhook(payload) {
-    const { url, secret, fetchImpl = globalThis.fetch } = this.webhook || {};
-    if (!url || !secret) return false;
-    for (let attempt = 1; attempt <= WEBHOOK_MAX_ATTEMPTS; attempt += 1) {
-      try {
-        const res = await fetchImpl(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${secret}` },
-          body: JSON.stringify(payload),
-        });
-        if (res.ok) return true;
-        logError('webhook yanıtı başarısız', { status: res.status });
-      } catch (e) {
-        logError('webhook bağlantı hatası', { error: (e && e.name) || 'error' });
-      }
+    if (!this.webhookDelivery) {
+      bump(this.msgCounters, 'webhook_post_failed');
+      return;
     }
-    return false;
+    // Yalnız ilk deneme beklenir; geçici hatada arka plan kuyruğu (oturum akışı bloklanmaz).
+    await this.webhookDelivery.deliver(payload);
   }
 
   async _onClose(s, sock, code) {

@@ -17,7 +17,7 @@ import re
 import threading
 import time
 from datetime import datetime, timezone
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, NamedTuple, Optional, Tuple
 
 from google import genai
 from google.genai import types as genai_types
@@ -25,7 +25,7 @@ from google.genai import types as genai_types
 import parse_cache
 import supabase_client
 from api_key_manager import GeminiKeyManager
-from parse_schema import validate_parsed
+from parse_schema import NULLABLE_FIELDS, validate_parsed
 from prefilter import is_obviously_not_listing
 from regex_extract import extract_fields
 
@@ -78,6 +78,28 @@ Yalnızca JSON döndür, başka açıklama ekleme."""
 _LISTING = "listing"
 _NOT_LISTING = "not_listing"
 _ERROR = "error"
+# Dışa açık durum adları (orchestrator kullanır).
+LISTING, NOT_LISTING, ERROR = _LISTING, _NOT_LISTING, _ERROR
+
+# Geçici sayılan hata nedenleri: orchestrator yalnız bunlarda yeniden dener.
+# no_key (yapılandırma) ve schema_invalid (model sözleşme dışı veri döndürdü) denenmez.
+RETRYABLE_REASONS = frozenset({"rate_limit", "timeout", "network", "provider_error", "json_invalid"})
+
+# Yalnız eski yol: doğrulamadan önce "TRY"ye eşlenen Türk lirası yazımları (strip + büyük harf).
+LEGACY_TRY_ALIASES = frozenset({"TRY", "TL", "₺"})
+_LEGACY_ALLOWED_KEYS = frozenset(("is_listing",) + NULLABLE_FIELDS)
+
+
+class ParseOutcome(NamedTuple):
+    """Ayrıştırma sonucu. status: listing | not_listing | error.
+
+    parsed yalnız listing'de dolu; reason yalnız error'da dolu ve içeriksiz bir koddur
+    (no_key, rate_limit, timeout, network, provider_error, json_invalid, schema_invalid).
+    """
+
+    status: str
+    parsed: Optional[Dict[str, Any]] = None
+    reason: Optional[str] = None
 
 
 def _optimization_enabled() -> bool:
@@ -103,15 +125,15 @@ def _provider_error_reason(exc: Exception) -> str:
     return "provider_error"
 
 
-async def _generate(contents: str, key_manager: GeminiKeyManager) -> Optional[str]:
-    """Rotasyonlu Gemini çağrısı. Yanıt metni ya da hata durumunda None döner."""
+async def _generate(contents: str, key_manager: GeminiKeyManager) -> Tuple[Optional[str], Optional[str]]:
+    """Rotasyonlu Gemini çağrısı. (yanıt metni, None) ya da hata durumunda (None, neden kodu) döner."""
     attempts = max(1, len(key_manager.get_all_keys()))
 
     for _ in range(attempts):
         api_key = key_manager.get_active_key()
         if not api_key:
             logger.error("gemini_error reason=no_key")
-            return None
+            return None, "no_key"
 
         # timeout milisaniye cinsinden (30000 = 30s); asılı kalan Gemini çağrısını keser.
         client = genai.Client(
@@ -127,26 +149,57 @@ async def _generate(contents: str, key_manager: GeminiKeyManager) -> Optional[st
                 logger.info("gemini_error reason=rate_limit")
                 await key_manager.switch_to_next_async()
                 continue
-            logger.error("gemini_error reason=%s", _provider_error_reason(exc))
-            return None
-        return response.text or ""
+            reason = _provider_error_reason(exc)
+            logger.error("gemini_error reason=%s", reason)
+            return None, reason
+        return response.text or "", None
 
     logger.error("Tüm Gemini key'leri tükendi (rate limit).")
-    return None
+    return None, "rate_limit"
 
 
-async def _parse_legacy(raw_text: str, key_manager: GeminiKeyManager) -> Optional[Dict[str, Any]]:
-    """Bayrak kapalıyken mevcut ayrıştırma yolu (önbellek, ön-eleme, regex yok)."""
-    text = await _generate(f"{SYSTEM_PROMPT}\n\n---\nİlan metni:\n{raw_text}", key_manager)
+def _normalize_legacy_output(obj: Dict[str, Any]) -> Dict[str, Any]:
+    """Eski yolda kozmetik sapmaları düzeltir (yeni dict döner, girdi değişmez).
+
+    Şema dışı anahtarlar atılır; Türk lirası yazım varyantları (LEGACY_TRY_ALIASES) "TRY" olur.
+    Tür zorlaması YOK: sayı/metin/is_listing ihlalleri validate_parsed'da schema_invalid kalır.
+    Log yalnız sayı/bayrak içerir (anahtar adı ya da değer yok).
+    """
+    result = {key: value for key, value in obj.items() if key in _LEGACY_ALLOWED_KEYS}
+    extra_keys = len(obj) - len(result)
+    currency = result.get("currency")
+    alias = (
+        isinstance(currency, str)
+        and currency != "TRY"
+        and currency.strip().upper() in LEGACY_TRY_ALIASES
+    )
+    if alias:
+        result["currency"] = "TRY"
+    if extra_keys or alias:
+        logger.info("legacy_normalized extra_keys=%d currency_alias=%s", extra_keys, "true" if alias else "false")
+    return result
+
+
+async def _parse_legacy(raw_text: str, key_manager: GeminiKeyManager) -> ParseOutcome:
+    """Bayrak kapalıyken mevcut ayrıştırma yolu (önbellek, ön-eleme, regex yok).
+
+    İlan çıktısı _ask_model gibi validate_parsed'dan geçer; uymazsa error/schema_invalid.
+    """
+    text, reason = await _generate(f"{SYSTEM_PROMPT}\n\n---\nİlan metni:\n{raw_text}", key_manager)
     if text is None:
-        return None
+        return ParseOutcome(_ERROR, None, reason)
     parsed = _extract_json(text)
     if parsed is None:
         logger.warning("gemini_error reason=json_invalid")
-        return None
+        return ParseOutcome(_ERROR, None, "json_invalid")
     if not parsed.get("is_listing"):
-        return None
-    return parsed
+        # İlan olmayan yanıt hiçbir şey yazmaz; doğrulanmaz (sohbet mesajları bekletmeye düşmesin).
+        return ParseOutcome(_NOT_LISTING)
+    checked = validate_parsed(_normalize_legacy_output(parsed))
+    if checked is None:
+        logger.warning("gemini_error reason=schema_invalid")
+        return ParseOutcome(_ERROR, None, "schema_invalid")
+    return ParseOutcome(_LISTING, checked)
 
 
 def _build_prompt(raw_text: str, known: Dict[str, Any]) -> str:
@@ -165,19 +218,19 @@ def _build_prompt(raw_text: str, known: Dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-async def _ask_model(prompt: str, key_manager: GeminiKeyManager) -> Tuple[str, Optional[Dict[str, Any]]]:
-    text = await _generate(prompt, key_manager)
+async def _ask_model(prompt: str, key_manager: GeminiKeyManager) -> ParseOutcome:
+    text, reason = await _generate(prompt, key_manager)
     if text is None:
-        return _ERROR, None
+        return ParseOutcome(_ERROR, None, reason)
     obj = _extract_json(text)
     if obj is None:
         logger.warning("gemini_error reason=json_invalid")
-        return _ERROR, None
+        return ParseOutcome(_ERROR, None, "json_invalid")
     checked = validate_parsed(obj)
     if checked is None:
         logger.warning("gemini_error reason=schema_invalid")
-        return _ERROR, None
-    return (_LISTING if checked["is_listing"] else _NOT_LISTING), checked
+        return ParseOutcome(_ERROR, None, "schema_invalid")
+    return ParseOutcome(_LISTING, checked) if checked["is_listing"] else ParseOutcome(_NOT_LISTING)
 
 
 def _rooms_head(rooms: str) -> Optional[str]:
@@ -344,57 +397,64 @@ def _store(key: str, is_listing: bool, parsed: Optional[Dict[str, Any]]) -> None
     _submit(_persist, key, is_listing, parsed, expires_at)
 
 
-async def _parse_optimized(raw_text: str, key_manager: GeminiKeyManager) -> Optional[Dict[str, Any]]:
+async def _parse_optimized(raw_text: str, key_manager: GeminiKeyManager) -> ParseOutcome:
     key = parse_cache.cache_key(raw_text, CACHE_VERSION)
 
     cached = _lookup(key)
     if cached is not None:
-        return cached["parsed"]
+        return ParseOutcome(_LISTING, cached["parsed"]) if cached["parsed"] is not None else ParseOutcome(_NOT_LISTING)
 
     if is_obviously_not_listing(raw_text):
         logger.info("prefilter_rejected")
         _store(key, False, None)
-        return None
+        return ParseOutcome(_NOT_LISTING)
 
     regex = extract_fields(raw_text)
     if regex:
         logger.info("regex_partial")
     prompt = _build_prompt(raw_text, regex)
 
-    status, model = await _ask_model(prompt, key_manager)
-    if status == _ERROR:
-        return None
+    outcome = await _ask_model(prompt, key_manager)
+    if outcome.status == _ERROR:
+        return outcome
 
-    if regex and status == _LISTING and _conflicts(regex, model):
+    if regex and outcome.status == _LISTING and _conflicts(regex, outcome.parsed):
         logger.info("regex_conflict")
         # Ek tam ayrıştırma: regex değerleri dayatılmaz; modelin doğrulanmış sonucu kazanır.
-        status, model = await _ask_model(_build_prompt(raw_text, {}), key_manager)
-        if status == _ERROR:
-            return None
-        if status == _LISTING:
-            _store(key, True, model)
-            return model
+        outcome = await _ask_model(_build_prompt(raw_text, {}), key_manager)
+        if outcome.status == _ERROR:
+            return outcome
+        if outcome.status == _LISTING:
+            _store(key, True, outcome.parsed)
+            return outcome
 
-    if status == _NOT_LISTING:
+    if outcome.status == _NOT_LISTING:
         _store(key, False, None)
-        return None
+        return outcome
 
-    result = _merge(regex, model)
+    result = _merge(regex, outcome.parsed)
     _store(key, True, result)
-    return result
+    return ParseOutcome(_LISTING, result)
 
 
-async def parse_listing_message(raw_text: str, key_manager: GeminiKeyManager) -> Optional[Dict[str, Any]]:
-    """Ham WhatsApp mesajını yapılandırılmış ilan verisine çevirir.
+async def parse_listing_outcome(raw_text: str, key_manager: GeminiKeyManager) -> ParseOutcome:
+    """Ham WhatsApp mesajını üç durumlu sonuca çevirir: listing / not_listing / error.
 
-    Dönüş: ilan değilse ya da doğrulanamıyorsa None, aksi halde tam sözleşmeli parsed dict.
-    429 (rate limit) alınırsa key rotasyonu yapıp bir kez daha dener.
+    Teknik hata (anahtar yok, rate limit, zaman aşımı, ağ, sağlayıcı, geçersiz yanıt) asla
+    not_listing'e çökmez; error + içeriksiz neden kodu döner. 429'da key rotasyonu yapılır;
+    üst seviye yeniden deneme orchestrator'dadır.
     """
     key_manager.load_keys()
     if not _optimization_enabled():
         return await _parse_legacy(raw_text, key_manager)
 
     started = time.monotonic()
-    result = await _parse_optimized(raw_text, key_manager)
+    outcome = await _parse_optimized(raw_text, key_manager)
     logger.info("parse_timing ms=%.1f", (time.monotonic() - started) * 1000)
-    return result
+    return outcome
+
+
+async def parse_listing_message(raw_text: str, key_manager: GeminiKeyManager) -> Optional[Dict[str, Any]]:
+    """Geri uyumlu sarmalayıcı: listing ise parsed dict, aksi halde (ilan değil ya da hata) None."""
+    outcome = await parse_listing_outcome(raw_text, key_manager)
+    return outcome.parsed if outcome.status == _LISTING else None
