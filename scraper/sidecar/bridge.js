@@ -1,7 +1,8 @@
 // Baileys -> Python orchestrator (/baileys-webhook) köprüsü.
 // maviLojistik/sidecar/bridge.js'teki üretimde doğrulanmış bağlantı/mesaj
 // ayrıştırma mantığının MVP'ye indirgenmiş portu. EML-77: decrypt-failed log,
-// risk log, grup adı zenginleştirme (cache + 3s timeout) ve webhook 3x retry.
+// risk log, grup adı zenginleştirme (cache + 3s timeout). Webhook teslimatı (timeout, backoff'lu
+// yeniden deneme kuyruğu) ortak webhook-delivery modülündedir (kişisel oturumlarla aynı).
 // retry-getMessage desteği kapsam dışı (Baileys'in varsayılan recent-message
 // cache'i zaten çözüyor).
 //
@@ -14,6 +15,7 @@ const qrcode = require('qrcode-terminal');
 const pino = require('pino');
 const path = require('path');
 const fs = require('fs');
+const { createWebhookDelivery } = require('./webhook-delivery');
 
 const WEBHOOK_URL = process.env.WEBHOOK_URL || 'http://localhost:8090/baileys-webhook';
 const AUTH_DIR = process.env.WHATSAPP_SESSION_DIR || path.join(__dirname, 'session');
@@ -26,7 +28,6 @@ const WEBHOOK_SECRET = process.env.BAILEYS_WEBHOOK_SECRET;
 const GROUP_NAME_ENABLED = process.env.BRIDGE_ENABLE_GROUP_NAME !== 'false';
 const RISK_LOG_ENABLED = process.env.BRIDGE_ENABLE_RISK_LOG !== 'false';
 
-const WEBHOOK_MAX_ATTEMPTS = 3;
 const GROUP_METADATA_TIMEOUT_MS = 3000;
 const GROUP_NAME_TTL_MS = 6 * 60 * 60 * 1000;
 
@@ -95,6 +96,23 @@ function appendRiskLog(category, extra = {}) {
   }
 }
 
+// Teslimat düşerse risk log'a yalnız sabit kategori + messageId yazılır (metin/JID asla).
+const DROP_RISK_CATEGORY = {
+  permanent: 'webhook_post_failed_max_retries',
+  max_retries: 'webhook_post_failed_max_retries',
+  queue_overflow: 'webhook_retry_queue_overflow',
+  expired: 'webhook_retry_expired',
+};
+
+const webhookDelivery = createWebhookDelivery({
+  url: WEBHOOK_URL,
+  secret: WEBHOOK_SECRET,
+  onFailed: ({ id, reason }) => appendRiskLog(DROP_RISK_CATEGORY[reason] || 'webhook_post_failed_max_retries', { messageId: id }),
+  onDelivered: () => {
+    counters.forwarded += 1;
+  },
+});
+
 // Grup adını cache'ten ya da sock.groupMetadata'dan (3s timeout) alır. Başarısızsa null + risk log.
 async function resolveGroupName(jid, sock) {
   if (!GROUP_NAME_ENABLED) return null;
@@ -148,9 +166,8 @@ async function processIncomingMessage(msg, sock) {
 
   const groupName = await resolveGroupName(remoteJid, sock);
   const payload = toWebhookPayload(msg, groupName);
-  if (payload && (await postMessage(payload))) {
-    counters.forwarded += 1;
-  }
+  // Yalnız ilk deneme beklenir; geçici hatada mesaj arka plan kuyruğuna alınır (upsert bloklanmaz).
+  if (payload) await webhookDelivery.deliver(payload);
 }
 
 function extractText(message) {
@@ -181,31 +198,6 @@ function toWebhookPayload(msg, groupName) {
     group: from,
     groupName: groupName ?? null,
   };
-}
-
-// Başarılıysa true. WEBHOOK_MAX_ATTEMPTS kez denenir (bekleme yok); hepsi başarısızsa risk log + false.
-async function postMessage(payload) {
-  for (let attempt = 1; attempt <= WEBHOOK_MAX_ATTEMPTS; attempt += 1) {
-    try {
-      const res = await fetch(WEBHOOK_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${WEBHOOK_SECRET}`,
-        },
-        body: JSON.stringify(payload),
-      });
-      if (res.ok) return true;
-      console.error(`[WEBHOOK HATA] ${res.status} ${res.statusText}`);
-      if (res.status === 401) {
-        console.error('[WEBHOOK AUTH HATASI] webhook auth failed (401), BAILEYS_WEBHOOK_SECRET uyuşmuyor');
-      }
-    } catch (e) {
-      console.error('[WEBHOOK BAGLANTI HATASI]', e.message, `(hedef: ${WEBHOOK_URL}, orchestrator.py çalışıyor mu?)`);
-    }
-  }
-  appendRiskLog('webhook_post_failed_max_retries', { messageId: payload.id });
-  return false;
 }
 
 async function bridge() {
@@ -278,4 +270,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { isGroupJid, processIncomingMessage };
+module.exports = { isGroupJid, processIncomingMessage, webhookDelivery };

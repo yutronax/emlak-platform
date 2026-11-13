@@ -2,7 +2,7 @@
 // scraper/sidecar/package.json: "type": "commonjs" -> require() kullanılır.
 //
 // ATDD EML-77, AC-3 [Medium] (groupMetadata başarısız/timeout -> groupName:null + risk log),
-// AC-4 [Medium] (webhook 3x başarısız -> mesaj düşer + risk log),
+// AC-4 [Medium] (webhook başarısız -> geçici hatada arka plan kuyruğu, kalıcı hatada risk log),
 // AC-5 [Low] (log yazma başarısız -> akış durmaz, [LOG-YAZMA HATASI]),
 // AC-S1 [Critical] (grup adı log-injection: log dosyalarında grup adı İÇERİĞİ görünmez).
 //
@@ -14,7 +14,10 @@
 //
 // Varsayımlar:
 // - processIncomingMessage(msg, sock) ikinci argümanla Baileys socket'ini alır.
-// - Webhook retry sayısı 3 (sabit, bekleme yok): fetch tam 3 kez çağrılır.
+// - Webhook teslimatı ortak webhook-delivery modülündedir: ilk deneme beklenir; geçici hatada
+//   (ağ/5xx/429/408) mesaj bellek-içi kuyruğa alınır ve handler hemen döner (backoff'lu yeniden
+//   denemeler webhook-delivery.test.js'te sahte saatle test edilir). Kalıcı 4xx yeniden denenmez ->
+//   risk log. Her testten sonra kuyruk temizlenir (arka plan denemesi başka teste sızmasın).
 // - Timeout 3s; timeout testi için groupMetadata asla resolve etmeyen Promise döner.
 
 const { test, beforeEach, afterEach } = require('node:test');
@@ -87,6 +90,13 @@ function setFetchAlwaysNonOk() {
   };
 }
 
+function setFetchAlwaysStatus(status) {
+  global.fetch = async (...args) => {
+    fetchCalls.push(args);
+    return { ok: false, status, statusText: 'X' };
+  };
+}
+
 function setFetchAlwaysOk() {
   global.fetch = async (...args) => {
     fetchCalls.push(args);
@@ -100,6 +110,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  bridge.webhookDelivery.clear();
   global.fetch = originalFetch;
   fs.appendFileSync = originalAppendFileSync;
   removeLogFiles();
@@ -186,10 +197,11 @@ test(
 );
 
 // ---------------------------------------------------------------------------
-// AC-4 [Medium]: webhook 3x başarısız -> mesaj düşer, risk log webhook_post_failed_max_retries
+// AC-4 [Medium]: webhook başarısız -> geçici hatada kuyruk (handler bloklanmaz), kalıcı hatada
+// risk log webhook_post_failed_max_retries (yalnız messageId)
 // ---------------------------------------------------------------------------
 
-test('AC-4: webhook fetch reject -> tam 3 deneme yapılır (fetch 3 kez)', async () => {
+test('AC-4: webhook fetch reject (geçici) -> ilk deneme 1 kez, mesaj kuyruğa alınır, handler beklemeden döner', async () => {
   setFetchAlwaysRejects();
   const sock = makeSock(async () => ({ subject: 'Test Grubu' }));
   const capture = captureConsole();
@@ -199,10 +211,13 @@ test('AC-4: webhook fetch reject -> tam 3 deneme yapılır (fetch 3 kez)', async
     capture.restore();
   }
 
-  assert.strictEqual(fetchCalls.length, 3, '3 deneme yapılmalı');
+  assert.strictEqual(fetchCalls.length, 1, 'handler yalnız ilk denemeyi beklemeli');
+  assert.strictEqual(bridge.webhookDelivery.pending(), 1, 'mesaj yeniden deneme kuyruğunda olmalı');
+  const match = readRiskEntries().filter((e) => e.category === 'webhook_post_failed_max_retries');
+  assert.strictEqual(match.length, 0, 'kuyruktaki mesaj için henüz risk log yazılmamalı');
 });
 
-test('AC-4: webhook 3x non-ok -> fetch 3 kez çağrılır, 4. deneme yok', async () => {
+test('AC-4: webhook 5xx (geçici) -> fetch 1 kez, mesaj kuyruğa alınır', async () => {
   setFetchAlwaysNonOk();
   const sock = makeSock(async () => ({ subject: 'Test Grubu' }));
   const capture = captureConsole();
@@ -212,11 +227,47 @@ test('AC-4: webhook 3x non-ok -> fetch 3 kez çağrılır, 4. deneme yok', async
     capture.restore();
   }
 
-  assert.strictEqual(fetchCalls.length, 3, 'Tam 3 deneme yapılmalı, daha fazla değil');
+  assert.strictEqual(fetchCalls.length, 1);
+  assert.strictEqual(bridge.webhookDelivery.pending(), 1);
 });
 
-test('AC-4: 3. deneme de başarısızsa -> bridge_risk.log category="webhook_post_failed_max_retries", messageId dolu', async () => {
+test('AC-4: 401 -> yeniden denenmez ve BAILEYS_WEBHOOK_SECRET ipucu konsola düşer', async () => {
+  setFetchAlwaysStatus(401);
+  const sock = makeSock(async () => ({ subject: 'Test Grubu' }));
+  const capture = captureConsole();
+  try {
+    await processIncomingMessage(textGroupMessage('120363wh5@g.us', 'msg-retry-5'), sock);
+  } finally {
+    capture.restore();
+  }
+
+  assert.strictEqual(fetchCalls.length, 1);
+  assert.strictEqual(bridge.webhookDelivery.pending(), 0);
+  assert.match(capture.lines.join('\n'), /BAILEYS_WEBHOOK_SECRET uyuşmuyor/);
+});
+
+test('AC-4 / KVKK: geçici hata + kuyruk ve kalıcı hata -> konsol ve risk log metin/JID içermez', async () => {
   setFetchAlwaysRejects();
+  const sock = makeSock(async () => ({ subject: 'Test Grubu' }));
+  const capture = captureConsole();
+  try {
+    await processIncomingMessage(textGroupMessage('120363kvkk1@g.us', 'msg-kvkk-1'), sock);
+    setFetchAlwaysStatus(400);
+    await processIncomingMessage(textGroupMessage('120363kvkk2@g.us', 'msg-kvkk-2'), sock);
+  } finally {
+    capture.restore();
+  }
+
+  const riskContent = fs.existsSync(RISK_LOG) ? fs.readFileSync(RISK_LOG, 'utf8') : '';
+  assert.ok(capture.lines.length > 0 && riskContent.length > 0, 'test anlamlı olsun: log üretilmeli');
+  const all = `${capture.lines.join('\n')}\n${riskContent}`;
+  for (const needle of ['Kadıköy', '2.500.000', '120363kvkk1', '120363kvkk2']) {
+    assert.ok(!all.includes(needle), `loglarda "${needle}" görünmemeli`);
+  }
+});
+
+test('AC-4: kalıcı 4xx -> yeniden denenmez, bridge_risk.log category="webhook_post_failed_max_retries", messageId dolu', async () => {
+  setFetchAlwaysStatus(400);
   const sock = makeSock(async () => ({ subject: 'Test Grubu' }));
   const capture = captureConsole();
   try {
@@ -225,6 +276,8 @@ test('AC-4: 3. deneme de başarısızsa -> bridge_risk.log category="webhook_pos
     capture.restore();
   }
 
+  assert.strictEqual(fetchCalls.length, 1, 'kalıcı hata yeniden denenmemeli');
+  assert.strictEqual(bridge.webhookDelivery.pending(), 0);
   const entries = readRiskEntries();
   const match = entries.filter((e) => e.category === 'webhook_post_failed_max_retries');
   assert.strictEqual(match.length, 1, 'Tam 1 webhook_post_failed_max_retries satırı yazılmalı');
@@ -249,8 +302,9 @@ test('AC-4: webhook düşürülse bile bridge çalışmaya devam eder (processIn
 // (AC-6 testleriyle AYNI desen, risk log için tekrarlandı)
 // ---------------------------------------------------------------------------
 
+// Risk log satırını tetiklemek için kalıcı hata (400) kullanılır: geçici hata artık kuyruğa gider.
 test('AC-5: risk log appendFileSync hata fırlatsa bile processIncomingMessage exception fırlatmaz', async () => {
-  setFetchAlwaysRejects();
+  setFetchAlwaysStatus(400);
   let writeAttempts = 0;
   fs.appendFileSync = () => {
     writeAttempts += 1;
@@ -273,7 +327,7 @@ test('AC-5: risk log appendFileSync hata fırlatsa bile processIncomingMessage e
 });
 
 test('AC-5: risk log yazım hatasında konsola [LOG-YAZMA HATASI] düşer', async () => {
-  setFetchAlwaysRejects();
+  setFetchAlwaysStatus(400);
   fs.appendFileSync = () => {
     throw new Error('ENOSPC: no space left on device (simulated)');
   };
@@ -290,8 +344,8 @@ test('AC-5: risk log yazım hatasında konsola [LOG-YAZMA HATASI] düşer', asyn
   assert.match(consoleText, /\[LOG-YAZMA HATASI\]/);
 });
 
-test('AC-5: risk log yazım hatasında akış devam eder (webhook denemeleri tamamlanır: fetch 3 kez)', async () => {
-  setFetchAlwaysRejects();
+test('AC-5: risk log yazım hatasında akış devam eder (webhook denemesi tamamlanır, reject yok)', async () => {
+  setFetchAlwaysStatus(400);
   fs.appendFileSync = () => {
     throw new Error('EACCES: permission denied (simulated)');
   };
@@ -304,7 +358,7 @@ test('AC-5: risk log yazım hatasında akış devam eder (webhook denemeleri tam
     capture.restore();
   }
 
-  assert.strictEqual(fetchCalls.length, 3, 'Log hatası webhook retry akışını durdurmamalı');
+  assert.strictEqual(fetchCalls.length, 1, 'Log hatası webhook akışını durdurmamalı');
 });
 
 // ---------------------------------------------------------------------------
@@ -313,7 +367,7 @@ test('AC-5: risk log yazım hatasında akış devam eder (webhook denemeleri tam
 
 test('AC-S1: newline/sahte satır içeren grup adı -> unhandled ve risk loglarında içerik yok', async () => {
   const injectedSubject = 'Grup\n[FAKE] admin girişi başarılı';
-  setFetchAlwaysRejects();
+  setFetchAlwaysStatus(400);
   const sock = makeSock(async () => ({ subject: injectedSubject }));
   const capture = captureConsole();
   try {
@@ -325,7 +379,7 @@ test('AC-S1: newline/sahte satır içeren grup adı -> unhandled ve risk loglar�
       },
       sock,
     );
-    // 2) metinli grup mesajı, webhook 3x düşer -> bridge_risk.log
+    // 2) metinli grup mesajı, webhook kalıcı hata (400) ile düşer -> bridge_risk.log
     await processIncomingMessage(textGroupMessage('120363inj2@g.us', 'msg-inj-2'), sock);
   } finally {
     capture.restore();

@@ -18,13 +18,26 @@ const ALLOWED_UPDATE_FIELDS = new Set([
 
 const ACTIVE_STATUSES = new Set(['active', 'trialing', 'past_due']);
 
+// İstek başına üst sınır: asılı bir PostgREST çağrısı tick() kilidini (_ticking) ve oturum mesaj
+// akışını sonsuza dek tutamaz. Timeout, ağ hatası gibi fırlatılır (TimeoutError); çağıranlar aynı yolla ele alır.
+const REST_TIMEOUT_MS = 15_000;
+
 class SupabaseRest {
-  constructor({ url, serviceKey, fetchImpl = globalThis.fetch, now = Date.now }) {
+  constructor({
+    url,
+    serviceKey,
+    fetchImpl = globalThis.fetch,
+    now = Date.now,
+    timeoutMs = REST_TIMEOUT_MS,
+    timeoutSignal = (ms) => AbortSignal.timeout(ms),
+  }) {
     if (!url || !serviceKey) throw new Error('SUPABASE_URL ve SUPABASE_SERVICE_ROLE_KEY gerekli');
     this.base = `${String(url).replace(/\/+$/, '')}/rest/v1`;
     this.serviceKey = serviceKey;
     this.fetch = fetchImpl;
     this.now = now;
+    this.timeoutMs = timeoutMs;
+    this.timeoutSignal = timeoutSignal;
   }
 
   _headers(extra = {}) {
@@ -41,6 +54,8 @@ class SupabaseRest {
       method,
       headers: this._headers(prefer ? { Prefer: prefer } : {}),
       body: body === undefined ? undefined : JSON.stringify(body),
+      // Gövde okuması (res.text) da aynı signal ile sınırlıdır.
+      signal: this.timeoutSignal(this.timeoutMs),
     });
     if (!res.ok) {
       // Hata metninde anahtar/gövde yok; yalnız yöntem, tablo yolu ve HTTP kodu.
@@ -132,4 +147,4 @@ class SupabaseRest {
   }
 }
 
-module.exports = { SupabaseRest, ALLOWED_UPDATE_FIELDS };
+module.exports = { SupabaseRest, ALLOWED_UPDATE_FIELDS, REST_TIMEOUT_MS };
