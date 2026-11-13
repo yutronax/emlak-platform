@@ -19,9 +19,11 @@ import asyncio
 import json
 from unittest.mock import MagicMock, patch
 
+import pytest
 from google.genai import types as genai_types
 
 from api_key_manager import GeminiKeyManager
+import parser as parser_mod
 from parser import parse_listing_message
 
 EXPECTED_TIMEOUT_MS = 30000
@@ -57,6 +59,16 @@ def _mock_response(text):
 
 def _run(coro):
     return asyncio.run(coro)
+
+
+@pytest.fixture(autouse=True)
+def _no_transient_retry_sleep(monkeypatch):
+    """Geçici hata yeniden denemelerinin gerçek beklemesini önler."""
+
+    async def _noop(*_args, **_kwargs):
+        return None
+
+    monkeypatch.setattr(parser_mod, "_sleep", _noop, raising=False)
 
 
 # ---------------------------------------------------------------------------

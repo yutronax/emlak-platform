@@ -17,6 +17,9 @@ import asyncio
 import json
 from unittest.mock import MagicMock, patch
 
+import pytest
+
+import parser as parser_mod
 from api_key_manager import GeminiKeyManager
 from parser import parse_listing_message
 
@@ -53,6 +56,16 @@ def _mock_response(text):
 
 def _run(coro):
     return asyncio.run(coro)
+
+
+@pytest.fixture(autouse=True)
+def _no_transient_retry_sleep(monkeypatch):
+    """Geçici hata yeniden denemelerinin gerçek beklemesini önler."""
+
+    async def _noop(*_args, **_kwargs):
+        return None
+
+    monkeypatch.setattr(parser_mod, "_sleep", _noop, raising=False)
 
 
 # ---------------------------------------------------------------------------
@@ -186,4 +199,5 @@ def test_non_rate_limit_exception_returns_none_without_rotation(monkeypatch):
 
     assert result is None
     mocked_switch.assert_not_called()
-    assert mocked_genai.Client.call_count == 1
+    # "timeout" geçici hata: yeni sözleşmede aynı anahtarla 3 çağrı (rotasyon yok, yalnız yeniden deneme).
+    assert mocked_client.models.generate_content.call_count == 3

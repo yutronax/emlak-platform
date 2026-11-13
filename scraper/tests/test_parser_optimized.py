@@ -861,10 +861,12 @@ def test_gemini_error_after_partial_regex_returns_none_and_is_not_cached(monkeyp
 )
 def test_gemini_network_failure_returns_none_and_writes_nothing(monkeypatch, flag_on, genai, db, failure):
     manager = _manager(monkeypatch)
-    genai.Client.return_value = _client_failing(failure)
+    client = _client_failing(failure)
+    genai.Client.return_value = client
 
+    # Geçici hata (timeout/network): yeni sözleşmede aynı anahtarla 3 çağrı, sonra None.
     assert _parse(_uid(PLAIN_TEXT), manager) is None
-    assert genai.Client.call_count == 1
+    assert client.models.generate_content.call_count == 3
     assert _db_write_attempted(db) is False
 
 
@@ -1292,22 +1294,30 @@ def test_conflict_second_call_error_returns_none_and_writes_nothing(monkeypatch,
     """Madde 7: çelişki sonrası ikinci çağrı timeout verirse None; önbelleğe hiçbir şey yazılmaz."""
     manager = _manager(monkeypatch)
     text = _uid(REGEX_CONFLICT_TEXT)
-    genai.Client.side_effect = [
-        _client_returning(CONFLICTING_PRICE_JSON),
-        _client_failing(TimeoutError("read timed out")),
+    # İlk çağrı çelişkili sonuç; ikinci tam ayrıştırma timeout. Geçici hata olduğundan
+    # ikinci ayrıştırma 3 çağrı yapar (toplam 4).
+    client = _client_returning(CONFLICTING_PRICE_JSON)
+    genai.Client.return_value = client
+    client.models.generate_content.side_effect = [
+        _mock_response(CONFLICTING_PRICE_JSON),
+        TimeoutError("read timed out"),
+        TimeoutError("read timed out"),
+        TimeoutError("read timed out"),
     ]
 
     assert _parse(text, manager) is None
-    assert genai.Client.call_count == 2
+    assert client.models.generate_content.call_count == 4
     assert _db_write_attempted(db) is False
 
-    # LRU'da da kayıt olmadığını, aynı metnin yeniden Gemini'ye gitmesiyle doğrula.
-    genai.Client.side_effect = [
-        _client_returning(CONFLICTING_PRICE_JSON),
-        _client_failing(TimeoutError("read timed out")),
+    # LRU'da da kayıt olmadığını, aynı metnin yeniden Gemini'ye gitmesiyle doğrula (+4 çağrı).
+    client.models.generate_content.side_effect = [
+        _mock_response(CONFLICTING_PRICE_JSON),
+        TimeoutError("read timed out"),
+        TimeoutError("read timed out"),
+        TimeoutError("read timed out"),
     ]
     assert _parse(text, manager) is None
-    assert genai.Client.call_count == 4
+    assert client.models.generate_content.call_count == 8
 
 
 def test_conflict_second_call_not_listing_is_negatively_cached(monkeypatch, flag_on, genai, db):
@@ -1403,6 +1413,16 @@ def _cache_client_reset_and_sync_submit(monkeypatch):
     monkeypatch.setattr(parser_mod, "_CACHE_CLIENT", None, raising=False)
     monkeypatch.setattr(parser_mod, "_submit", _sync_submit, raising=False)
     yield
+
+
+@pytest.fixture(autouse=True)
+def _no_transient_retry_sleep(monkeypatch):
+    """Geçici hata yeniden denemelerinin gerçek beklemesini önler."""
+
+    async def _noop(*_args, **_kwargs):
+        return None
+
+    monkeypatch.setattr(parser_mod, "_sleep", _noop, raising=False)
 
 
 def _poll_until(predicate, timeout_s=2.0):

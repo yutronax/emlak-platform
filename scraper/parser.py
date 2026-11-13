@@ -9,6 +9,7 @@ kısmi regex -> Gemini -> doğrulama -> önbelleğe yazım. Bayrak kapalıyken m
 Loglar içeriksizdir: mesaj, telefon, URL, hash ve model/sağlayıcı metni loglanmaz.
 """
 
+import asyncio
 import concurrent.futures
 import json
 import logging
@@ -38,6 +39,9 @@ FLAG_ENV = "GEMINI_PARSE_OPTIMIZATION_ENABLED"
 MAX_PERSISTED_BYTES = 8 * 1024
 READ_TIMEOUT_ENV = "PARSE_CACHE_READ_TIMEOUT_MS"
 DEFAULT_READ_TIMEOUT_MS = 600
+# Geçici Gemini hatasında aynı anahtarla yeniden deneme bekleme süreleri (toplam 3 çağrı).
+TRANSIENT_RETRY_DELAYS_S = (2.0, 6.0)
+_sleep = asyncio.sleep
 
 # Süreç başına tek, tembel kurulan önbellek istemcisi (kurulum hatası saklanmaz).
 _CACHE_CLIENT = None
@@ -103,6 +107,13 @@ def _provider_error_reason(exc: Exception) -> str:
     return "provider_error"
 
 
+def _is_transient(exc: Exception) -> bool:
+    if _provider_error_reason(exc) in ("timeout", "network"):
+        return True
+    message = str(exc)
+    return any(code in message for code in ("500", "502", "503", "504", "UNAVAILABLE", "INTERNAL"))
+
+
 async def _generate(contents: str, key_manager: GeminiKeyManager) -> Optional[str]:
     """Rotasyonlu Gemini çağrısı. Yanıt metni ya da hata durumunda None döner."""
     attempts = max(1, len(key_manager.get_all_keys()))
@@ -119,17 +130,25 @@ async def _generate(contents: str, key_manager: GeminiKeyManager) -> Optional[st
             http_options=genai_types.HttpOptions(timeout=30000),
         )
         logger.info("gemini_call")
-        try:
-            response = client.models.generate_content(model=MODEL, contents=contents)
-        except Exception as exc:  # noqa: BLE001 - sağlayıcı hatası; tür ayrımı aşağıda
-            message = str(exc)
-            if "429" in message or "RESOURCE_EXHAUSTED" in message:
-                logger.info("gemini_error reason=rate_limit")
-                await key_manager.switch_to_next_async()
-                continue
-            logger.error("gemini_error reason=%s", _provider_error_reason(exc))
-            return None
-        return response.text or ""
+        retries = 0
+        while True:
+            try:
+                response = client.models.generate_content(model=MODEL, contents=contents)
+            except Exception as exc:  # noqa: BLE001 - sağlayıcı hatası; tür ayrımı aşağıda
+                message = str(exc)
+                if "429" in message or "RESOURCE_EXHAUSTED" in message:
+                    logger.info("gemini_error reason=rate_limit")
+                    await key_manager.switch_to_next_async()
+                    break
+                reason = _provider_error_reason(exc)
+                if _is_transient(exc) and retries < len(TRANSIENT_RETRY_DELAYS_S):
+                    retries += 1
+                    logger.info("gemini_retry attempt=%d reason=%s", retries, reason)
+                    await _sleep(TRANSIENT_RETRY_DELAYS_S[retries - 1])
+                    continue
+                logger.error("gemini_error reason=%s", reason)
+                return None
+            return response.text or ""
 
     logger.error("Tüm Gemini key'leri tükendi (rate limit).")
     return None
