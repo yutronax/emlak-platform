@@ -208,6 +208,8 @@ def test_transient_failures_exhausted_default_returns_none(flag, monkeypatch, ge
 
 
 def test_all_keys_rate_limited_raise_gemini_unavailable(flag, monkeypatch, genai, sleeps):
+    # Yedek tur bu testin kapsamı dışı (test_parser_fallback.py); ana model rotasyon sınırını ölçer.
+    monkeypatch.setattr(parser_mod, "FALLBACK_MODEL", "", raising=False)
     manager = _manager(monkeypatch, keys="key-1,key-2")
     genai.Client.side_effect = lambda **_kwargs: _client(Exception("429 RESOURCE_EXHAUSTED"))
 
@@ -219,6 +221,8 @@ def test_all_keys_rate_limited_raise_gemini_unavailable(flag, monkeypatch, genai
 
 
 def test_all_keys_rate_limited_default_returns_none(flag, monkeypatch, genai, sleeps):
+    # Yedek tur bu testin kapsamı dışı (test_parser_fallback.py); ana model rotasyon sınırını ölçer.
+    monkeypatch.setattr(parser_mod, "FALLBACK_MODEL", "", raising=False)
     manager = _manager(monkeypatch, keys="key-1,key-2")
     genai.Client.side_effect = lambda **_kwargs: _client(Exception("429 RESOURCE_EXHAUSTED"))
 

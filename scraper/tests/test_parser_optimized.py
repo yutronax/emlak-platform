@@ -886,6 +886,8 @@ def test_no_usable_key_returns_none_without_client_or_cache_write(monkeypatch, f
 
 def test_all_keys_rate_limited_returns_none_within_attempt_budget(monkeypatch, flag_on, genai, db, caplog):
     caplog.set_level(logging.DEBUG)
+    # Yedek tur bu testin kapsamı dışı (test_parser_fallback.py); ana model rotasyon sınırını ölçer.
+    monkeypatch.setattr(parser_mod, "FALLBACK_MODEL", "", raising=False)
     manager = _manager(monkeypatch, keys="key-1,key-2")
     genai.Client.side_effect = lambda *args, **kwargs: _client_failing(Exception("429 RESOURCE_EXHAUSTED"))
 
@@ -913,6 +915,8 @@ def test_rate_limit_then_success_result_is_cached(monkeypatch, flag_on, genai, d
 
 
 def test_failed_rate_limited_attempts_do_not_create_negative_entry(monkeypatch, flag_on, genai, db):
+    # Yedek tur bu testin kapsamı dışı (test_parser_fallback.py); negatif önbellek yazılmaması ölçülür.
+    monkeypatch.setattr(parser_mod, "FALLBACK_MODEL", "", raising=False)
     manager = _manager(monkeypatch, keys="key-1,key-2")
     genai.Client.side_effect = lambda *args, **kwargs: _client_failing(Exception("429 RESOURCE_EXHAUSTED"))
     text = _uid(PLAIN_TEXT)

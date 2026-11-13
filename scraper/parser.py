@@ -33,6 +33,8 @@ from regex_extract import extract_fields
 logger = logging.getLogger(__name__)
 
 MODEL = "gemini-3.8-flash"
+# Geçici hatadan sonraki yeniden denemelerde kullanılan yedek model; boş = kapalı.
+FALLBACK_MODEL = os.getenv("GEMINI_FALLBACK_MODEL", "gemini-3.5-flash-lite")
 # Anahtara girer: model, şema veya ayrıştırıcı değişince eski kayıtlar kaçırma sayılır.
 CACHE_VERSION = "gemini-3.8-flash|schema-v1|parser-v1"
 FLAG_ENV = "GEMINI_PARSE_OPTIMIZATION_ENABLED"
@@ -42,6 +44,10 @@ DEFAULT_READ_TIMEOUT_MS = 600
 # Geçici Gemini hatasında aynı anahtarla yeniden deneme bekleme süreleri (toplam 3 çağrı).
 TRANSIENT_RETRY_DELAYS_S = (2.0, 6.0)
 _sleep = asyncio.sleep
+
+class _AllRateLimited(Exception):
+    """Bir model turunda tüm anahtarlar 429 verdi (iç sinyal; dışarıya GeminiUnavailable olarak çıkar)."""
+
 
 class GeminiUnavailable(Exception):
     """Gemini geçici olarak ulaşılamıyor (3 deneme tükendi ya da tüm anahtarlar 429). Sonuç yoktur."""
@@ -118,8 +124,8 @@ def _is_transient(exc: Exception) -> bool:
     return any(code in message for code in ("500", "502", "503", "504", "UNAVAILABLE", "INTERNAL"))
 
 
-async def _generate(contents: str, key_manager: GeminiKeyManager) -> Optional[str]:
-    """Rotasyonlu Gemini çağrısı. Yanıt metni ya da hata durumunda None döner."""
+async def _rotate_keys(contents: str, key_manager: GeminiKeyManager, first_model: str) -> Optional[str]:
+    """Anahtar rotasyonu; bir tur, ilk çağrı first_model ile. Tüm anahtarlar 429 ise _AllRateLimited."""
     attempts = max(1, len(key_manager.get_all_keys()))
 
     for _ in range(attempts):
@@ -136,8 +142,9 @@ async def _generate(contents: str, key_manager: GeminiKeyManager) -> Optional[st
         logger.info("gemini_call")
         retries = 0
         while True:
+            call_model = FALLBACK_MODEL if retries and FALLBACK_MODEL else first_model
             try:
-                response = client.models.generate_content(model=MODEL, contents=contents)
+                response = client.models.generate_content(model=call_model, contents=contents)
             except Exception as exc:  # noqa: BLE001 - sağlayıcı hatası; tür ayrımı aşağıda
                 message = str(exc)
                 if "429" in message or "RESOURCE_EXHAUSTED" in message:
@@ -148,6 +155,8 @@ async def _generate(contents: str, key_manager: GeminiKeyManager) -> Optional[st
                 if _is_transient(exc) and retries < len(TRANSIENT_RETRY_DELAYS_S):
                     retries += 1
                     logger.info("gemini_retry attempt=%d reason=%s", retries, reason)
+                    if retries == 1 and FALLBACK_MODEL:
+                        logger.info("gemini_fallback model=%s", FALLBACK_MODEL)
                     await _sleep(TRANSIENT_RETRY_DELAYS_S[retries - 1])
                     continue
                 logger.error("gemini_error reason=%s", reason)
@@ -156,8 +165,26 @@ async def _generate(contents: str, key_manager: GeminiKeyManager) -> Optional[st
                 return None
             return response.text or ""
 
-    logger.error("Tüm Gemini key'leri tükendi (rate limit).")
-    raise GeminiUnavailable()
+    raise _AllRateLimited()
+
+
+async def _generate(contents: str, key_manager: GeminiKeyManager) -> Optional[str]:
+    """Rotasyonlu Gemini çağrısı. Yanıt metni ya da hata durumunda None döner.
+
+    Ana model tüm anahtarlarda 429 verirse ve yedek model doluysa, yedekle bir tur daha denenir.
+    """
+    try:
+        return await _rotate_keys(contents, key_manager, MODEL)
+    except _AllRateLimited:
+        if not FALLBACK_MODEL:
+            logger.error("Tüm Gemini key'leri tükendi (rate limit).")
+            raise GeminiUnavailable()
+    logger.info("gemini_fallback model=%s reason=rate_limit", FALLBACK_MODEL)
+    try:
+        return await _rotate_keys(contents, key_manager, FALLBACK_MODEL)
+    except _AllRateLimited:
+        logger.error("Tüm Gemini key'leri tükendi (rate limit).")
+        raise GeminiUnavailable()
 
 
 async def _parse_legacy(raw_text: str, key_manager: GeminiKeyManager) -> Optional[Dict[str, Any]]:
