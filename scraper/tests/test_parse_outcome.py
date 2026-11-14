@@ -161,6 +161,7 @@ def test_provider_failure_yields_error_with_reason(monkeypatch, any_path, genai,
 
 
 def test_all_keys_rate_limited_yields_error_rate_limit(monkeypatch, any_path, genai):
+    monkeypatch.setattr(parser_mod, "FALLBACK_MODEL", "")
     manager = _manager(monkeypatch, keys="k1,k2")
     genai.Client.side_effect = lambda *a, **k: _client_failing(Exception("429 RESOURCE_EXHAUSTED"))
     outcome = _outcome(_uid("satılık daire kadıköy temiz"), manager)

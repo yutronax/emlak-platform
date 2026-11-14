@@ -32,6 +32,8 @@ from regex_extract import extract_fields
 logger = logging.getLogger(__name__)
 
 MODEL = "gemini-3.8-flash"
+# Ana model geçici hata verirse tek seferlik yedek model (boş = kapalı).
+FALLBACK_MODEL = os.getenv("GEMINI_FALLBACK_MODEL", "gemini-3.5-flash-lite")
 # Anahtara girer: model, şema veya ayrıştırıcı değişince eski kayıtlar kaçırma sayılır.
 CACHE_VERSION = "gemini-3.8-flash|schema-v1|parser-v1"
 FLAG_ENV = "GEMINI_PARSE_OPTIMIZATION_ENABLED"
@@ -125,9 +127,33 @@ def _provider_error_reason(exc: Exception) -> str:
     return "provider_error"
 
 
-async def _generate(contents: str, key_manager: GeminiKeyManager) -> Tuple[Optional[str], Optional[str]]:
-    """Rotasyonlu Gemini çağrısı. (yanıt metni, None) ya da hata durumunda (None, neden kodu) döner."""
+_TRANSIENT_MARKERS = ("500", "502", "503", "504", "UNAVAILABLE", "INTERNAL")
+# _rotate'in dönüşü: ana model tüm anahtarlarda 429 ile tükendi, yedek tur henüz denenmedi.
+_MAIN_EXHAUSTED = "main_exhausted"
+
+
+def _is_rate_limit(exc: Exception) -> bool:
+    message = str(exc)
+    return "429" in message or "RESOURCE_EXHAUSTED" in message
+
+
+def _is_transient(exc: Exception) -> bool:
+    if _provider_error_reason(exc) in ("timeout", "network"):
+        return True
+    message = str(exc)
+    return any(marker in message for marker in _TRANSIENT_MARKERS)
+
+
+async def _rotate(
+    contents: str, key_manager: GeminiKeyManager, model: str, allow_fallback: bool
+) -> Tuple[Optional[str], Optional[str]]:
+    """Anahtarlar arasında döner. (yanıt metni, None) ya da (None, neden kodu) döner.
+
+    allow_fallback ve FALLBACK_MODEL doluysa geçici hatada aynı anahtarla yedek model bir kez denenir.
+    Tüm anahtarlar 429 ile biter ve yedek denenmediyse (None, _MAIN_EXHAUSTED) döner.
+    """
     attempts = max(1, len(key_manager.get_all_keys()))
+    fallback_tried = False
 
     for _ in range(attempts):
         api_key = key_manager.get_active_key()
@@ -142,20 +168,48 @@ async def _generate(contents: str, key_manager: GeminiKeyManager) -> Tuple[Optio
         )
         logger.info("gemini_call")
         try:
-            response = client.models.generate_content(model=MODEL, contents=contents)
+            response = client.models.generate_content(model=model, contents=contents)
         except Exception as exc:  # noqa: BLE001 - sağlayıcı hatası; tür ayrımı aşağıda
-            message = str(exc)
-            if "429" in message or "RESOURCE_EXHAUSTED" in message:
+            if _is_rate_limit(exc):
                 logger.info("gemini_error reason=rate_limit")
                 await key_manager.switch_to_next_async()
                 continue
+            if allow_fallback and FALLBACK_MODEL and _is_transient(exc):
+                reason = _provider_error_reason(exc)
+                logger.info("gemini_fallback model=%s reason=%s", FALLBACK_MODEL, reason)
+                fallback_tried = True
+                try:
+                    response = client.models.generate_content(model=FALLBACK_MODEL, contents=contents)
+                except Exception as fallback_exc:  # noqa: BLE001
+                    if _is_rate_limit(fallback_exc):
+                        logger.info("gemini_error reason=rate_limit")
+                        await key_manager.switch_to_next_async()
+                        continue
+                    fallback_reason = _provider_error_reason(fallback_exc)
+                    logger.error("gemini_error reason=%s", fallback_reason)
+                    return None, fallback_reason
+                return response.text or "", None
             reason = _provider_error_reason(exc)
             logger.error("gemini_error reason=%s", reason)
             return None, reason
         return response.text or "", None
 
+    if allow_fallback and FALLBACK_MODEL and not fallback_tried:
+        return None, _MAIN_EXHAUSTED
     logger.error("Tüm Gemini key'leri tükendi (rate limit).")
     return None, "rate_limit"
+
+
+async def _generate(contents: str, key_manager: GeminiKeyManager) -> Tuple[Optional[str], Optional[str]]:
+    """Rotasyonlu Gemini çağrısı. (yanıt metni, None) ya da hata durumunda (None, neden kodu) döner.
+
+    Ana model tüm anahtarlarda 429 ile tükenirse, yedek model anahtarlarla bir tur daha denenir.
+    """
+    text, reason = await _rotate(contents, key_manager, MODEL, True)
+    if reason != _MAIN_EXHAUSTED:
+        return text, reason
+    logger.info("gemini_fallback model=%s reason=rate_limit", FALLBACK_MODEL)
+    return await _rotate(contents, key_manager, FALLBACK_MODEL, False)
 
 
 def _normalize_legacy_output(obj: Dict[str, Any]) -> Dict[str, Any]:
