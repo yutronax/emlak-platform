@@ -1,3 +1,5 @@
+// Servis anahtarı taşıyan modül: istemci paketine girerse derleme hatası verir.
+import "server-only";
 import { createServerClient } from "@supabase/ssr";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";

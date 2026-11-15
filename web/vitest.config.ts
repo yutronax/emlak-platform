@@ -5,6 +5,8 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
+      // Vitest react-server koşulunda çalışmaz; server-only'nin sunucu sürümü (boş modül) kullanılır.
+      "server-only": path.resolve(__dirname, "node_modules/server-only/empty.js"),
     },
   },
   test: {
