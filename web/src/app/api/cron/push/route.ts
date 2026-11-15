@@ -1,8 +1,7 @@
-import { timingSafeEqual } from "node:crypto";
-
 import { NextRequest, NextResponse } from "next/server";
 import webpush from "web-push";
 
+import { isAuthorized } from "@/lib/cron/isAuthorized";
 import { getVapidConfig } from "@/lib/push/config";
 import { isAllowedPushEndpoint, isValidKey } from "@/lib/push/endpoint";
 import { buildPayload } from "@/lib/push/payload";
@@ -24,15 +23,6 @@ type Summary = {
   removed: number;
   skipped: "disabled" | "no_subscribers" | "nothing_new" | null;
 };
-
-function isAuthorized(header: string | null): boolean {
-  // Fail-closed: CRON_SECRET yoksa hiçbir istek geçmez (AC-S3).
-  const secret = process.env.CRON_SECRET;
-  if (!secret || !header) return false;
-  const expected = `Bearer ${secret}`;
-  if (header.length !== expected.length) return false;
-  return timingSafeEqual(Buffer.from(header), Buffer.from(expected));
-}
 
 function emptySummary(skipped: Summary["skipped"]): Summary {
   return { sent: 0, failed: 0, removed: 0, skipped };
