@@ -26,3 +26,9 @@ araç kırpması, sayfa sorunu değil. `vision-test` çalıştırılmadı.
 - Mock açıkken (yalnız dev) oturum kontrolü atlanır ki tasarım oturumsuz görülebilsin; gerçek serviste kontrol yapılır.
 - Header'da giriş yapmış kullanıcı menüsü yok → profile bağlantı eklenmedi (kapsam dışı).
 - `web/.env.local`'a `NEXT_PUBLIC_PROFILE_MOCK=1` eklendi (yerel, commit edilmez).
+
+## Görsel yenileme v2 (2026-11-16) — FRONTEND-READY / MOCKED
+- [Playwright] 1440×900, 768×1024, 390×844: dört sekmede yatay taşma yok; uzun şirket adı masaüstünde "…", mobilde 2 satır.
+- V-1..V-7 karşılandı (profile-view.tsx, sections.tsx); sekmeli yapı ve klavye gezinmesi korundu.
+- Konsolda profil kaynaklı hata yok. Pasif Kaydet: slate-500 / mist-200 ≈ 5.9:1 kontrast.
+- Doğrulama yerel mock veriyle (NEXT_PUBLIC_PROFILE_MOCK=1); gerçek servis arayüzü değişmedi.

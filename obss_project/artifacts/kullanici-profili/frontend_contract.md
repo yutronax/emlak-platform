@@ -71,3 +71,23 @@ yeni şifre en az "Orta" ve mevcuttan farklı, tekrarı eşleşmeli.
 4. Şifre değişiminde mevcut şifre sunucuda doğrulanabilir mi?
 5. Bildirim tercihleri nerede tutulacak; push tercihi cihaz aboneliğinden bağımsız mı?
 6. "Tüm cihazlardan çıkış" (global sign-out) desteklenecek mi?
+
+## Görsel yenileme v2 (Stitch yönü, 2026-11-16) — sekmeli yapı korunur
+Kaynak: Stitch "Hesap Ayarları (Desktop/Mobil)". Kullanıcı kararı: tek sayfa değil, mevcut sekmeler kalır.
+Servis arayüzü, durumlar ve doğrulama DEĞİŞMEZ; yalnız sunum.
+
+- **V-1 Başlık bandı:** solda 56px kare marka (logoUrl varsa görsel, yoksa baş harfler, lacivert zemin).
+  Şirket adı `md:` ve üstünde tek satır `truncate` + `title` özniteliğinde tam ad; mobilde en fazla 2 satır (`line-clamp-2`).
+  Altında meta: "{contactName} · {city}" (boş olan atlanır) ve e-posta. Profil yüklenmeden "Profil" başlığı kalır.
+- **V-2 Profil tamamlanma:** başlık bandının sağında (mobilde altında) "Profil tamamlanma" etiketi, yüzde ve
+  `role="progressbar"` (aria-valuenow 0-100). Ölçüt 5 madde, her biri %20: şirket adı, yetkili adı, şehir, logo,
+  WhatsApp numarası. %100 ise "Profil tamam" yazısı.
+- **V-3 Genişlik:** masaüstünde içerik paneli kalan genişliği kullanır (`lg:grid-cols-[220px_minmax(0,1fr)]`), 640px sınırı kalkar.
+- **V-4 Bölüm başlığı:** terracotta küçük büyük harf "eyebrow" (Şirket bilgileri → "MARKA", İletişim → "İLETİŞİM",
+  Güvenlik → "GÜVENLİK", Bildirimler → "TERCİHLER") + başlık + açıklama.
+- **V-5 Logo bloğu:** logo, düğmeler ve ipucu tek satır grubunda; logo bloğu ile form arasındaki büyük boşluk kalkar.
+- **V-6 Kaydet çubuğu:** her formun sonunda üst çizgili alt çubuk: solda durum metni ("Kaydedildi" / değişiklik varsa
+  "Kaydedilmemiş değişiklik var"), sağda Kaydet. Pasif Kaydet düğmesi okunur kalır (opacity-50 yerine dolu soluk zemin +
+  koyu metin, kontrast ≥ 4.5:1).
+- **V-7 Bekleyen e-posta:** "Onay bekliyor" rozeti e-posta alanının yanında.
+Kabul: 1440/768/390 genişlikte yatay taşma yok; uzun şirket adı taşmıyor; klavye focus görünür; mevcut tüm testler geçer.

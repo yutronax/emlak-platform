@@ -36,6 +36,10 @@ function makeService(overrides: Partial<ProfileService> = {}): ProfileService {
   };
 }
 
+function serviceWith(p: Partial<Profile>): ProfileService {
+  return makeService({ load: vi.fn(() => Promise.resolve({ status: "ok" as const, profile: { ...PROFILE, ...p } })) });
+}
+
 async function renderView(service = makeService(), initialTab?: "sirket" | "iletisim" | "guvenlik" | "bildirimler") {
   const navigate = vi.fn();
   render(<ProfileView service={service} initialTab={initialTab} navigate={navigate} />);
@@ -280,5 +284,91 @@ describe("ProfileView — Bildirimler", () => {
 
     expect(await screen.findByText("Kaydedildi")).toBeInTheDocument();
     expect(service.updateNotifications).toHaveBeenCalledWith({ ...PROFILE.notifications, weeklySummaryEmail: true });
+  });
+});
+
+describe("ProfileView — başlık bandı (V-1, V-2)", () => {
+  it("başlıkta şirket adı; title özniteliği tam ad; meta satırında 'Yetkili · Şehir'", async () => {
+    await renderView();
+
+    const h1 = screen.getByRole("heading", { level: 1 });
+    expect(h1).toHaveTextContent("Acme Emlak");
+    expect(h1).toHaveAttribute("title", "Acme Emlak");
+    expect(screen.getByText("Ayşe Yılmaz · İzmir")).toBeInTheDocument();
+  });
+
+  it("yetkili adı boşsa meta yalnız şehri gösterir, ayırıcı kullanmaz", async () => {
+    await renderView(serviceWith({ contactName: "" }), "iletisim");
+
+    expect(screen.getByText("İzmir")).toBeInTheDocument();
+    expect(screen.queryByText(/·/)).toBeNull();
+  });
+
+  it("logo yoksa başlıkta baş harfler görünür", async () => {
+    await renderView(serviceWith({ logoUrl: null }), "iletisim");
+
+    expect(screen.getByText("AC")).toBeInTheDocument();
+  });
+
+  it("logo varsa başlıktaki görsel 'Şirket logosu' alt metniyle gösterilir", async () => {
+    await renderView(serviceWith({ logoUrl: "https://cdn.example.com/logo.png" }), "iletisim");
+
+    const img = screen.getByRole("img", { name: "Şirket logosu" });
+    expect(img.closest("header")).not.toBeNull();
+    expect(screen.queryByText("AC")).toBeNull();
+  });
+
+  it("beş madde doluyken tamamlanma 100 ve 'Profil tamam' gösterir", async () => {
+    await renderView(serviceWith({ logoUrl: "https://cdn.example.com/logo.png" }));
+
+    const bar = screen.getByRole("progressbar", { name: "Profil tamamlanma" });
+    expect(bar).toHaveAttribute("aria-valuenow", "100");
+    expect(screen.getByText("Profil tamam")).toBeInTheDocument();
+  });
+
+  it("logo ve WhatsApp boşsa tamamlanma 60 ve '%60' gösterir", async () => {
+    await renderView(serviceWith({ logoUrl: null, whatsappPhone: null }));
+
+    const bar = screen.getByRole("progressbar", { name: "Profil tamamlanma" });
+    expect(bar).toHaveAttribute("aria-valuenow", "60");
+    expect(screen.getByText("%60")).toBeInTheDocument();
+  });
+});
+
+describe("ProfileView — bölüm başlıkları (V-4)", () => {
+  it("Şirket sekmesinde 'MARKA' eyebrow ve 'Şirket bilgileri' başlığı (h2) görünür", async () => {
+    await renderView();
+
+    expect(screen.getByText("MARKA")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "Şirket bilgileri" })).toBeInTheDocument();
+  });
+});
+
+describe("ProfileView — kaydet çubuğu (V-6)", () => {
+  it("değişiklik yokken uyarı yok; değişince uyarı; kaydedince role=status içinde 'Kaydedildi'", async () => {
+    await renderView();
+
+    expect(screen.queryByText("Kaydedilmemiş değişiklik var")).toBeNull();
+
+    fireEvent.change(screen.getByLabelText("Yetkili adı"), { target: { value: "Mehmet Kaya" } });
+    expect(screen.getByText("Kaydedilmemiş değişiklik var")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Kaydet" }));
+    expect(await screen.findByText("Kaydedildi")).toHaveAttribute("role", "status");
+    expect(screen.queryByText("Kaydedilmemiş değişiklik var")).toBeNull();
+  });
+});
+
+describe("ProfileView — bekleyen e-posta (V-7)", () => {
+  it("pendingEmail doluysa İletişim'de 'Onay bekliyor' rozeti görünür", async () => {
+    await renderView(serviceWith({ pendingEmail: "yeni@acme.com" }), "iletisim");
+
+    expect(screen.getByText("Onay bekliyor")).toBeInTheDocument();
+  });
+
+  it("pendingEmail null ise rozet görünmez", async () => {
+    await renderView(makeService(), "iletisim");
+
+    expect(screen.queryByText("Onay bekliyor")).toBeNull();
   });
 });

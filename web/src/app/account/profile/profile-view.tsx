@@ -16,6 +16,14 @@ type ProfileViewProps = {
 
 const UNSAVED = "Kaydedilmemiş değişiklikler var; sekmeyi değiştirirseniz kaybolacak. Devam edilsin mi?";
 
+// Tamamlanma: 5 madde, her biri %20.
+function completionPercent(p: Profile): number {
+  const filled = [p.companyName, p.contactName, p.city, p.logoUrl, p.whatsappPhone].filter(
+    (v) => typeof v === "string" && v.trim() !== "",
+  ).length;
+  return filled * 20;
+}
+
 export function ProfileView({
   service,
   initialTab = "sirket",
@@ -83,16 +91,65 @@ export function ProfileView({
   return (
     <main className="min-h-[70vh] bg-cream-50 text-ink-900">
       <header className="bg-ink-900 text-fog-50">
-        <div className="mx-auto w-full max-w-6xl px-4 py-6 md:px-6 md:py-8">
-          <p className="font-body text-xs font-medium tracking-[0.2em] text-terracotta-600 uppercase">Profilim</p>
-          <h1 className="mt-2 font-display text-2xl leading-tight font-normal tracking-[-0.03em] text-pretty break-words md:text-[1.75rem]">
-            {profile?.companyName || "Profil"}
-          </h1>
-          {profile && <p className="mt-1 font-body text-sm text-fog-50/70 break-all">{profile.email}</p>}
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-6 md:flex-row md:items-center md:justify-between md:px-6 md:py-8">
+          <div className="flex min-w-0 items-center gap-4">
+            {profile &&
+              (profile.logoUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element -- yerel önizleme (blob/imzalı URL), optimizasyon gereksiz
+                <img
+                  src={profile.logoUrl}
+                  alt="Şirket logosu"
+                  className="h-14 w-14 shrink-0 rounded-xl border border-white/15 object-cover"
+                />
+              ) : (
+                <span
+                  aria-hidden="true"
+                  className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-ink-800 font-display text-lg font-bold text-fog-50"
+                >
+                  {profile.companyName.trim().slice(0, 2).toLocaleUpperCase("tr-TR")}
+                </span>
+              ))}
+            <div className="min-w-0">
+              <p className="font-body text-xs font-medium tracking-[0.2em] text-terracotta-600 uppercase">Profilim</p>
+              <h1
+                title={profile?.companyName || undefined}
+                className="mt-2 font-display text-2xl leading-tight font-normal tracking-[-0.03em] break-words line-clamp-2 md:line-clamp-none md:truncate md:text-[1.75rem]"
+              >
+                {profile?.companyName || "Profil"}
+              </h1>
+              {profile && (
+                <p className="mt-1 truncate font-body text-sm text-fog-50/70">
+                  {[profile.contactName, profile.city].filter(Boolean).join(" · ")}
+                </p>
+              )}
+              {profile && <p className="font-body text-sm text-fog-50/70 break-all">{profile.email}</p>}
+            </div>
+          </div>
+          {profile && (
+            <div className="font-body md:w-56 md:shrink-0">
+              <div className="flex items-center justify-between text-xs text-fog-50/80">
+                <span>Profil tamamlanma</span>
+                <span>{completionPercent(profile) === 100 ? "Profil tamam" : `%${completionPercent(profile)}`}</span>
+              </div>
+              <div
+                role="progressbar"
+                aria-label="Profil tamamlanma"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={completionPercent(profile)}
+                className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/15"
+              >
+                <div
+                  className="h-full rounded-full bg-terracotta-600 transition-[width] motion-reduce:transition-none"
+                  style={{ width: `${completionPercent(profile)}%` }}
+                />
+              </div>
+            </div>
+          )}
         </div>
       </header>
 
-      <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 py-6 md:px-6 md:py-10 lg:grid-cols-[200px_minmax(0,640px)] lg:gap-10">
+      <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 py-6 md:px-6 md:py-10 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-10">
         <div
           role="tablist"
           aria-label="Profil bölümleri"

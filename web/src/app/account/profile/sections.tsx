@@ -75,23 +75,47 @@ function useSave(formRef: React.RefObject<HTMLFormElement | null>) {
   return { pending, saved, setSaved, formError, errors, setErrors, reject, run };
 }
 
-function SectionHeading({ title, children }: { title: string; children?: ReactNode }) {
+function SectionHeading({ eyebrow, title, children }: { eyebrow: string; title: string; children?: ReactNode }) {
   return (
     <div className="mb-6">
-      <h2 className="font-display text-xl font-normal tracking-[-0.03em]">{title}</h2>
+      <p className="font-body text-xs font-medium tracking-[0.2em] text-terracotta-600 uppercase">{eyebrow}</p>
+      <h2 className="mt-2 font-display text-xl font-normal tracking-[-0.03em]">{title}</h2>
       {children && <p className="mt-1 text-sm text-slate-500">{children}</p>}
     </div>
   );
 }
 
-function Feedback({ saved, formError }: { saved: string | null; formError: string | null }) {
+function Feedback({ saved, formError }: { saved?: string | null; formError: string | null }) {
   return (
     <>
       {formError && <Alert variant="error">{formError}</Alert>}
-      <p role="status" className="text-sm font-medium text-moss-700 empty:hidden">
-        {saved ?? ""}
-      </p>
+      {saved && (
+        <p role="status" className="text-sm font-medium text-moss-700">
+          {saved}
+        </p>
+      )}
     </>
+  );
+}
+
+// Pasif Kaydet: dolu soluk zemin + koyu metin (opacity ile soluklaşmaz).
+const saveButton = "disabled:opacity-100! disabled:bg-mist-200 disabled:text-slate-500";
+
+// Form sonu alt çubuk: solda durum, sağda Kaydet.
+function SaveBar({ dirty, saved, children }: { dirty: boolean; saved: string | null; children: ReactNode }) {
+  return (
+    <div className="mt-2 flex flex-wrap items-center justify-between gap-3 border-t border-mist-200 pt-5">
+      <p className="min-h-5 text-sm">
+        {saved ? (
+          <span role="status" className="font-medium text-moss-700">
+            {saved}
+          </span>
+        ) : dirty ? (
+          <span className="text-slate-500">Kaydedilmemiş değişiklik var</span>
+        ) : null}
+      </p>
+      {children}
+    </div>
   );
 }
 
@@ -154,14 +178,15 @@ export function CompanySection({ profile, service, onSaved, onDirty }: SectionPr
 
   return (
     <form ref={formRef} onSubmit={onSubmit} noValidate aria-busy={save.pending} className="flex flex-col gap-4">
-      <SectionHeading title="Şirket bilgileri">Müşterilerinize ve ekibimize görünen bilgiler.</SectionHeading>
+      <SectionHeading eyebrow="MARKA" title="Şirket bilgileri">Müşterilerinize ve ekibimize görünen bilgiler.</SectionHeading>
 
       <div className="flex flex-wrap items-center gap-4">
         {profile.logoUrl ? (
           // eslint-disable-next-line @next/next/no-img-element -- yerel önizleme (blob/imzalı URL), optimizasyon gereksiz
           <img
             src={profile.logoUrl}
-            alt="Şirket logosu"
+            alt=""
+            aria-hidden="true"
             className="h-16 w-16 rounded-xl border border-mist-200 object-cover"
           />
         ) : (
@@ -194,16 +219,16 @@ export function CompanySection({ profile, service, onSaved, onDirty }: SectionPr
             </Button>
           )}
         </div>
-        <p id="logo-hint" className="basis-full text-xs text-slate-500">
+        <p id="logo-hint" className="text-xs text-slate-500">
           PNG, JPG veya WEBP · en fazla 2 MB · kare önerilir.
         </p>
-        <div className="basis-full">
-          <FieldError id="logo-error" message={logoError ?? undefined} />
-          <Feedback saved={logo.saved} formError={logo.formError} />
-        </div>
+        {(logoError || logo.saved || logo.formError) && (
+          <div className="basis-full">
+            <FieldError id="logo-error" message={logoError ?? undefined} />
+            <Feedback saved={logo.saved} formError={logo.formError} />
+          </div>
+        )}
       </div>
-
-      <div className={divider} />
 
       <TextField
         name="companyName"
@@ -243,12 +268,12 @@ export function CompanySection({ profile, service, onSaved, onDirty }: SectionPr
         />
       </div>
 
-      <Feedback saved={save.saved} formError={save.formError} />
-      <div>
-        <Button type="submit" isPending={save.pending} disabled={!isDirty}>
+      <Feedback formError={save.formError} />
+      <SaveBar dirty={isDirty} saved={save.saved}>
+        <Button type="submit" isPending={save.pending} disabled={!isDirty} className={saveButton}>
           {save.pending ? "Kaydediliyor…" : "Kaydet"}
         </Button>
-      </div>
+      </SaveBar>
     </form>
   );
 }
@@ -292,7 +317,7 @@ export function ContactSection({ profile, service, onSaved, onDirty }: SectionPr
 
   return (
     <div className="flex flex-col">
-      <SectionHeading title="İletişim">İlan bildirimleri ve hesap e-postaları buraya gelir.</SectionHeading>
+      <SectionHeading eyebrow="İLETİŞİM" title="İletişim">İlan bildirimleri ve hesap e-postaları buraya gelir.</SectionHeading>
 
       <form ref={phoneRef} onSubmit={onPhone} noValidate aria-busy={phoneSave.pending} className="flex flex-col gap-4">
         <TextField
@@ -311,19 +336,26 @@ export function ContactSection({ profile, service, onSaved, onDirty }: SectionPr
           error={phoneSave.errors.whatsappPhone}
           disabled={phoneSave.pending}
         />
-        <Feedback saved={phoneSave.saved} formError={phoneSave.formError} />
-        <div>
-          <Button type="submit" isPending={phoneSave.pending} disabled={phone === phoneBase}>
+        <Feedback formError={phoneSave.formError} />
+        <SaveBar dirty={phone !== phoneBase} saved={phoneSave.saved}>
+          <Button type="submit" isPending={phoneSave.pending} disabled={phone === phoneBase} className={saveButton}>
             Numarayı kaydet
           </Button>
-        </div>
+        </SaveBar>
       </form>
 
       <div className={divider} />
 
       <form ref={emailRef} onSubmit={onEmail} noValidate aria-busy={emailSave.pending} className="flex flex-col gap-4">
         <div>
-          <p className="text-sm font-medium">E-posta</p>
+          <p className="flex flex-wrap items-center gap-2 text-sm font-medium">
+            E-posta
+            {profile.pendingEmail && (
+              <span className="rounded-full border border-mist-200 bg-cream-50 px-2 py-0.5 text-xs font-medium text-ink-900">
+                Onay bekliyor
+              </span>
+            )}
+          </p>
           <p className="mt-1 text-sm break-all text-slate-500">{profile.email}</p>
         </div>
         {profile.pendingEmail && (
@@ -396,7 +428,7 @@ export function SecuritySection({ service, onDirty, navigate }: SecurityProps) {
   return (
     <div className="flex flex-col">
       <form ref={formRef} onSubmit={onSubmit} noValidate aria-busy={save.pending} className="flex flex-col gap-4">
-        <SectionHeading title="Şifre">Güçlü ve başka yerde kullanmadığınız bir şifre seçin.</SectionHeading>
+        <SectionHeading eyebrow="GÜVENLİK" title="Şifre">Güçlü ve başka yerde kullanmadığınız bir şifre seçin.</SectionHeading>
         <PasswordField
           id="current"
           label="Mevcut şifre"
@@ -422,12 +454,12 @@ export function SecuritySection({ service, onDirty, navigate }: SecurityProps) {
           autoComplete="new-password"
           error={save.errors.confirm}
         />
-        <Feedback saved={save.saved} formError={save.formError} />
-        <div>
-          <Button type="submit" isPending={save.pending} disabled={!isDirty}>
+        <Feedback formError={save.formError} />
+        <SaveBar dirty={isDirty} saved={save.saved}>
+          <Button type="submit" isPending={save.pending} disabled={!isDirty} className={saveButton}>
             Şifreyi güncelle
           </Button>
-        </div>
+        </SaveBar>
       </form>
 
       <div className={divider} />
@@ -491,7 +523,7 @@ export function NotificationsSection({ profile, service, onSaved, onDirty }: Sec
 
   return (
     <form ref={formRef} onSubmit={onSubmit} noValidate aria-busy={save.pending} className="flex flex-col gap-4">
-      <SectionHeading title="Bildirimler">Neyi, nereden duymak istediğinizi seçin.</SectionHeading>
+      <SectionHeading eyebrow="TERCİHLER" title="Bildirimler">Neyi, nereden duymak istediğinizi seçin.</SectionHeading>
       <ul className="flex flex-col divide-y divide-mist-200">
         {PREFS.map(({ key, title, desc }) => {
           const on = prefs[key];
@@ -531,12 +563,12 @@ export function NotificationsSection({ profile, service, onSaved, onDirty }: Sec
           );
         })}
       </ul>
-      <Feedback saved={save.saved} formError={save.formError} />
-      <div>
-        <Button type="submit" isPending={save.pending} disabled={!isDirty}>
+      <Feedback formError={save.formError} />
+      <SaveBar dirty={isDirty} saved={save.saved}>
+        <Button type="submit" isPending={save.pending} disabled={!isDirty} className={saveButton}>
           {save.pending ? "Kaydediliyor…" : "Kaydet"}
         </Button>
-      </div>
+      </SaveBar>
     </form>
   );
 }
