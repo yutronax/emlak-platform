@@ -1,10 +1,17 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ensureAgentRow } from "@/lib/auth/ensureAgentRow";
+import { isPwnedPassword, PWNED_PASSWORD_MESSAGE } from "@/lib/auth/pwnedPassword";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
 import { signup } from "./actions";
+
+// Testler ağa çıkmaz; varsayılan "sızmamış". Mesaj sabiti gerçek modülden gelir.
+vi.mock("@/lib/auth/pwnedPassword", async (orig) => ({
+  ...(await orig<typeof import("@/lib/auth/pwnedPassword")>()),
+  isPwnedPassword: vi.fn(async () => false),
+}));
 
 vi.mock("@/lib/auth/ensureAgentRow", () => ({
   ensureAgentRow: vi.fn(),
@@ -58,6 +65,20 @@ describe("signup", () => {
     vi.clearAllMocks();
     vi.unstubAllEnvs();
     vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://emlak.example.com");
+  });
+
+  it("sızıntılarda görülmüş şifre reddedilir ve signUp() çağrılmaz", async () => {
+    vi.mocked(isPwnedPassword).mockResolvedValueOnce(true);
+    const { signUp } = setupSupabase({ data: { user: null, session: null }, error: null });
+    const fd = new FormData();
+    fd.set("email", "yeni@example.com");
+    fd.set("password", "password123");
+    fd.set("company_name", "Acme Emlak");
+    fd.set("terms", "on");
+
+    expect(await signup(fd)).toEqual({ error: PWNED_PASSWORD_MESSAGE });
+    expect(isPwnedPassword).toHaveBeenCalledWith("password123");
+    expect(signUp).not.toHaveBeenCalled();
   });
 
   // AC-6: company_name boş/sadece boşluk -> signUp() hiç çağrılmaz.

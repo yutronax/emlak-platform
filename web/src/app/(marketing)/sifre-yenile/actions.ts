@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 
+import { isPwnedPassword, PWNED_PASSWORD_MESSAGE } from "@/lib/auth/pwnedPassword";
 import { createClient } from "@/lib/supabase/server";
 
 const EXPIRED_MESSAGE = "Bağlantının süresi dolmuş";
@@ -23,6 +24,7 @@ export async function updatePassword(
 
   if (password.length < 8) return { error: TOO_SHORT_MESSAGE };
   if (password !== confirm) return { error: MISMATCH_MESSAGE };
+  if (await isPwnedPassword(password)) return { error: PWNED_PASSWORD_MESSAGE };
 
   const { error } = await supabase.auth.updateUser({ password });
   if (error) {

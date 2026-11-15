@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 
 import { ensureAgentRow } from "@/lib/auth/ensureAgentRow";
+import { isPwnedPassword, PWNED_PASSWORD_MESSAGE } from "@/lib/auth/pwnedPassword";
 import { createClient } from "@/lib/supabase/server";
 
 const GENERIC_MESSAGE = "Kayıt alındı; hesabınız varsa e-postanızı kontrol edin veya giriş yapın.";
@@ -25,6 +26,8 @@ export async function signup(formData: FormData): Promise<{ message: string } | 
     console.info("signup_terms_missing");
     return { error: TERMS_ERROR };
   }
+
+  if (await isPwnedPassword(password)) return { error: PWNED_PASSWORD_MESSAGE };
 
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({

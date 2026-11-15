@@ -2,6 +2,7 @@
 
 import { normalizeTrPhone } from "@/lib/auth-ui/phone";
 import { checkPassword } from "@/lib/auth-ui/password-strength";
+import { isPwnedPassword, PWNED_PASSWORD_MESSAGE } from "@/lib/auth/pwnedPassword";
 import type { CompanyInput, NotificationPrefs, Profile, SaveError, SaveResult } from "@/lib/profile-ui/types";
 import { LOGO_MAX_BYTES, LOGO_TYPES, validateCompany, validateEmailChange } from "@/lib/profile-ui/validation";
 import { createClient } from "@/lib/supabase/server";
@@ -180,6 +181,7 @@ export async function changePassword(input: { current: string; next: string }): 
   // Mevcut şifre doğrulanmadan yeni şifre yazılmaz (oturum çalınmasına karşı).
   const { error: authError } = await supabase.auth.signInWithPassword({ email: user.email, password: input.current });
   if (authError) return { status: "error", code: "wrong_password", field: "current" };
+  if (await isPwnedPassword(input.next)) return invalid("next", PWNED_PASSWORD_MESSAGE);
 
   const { error } = await supabase.auth.updateUser({ password: input.next });
   if (error) return { status: "error", code: "unknown", message: "Şifre güncellenemedi. Tekrar deneyin." };

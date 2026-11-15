@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { isPwnedPassword, PWNED_PASSWORD_MESSAGE } from "@/lib/auth/pwnedPassword";
 import { createClient } from "@/lib/supabase/server";
 
 import {
@@ -16,6 +17,11 @@ import {
 } from "./actions";
 
 vi.mock("@/lib/supabase/server", () => ({ createClient: vi.fn() }));
+// Testler ağa çıkmaz; varsayılan "sızmamış". Mesaj sabiti gerçek modülden gelir.
+vi.mock("@/lib/auth/pwnedPassword", async (orig) => ({
+  ...(await orig<typeof import("@/lib/auth/pwnedPassword")>()),
+  isPwnedPassword: vi.fn(async () => false),
+}));
 vi.mock("next/navigation", () => ({
   redirect: vi.fn((url: string) => {
     throw new Error(`REDIRECT:${url}`);
@@ -231,6 +237,16 @@ describe("hesap güvenliği", () => {
     expect(auth.signInWithPassword).toHaveBeenCalledWith({ email: "ayse@acme.com", password: "eski1234" });
     expect(auth.updateUser).toHaveBeenCalledWith({ password: "Yeni12345" });
     expect(res.status).toBe("ok");
+  });
+
+  it("sızıntılarda görülmüş yeni şifre reddedilir, şifre yazılmaz", async () => {
+    vi.mocked(isPwnedPassword).mockResolvedValueOnce(true);
+    const { auth } = setup();
+
+    const res = await changePassword({ current: "eski1234", next: "Password1!" });
+    expect(res).toMatchObject({ status: "error", field: "next", message: PWNED_PASSWORD_MESSAGE });
+    expect(isPwnedPassword).toHaveBeenCalledWith("Password1!");
+    expect(auth.updateUser).not.toHaveBeenCalled();
   });
 
   it("zayıf yeni şifre sunucuda da reddedilir", async () => {

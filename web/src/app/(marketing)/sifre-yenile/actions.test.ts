@@ -1,9 +1,16 @@
 import { redirect } from "next/navigation";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { isPwnedPassword, PWNED_PASSWORD_MESSAGE } from "@/lib/auth/pwnedPassword";
 import { createClient } from "@/lib/supabase/server";
 
 import { updatePassword } from "./actions";
+
+// Testler ağa çıkmaz; varsayılan "sızmamış". Mesaj sabiti gerçek modülden gelir.
+vi.mock("@/lib/auth/pwnedPassword", async (orig) => ({
+  ...(await orig<typeof import("@/lib/auth/pwnedPassword")>()),
+  isPwnedPassword: vi.fn(async () => false),
+}));
 
 vi.mock("@/lib/supabase/server", () => ({
   createClient: vi.fn(),
@@ -96,6 +103,17 @@ describe("updatePassword (/sifre-yenile)", () => {
 
     expect(updateUser).toHaveBeenCalledWith({ password: "yenisifre123" });
     expect(redirect).toHaveBeenCalledWith("/agent/dashboard?password_updated=1");
+  });
+
+  it("sızıntılarda görülmüş şifre reddedilir ve updateUser çağrılmaz", async () => {
+    vi.mocked(isPwnedPassword).mockResolvedValueOnce(true);
+    const { updateUser } = setupSupabase({ user: RECOVERY_USER });
+
+    expect(
+      await updatePassword(makeFormData({ password: "password123", password_confirm: "password123" })),
+    ).toEqual({ error: PWNED_PASSWORD_MESSAGE });
+    expect(updateUser).not.toHaveBeenCalled();
+    expect(redirect).not.toHaveBeenCalled();
   });
 
   // AC-12 (Medium): güncelleme hatası -> password_update_failed {reason} loglanır, şifre loglanmaz.
