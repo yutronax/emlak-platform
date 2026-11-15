@@ -34,6 +34,18 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     notFound();
   }
 
+  // AC-2: admin MFA (aal2) doğrulamadan admin sayfalarına giremez; okunamazsa kapalı-varsayılan.
+  let isAal2 = false;
+  try {
+    const { data: aal, error: aalError } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+    isAal2 = !aalError && aal?.currentLevel === "aal2";
+  } catch {
+    isAal2 = false;
+  }
+  if (!isAal2) {
+    redirect("/mfa");
+  }
+
   const sections: HeaderSection[] = [
     { href: "/admin", label: "Genel bakış", exact: true },
     { href: "/admin/listings", label: "İlanlar" },

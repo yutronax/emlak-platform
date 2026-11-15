@@ -89,6 +89,19 @@ describe.each(actions)("$name", ({ fn, rpcName, genericFailure }) => {
     expect(redirect).not.toHaveBeenCalled();
   });
 
+  // AC-1 (MFA): admin ama aal1 -> requireAdmin mfa-required döner; not-admin ile aynı şekilde reddedilir.
+  it("AC-1: requireAdmin mfa-required dönerse rpc ÇAĞRILMAZ ve 'yetkiniz yok' hatası fırlatır (not-admin ile aynı)", async () => {
+    const { rpc } = setupSupabase({ error: null });
+    vi.mocked(requireAdmin).mockResolvedValue({
+      ok: false,
+      reason: "mfa-required",
+    });
+
+    await expect(fn(makeFormData())).rejects.toThrow(/yetkiniz yok/i);
+    expect(rpc).not.toHaveBeenCalled();
+    expect(redirect).not.toHaveBeenCalled();
+  });
+
   // AC-S1 (oturum yok) / AC-S2: action içinde oturum yoksa /login'e yönlendirilir.
   it("AC-S1/S2: requireAdmin no-session dönerse redirect('/login') çağrılır ve rpc ÇAĞRILMAZ", async () => {
     const { rpc } = setupSupabase({ error: null });

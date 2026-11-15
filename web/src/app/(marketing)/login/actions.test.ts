@@ -107,8 +107,8 @@ describe("login", () => {
     },
   );
 
-  // AC-1: agents.is_admin = true -> doğrudan /admin/listings.
-  it("AC-1: agents.is_admin=true ise /admin/listings'e yönlendirilir", async () => {
+  // AC-3 (MFA): agents.is_admin = true -> önce /mfa (aal2 olmadan /admin/listings'e gidilmez).
+  it("AC-3: agents.is_admin=true ise /mfa'ya yönlendirilir, /admin/listings'e değil", async () => {
     setupSupabase(
       { error: null },
       { data: { user: { id: "user-1", user_metadata: {} } } },
@@ -119,7 +119,8 @@ describe("login", () => {
       login(makeFormData({ email: "test@example.com", password: "sifre123" })),
     ).rejects.toThrow("NEXT_REDIRECT");
 
-    expect(redirect).toHaveBeenCalledWith("/admin/listings");
+    expect(redirect).toHaveBeenCalledWith("/mfa");
+    expect(redirect).not.toHaveBeenCalledWith("/admin/listings");
   });
 
   // AC-2a: agents.is_admin = false -> /agent/dashboard.

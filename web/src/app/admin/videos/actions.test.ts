@@ -39,8 +39,9 @@ const h = vi.hoisted(() => {
   const objects = new Map<string, { size: number }>();
   const state: {
     user: { id: string } | null;
+    aal: "aal1" | "aal2";
     beforeExec: ((table: string, op: string) => void) | null;
-  } = { user: null, beforeExec: null };
+  } = { user: null, aal: "aal2", beforeExec: null };
   const calls = {
     createSignedUploadUrl: vi.fn(),
     createSignedUrl: vi.fn(),
@@ -161,7 +162,15 @@ const h = vi.hoisted(() => {
   };
 
   const client = {
-    auth: { getUser: async () => ({ data: { user: state.user }, error: null }) },
+    auth: {
+      getUser: async () => ({ data: { user: state.user }, error: null }),
+      mfa: {
+        getAuthenticatorAssuranceLevel: async () => ({
+          data: { currentLevel: state.aal, nextLevel: "aal2" },
+          error: null,
+        }),
+      },
+    },
     from: (table: string) => query(table),
     storage,
   };
@@ -198,6 +207,7 @@ function resetDb() {
   for (const key of Object.keys(h.db)) delete h.db[key];
   h.objects.clear();
   h.state.beforeExec = null;
+  h.state.aal = "aal2";
   h.state.user = { id: ADMIN };
   h.db.agents = [
     { id: ADMIN, is_admin: true },
@@ -309,6 +319,23 @@ describe("yetki — admin olmayan kullanıcı NOT_FOUND alır", () => {
     expect(orderRow(quote.orderId)?.status).toBe("quote_pending");
     expect(orderRow(delivery.orderId)?.status).toBe("in_progress");
     expect(rowsOf("property_videos")).toHaveLength(0);
+  });
+
+  // MFA: admin ama aal1 ise admin video işlemi yetkisiz sonuç döner, hiçbir yazma yapılmaz.
+  it("admin ama aal1 iken setQuote NOT_FOUND döner ve sipariş/fiyat yazılmaz", async () => {
+    const quote = seedOrder({ serviceCode: "onsite", status: "quote_pending" });
+    h.state.aal = "aal1";
+
+    await expect(setQuote(quote.orderId, "1500")).resolves.toMatchObject({
+      ok: false,
+      error: "NOT_FOUND",
+    });
+
+    expect(orderRow(quote.orderId)).toMatchObject({
+      status: "quote_pending",
+      price_minor_unit: null,
+    });
+    expect(revalidatePath).not.toHaveBeenCalled();
   });
 });
 

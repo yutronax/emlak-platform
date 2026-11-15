@@ -70,5 +70,6 @@ export async function login(formData: FormData): Promise<{ error: string } | nev
     }
   }
 
-  redirect(isAdmin ? "/admin/listings" : "/agent/dashboard");
+  // AC-3: admin önce MFA sayfasına gider (aal2 olmadan /admin/listings'e gidilmez).
+  redirect(isAdmin ? "/mfa" : "/agent/dashboard");
 }

@@ -28,9 +28,17 @@ vi.mock("next/navigation", () => ({
 }));
 
 type AgentResult = { data: { is_admin: boolean } | null; error: { message: string } | null };
+type AalResult = {
+  data: { currentLevel: string | null; nextLevel: string | null } | null;
+  error: { message: string } | null;
+};
 
-function setupSupabase(userId: string | null, agentResult?: AgentResult) {
+const AAL2: AalResult = { data: { currentLevel: "aal2", nextLevel: "aal2" }, error: null };
+const AAL1: AalResult = { data: { currentLevel: "aal1", nextLevel: "aal2" }, error: null };
+
+function setupSupabase(userId: string | null, agentResult?: AgentResult, aal: AalResult = AAL2) {
   const getUser = vi.fn().mockResolvedValue({ data: { user: userId ? { id: userId } : null } });
+  const getAuthenticatorAssuranceLevel = vi.fn().mockResolvedValue(aal);
 
   let maybeSingle: ReturnType<typeof vi.fn> | undefined;
   let agentsChain: Record<string, unknown> | undefined;
@@ -47,9 +55,9 @@ function setupSupabase(userId: string | null, agentResult?: AgentResult) {
     agentsChain.maybeSingle = maybeSingle;
   }
 
-  const supabase = { auth: { getUser }, from };
+  const supabase = { auth: { getUser, mfa: { getAuthenticatorAssuranceLevel } }, from };
   vi.mocked(createClient).mockResolvedValue(supabase as never);
-  return { getUser, from };
+  return { getUser, from, getAuthenticatorAssuranceLevel };
 }
 
 describe("AdminLayout", () => {
@@ -104,5 +112,61 @@ describe("AdminLayout", () => {
     expect(notFound).not.toHaveBeenCalled();
     expect(redirect).not.toHaveBeenCalled();
     expect(screen.getByText("gizli içerik")).toBeInTheDocument();
+  });
+
+  // AC-2: admin ama aal1 -> /mfa'ya yönlendirilir, içerik render edilmez.
+  it("AC-2: admin ama aal1 ise redirect('/mfa') çağrılır ve children render edilmez", async () => {
+    const { getAuthenticatorAssuranceLevel } = setupSupabase(
+      "user-1",
+      { data: { is_admin: true }, error: null },
+      AAL1,
+    );
+
+    await expect(AdminLayout({ children: <div>gizli içerik</div> })).rejects.toThrow(
+      "NEXT_REDIRECT",
+    );
+
+    expect(getAuthenticatorAssuranceLevel).toHaveBeenCalled();
+    expect(redirect).toHaveBeenCalledWith("/mfa");
+    expect(notFound).not.toHaveBeenCalled();
+  });
+
+  // AC-2: admin + aal2 -> sayfa açılır.
+  it("AC-2: admin + aal2 ise children render edilir, redirect/notFound çağrılmaz", async () => {
+    setupSupabase("user-1", { data: { is_admin: true }, error: null }, AAL2);
+
+    const jsx = await AdminLayout({ children: <div>gizli içerik</div> });
+    render(jsx);
+
+    expect(screen.getByText("gizli içerik")).toBeInTheDocument();
+    expect(redirect).not.toHaveBeenCalled();
+    expect(notFound).not.toHaveBeenCalled();
+  });
+
+  // AC-2 / kapalı-varsayılan: AAL okunamazsa admin /mfa'ya gider.
+  it("AC-2: admin ama AAL sorgusu hata dönerse redirect('/mfa') çağrılır", async () => {
+    setupSupabase(
+      "user-1",
+      { data: { is_admin: true }, error: null },
+      { data: null, error: { message: "mfa service unavailable" } },
+    );
+
+    await expect(AdminLayout({ children: <div>gizli içerik</div> })).rejects.toThrow(
+      "NEXT_REDIRECT",
+    );
+
+    expect(redirect).toHaveBeenCalledWith("/mfa");
+  });
+
+  // AC-2: admin değilse MFA kapısı değil, mevcut notFound() davranışı geçerlidir.
+  it("AC-2: admin olmayan aal1 kullanıcıda notFound() çağrılır, /mfa'ya yönlendirilmez", async () => {
+    setupSupabase("user-1", { data: { is_admin: false }, error: null }, AAL1);
+
+    await expect(AdminLayout({ children: <div>gizli içerik</div> })).rejects.toThrow(
+      "NEXT_NOT_FOUND",
+    );
+
+    expect(notFound).toHaveBeenCalled();
+    expect(redirect).not.toHaveBeenCalledWith("/mfa");
   });
 });
