@@ -1,10 +1,14 @@
 import type { ReactNode } from "react";
 import { notFound, redirect } from "next/navigation";
 
-import { Alert } from "@/components/ui/alert";
 import { createClient } from "@/lib/supabase/server";
 
+import EnrollForm from "./enroll-form";
 import { MfaForm } from "./mfa-form";
+
+// Blocking route: render'da Date.now vb. prerender uyarısını önler (admin layout ile aynı yaklaşım).
+// Render'da MFA kurulumu/temizliği YAPILMAZ; kurulum yalnız EnrollForm'un butonuyla başlar.
+export const instant = false;
 
 function MfaShell({ text, children }: { text: string; children: ReactNode }) {
   return (
@@ -20,7 +24,7 @@ function MfaShell({ text, children }: { text: string; children: ReactNode }) {
   );
 }
 
-// Yalnız admin; aal2 ise doğrudan admin paneline. MFA kurulumu/doğrulaması bu sayfada.
+// Yalnız admin; aal2 ise doğrudan admin paneline.
 export default async function MfaPage(_props: unknown) {
   const supabase = await createClient();
   const { data: userData } = await supabase.auth.getUser();
@@ -42,7 +46,7 @@ export default async function MfaPage(_props: unknown) {
     redirect("/admin/listings");
   }
 
-  // AC-S3: yalnız oturum sahibinin faktörleri (argümansız listFactors).
+  // AC-S3: yalnız oturum sahibinin faktörleri (argümansız listFactors). Salt okunur.
   const { data: factorData } = await supabase.auth.mfa.listFactors();
   const totp = factorData?.totp ?? [];
 
@@ -55,34 +59,9 @@ export default async function MfaPage(_props: unknown) {
     );
   }
 
-  // Doğrulanmamış (yarım kalmış) faktörler yenisinden önce temizlenir.
-  for (const factor of totp) {
-    await supabase.auth.mfa.unenroll({ factorId: factor.id });
-  }
-
-  const { data: enrolled, error: enrollError } = await supabase.auth.mfa.enroll({
-    factorType: "totp",
-    friendlyName: "Admin",
-  });
-  if (enrollError || !enrolled?.totp) {
-    return (
-      <MfaShell text="Kurulum başlatılamadı.">
-        <Alert variant="error">Kurulum başlatılamadı. Sayfayı yenileyip tekrar deneyin.</Alert>
-      </MfaShell>
-    );
-  }
-
   return (
     <MfaShell text="Google Authenticator gibi bir uygulamayla QR kodu okutun, uygulamadaki 6 haneli kodu girin.">
-      <div className="flex flex-col items-center gap-3">
-        {/* eslint-disable-next-line @next/next/no-img-element -- Supabase'in ürettiği SVG data URL; boyut sabit */}
-        <img src={enrolled.totp.qr_code} alt="MFA QR kodu" width={192} height={192} className="h-48 w-48" />
-        <p className="text-sm text-slate-500">QR okutamazsanız bu anahtarı elle girin:</p>
-        <code className="break-all font-mono text-sm">{enrolled.totp.secret}</code>
-      </div>
-      <div className="mt-6">
-        <MfaForm factorId={enrolled.id} />
-      </div>
+      <EnrollForm />
     </MfaShell>
   );
 }

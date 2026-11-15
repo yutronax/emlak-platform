@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createClient } from "@/lib/supabase/server";
 import { notFound, redirect } from "next/navigation";
 
-import { verifyMfa } from "./actions";
+import { startEnrollment, verifyMfa } from "./actions";
 import Page from "./page";
 
 vi.mock("@/lib/supabase/server", () => ({
@@ -15,6 +15,7 @@ vi.mock("@/lib/supabase/server", () => ({
 
 vi.mock("./actions", () => ({
   verifyMfa: vi.fn(),
+  startEnrollment: vi.fn(),
 }));
 
 vi.mock("next/navigation", () => ({
@@ -137,53 +138,60 @@ describe("MfaPage (/mfa)", () => {
     expect(mfa.enroll).not.toHaveBeenCalled();
   });
 
-  // AC-4: faktör yok -> kurulum ekranı (QR, secret, kod formu).
-  it("doğrulanmış faktör yoksa enroll({ factorType: 'totp', friendlyName: 'Admin' }) çağrılır", async () => {
+  // Yeni sözleşme: render asla enroll/unenroll çağırmaz (QR anahtarı kullanıcı kodu girene dek sabit kalmalı).
+  it("faktör yokken render enroll ve unenroll ÇAĞIRMAZ, startEnrollment de render'da çağrılmaz", async () => {
     const { mfa } = setupSupabase({ factors: [] });
 
     await renderPage();
 
-    expect(mfa.enroll).toHaveBeenCalledTimes(1);
-    expect(mfa.enroll).toHaveBeenCalledWith({ factorType: "totp", friendlyName: "Admin" });
+    expect(mfa.enroll).not.toHaveBeenCalled();
+    expect(mfa.unenroll).not.toHaveBeenCalled();
+    expect(startEnrollment).not.toHaveBeenCalled();
   });
 
-  it("faktör yokken QR kodu <img src> olarak, secret metin olarak ve 6 haneli kod formu render edilir", async () => {
-    setupSupabase({ factors: [] });
-
-    await renderPage();
-
-    const img = document.querySelector("img");
-    expect(img).not.toBeNull();
-    expect(img).toHaveAttribute("src", QR);
-    expect(screen.getByText(SECRET)).toBeInTheDocument();
-    expect(screen.getByLabelText(/doğrulama kodu/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /doğrula/i })).toBeInTheDocument();
-    expect(hiddenFactorId()).toBe("factor-new");
-  });
-
-  // AC-4: önceki yarım kalmış (unverified) faktörler kurulumdan önce temizlenir.
-  it("unverified faktörler enroll'dan ÖNCE unenroll ile temizlenir", async () => {
+  // Yeni sözleşme: unverified faktör varken de render temizlik/kurulum yapmaz.
+  it("unverified faktör varken render enroll ve unenroll ÇAĞIRMAZ", async () => {
     const { mfa } = setupSupabase({ factors: [UNVERIFIED] });
 
     await renderPage();
 
-    expect(mfa.unenroll).toHaveBeenCalledWith({ factorId: "factor-old" });
-    expect(mfa.enroll).toHaveBeenCalledTimes(1);
-    expect(mfa.unenroll.mock.invocationCallOrder[0]).toBeLessThan(
-      mfa.enroll.mock.invocationCallOrder[0],
-    );
+    expect(mfa.enroll).not.toHaveBeenCalled();
+    expect(mfa.unenroll).not.toHaveBeenCalled();
+    expect(screen.getByRole("button", { name: /kurulumu başlat/i })).toBeInTheDocument();
   });
 
-  // AC-S3: yalnız oturum sahibinin faktörleri listelenir; unenroll yalnız kendi unverified faktörü için.
-  it("AC-S3: faktörler argümansız mfa.listFactors() ile (oturum sahibinin) okunur", async () => {
+  // Yeni sözleşme: yeniden render (server action sonrası dahil) yeni anahtar üretmez.
+  it("sayfa yeniden render edildiğinde de enroll çağrılmaz", async () => {
+    const { mfa } = setupSupabase({ factors: [] });
+
+    await renderPage();
+    cleanup();
+    await renderPage();
+
+    expect(mfa.enroll).not.toHaveBeenCalled();
+    expect(mfa.unenroll).not.toHaveBeenCalled();
+  });
+
+  // Yeni sözleşme: faktör yokken kurulum bileşeni (buton) görünür; QR/secret render'da yok.
+  it("faktör yokken 'Kurulumu başlat' butonu görünür, QR ve secret render'da yoktur", async () => {
+    setupSupabase({ factors: [] });
+
+    await renderPage();
+
+    expect(screen.getByRole("button", { name: /kurulumu başlat/i })).toBeInTheDocument();
+    expect(document.querySelector("img")).toBeNull();
+    expect(screen.queryByText(SECRET)).toBeNull();
+    expect(hiddenFactorId()).toBeUndefined();
+  });
+
+  // AC-S3: faktörler argümansız mfa.listFactors() ile (oturum sahibinin) okunur.
+  it("AC-S3: faktörler argümansız mfa.listFactors() ile okunur", async () => {
     const { mfa } = setupSupabase({ factors: [UNVERIFIED] });
 
     await renderPage();
 
     expect(mfa.listFactors).toHaveBeenCalledTimes(1);
     expect(mfa.listFactors).toHaveBeenCalledWith();
-    expect(mfa.unenroll).toHaveBeenCalledTimes(1);
-    expect(mfa.unenroll).toHaveBeenCalledWith({ factorId: "factor-old" });
   });
 
   // AC-4: doğrulanmış faktör varsa kurulum yapılmaz, yalnız kod formu gösterilir.

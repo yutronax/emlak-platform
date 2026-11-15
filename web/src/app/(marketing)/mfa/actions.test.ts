@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
-import { verifyMfa } from "./actions";
+import { startEnrollment, verifyMfa } from "./actions";
 
 vi.mock("@/lib/supabase/server", () => ({
   createClient: vi.fn(),
@@ -19,15 +19,23 @@ vi.mock("next/navigation", () => ({
 }));
 
 const GENERIC_ERROR = "Kod geçersiz ya da süresi doldu.";
+const ENROLL_ERROR = "Kurulum başlatılamadı. Tekrar deneyin.";
+const NO_AUTH = "Yetkiniz yok.";
+const QR = "data:image/svg+xml;base64,PHN2Zy8+";
+const SECRET = "JBSWY3DPEHPK3PXP";
+
+type Factor = { id: string; status: "verified" | "unverified"; factor_type: "totp" };
 
 type Setup = {
   user?: { id: string } | null;
   isAdmin?: boolean;
   challengeResult?: { data: unknown; error: { message: string } | null };
+  factors?: Factor[];
+  enrollFails?: boolean;
 };
 
 // Hem admin kontrolü (getUser + agents.is_admin) hem MFA çağrıları aynı client mock'undan geçer.
-// Action, aal1 admin'in de doğrulama yapabilmesi için yetki kontrolünü aal'a bağlamamalıdır.
+// verifyMfa aal1 admin için de çalışmalı; bu yüzden yetki kontrolü aal'a bağlı olmamalıdır.
 function setupSupabase(options: Setup = {}) {
   const user = options.user === undefined ? { id: "admin-1" } : options.user;
   const isAdmin = options.isAdmin ?? true;
@@ -43,14 +51,26 @@ function setupSupabase(options: Setup = {}) {
     throw new Error(`Beklenmeyen tablo: ${table}`);
   });
 
+  const factors = options.factors ?? [];
   const mfa = {
     getAuthenticatorAssuranceLevel: vi.fn().mockResolvedValue({
       data: { currentLevel: "aal1", nextLevel: "aal2" },
       error: null,
     }),
-    listFactors: vi.fn().mockResolvedValue({ data: { totp: [], all: [] }, error: null }),
-    enroll: vi.fn().mockResolvedValue({ data: null, error: { message: "not expected" } }),
-    unenroll: vi.fn().mockResolvedValue({ data: { id: "x" }, error: null }),
+    listFactors: vi.fn().mockResolvedValue({ data: { totp: factors, all: factors }, error: null }),
+    enroll: vi.fn().mockResolvedValue(
+      options.enrollFails
+        ? { data: null, error: { message: "enroll boom" } }
+        : {
+            data: {
+              id: "factor-new",
+              type: "totp",
+              totp: { qr_code: QR, secret: SECRET, uri: "otpauth://totp/Admin?secret=JBSWY3DPEHPK3PXP" },
+            },
+            error: null,
+          },
+    ),
+    unenroll: vi.fn().mockResolvedValue({ data: { id: "factor-old" }, error: null }),
     challengeAndVerify: vi
       .fn()
       .mockResolvedValue(options.challengeResult ?? { data: {}, error: null }),
@@ -75,12 +95,106 @@ function expectNoMfaCall(mfa: Record<string, ReturnType<typeof vi.fn>>) {
   }
 }
 
+describe("startEnrollment", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  // Yetki: admin değil / oturum yok -> hiçbir mfa fonksiyonu çağrılmaz.
+  it.each([
+    { label: "admin değil", options: { isAdmin: false } },
+    { label: "oturum yok", options: { user: null } },
+  ])("$label ise mfa fonksiyonu çağrılmaz ve { status: 'error', message: 'Yetkiniz yok.' } döner", async ({ options }) => {
+    const { mfa } = setupSupabase({ ...options, factors: [UNVERIFIED] });
+
+    const result = await startEnrollment();
+
+    expectNoMfaCall(mfa);
+    expect(result).toEqual({ status: "error", message: NO_AUTH });
+  });
+
+  // AC-4: unverified faktörler kurulumdan önce unenroll ile temizlenir.
+  it("unverified TOTP faktörleri enroll'dan ÖNCE unenroll ile temizlenir", async () => {
+    const { mfa } = setupSupabase({ factors: [UNVERIFIED] });
+
+    await startEnrollment();
+
+    expect(mfa.listFactors).toHaveBeenCalled();
+    expect(mfa.unenroll).toHaveBeenCalledWith({ factorId: "factor-old" });
+    expect(mfa.enroll).toHaveBeenCalledTimes(1);
+    expect(mfa.unenroll.mock.invocationCallOrder[0]).toBeLessThan(
+      mfa.enroll.mock.invocationCallOrder[0],
+    );
+  });
+
+  // Güvenlik: zaten doğrulanmış TOTP faktörü varsa yeni kurulum YAPILMAZ. Aksi halde parolası
+  // çalınan biri kendi cihazını ikinci faktör olarak ekleyip MFA'yı atlatabilir.
+  it.each([
+    { label: "yalnız doğrulanmış faktör", factors: [VERIFIED] },
+    { label: "doğrulanmış + unverified faktör", factors: [VERIFIED, UNVERIFIED] },
+  ])(
+    "$label varsa enroll ve unenroll ÇAĞRILMAZ, { status: 'error', message: 'MFA zaten kurulu.' } döner",
+    async ({ factors }) => {
+      const { mfa } = setupSupabase({ factors });
+
+      const result = await startEnrollment();
+
+      expect(mfa.enroll).not.toHaveBeenCalled();
+      expect(mfa.unenroll).not.toHaveBeenCalled();
+      expect(result).toEqual({ status: "error", message: "MFA zaten kurulu." });
+    },
+  );
+
+  // Başarı: enroll çağrılır, factorId + qr + secret döner.
+  it("başarıda enroll({ factorType: 'totp', friendlyName: 'Admin' }) çağrılır ve { status: 'ok', factorId, qr, secret } döner", async () => {
+    const { mfa } = setupSupabase({ factors: [] });
+
+    const result = await startEnrollment();
+
+    expect(mfa.enroll).toHaveBeenCalledWith({ factorType: "totp", friendlyName: "Admin" });
+    expect(result).toEqual({ status: "ok", factorId: "factor-new", qr: QR, secret: SECRET });
+  });
+
+  // Hata: enroll başarısız -> Türkçe mesaj.
+  it("enroll hata dönerse { status: 'error', message: 'Kurulum başlatılamadı. Tekrar deneyin.' } döner", async () => {
+    setupSupabase({ factors: [], enrollFails: true });
+
+    const result = await startEnrollment();
+
+    expect(result).toEqual({ status: "error", message: ENROLL_ERROR });
+  });
+
+  // AC-S2: secret ve QR asla loglanmaz (başarı ve hata yolları).
+  it("AC-S2: başarı ve hata yollarında console çıktılarında secret/QR geçmez", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+    const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    setupSupabase({ factors: [] });
+    await startEnrollment();
+    setupSupabase({ factors: [], enrollFails: true });
+    await startEnrollment();
+
+    const logged = JSON.stringify([
+      consoleErrorSpy.mock.calls,
+      consoleLogSpy.mock.calls,
+      consoleWarnSpy.mock.calls,
+    ]);
+    expect(logged).not.toContain(SECRET);
+    expect(logged).not.toContain(QR);
+
+    consoleErrorSpy.mockRestore();
+    consoleLogSpy.mockRestore();
+    consoleWarnSpy.mockRestore();
+  });
+});
+
 describe("verifyMfa", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  // AC-4: kod tam 6 rakam değilse Supabase'e gidilmez, Türkçe hata döner.
+  // AC-4: kod tam 6 rakam değilse Supabase çağrılmadan Türkçe hata döner.
   it.each([
     { label: "5 rakam", code: "12345" },
     { label: "7 rakam", code: "1234567" },
@@ -181,3 +295,6 @@ describe("verifyMfa", () => {
     expect(redirect).not.toHaveBeenCalledWith("/admin/listings");
   });
 });
+
+const UNVERIFIED: Factor = { id: "factor-old", status: "unverified", factor_type: "totp" };
+const VERIFIED: Factor = { id: "factor-verified", status: "verified", factor_type: "totp" };

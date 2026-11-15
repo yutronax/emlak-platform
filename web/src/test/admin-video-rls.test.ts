@@ -21,6 +21,11 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
  * Vitest .env.local'i otomatik yüklemediği için burada elle okunuyor.
  * Service key yoksa tüm suite describe.skipIf ile atlanır (crash etmez).
  *
+ * Not (migration 0033): Admin verisine erişim aal2 (MFA) JWT ister. Bu testteki admin
+ * parolayla girer (aal1), bu yüzden admin yazma testleri "aal1 (MFA'sız) admin yapamaz"
+ * olarak reddi doğrular. aal2 başarılı yolu bu testte sınanmaz (TOTP kurulumu gerektirir);
+ * migration 0033 canlı doğrulamasında kimlik taklidiyle sınandı.
+ *
  * Fixture'lar (her çalıştırmada rastgele, afterAll'da temizlenir):
  *  - Admin (A): agents.is_admin=true, hiçbir property'ye sahip değil.
  *  - Sahip-olmayan agent (B): is_admin=false, propB'ye sahip.
@@ -227,47 +232,49 @@ describe.skipIf(!hasRealSupabaseEnv)(
     // ---------------------------------------------------------------------
     // Satır 1 — Admin, sahibi olmadığı property'ye INSERT → BAŞARILI
     // ---------------------------------------------------------------------
-    it("authz #1 / AC-S3 — admin, kendisine ait olmayan property'ye property_videos INSERT yapabilir", async () => {
-      const { data, error, status } = await adminClient
+    it("authz #1 / AC-S3 — aal1 (MFA'sız) admin, kendisine ait olmayan property'ye property_videos INSERT yapamaz (0033)", async () => {
+      const marker = `${propertyBId}/admin-aal1-${randomUUID()}.mp4`;
+
+      const { data, error } = await adminClient
         .from("property_videos")
-        .insert({
-          property_id: propertyBId,
-          storage_path: `${propertyBId}/admin-${randomUUID()}.mp4`,
-          status: "draft",
-        })
-        .select("id, property_id, status")
-        .single<Pick<VideoRow, "id" | "property_id" | "status">>();
+        .insert({ property_id: propertyBId, storage_path: marker, status: "draft" })
+        .select("id");
 
-      expect(error).toBeNull();
-      expect([200, 201]).toContain(status);
-      expect(data?.property_id).toBe(propertyBId);
-      expect(data?.status).toBe("draft");
+      // RLS reddi (42501) ya da etkilenen satır yok; her ikisinde de satır oluşmamalı.
+      expect(error !== null || (data ?? []).length === 0).toBe(true);
+      if (error) expect(error.code).toBe("42501");
 
-      if (data?.id) createdVideoIds.push(data.id);
+      const { data: check, error: checkErr } = await serviceClient
+        .from("property_videos")
+        .select("id")
+        .eq("storage_path", marker);
+      expect(checkErr).toBeNull();
+      expect(check).toEqual([]);
     });
 
     // ---------------------------------------------------------------------
     // Satır 2 — Admin, başkasının videosunu UPDATE (status=published) → BAŞARILI
     // ---------------------------------------------------------------------
-    it("authz #2 / AC-S3 — admin, kendisine ait olmayan property'nin videosunu published yapabilir", async () => {
-      const { data, error, status } = await adminClient
+    it("authz #2 / AC-S3 — aal1 (MFA'sız) admin, kendisine ait olmayan property'nin videosunu published yapamaz (0033)", async () => {
+      const { data, error } = await adminClient
         .from("property_videos")
         .update({ status: "published", published_at: new Date().toISOString() })
         .eq("id", videoForAdminId)
-        .select("id, status")
-        .single<Pick<VideoRow, "id" | "status">>();
+        .select("id, status");
 
-      expect(error).toBeNull();
-      expect(status).toBe(200);
-      expect(data?.status).toBe("published");
+      // RLS reddi (42501) ya da 0 satır etkilendi.
+      expect(error !== null || (data ?? []).length === 0).toBe(true);
+      if (error) expect(error.code).toBe("42501");
 
-      // Son durum service_role ile doğrulanır (yazma testi kuralı)
-      const { data: check } = await serviceClient
+      // Asıl kanıt: service_role ile durum değişmemiş olmalı (yazma testi kuralı).
+      const { data: check, error: checkErr } = await serviceClient
         .from("property_videos")
-        .select("status")
+        .select("status, published_at")
         .eq("id", videoForAdminId)
-        .single<Pick<VideoRow, "status">>();
-      expect(check?.status).toBe("published");
+        .single<Pick<VideoRow, "status" | "published_at">>();
+      expect(checkErr).toBeNull();
+      expect(check?.status).toBe("draft");
+      expect(check?.published_at).toBeNull();
     });
 
     // ---------------------------------------------------------------------
@@ -387,25 +394,26 @@ describe.skipIf(!hasRealSupabaseEnv)(
     // ---------------------------------------------------------------------
     // Satır 7 — Admin, property-videos bucket'ına herhangi bir property önekiyle yazar
     // ---------------------------------------------------------------------
-    it("authz #7 / AC-S3 — admin, property-videos bucket'ına başka bir property önekiyle dosya yükleyebilir", async () => {
-      const objectPath = `${propertyCId}/admin-storage-${randomUUID()}.mp4`;
+    it("authz #7 / AC-S3 — aal1 (MFA'sız) admin, property-videos bucket'ına başka bir property önekiyle dosya yükleyemez (0033)", async () => {
+      const objectPath = `${propertyCId}/admin-storage-aal1-${randomUUID()}.mp4`;
+      const fileName = objectPath.split("/").pop() as string;
+      // Başarısız olsa bile temizlik için takip et (yanlışlıkla oluşursa silinsin)
       createdStoragePaths.push(objectPath);
 
       const blob = new Blob([Buffer.from("fake-mp4-bytes")], { type: "video/mp4" });
-      const { data, error } = await adminClient.storage
+      const { error } = await adminClient.storage
         .from(BUCKET)
         .upload(objectPath, blob, { contentType: "video/mp4" });
 
-      expect(error).toBeNull();
-      expect(data?.path).toBe(objectPath);
+      // Storage RLS ihlali: yükleme hata vermeli.
+      expect(error).not.toBeNull();
 
-      // Dosya gerçekten Storage'da mı? (service_role ile liste)
-      const fileName = objectPath.split("/").pop() as string;
+      // Asıl kanıt: service_role ile Storage listesinde dosya olmamalı.
       const { data: listed, error: listErr } = await serviceClient.storage
         .from(BUCKET)
         .list(propertyCId, { search: fileName });
       expect(listErr).toBeNull();
-      expect(listed?.some((f) => f.name === fileName)).toBe(true);
+      expect(listed?.some((f) => f.name === fileName)).toBe(false);
     });
 
     // ---------------------------------------------------------------------
