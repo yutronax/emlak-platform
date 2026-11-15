@@ -208,24 +208,33 @@ describe.skipIf(!hasRealSupabaseEnv)(
     });
 
     afterAll(async () => {
-      // Storage dosyaları
+      // Temizlik hataları sessizce yutulmaz: canlı DB'de admin yetkili test hesabı kalmamalı.
+      const failures: string[] = [];
+      const note = (step: string, error: { message: string } | null) => {
+        if (error) failures.push(`${step}: ${error.message}`);
+      };
+
       if (createdStoragePaths.length > 0) {
-        await serviceClient.storage.from(BUCKET).remove(createdStoragePaths);
+        note("storage", (await serviceClient.storage.from(BUCKET).remove(createdStoragePaths)).error);
       }
-      // property_videos satırları
       if (createdVideoIds.length > 0) {
-        await serviceClient.from("property_videos").delete().in("id", createdVideoIds);
+        note(
+          "property_videos",
+          (await serviceClient.from("property_videos").delete().in("id", createdVideoIds)).error,
+        );
       }
-      // properties
       const propIds = [propertyBId, propertyCId].filter(Boolean);
       if (propIds.length > 0) {
-        await serviceClient.from("properties").delete().in("id", propIds);
+        note("properties", (await serviceClient.from("properties").delete().in("id", propIds)).error);
       }
-      // agents + auth kullanıcıları
       for (const id of [adminId, agentBId, agentCId]) {
         if (!id) continue;
-        await serviceClient.from("agents").delete().eq("id", id);
-        await serviceClient.auth.admin.deleteUser(id);
+        note(`agents ${id}`, (await serviceClient.from("agents").delete().eq("id", id)).error);
+        note(`auth ${id}`, (await serviceClient.auth.admin.deleteUser(id)).error);
+      }
+
+      if (failures.length > 0) {
+        throw new Error(`Test temizliği eksik kaldı:\n${failures.join("\n")}`);
       }
     });
 
@@ -350,7 +359,7 @@ describe.skipIf(!hasRealSupabaseEnv)(
     // Satır 6 — anon key SELECT: 200 + [] (RLS sessizce filtreler, Supabase normal davranışı)
     // Kontrast: service_role satırı görür (length 1), anon aynı sorguda [] görür.
     // ---------------------------------------------------------------------
-    it("authz #6 / AC-S2 — anon key property_videos SELECT -> 200+[] (RLS sessizce filtreler, Supabase normal davranışı)", async () => {
+    it("authz #6 / AC-S2 — anon key property_videos SELECT -> 42501 (0034: anon tablo yetkisi yok)", async () => {
       // 1) Önce service_role ile satırın gerçekten var olduğunu kanıtla (boş sonucun veri yokluğundan değil RLS'ten geldiğini ayırt etmek için)
       const { data: exists, error: existsErr, status: existsStatus } = await serviceClient
         .from("property_videos")
@@ -361,16 +370,14 @@ describe.skipIf(!hasRealSupabaseEnv)(
       expect(exists).not.toBeNull();
       expect(exists).toHaveLength(1);
 
-      // 2) Aynı sorgu anon key ile: hata yok, HTTP 200, veri boş dizi (null değil)
-      const { data, error, status } = await anonClient
+      // 2) Aynı sorgu anon key ile: 0034 sonrası anon'un tablo yetkisi yok → 42501, veri dönmez
+      const { data, error } = await anonClient
         .from("property_videos")
         .select("id")
         .eq("id", videoForBId);
 
-      expect(error).toBeNull();
-      expect(status).toBe(200);
-      expect(data).not.toBeNull();
-      expect(data).toEqual([]);
+      expect(error?.code).toBe("42501");
+      expect(data).toBeNull();
     });
 
     it("authz #6 / AC-S2 — anon key property_videos INSERT → reddedilir, satır oluşmaz", async () => {
