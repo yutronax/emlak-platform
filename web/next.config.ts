@@ -13,21 +13,23 @@ const supabaseOrigin = (() => {
   }
 })();
 
-// CSP önce Report-Only: ihlaller konsola düşer, sayfa KIRILMAZ (rapor önerisi).
-// Enforced hale getirmeden önce gerçek trafikte gözlemlenmeli.
+// CSP zorlanır (güvenlik değerlendirmesi 2026-11-15 bulgu 6). Teslim edilen ilan videoları
+// Supabase imzalı URL'sinden oynatıldığı için media-src Supabase'i içerir.
+const isDev = process.env.NODE_ENV !== "production";
 const csp = [
   "default-src 'self'",
   "base-uri 'self'",
   "object-src 'none'",
   "frame-ancestors 'none'",
   "form-action 'self'",
-  // Next.js satır içi bootstrap script'leri nonce olmadan 'unsafe-inline' ister; turbopack dev 'unsafe-eval'.
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+  // Next.js satır içi bootstrap script'leri nonce olmadan 'unsafe-inline' ister; 'unsafe-eval' yalnız dev (turbopack HMR).
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   `img-src 'self' data: blob: https://images.unsplash.com ${supabaseOrigin}`.trim(),
-  "media-src 'self' blob:",
+  `media-src 'self' blob: ${supabaseOrigin}`.trim(),
   "font-src 'self' data:",
-  `connect-src 'self' ${supabaseOrigin}`.trim(),
+  // dev: HMR websocket'i (ws://localhost) için ws: gerekir; production'da yok.
+  `connect-src 'self' ${supabaseOrigin}${isDev ? " ws:" : ""}`.trim(),
   "frame-src 'none'",
 ].join("; ");
 
@@ -37,7 +39,7 @@ const securityHeaders = [
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), interest-cohort=()" },
   { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
-  { key: "Content-Security-Policy-Report-Only", value: csp },
+  { key: "Content-Security-Policy", value: csp },
 ];
 
 const nextConfig: NextConfig = {

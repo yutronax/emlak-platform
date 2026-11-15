@@ -4,12 +4,36 @@ import type { ReactNode } from "react";
 
 import { AppHeader, type HeaderSection } from "@/components/app-shell/app-header";
 import { getProfileService } from "@/lib/profile-ui/service";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceRoleClient } from "@/lib/supabase/server";
 
 // Next.js 16 Cache Components: cookies() (Supabase session) her istekte
 // değişebilir, bu route segment'i prerender edilemez — statik build'i
 // engellemesin diye bloklu/dinamik render'a izin veriyoruz.
 export const instant = false;
+
+// Güvenlik değerlendirmesi bulgu 4: WhatsApp köprüsü 5 dk'dan uzun sessizse admin uyarılır.
+// sidecar_heartbeat RLS ile kapalı; yalnız servis rolü okur. Okunamazsa uyarı gösterilir (kapalı-varsayılan).
+const HEARTBEAT_STALE_MS = 5 * 60 * 1000;
+
+async function getScraperWarning(): Promise<string | null> {
+  try {
+    const { data, error } = await createServiceRoleClient()
+      .from("sidecar_heartbeat")
+      .select("last_beat_at")
+      .eq("id", 1)
+      .maybeSingle<{ last_beat_at: string | null }>();
+    if (error) return "Scraper durumu okunamadı.";
+    const last = data?.last_beat_at ? Date.parse(data.last_beat_at) : NaN;
+    if (Number.isNaN(last)) return "Scraper hiç sinyal göndermedi; WhatsApp köprüsü çalışmıyor olabilir.";
+    const minutes = Math.floor((Date.now() - last) / 60000);
+    if (Date.now() - last > HEARTBEAT_STALE_MS) {
+      return `Scraper ${minutes} dakikadır sinyal göndermiyor; WhatsApp köprüsü çalışmıyor olabilir.`;
+    }
+    return null;
+  } catch {
+    return "Scraper durumu okunamadı.";
+  }
+}
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
   // Date.now (Supabase getUser içinde) prerender sırasında çağrılmasın diye
@@ -46,6 +70,8 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     redirect("/mfa");
   }
 
+  const scraperWarning = await getScraperWarning();
+
   const sections: HeaderSection[] = [
     { href: "/admin", label: "Genel bakış", exact: true },
     { href: "/admin/listings", label: "İlanlar" },
@@ -63,6 +89,11 @@ export default async function AdminLayout({ children }: { children: ReactNode })
         navLabel="Yönetim bölümleri"
         homeHref={sections[0].href}
       />
+      {scraperWarning && (
+        <div role="alert" className="bg-red-50 px-4 py-2 text-center text-sm text-red-800">
+          {scraperWarning}
+        </div>
+      )}
       {children}
     </div>
   );

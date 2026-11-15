@@ -3,14 +3,33 @@ import "@testing-library/jest-dom/vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceRoleClient } from "@/lib/supabase/server";
 import { notFound, redirect } from "next/navigation";
 
 import AdminLayout from "./layout";
 
 vi.mock("@/lib/supabase/server", () => ({
   createClient: vi.fn(),
+  createServiceRoleClient: vi.fn(),
 }));
+
+type HeartbeatResult = { data: { last_beat_at: string | null } | null; error: { message: string } | null };
+
+// sidecar_heartbeat okuması (servis rolü). Varsayılan: 1 dk önce sinyal, uyarı yok.
+function setupHeartbeat(result: HeartbeatResult) {
+  const chain: Record<string, unknown> = {};
+  chain.select = vi.fn(() => chain);
+  chain.eq = vi.fn(() => chain);
+  chain.maybeSingle = vi.fn().mockResolvedValue(result);
+  const from = vi.fn((table: string) => {
+    if (table !== "sidecar_heartbeat") throw new Error(`Beklenmeyen tablo: ${table}`);
+    return chain;
+  });
+  vi.mocked(createServiceRoleClient).mockReturnValue({ from } as never);
+  return { from };
+}
+
+const minutesAgo = (m: number) => new Date(Date.now() - m * 60000).toISOString();
 
 vi.mock("next/server", () => ({
   connection: vi.fn(async () => undefined),
@@ -63,6 +82,7 @@ function setupSupabase(userId: string | null, agentResult?: AgentResult, aal: Aa
 describe("AdminLayout", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    setupHeartbeat({ data: { last_beat_at: minutesAgo(1) }, error: null });
   });
 
   afterEach(() => {
@@ -168,5 +188,65 @@ describe("AdminLayout", () => {
 
     expect(notFound).toHaveBeenCalled();
     expect(redirect).not.toHaveBeenCalledWith("/mfa");
+  });
+
+  // Bulgu 4: köprü heartbeat'i bayatsa admin uyarılır.
+  describe("scraper heartbeat uyarısı", () => {
+    const renderAdmin = async () => {
+      setupSupabase("user-1", { data: { is_admin: true }, error: null }, AAL2);
+      render(await AdminLayout({ children: <div>gizli içerik</div> }));
+    };
+
+    it("sinyal 1 dk önceyse uyarı gösterilmez", async () => {
+      await renderAdmin();
+      expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+      expect(screen.getByText("gizli içerik")).toBeInTheDocument();
+    });
+
+    it("sinyal 12 dk önceyse dakika ile uyarı gösterilir", async () => {
+      setupHeartbeat({ data: { last_beat_at: minutesAgo(12) }, error: null });
+      await renderAdmin();
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "Scraper 12 dakikadır sinyal göndermiyor; WhatsApp köprüsü çalışmıyor olabilir.",
+      );
+    });
+
+    it("hiç sinyal yoksa (last_beat_at null) uyarı gösterilir", async () => {
+      setupHeartbeat({ data: { last_beat_at: null }, error: null });
+      await renderAdmin();
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "Scraper hiç sinyal göndermedi; WhatsApp köprüsü çalışmıyor olabilir.",
+      );
+    });
+
+    it("heartbeat satırı yoksa uyarı gösterilir", async () => {
+      setupHeartbeat({ data: null, error: null });
+      await renderAdmin();
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "Scraper hiç sinyal göndermedi; WhatsApp köprüsü çalışmıyor olabilir.",
+      );
+    });
+
+    it("okuma hata dönerse 'okunamadı' uyarısı gösterilir, sayfa yine açılır", async () => {
+      setupHeartbeat({ data: null, error: { message: "boom" } });
+      await renderAdmin();
+      expect(screen.getByRole("alert")).toHaveTextContent("Scraper durumu okunamadı.");
+      expect(screen.getByText("gizli içerik")).toBeInTheDocument();
+    });
+
+    it("istemci oluşturma fırlatırsa 'okunamadı' uyarısı gösterilir", async () => {
+      vi.mocked(createServiceRoleClient).mockImplementation(() => {
+        throw new Error("env yok");
+      });
+      await renderAdmin();
+      expect(screen.getByRole("alert")).toHaveTextContent("Scraper durumu okunamadı.");
+    });
+
+    it("admin olmayan kullanıcı için heartbeat okunmaz", async () => {
+      const { from } = setupHeartbeat({ data: { last_beat_at: minutesAgo(1) }, error: null });
+      setupSupabase("user-1", { data: { is_admin: false }, error: null });
+      await expect(AdminLayout({ children: <div /> })).rejects.toThrow("NEXT_NOT_FOUND");
+      expect(from).not.toHaveBeenCalled();
+    });
   });
 });
