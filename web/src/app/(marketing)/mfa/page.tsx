@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { notFound, redirect } from "next/navigation";
+import { connection } from "next/server";
 
 import { createClient } from "@/lib/supabase/server";
 
@@ -26,6 +27,7 @@ function MfaShell({ text, children }: { text: string; children: ReactNode }) {
 
 // Yalnız admin; aal2 ise doğrudan admin paneline.
 export default async function MfaPage(_props: unknown) {
+  await connection();
   const supabase = await createClient();
   const { data: userData } = await supabase.auth.getUser();
   if (!userData.user) {
