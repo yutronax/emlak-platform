@@ -205,7 +205,19 @@ async function bridge() {
 
   const sock = makeWASocket({
     auth: state,
-    logger: pino({ level: 'warn' }),
+    // KVKK: Baileys uyarı loglarındaki telefon numarası taşıyan JID alanları maskelenir.
+    logger: pino({
+      level: 'warn',
+      redact: {
+        paths: [
+          'jid', 'remoteJid', 'participant', 'participantAlt', 'remoteJidAlt', 'from', 'to',
+          '*.jid', '*.remoteJid', '*.participant', '*.participantAlt', '*.remoteJidAlt', '*.from', '*.to',
+          '*.key.remoteJid', '*.key.participant', '*.key.participantAlt', '*.key.remoteJidAlt',
+          '*.attrs.from', '*.attrs.to', '*.attrs.participant', '*.attrs.recipient',
+        ],
+        censor: '[gizli]',
+      },
+    }),
     printQRInTerminal: false,
     enableRecentMessageCache: true,
   });
