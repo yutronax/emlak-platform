@@ -62,6 +62,14 @@ function classifyUnhandledReason(msg) {
   return null;
 }
 
+// KVKK: Baileys loglarında numara taşıyan JID'ler alan adından bağımsız, metnin tamamında maskelenir
+// (sender/author gibi yol listesine girmeyen alanlar ve metne gömülü JID'ler dahil).
+// Örn. 905551112233@s.whatsapp.net, 905551112233:12@s.whatsapp.net, 1203630...@g.us, 2345...@lid.
+const JID_PATTERN = /\d{5,}(?::\d+)?@(s\.whatsapp\.net|c\.us|g\.us|lid|broadcast|newsletter)/g;
+function maskJids(text) {
+  return String(text).replace(JID_PATTERN, '[gizli]@$1');
+}
+
 // PII'siz satır: ham metin/JID yazılmaz, sadece zaman, mesaj ID ve grup/DM bilgisi + sabit extra alanlar.
 function logUnhandled(msg, extra = {}) {
   try {
@@ -217,6 +225,8 @@ async function bridge() {
         ],
         censor: '[gizli]',
       },
+      // Yol listesinin kaçırdığı JID'ler için son savunma: satır yazılmadan önce metin maskelenir.
+      hooks: { streamWrite: maskJids },
     }),
     printQRInTerminal: false,
     enableRecentMessageCache: true,
@@ -268,7 +278,7 @@ if (require.main === module) {
   }
 
   bridge().catch((e) => {
-    console.error('[BRIDGE BAŞLATMA HATASI]', e);
+    console.error('[BRIDGE BAŞLATMA HATASI]', maskJids(e && e.stack ? e.stack : e));
     process.exit(1);
   });
 
@@ -282,4 +292,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { isGroupJid, processIncomingMessage, webhookDelivery };
+module.exports = { isGroupJid, processIncomingMessage, webhookDelivery, maskJids };
