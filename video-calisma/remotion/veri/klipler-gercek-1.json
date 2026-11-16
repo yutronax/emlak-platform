@@ -1,0 +1,10 @@
+{"koridor": {"video": "medya/gercek/u-koridor.mp4", "en_fazla_sn": 6.5, "not": "gerçek telefon çekimi, mermer koridor"},
+ "koridor2": {"video": "medya/flow/koridor2.mp4", "en_fazla_sn": 3.0, "not": "3. sn'den sonra başka odaya giriyor; yalnız 0–3 sn kullan"},
+ "dolap": {"video": "medya/flow/dolap.mp4", "en_fazla_sn": 4.5, "not": "4.5 sn'den sonra koridor uzuyor; yalnız 0–4.5 sn"},
+ "salon": {"video": "medya/flow/salon.mp4", "en_fazla_sn": 8},
+ "mutfak": {"video": "medya/flow/mutfak.mp4", "en_fazla_sn": 8},
+ "balkon": {"video": "medya/flow/balkon.mp4", "en_fazla_sn": 8},
+ "manzara": {"video": "medya/flow/manzara.mp4", "en_fazla_sn": 8},
+ "yatak1": {"video": "medya/flow/yatak1.mp4", "en_fazla_sn": 8},
+ "banyo": {"video": "medya/flow/banyo.mp4", "en_fazla_sn": 8},
+ "banyo2": {"video": "medya/flow/banyo2.mp4", "en_fazla_sn": 8}}

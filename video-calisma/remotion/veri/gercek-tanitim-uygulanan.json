@@ -1,0 +1,234 @@
+{
+ "konsept": "Ataşehir Malatya Caddesi'nde Ferah ve Lüks 3+1 Daire Sunumu",
+ "muzik": {
+  "dosya": "medya/luxury-real-estate.mp3",
+  "baslangic_sn": 0,
+  "neden": "Dairenin prestijli konumu ve geniş ferah mekanlarına uygun kurumsal, şık ve sakin ritim."
+ },
+ "renk_tonu": "parlak",
+ "font": {
+  "baslik": "Montserrat",
+  "alt": "Raleway"
+ },
+ "vurgu_rengi": "#D4AF37",
+ "acilis": {
+  "teknik": "donusum",
+  "klipler": [
+   {
+    "video": "medya/gercek/u-koridor.mp4",
+    "kesit_bas_sn": 0.0
+   }
+  ],
+  "stil": "maske_yukari",
+  "metin": "ATAŞEHİR'DE|3+1 DAİRE",
+  "sure_sn": 1.4,
+  "ses": "vurus"
+ },
+ "planlar": [
+  {
+   "klip": "koridor",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 4.5,
+   "efekt": {
+    "ad": "isik_huzmesi",
+    "an_sn": 0.5
+   },
+   "yazi": null,
+   "sonraki_gecis": {
+    "ad": "isik_sizinti",
+    "sure_sn": 0.5,
+    "ses": "hava"
+   },
+   "neden": "Girişteki mermer zemin ve şık koridoru sakin bir yürüyüşle izleyiciye tanıtıyoruz.",
+   "video": "medya/gercek/u-koridor.mp4"
+  },
+  {
+   "klip": "salon",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 5.0,
+   "efekt": {
+    "ad": "vinyet",
+    "an_sn": 0.5
+   },
+   "yazi": {
+    "metin": "MALATYA CADDESİ",
+    "alt": "CEPHELİ",
+    "stil": "cizgi",
+    "konum": "alt",
+    "giris_sn": 0.8
+   },
+   "sonraki_gecis": {
+    "ad": "bulanik_kayma_sag",
+    "sure_sn": 0.5,
+    "ses": "whoosh"
+   },
+   "neden": "Geniş salonu ve lokasyon bilgisini vurgulamak için.",
+   "video": "medya/gercek/u-salon.mp4"
+  },
+  {
+   "klip": "dolap",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 4.0,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "sonraki_gecis": {
+    "ad": "cozulme",
+    "sure_sn": 0.4,
+    "ses": "hava"
+   },
+   "neden": "Gömme dolap detaylarını göstererek depolama alanına dikkat çekiyoruz.",
+   "video": "medya/gercek/u-dolap.mp4"
+  },
+  {
+   "klip": "mutfak",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 2.3,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "sonraki_gecis": {
+    "ad": "kayma_sag",
+    "sure_sn": 0.4,
+    "ses": "whoosh"
+   },
+   "neden": "Mutfak dolaplarının temiz ve modern görünümünü sunuyoruz.",
+   "video": "medya/gercek/plan-4.mp4"
+  },
+  {
+   "klip": "balkon",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.8,
+   "sure_sn": 2.5,
+   "efekt": {
+    "ad": "mercek",
+    "an_sn": 0.4
+   },
+   "yazi": {
+    "metin": "TEK BALKON",
+    "stil": "maske_yukari",
+    "konum": "orta",
+    "giris_sn": 0.5
+   },
+   "sonraki_gecis": {
+    "ad": "isik_sizinti",
+    "sure_sn": 0.5,
+    "ses": "parilti"
+   },
+   "neden": "Tek balkon özelliğini cam balkona giriş ana planıyla net bir şekilde gösteriyoruz.",
+   "video": "medya/gercek/balkon-giris.mp4"
+  },
+  {
+   "klip": "balkon2",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 3.5,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "sonraki_gecis": {
+    "ad": "cozulme",
+    "sure_sn": 0.4,
+    "ses": "hava"
+   },
+   "neden": "Balkonun genişliğini ve köşe cam detaylarını destekliyoruz.",
+   "video": "medya/gercek/balkon-genis.mp4"
+  },
+  {
+   "klip": "yatak2",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 4.5,
+   "efekt": {
+    "ad": "vinyet",
+    "an_sn": 0.5
+   },
+   "yazi": null,
+   "sonraki_gecis": {
+    "ad": "bulanik_kayma_sol",
+    "sure_sn": 0.5,
+    "ses": "whoosh"
+   },
+   "neden": "Geniş ebeveyn yatak odasını rahatlatıcı bir havayla tanıtıyoruz.",
+   "video": "medya/gercek/u-yatak2.mp4"
+  },
+  {
+   "klip": "yatak1",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 2.8,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "sonraki_gecis": {
+    "ad": "kayma_alt",
+    "sure_sn": 0.4,
+    "ses": "hava"
+   },
+   "neden": "Diğer oda seçeneğini ve 3+1 alan bütünlüğünü tamamlıyoruz.",
+   "video": "medya/gercek/plan-7.mp4"
+  },
+  {
+   "klip": "banyo",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 3.5,
+   "efekt": {
+    "ad": "parilti_toz",
+    "an_sn": 0.3
+   },
+   "yazi": {
+    "metin": "ÇİFT BANYO",
+    "stil": "daktilo",
+    "konum": "alt",
+    "giris_sn": 0.6
+   },
+   "sonraki_gecis": {
+    "ad": "cozulme",
+    "sure_sn": 0.4,
+    "ses": "hava"
+   },
+   "neden": "Ana banyonun ferahlığını ve çift banyo özelliğini sunuyoruz.",
+   "video": "medya/gercek/u-banyo.mp4"
+  },
+  {
+   "klip": "banyo2",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 2.2,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "sonraki_gecis": {
+    "ad": "isik_sizinti",
+    "sure_sn": 0.6,
+    "ses": "vurus"
+   },
+   "neden": "İkinci banyoyu göstererek çift banyo bilgisini pekiştiriyoruz.",
+   "video": "medya/gercek/ek-banyo.mp4"
+  }
+ ],
+ "gerekce": "Videoyu aceleci olmayan, izleyicinin mekanları 3-5 saniyelik sürelerle rahatça deneyimleyebileceği şık bir akışta kurguladık. Sadece onaylanmış gerçek ilan bilgileri kullanıldı, balkonu gösterme kuralına riayet edilerek ilk karedeki zemin koruma sacı engellendi ve metin-görsel eşleşmesi tam sağlandı.",
+ "kapanis": {
+  "logo": "medya/logo.png",
+  "cagri": "YERİNDE GÖRÜN",
+  "telefon": "0 (507) 118 23 62",
+  "sure_sn": 4.5,
+  "logo_animasyonu": "yukselis",
+  "notlar": []
+ }
+}

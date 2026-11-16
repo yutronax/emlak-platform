@@ -1,0 +1,160 @@
+{
+  "model": "gemini-2.5-flash",
+  "parcalar": [
+    {
+      "etiket": "KLIP 614529",
+      "mekan": "Açık Plan Oturma Odası ve Yemek Alanı",
+      "kalite": 9,
+      "kamera": "Sabit geniş açı, genel bakış",
+      "kullanim": "Açılış ve ilk plan, mekanın genel atmosferini tanıtmak için"
+    },
+    {
+      "etiket": "KLIP 614419",
+      "mekan": "Oturma Odası",
+      "kalite": 9,
+      "kamera": "Orta yakın, koltuk ve sehpa detayı",
+      "kullanim": "Oturma alanının konforunu ve dekoratif öğeleri vurgulamak"
+    },
+    {
+      "etiket": "KLIP 614410",
+      "mekan": "Yemek Alanı ve Oturma Odası",
+      "kalite": 9,
+      "kamera": "Yemek masası üzerinden oturma odasına doğru hafif kaydırma",
+      "kullanim": "Yemek ve oturma alanları arasındaki akışı ve bağlantıyı göstermek"
+    },
+    {
+      "etiket": "KLIP 614407",
+      "mekan": "Yemek Alanı ve Mutfak",
+      "kalite": 9,
+      "kamera": "Yemek masası ve sandalyelerden mutfak ve pencereye doğru",
+      "kullanim": "Mutfakla entegre yemek alanının şıklığını ve pencere detayını sunmak"
+    },
+    {
+      "etiket": "KLIP 614541",
+      "mekan": "Modern Mutfak ve Yemek Alanı",
+      "kalite": 9,
+      "kamera": "Sabit geniş açı, mutfak ve yemek masası",
+      "kullanim": "Mutfak tasarımını ve yemek alanının bütünlüğünü ortaya koymak"
+    },
+    {
+      "etiket": "KLIP 614421",
+      "mekan": "Mutfak ve Yemek Alanı",
+      "kalite": 8,
+      "kamera": "Yakın, sandalye ayarlayan kişi, vazo",
+      "kullanim": "Mekana insan dokunuşu katmak, yaşam alanının işlevselliğini ve samimiyetini göstermek"
+    },
+    {
+      "etiket": "KLIP 614406",
+      "mekan": "Yemek Alanı ve Oturma Odası",
+      "kalite": 9,
+      "kamera": "Sabit geniş açı, yemek masası ve oturma odası manzarası",
+      "kullanim": "Mekanın geneline tekrar bir bakış sunarak kapanışa hazırlık"
+    }
+  ],
+  "edit_turu": "Modern Yaşam Tarzı Sunumu + Şık Akış",
+  "hikaye": "Şehrin kalbinde, modern yaşamın tüm konforunu sunan, her detayı özenle tasarlanmış bir dairenin hikayesi. Fonksiyonelliği estetikle birleştiren, doğal ışıkla dolu ferah alanlar. Mimari çizimden gerçeğe dönüşen bir düş, sakin ve ilham verici bir yaşam alanı.",
+  "planlar": [
+    {
+      "etiket": "KLIP 614529",
+      "baslangic_sn": 0,
+      "neden": "Açılış efekti için geniş bir perspektif sunuyor ve mekanın büyüklüğünü vurguluyor."
+    },
+    {
+      "etiket": "KLIP 614419",
+      "baslangic_sn": 0,
+      "neden": "Oturma alanının rahatlığını ve dekoratif uyumunu gösteriyor."
+    },
+    {
+      "etiket": "KLIP 614410",
+      "baslangic_sn": 0,
+      "neden": "Yemek ve oturma alanları arasındaki geçişi akıcı bir şekilde sunuyor, perspektif sağlıyor."
+    },
+    {
+      "etiket": "KLIP 614407",
+      "baslangic_sn": 0,
+      "neden": "Yemek alanından mutfağa ve pencereden gelen doğal ışığa odaklanıyor."
+    },
+    {
+      "etiket": "KLIP 614541",
+      "baslangic_sn": 0,
+      "neden": "Mutfak ve yemek alanını bir bütün olarak gösteren en temiz ve geniş plan."
+    },
+    {
+      "etiket": "KLIP 614421",
+      "baslangic_sn": 0,
+      "neden": "İnsan etkileşimiyle mekana sıcaklık katıyor ve sandalyelerin kumaş dokusunu vurguluyor."
+    },
+    {
+      "etiket": "KLIP 614406",
+      "baslangic_sn": 0,
+      "neden": "Filmin başında olduğu gibi, kapanışa doğru genel bir izlenim bırakmak için kullanılıyor."
+    }
+  ],
+  "plan_suresi_sn": 3.5,
+  "gecisler": [
+    {
+      "ad": "Çizimden Gerçeğe Geçiş",
+      "yontem": "Filmin açılışı 'kurgu/cizimden_gercege.py' betiği kullanılarak yapılacak. KLIP 614529'un ilk 3 saniyesi 'sag' yönde, bir mimari çizimin modern yaşam alanına dönüştüğü dinamik bir açılış sunacak. Çizimin çizgileri yavaşça belirginleşip gerçekçi renklere ve dokulara dönüşürken, sahne sağdan sola doğru kayarak kendini açığa çıkaracak.",
+      "ses": "Yüksek frekanslı, hafif bir 'sihirli fırça darbesi' sesiyle başlayıp, sahne belirginleştikçe ince bir 'ortam ambiyansı' fısıltısı eşlik edecek."
+    },
+    {
+      "ad": "Yumuşak Işık Solması",
+      "yontem": "Plan 1'den Plan 2'ye geçişte, ilk plan yavaşça parlak beyaz bir ışığa doğru solacak (0.8 saniye), ardından bu ışık hızlanarak solarak Plan 2'yi ortaya çıkaracak (0.7 saniye). Işık solması sırasında her iki görüntünün kenarları hafifçe bulanıklaşacak, yumuşak bir odak geçişi hissi verecek.",
+      "ses": "Yükselen, hafif bir 'ışık parlaması' sesi, ardından sakin bir 'nefes alma' efekti."
+    },
+    {
+      "ad": "Dairesel Yakınlaşma",
+      "yontem": "Plan 2'den Plan 3'e geçişte, Plan 2'nin merkezinden yavaşça dışa doğru genişleyen, yarı şeffaf, koyu gri bir daire belirecek. Bu daire, 1.2 saniye içinde ekranı tamamen kaplamadan hemen önce, Plan 3'ün görüntüsünü dairesel bir maske içinde açığa çıkaracak ve ardından daire hızla küçülerek tamamen kaybolacak. Geçişin son 0.4 saniyesi hız rampasıyla hızlanacak.",
+      "ses": "Hafif bir 'su dalgası' sesi ile birlikte orta frekanslı, kısa bir 'yuvarlak açılma' sesi."
+    },
+    {
+      "ad": "Hız Rampalı Düz Kesme",
+      "yontem": "Plan 3'ten Plan 4'e ve Plan 5'ten Plan 6'ya geçişlerde kullanılacak. Her iki planın son 0.5 saniyesi hızlanacak ve ardından düz bir kesme ile yeni plana geçilecek. Geçişin hızıyla oluşan ani ama net bir görüntü değişimi olacak.",
+      "ses": "Kısa ve net bir 'deklanşör' sesi."
+    },
+    {
+      "ad": "Yanlara Açılan Perde",
+      "yontem": "Plan 4'ten Plan 5'e geçişte, Plan 4'ün görüntüsü, 1.5 saniye süresince merkezden sağa ve sola doğru eşit şekilde açılarak kaybolacak. Bu açılma sırasında geride Plan 5'in görüntüsü yavaşça belirmeye başlayacak. Perde etkisi, şeffaf, hafifçe dokulu bir malzeme hissi verecek. Açılmanın son 0.5 saniyesi hızlanacak.",
+      "ses": "Yavaşça açılan bir 'ipek perde' sesiyle, hafif bir 'atmosferik rüzgar' fısıltısı karışımı."
+    },
+    {
+      "ad": "Mozaik Kapsül",
+      "yontem": "Plan 6'dan Plan 7'ye geçişte, Plan 6'nın görüntüsü 1.3 saniye boyunca küçük, yuvarlak ve hafif şeffaf mozaik kapsüllere ayrılacak. Bu kapsüller, ekranın dışına doğru yavaşça dağılırken, aynı anda Plan 7'nin görüntüsü, dağılan kapsüllerin arasından, benzer yuvarlak formlarda yavaşça birleşerek ortaya çıkacak. Geçişin son 0.3 saniyesi hızlanarak tamamlanacak.",
+      "ses": "Kristal bir 'çıngırak' sesiyle başlayan, ardından yumuşak bir 'birleşme' sesiyle biten, hafif 'kabarcık' dokunuşları."
+    }
+  ],
+  "isik_renk": "Tüm film boyunca, mekanın modern ve ferah atmosferini pekiştiren, doğal ışığı vurgulayan bir renk paleti kullanılacak. Renkler canlılığını korurken, daha sıcak ve davetkar bir his için hafifçe altın rengi tonlara kayacak. Geniş pencerelerden gelen ışık, mekanları aydınlatırken, derinlik ve boyut katacak gölgeler dengeli bir şekilde işlenecek. Genel kontrast 1.05, doygunluk 1.02, parlaklık 0.01 seviyesinde tutulacak. Renk dengesi, kırmızı ve mavi tonlarda hafif artışla (+0.015) daha zengin bir görünüm sağlayacak. Ton eğrileri, koyu tonları daha derin, açık tonları daha parlak yaparak dinamik aralığı artıracak.",
+  "isik_efektleri": "Açılış efekti sırasında ve başlıkların belirginleşmesinde, kamera lensinden geçen güneş ışığının yarattığı doğal bir 'parlama' efekti (lens flare) hafifçe kullanılacak. Bu parlamalar, sıcak ve davetkar bir atmosfer yaratacak. Özellikle pencereye yakın çekimlerde, ışığın içeri doluşunu hissettiren yumuşak 'ışık süzmeleri' eklenecek, ancak görüntüyü boğmadan doğal bir etki yaratacak şekilde ayarlanacak.",
+  "acilis": "Film, siyah ekrandan yavaşça ortaya çıkan bir mimari çizim silüeti ile başlayacak. Ardından 'Çizimden Gerçeğe Geçiş' efekti devreye girecek ve bu silüet, KLIP 614529'un gerçekçi, aydınlık ve detaylı görüntüsüne, sağdan sola doğru bir dönüşümle evrilecek. Bu geçiş yaklaşık 3 saniye sürecek ve mekanın hayalden gerçeğe adım adım şekillendiğini vurgulayacak. Fon müziği bu sırada yavaşça yükselecek.",
+  "kapanis": "Son plan olan KLIP 614406'nın bitiminde, görüntü yavaşça, sıcak beyaz bir ışık patlamasına doğru çözülecek (1.5 saniye). Bu ışık patlaması içinde, logo ve iletişim bilgileri kademeli olarak belirecek. 'YERİNDE GÖRÜN' çağrısı, hemen altında hayali bir telefon numarası (örn: '0 5XX XXX XX XX') ile birlikte, modern ve temiz bir fontla beyaz renkte, logonun altına ortalanmış şekilde yer alacak. Kapanış ekranında fon müziği yavaşça solacak ve 'Müzik: Kevin MacLeod (incompetech.com) · CC BY 4.0' kredi bilgisi alt kısımda zarifçe görünecek.",
+  "yazi": {
+    "gorunum": "Yazı tipi 'Roboto Bold' olacak. Boyut 72px, renk saf beyaz (hex: #FFFFFF). Yazılar, ekranın üst orta kısmında, yatay olarak ortalanmış şekilde yer alacak. Metnin hemen altında, ince, yatay bir ayırıcı çizgi (1px kalınlığında, beyaz) bulunacak. Gölge efekti (shadow) olmayacak, metin keskin ve net olacak.",
+    "animasyon": "Başlıklar, ekranın üst kenarından aşağıya doğru 0.6 saniyede zarif bir şekilde süzülerek belirecek ve aynı yörünge üzerinde 0.5 saniyede yukarıya doğru süzülerek kaybolacak. Belirme ve kaybolma anlarında metne eşlik eden, hafif, dağılmış ve sıcak bir ışık parlaması efekti (bloom effect) eklenecek, bu da kelimelere 'canlılık' katacak. Hız rampaları her zaman bu hareketlere entegre edilecek."
+  },
+  "basliklar": [
+    {
+      "plan_no": 0,
+      "metin": "MODERN YAŞAM ALANI"
+    },
+    {
+      "plan_no": 2,
+      "metin": "KONFOR VE ZARAFET"
+    },
+    {
+      "plan_no": 4,
+      "metin": "PRATİK VE ŞIK MUTFAK"
+    },
+    {
+      "plan_no": 6,
+      "metin": "DETAYLARDA FARK YARATIN"
+    }
+  ],
+  "muzik": {
+    "tarif": "Bu film için ideal müzik, modern, kurumsal bir lüks hissi veren, orta tempoda (~100 BPM), piyano, yaylılar ve hafif bir ritimle dolu, güven veren ve ilham verici bir parça olmalı. Mekanın şıklığını ve dinginliğini vurgulayan, ancak dinamizm katmaktan da çekinmeyen bir melodiye sahip olmalı.",
+    "secim": "luxury-real-estate.mp3",
+    "baslangic_sn": 0,
+    "neden": "'Luxury-real-estate.mp3' parçası, tarif edilen tüm özellikleri taşıyor. Kurumsal lüks emlak teması, piyano ve yaylıların zarafeti, orta temposuyla modern ve güven veren bir atmosfer yaratmaya son derece uygun. Müzik, evin estetik ve fonksiyonel değerlerini kusursuzca destekleyecek."
+  },
+  "seslendirme_metni": "Şehrin kalbinde, modern çizgilerin ve sıcak detayların buluştuğu bir ev. Geniş yaşam alanları, şık mutfağı ve doğal ışıkla dolu odalarıyla, size özel bir yaşam sunuyor. Hayallerinizdeki konfor burada başlıyor.",
+  "gerekce": "Bu emlak tanıtım filmi, modern ve minimalist bir evin ruhunu yansıtmak üzere tasarlandı. 'Çizimden Gerçeğe' açılış efekti, projenin vizyonunu ve tamamlanmış halinin cazibesini anında ortaya koyarak güçlü bir başlangıç yapıyor. Seçilen 7 plan, evin ana yaşam alanlarını (oturma, yemek, mutfak) dengeli bir şekilde sergiliyor, geniş açılardan detay çekimlerine geçiş yaparak hem mekanın bütünlüğünü hem de özenle seçilmiş dekoratif unsurları vurguluyor. Özellikle KLIP 614421'deki insan dokunuşu, evin yaşanabilir ve davetkar atmosferini pekiştiriyor. Işık ve renk düzenlemeleri, doğal aydınlığı maksimize ederek ferah bir his verirken, sıcak tonlarla modern estetiği harmanlıyor. Geçişler (Yumuşak Işık Solması, Dairesel Yakınlaşma, Yanlara Açılan Perde, Mozaik Kapsül) hem görsel çeşitlilik sağlıyor hem de efekt yoğunluğu kuralına uyarak izleyicinin dikkatinin evden çok efektlere kaymasını engelliyor. Her geçişin mekanın akışı ve kamera hareketleriyle uyumlu olmasına özen gösterildi. 'Roboto Bold' yazı tipi ve parlak ışık animasyonu, evin modern ve şık imajını desteklerken, metinlerin okunabilirliğini ve etkisini artırıyor. Seslendirme metni, evin temel özelliklerini vurgulayarak kısa ve akılda kalıcı bir mesaj iletiyor. 'Luxury-real-estate.mp3' müziği ise, projenin premium kalitesini ve hedef kitlesine uygun lüks algısını tamamlıyor. Tüm bu kararlar, evin modern ve davetkar yapısını, hedef alıcının hayallerini süsleyecek bir yaşam tarzı sunumuyla birleştirmeyi amaçlamaktadır."
+}

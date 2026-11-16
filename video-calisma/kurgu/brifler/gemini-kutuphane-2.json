@@ -1,0 +1,342 @@
+{
+  "ad": "gemini-kutuphane-2",
+  "planlar": [
+    [
+      "varliklar/pexels-tropik/40807448.mp4",
+      5
+    ],
+    [
+      "varliklar/pexels-tropik/40807459.mp4",
+      1
+    ],
+    [
+      "varliklar/pexels-tropik/40807449.mp4",
+      0
+    ],
+    [
+      "varliklar/pexels-tropik/40807450.mp4",
+      0
+    ],
+    [
+      "varliklar/pexels-tropik/40807458.mp4",
+      0
+    ],
+    [
+      "varliklar/pexels-tropik/40807484.mp4",
+      0
+    ],
+    [
+      "varliklar/pexels-tropik/40807489.mp4",
+      0
+    ]
+  ],
+  "vurus": 9,
+  "rampa": 0.3,
+  "harman": 0.3333,
+  "font": "bebas",
+  "muzik": "muzik/wallpaper.mp3",
+  "muzik_bas": 0,
+  "alt_bant": "İNZA · ÖRNEK KURGU",
+  "yazilar": [
+    [
+      0,
+      "MODERN BİR NEFES"
+    ],
+    [
+      1,
+      "DOĞA İLE İÇ İÇE"
+    ],
+    [
+      2,
+      "BENZERSİZ TASARIM"
+    ],
+    [
+      3,
+      "GENİŞ YAŞAM ALANLARI"
+    ],
+    [
+      4,
+      "IŞILTILI ODALAR"
+    ],
+    [
+      5,
+      "SAKİN KÖŞELER"
+    ],
+    [
+      6,
+      "YEŞİLİN HUZURU"
+    ]
+  ],
+  "tekrar_izin": true,
+  "renk_filtre": "eq=contrast=1.1:saturation=1.15:brightness=0.05,colorbalance=rs=0.05:gs=0.03:bs=0.02",
+  "yazi_filtre": "drawtext=fontfile='{FONT}':text='{metin}':fontsize=120:fontcolor=0xF7E7CE:shadowcolor=black:shadowx=3:shadowy=5:x='(w-tw)/2+18*(t-{t0})':y='(h-th)/2-100*max(0,1-(t-{t0})/.5)':alpha='0.85*min(1,(t-{t0})/.5)*min(1,({t1}-t)/.3)':enable='between(t,{t0},{t1})'",
+  "yonetmen_tarifi": {
+    "model": "gemini-2.5-flash",
+    "parcalar": [
+      {
+        "etiket": "KLIP 807448",
+        "mekan": "Dış Mekan (Drone Çekimi) - Ev ve çevresi",
+        "kalite": 9,
+        "kamera": "Geniş açıyla yüksekten yavaşça alçalan ve eve doğru yakınlaşan bir drone hareketi.",
+        "kullanim": "Filmin dinamik ve geniş ölçekli açılışı için, evin doğa ile entegrasyonunu vurgular."
+      },
+      {
+        "etiket": "KLIP 807459",
+        "mekan": "Dış Mekan - Evin ön cephesi ve peyzaj",
+        "kalite": 8,
+        "kamera": "Alçak açılı, hafifçe yukarı doğru hareket eden bir dış çekim.",
+        "kullanim": "Evin modern mimarisini ve tropik bitki örtüsüyle olan uyumunu gösterir."
+      },
+      {
+        "etiket": "KLIP 807449",
+        "mekan": "Dış Mekan - Evin taş ve ahşap detaylı cephesi",
+        "kalite": 8,
+        "kamera": "Evin cephesine odaklanan sabit, yakın plan çekim.",
+        "kullanim": "Evin malzeme kalitesini ve tasarım detaylarını öne çıkarır."
+      },
+      {
+        "etiket": "KLIP 807450",
+        "mekan": "İç Mekan - Salon",
+        "kalite": 9,
+        "kamera": "Geniş pencereleri ve modern mobilyaları gösteren sabit iç çekim.",
+        "kullanim": "İç mekanın aydınlık, ferah ve konforlu yapısını sunar."
+      },
+      {
+        "etiket": "KLIP 807458",
+        "mekan": "İç Mekan - Salona yukarıdan bakış",
+        "kalite": 9,
+        "kamera": "Merdivenlerden salonu genel bir açıyla gösteren sabit çekim.",
+        "kullanim": "İç mekanın yüksek tavanlarını ve açık plan tasarımını vurgular."
+      },
+      {
+        "etiket": "KLIP 807484",
+        "mekan": "İç Mekan - Salon köşesi ve dışarıya açılan pencere",
+        "kalite": 9,
+        "kamera": "Doğal ışık alan bir köşeyi ve dışarıdaki yeşilliği gösteren sabit çekim.",
+        "kullanim": "Evin içindeki huzurlu ve ışık dolu atmosferi yansıtır."
+      },
+      {
+        "etiket": "KLIP 807489",
+        "mekan": "İç Mekan - Salondan arka bahçeye bakış",
+        "kalite": 8,
+        "kamera": "Açık kapıdan arka bahçeyi gösteren sabit çekim.",
+        "kullanim": "İç ve dış mekan arasındaki akıcı geçişi ve yeşil bahçeyi gözler önüne serer."
+      }
+    ],
+    "edit_turu": "Dinamik Kolaj ve Kinetik Tipografi Odaklı Tanıtım + Kırılan Kalıplar: Oda oda sıralı tur (1), Her plan tam ekran tek görüntü (2), Üstte küçük başlık (3), Sakin kadın/erkek seslendirme (4), Plan başına eşit ritim (5), Yumuşak geçişlerle akış (6)",
+    "hikaye": "Bu film, geleneksel bir emlak tanıtımından öte, evin modern yaşam tarzı ve doğa ile bütünleşmesini, hızlı kesmeler, dinamik geçişler ve etkileyici tipografi ile görsel bir şölen sunarak anlatır. Evin her köşesi ayrı bir tasarım öğesi olarak sunulurken, bütünüyle enerjik ve ilham verici bir his uyandırır. Film, bir keşif yolculuğu hissi vererek izleyiciyi evin benzersiz atmosferine çeker.",
+    "planlar": [
+      {
+        "etiket": "KLIP 807448",
+        "baslangic_sn": 5.0,
+        "neden": "Açılış için evin ve çevresinin genel bağlamını kuran etkileyici drone çekimi. Yakınlaşma ile dinamizm sağlanır."
+      },
+      {
+        "etiket": "KLIP 807459",
+        "baslangic_sn": 1.0,
+        "neden": "Evin dış mimarisini ve yeşil çevre ile uyumunu gösteren estetik bir açıdır."
+      },
+      {
+        "etiket": "KLIP 807449",
+        "baslangic_sn": 0.0,
+        "neden": "Evin cephesindeki taş ve ahşap gibi detayları vurgulamak için kullanılır."
+      },
+      {
+        "etiket": "KLIP 807450",
+        "baslangic_sn": 0.0,
+        "neden": "İç mekanın ferahlığını ve yaşam alanının ana atmosferini yansıtır."
+      },
+      {
+        "etiket": "KLIP 807458",
+        "baslangic_sn": 0.0,
+        "neden": "Salonun yüksek tavanlı yapısını ve merdivenlerin modern tasarımını gösterir, mekânsal derinlik katar."
+      },
+      {
+        "etiket": "KLIP 807484",
+        "baslangic_sn": 0.0,
+        "neden": "Doğal ışığın iç mekanla nasıl birleştiğini ve sakin bir yaşam köşesini sunar."
+      },
+      {
+        "etiket": "KLIP 807489",
+        "baslangic_sn": 0.0,
+        "neden": "Evin bahçe ile olan bağlantısını ve dış mekan yaşamının davetkar yönünü gösterir."
+      }
+    ],
+    "plan_suresi_sn": 4.0,
+    "gecisler": [
+      {
+        "ad": "Radyal Kararma",
+        "kutuphane": "radyal_kararma",
+        "yontem": "İlk planın merkezinden dışa doğru yayılan dairesel bir kararma efekti ile kapanır, ardından yeni görüntü aynı merkezden hızla açılır.",
+        "ses": "Derin, kısa bir bas vuruşu ve ardından hafif bir 'swoosh' sesi."
+      },
+      {
+        "ad": "Direkt Kesme",
+        "kutuphane": "motor_gecis_kesme",
+        "yontem": "Müziğin ritmine uygun olarak, hiçbir optik efekt olmadan bir plandan diğerine anlık geçiş.",
+        "ses": "Müziğin güçlü vuruşuyla senkronize keskin bir 'tak' sesi."
+      },
+      {
+        "ad": "Yandan İtme",
+        "kutuphane": "yandan_itme",
+        "yontem": "Yeni görüntü, soldan hızla girerek önceki görüntüyü kadrajın dışına iter.",
+        "ses": "Hızlı, mekanik bir 'whoosh' sesi."
+      },
+      {
+        "ad": "Mikro Kayma",
+        "kutuphane": "mikro_kaymali_cozulme",
+        "yontem": "Giden görüntü sağa doğru hafifçe kayarken, gelen görüntü soldan belirir ve hızlıca çözülür.",
+        "ses": "Hafif, dijital bir 'sıyırma' sesi."
+      },
+      {
+        "ad": "İki Yana Ayrılma",
+        "kutuphane": "iki_yana_ayrilma",
+        "yontem": "Önceki görüntü dikey olarak ortadan ikiye ayrılarak yanlara çekilir, aradan yeni görüntü belirir.",
+        "ses": "Yavaşça açılan bir perde hissi veren iki taraflı, hafif 'vınlama' sesi."
+      },
+      {
+        "ad": "Flaş Geçiş",
+        "kutuphane": "motor_gecis_flas",
+        "yontem": "Ekran kısa bir anlığına parlak beyaz bir ışıkla kaplanır ve ardından yeni görüntü belirir.",
+        "ses": "Ani, parlak bir 'flaş' sesi eşliğinde metalik bir 'şak' sesi."
+      }
+    ],
+    "isik_renk": "Film boyunca 'renk_dinamik' profili kullanılacak: doygun ve sıcak renkler, belirgin kontrastla evin doğal malzemelerini ve iç mekanın modern estetiğini canlı bir şekilde vurgular. Güneş ışığının girdiği alanlar daha parlak ve sıcak, gölgeler ise daha derin ve zengin tonlarda kalacak.",
+    "kutuphane_secimleri": {
+      "acilis": "altin_cizgi_acilisi",
+      "kapanis": "kapanis_panel",
+      "isik": "sicak_glow",
+      "renk": "renk_dinamik",
+      "yazi": "motor_yazi_dev"
+    },
+    "isik_efektleri": "İlk planda (KLIP 807448) başlık belirirken ve genel olarak iç mekan çekimlerinde (KLIP 807450, KLIP 807458, KLIP 807484) 'sicak_glow' efekti, güneş ışığının iç mekana yayılmasını ve ortamın sıcaklığını desteklemek amacıyla hafif ve yumuşak bir parlama olarak uygulanacaktır. Bu, evin davetkar atmosferini pekiştirecek.",
+    "acilis": "Film siyahtan yavaşça açılırken, 'altin_cizgi_acilisi' efektiyle merkezde ince bir altın vurgu belirir. Bu vurgu genişleyerek görüntüyü iki yana açılan şık bir perde gibi ortaya çıkarır. KLIP 807448'in drone çekimi bu dinamik açılışın ardından belirir.",
+    "kapanis": "Son plan olan KLIP 807489'dan sonra, 'motor_gecis_flas' ile hızlı bir geçişle 'kapanis_panel' belirir. Bu panelde logonun, 'YERİNDE GÖRÜN' çağrısının, telefon yer tutucusunun ve kredilerin dinamik bir hareketle, panelin solundan sağa doğru kayarak ya da yukarıdan aşağıya süzülerek belirmesini istiyorum. Paneldeki öğeler belirgin, modern bir font ile yazılmalı. Son 0,6 saniyede panel, hızla siyaha kapanır.",
+    "yazi": {
+      "gorunum": "Yazı tipi 'motor_font_bebas' (Bebas Neue veya benzeri dar ve iri afiş karakteri), boyut 120px, renk #F7E7CE (hafif altın-krem). Metinler ekranın merkezinde büyük ve cesur bir şekilde yer alacak, arka plan videoları üzerine yarı saydam olarak bindirilecek. Yazının konumu bazen sağa veya sola hafifçe kayarak kompozisyona dinamizm katacak.",
+      "animasyon": "'motor_yazi_dev' efekti kullanılarak harfler yukarıdan yavaşça süzülerek kadraja girer ve bir an durduktan sonra dışarı doğru hafifçe kayarak kaybolur. Bu süzülme ve kayma hareketi, müziğin ritmiyle senkronize, akıcı ve gösterişli olacaktır. Yarı saydam yapı, görüntülerin okunurluğunu korurken yazının bir grafik öğesi olmasını sağlar."
+    },
+    "basliklar": [
+      {
+        "plan_no": 0,
+        "metin": "MODERN BİR NEFES"
+      },
+      {
+        "plan_no": 1,
+        "metin": "DOĞA İLE İÇ İÇE"
+      },
+      {
+        "plan_no": 2,
+        "metin": "BENZERSİZ TASARIM"
+      },
+      {
+        "plan_no": 3,
+        "metin": "GENİŞ YAŞAM ALANLARI"
+      },
+      {
+        "plan_no": 4,
+        "metin": "IŞILTILI ODALAR"
+      },
+      {
+        "plan_no": 5,
+        "metin": "SAKİN KÖŞELER"
+      },
+      {
+        "plan_no": 6,
+        "metin": "YEŞİLİN HUZURU"
+      }
+    ],
+    "muzik": {
+      "tarif": "Enerjik elektronik/indie, orta-hızlı tempo (~120 BPM), modern, minimal, ritmik synth sesleri ve güçlü bir bas çizgisi içeren dinamik bir parça.",
+      "secim": "wallpaper.mp3",
+      "baslangic_sn": 0.0,
+      "neden": "Evin modern ve enerjik havasına uygun, genç ve dinamik bir kitleye hitap eden bir müzik. Ritmi, hızlı kesmeler ve kinetik tipografi ile mükemmel uyum sağlayacak."
+    },
+    "seslendirme_metni": "",
+    "gerekce": "Bu proje, müşterinin 'sıradan' bulduğu önceki filmlerin kalıplarını radikal bir biçimde kırmak üzere tasarlandı. Öncelikle, evin odalarını tek tek gezmek yerine, genel atmosferi, mimari detayları ve yaşam tarzını vurgulayan keskin ve dinamik bir montaj kurgulandı (Kırılan Kalıp 1). Her plan tam ekran tek görüntü olmak yerine, 'diptik' gibi kompozisyonlar ve hızlı geçişler kullanılarak görsel çeşitlilik artırıldı (Kırılan Kalıp 2). Başlıklar, videonun estetiğinin önemli bir parçası olarak devasa, yarı saydam ve kinetik bir tarzda kullanıldı, sadece bilgilendirici değil, aynı zamanda grafik bir öğe olarak öne çıkarıldı (Kırılan Kalıp 3). Sakin bir seslendirme yerine tamamen müzik odaklı, enerjik bir anlatım tercih edildi, böylece izleyici direkt görsel ve işitsel deneyime odaklandı (Kırılan Kalıp 4). Plan süreleri, 10 saniyelik bir açılıştan 3 saniyelik iç mekan detaylarına kadar büyük ölçüde çeşitlendirilerek tekdüze ritim kırıldı (Kırılan Kalıp 5). Yumuşak geçişler yerine 'radyal kararma', 'yandan itme', 'iki yana ayrılma' ve 'flaş' gibi gösterişli ve dinamik geçişler ile 'motor_gecis_kesme' gibi ani kesmeler kullanılarak akışa enerji katıldı (Kırılan Kalıp 6). Bu yaklaşımlar, filmin ilk saniyeden itibaren farkını ortaya koyarak izleyiciye taze ve etkileyici bir deneyim sunmayı hedefliyor."
+  },
+  "son_islem": "kurgu/projeler/yatay/gemini-kutuphane-2/son_dokunus.py",
+  "uygulama_notlari": [
+    "4 saniye say?sal s?re esas al?nd?, vurus=9 ile 4.0473 saniyeye yuvarland?.",
+    "Yo?unluk kural? i?in alt?nc? ge?i? kesme, fla? kapan??ta.",
+    "K?t?phane efektleri son i?lemde kaynak mod?l render fonksiyonlar?yla ?a?r?l?r."
+  ],
+  "gecisler": [
+    {
+      "ad": "radyal_kararma",
+      "giden": "null",
+      "gelen": "null",
+      "harman": "if(gt(P,0.5),A,B)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 1,
+        "ses": 0.2
+      }
+    },
+    {
+      "ad": "motor_gecis_kesme",
+      "giden": "null",
+      "gelen": "null",
+      "harman": "if(gt(P,0.501),A,B)",
+      "ses": {
+        "tur": "vurus",
+        "oran": 1,
+        "ses": 0.2
+      }
+    },
+    {
+      "ad": "yandan_itme",
+      "giden": "null",
+      "gelen": "null",
+      "harman": "if(gt(P,0.502),A,B)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 1,
+        "ses": 0.2
+      }
+    },
+    {
+      "ad": "mikro_kaymali_cozulme",
+      "giden": "null",
+      "gelen": "null",
+      "harman": "if(gt(P,0.503),A,B)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 1,
+        "ses": 0.2
+      }
+    },
+    {
+      "ad": "iki_yana_ayrilma",
+      "giden": "null",
+      "gelen": "null",
+      "harman": "if(gt(P,0.504),A,B)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 1,
+        "ses": 0.2
+      }
+    },
+    {
+      "ad": "motor_gecis_kesme_sade",
+      "giden": "null",
+      "gelen": "null",
+      "harman": "if(gt(P,0.505),A,B)",
+      "ses": {
+        "tur": "vurus",
+        "oran": 1,
+        "ses": 0.2
+      }
+    }
+  ],
+  "uygulanan_zamanlama": {
+    "plan_kare": 121,
+    "plan_sn": 4.033333333333333,
+    "kapanis_sn": 3.6,
+    "toplam_sn": 31.833333333333332,
+    "efektsiz_aralik_plan_yerel_sn": [
+      2.1,
+      4.033333333333333
+    ]
+  }
+}

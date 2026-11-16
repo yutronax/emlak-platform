@@ -1,0 +1,124 @@
+{
+  "ad": "gemini-radikal-2",
+  "planlar": [
+    [
+      "varliklar/pexels-trstudio/29466047.mp4",
+      0.4
+    ],
+    [
+      "varliklar/pexels-trstudio/29466021.mp4",
+      0.9
+    ],
+    [
+      "varliklar/pexels-trstudio/29466027.mp4",
+      0.466667
+    ],
+    [
+      "varliklar/pexels-trstudio/29466038.mp4",
+      1.2
+    ],
+    [
+      "varliklar/pexels-trstudio/29466011.mp4",
+      2.5
+    ],
+    [
+      "varliklar/pexels-trstudio/29466013.mp4",
+      0.533333
+    ]
+  ],
+  "vurus": 7,
+  "rampa": 0.3,
+  "harman": 0.3333,
+  "yavas": 0.5,
+  "egri": [
+    1.0
+  ],
+  "gecisler": [
+    {
+      "ad": "Geometrik Portal Genişlemesi",
+      "giden": "null",
+      "gelen": "null",
+      "harman": "if(lt(abs(X-W/2),W/2*(1-P)),B,A)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 0.65,
+        "ses": 0.4
+      }
+    },
+    {
+      "ad": "Ritmik Sert Kesme",
+      "giden": "null",
+      "gelen": "null",
+      "harman": "if(gt(P,0.5),A,B)",
+      "ses": {
+        "tur": "vurus",
+        "oran": 0.8,
+        "ses": 0.38
+      }
+    },
+    {
+      "ad": "Işık Yarığı Çözülmesi",
+      "giden": "eq=brightness='0.08*{p}':eval=frame",
+      "gelen": "eq=brightness='0.08*{p}':eval=frame",
+      "harman": "A*P+B*(1-P)+24*exp(-abs(X-W/2)/(4+180*(1-P)))*sin(PI*P)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 1.2,
+        "ses": 0.23
+      }
+    },
+    {
+      "ad": "Sade Kesme — yoğunluk uyarlaması",
+      "giden": "null",
+      "gelen": "null",
+      "harman": "if(gte(P,0.5),A,B)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 0.6,
+        "ses": 0.12
+      }
+    },
+    {
+      "ad": "Simetrik Odak Kayması",
+      "giden": "scale=2112:1188,crop={W}:{H}:x='96+90*{p}':y=54",
+      "gelen": "scale=2112:1188,crop={W}:{H}:x='96-90*{p}':y=54",
+      "harman": "A*P+B*(1-P)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 0.5,
+        "ses": 0.25
+      }
+    }
+  ],
+  "renk_filtre": "curves=master='0/0 0.15/0.11 0.5/0.51 1/1',colorbalance=rs=-0.025:gs=0.012:bs=0.025:rm=0.035:gm=0.012:bm=-0.035:pl=1,eq=saturation=1.10",
+  "yazi_filtre": "null",
+  "font": "georgia",
+  "muzik": "muzik/wallpaper.mp3",
+  "muzik_bas": 0.0,
+  "yazilar": [
+    [
+      0,
+      "ANITSAL ZARAFET"
+    ],
+    [
+      2,
+      "KUSURSUZ DETAYLAR"
+    ],
+    [
+      3,
+      "SARAY İHTİŞAMI"
+    ]
+  ],
+  "alt_bant": "İNZA · ÖRNEK KURGU",
+  "seslendirme_bas": 0.5,
+  "tekrar_izin": true,
+  "uygulama_notlari": [
+    "Plan numaraları motorda sıfır tabanlıdır.",
+    "Yoğunluk kuralı gereği dördüncü geçiş sadeleştirildi. Global hız rampaları 1x tutuldu.",
+    "Diptik, açılış, kapanış çerçevesi ve ışık efektleri son_dokunus.py ile uygulanır.",
+    "3.2 saniye vuruşa yuvarlandığında plan başına 3.1479 saniyedir.",
+    "84px normal Georgia serif ve harf bazlı tracking son işlemde eklenir. Motor font enumu georgia olarak korunur.",
+    "Başlangıçlar birleşik kaynağın zamanlarından yerel klip zamanlarına çevrildi. Kısa kaynaklar 0.5x oynatılıyor."
+  ],
+  "seslendirme": "varliklar/yz/gemini-radikal-2_seslendirme.wav"
+}

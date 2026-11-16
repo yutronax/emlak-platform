@@ -1,0 +1,238 @@
+{
+ "konsept": "Dinamik Ritmli Modern Şehir Yaşamı",
+ "muzik": {
+  "dosya": "medya/wallpaper.mp3",
+  "baslangic_sn": 0,
+  "neden": "92 BPM modern ritmi ve ritmik yapısıyla hızlı vuruşlu ev turları için yüksek enerji sağlar."
+ },
+ "renk_tonu": "parlak",
+ "font": {
+  "baslik": "Anton",
+  "alt": "Montserrat"
+ },
+ "vurgu_rengi": "#FFD700",
+ "acilis": {
+  "teknik": "kalip_kirma",
+  "klipler": [
+   {
+    "video": "medya/gercek/u-manzara.mp4",
+    "kesit_bas_sn": 0.0
+   },
+   {
+    "video": "medya/gercek/u-salon.mp4",
+    "kesit_bas_sn": 0.0
+   },
+   {
+    "video": "medya/gercek/u-koridor.mp4",
+    "kesit_bas_sn": 0.0
+   }
+  ],
+  "stil": "carpma",
+  "metin": "ATAŞEHİR'DE|3+1 DAİRE",
+  "sure_sn": 1.2,
+  "ses": "vurus"
+ },
+ "planlar": [
+  {
+   "klip": "koridor",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 2.6,
+   "efekt": {
+    "ad": "vinyet",
+    "an_sn": 0.5
+   },
+   "yazi": {
+    "metin": "MALATYA CADDESİ CEPHELİ",
+    "stil": "kelime",
+    "konum": "ust",
+    "giris_sn": 0.5
+   },
+   "sonraki_gecis": {
+    "ad": "whip_sag",
+    "sure_sn": 0.3,
+    "ses": "whoosh"
+   },
+   "neden": "Geniş mermer koridoru hızlı ve etkileyici bir giriş hareketiyle tanıtır.",
+   "video": "medya/gercek/u-koridor.mp4"
+  },
+  {
+   "klip": "salon",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 3.25,
+   "efekt": {
+    "ad": "isik_huzmesi",
+    "an_sn": 1.0
+   },
+   "yazi": {
+    "metin": "FERAH SALON",
+    "stil": "cizgi",
+    "konum": "alt",
+    "giris_sn": 0.6
+   },
+   "sonraki_gecis": {
+    "ad": "kesme",
+    "sure_sn": 0.04,
+    "ses": ""
+   },
+   "neden": "Salondaki geniş oturma alanını ve 3+1 daire düzenini vurgular.",
+   "video": "medya/gercek/u-salon.mp4"
+  },
+  {
+   "klip": "salon2",
+   "kesit_bas_sn": 0,
+   "sure_sn": 2.6,
+   "efekt": {
+    "ad": "yok"
+   },
+   "yazi": null,
+   "sonraki_gecis": {
+    "ad": "zoom_vurus",
+    "sure_sn": 0.3,
+    "ses": "vurus"
+   },
+   "video": "medya/gercek/ek-salon.mp4",
+   "videolar": [
+    "medya/gercek/u-koridor.mp4",
+    "medya/gercek/u-dolap.mp4",
+    "medya/gercek/u-salon.mp4",
+    "medya/gercek/plan-4.mp4",
+    "medya/gercek/plan-5.mp4",
+    "medya/gercek/u-manzara.mp4",
+    "medya/gercek/plan-7.mp4",
+    "medya/gercek/u-banyo.mp4",
+    "medya/gercek/u-yatak2.mp4"
+   ]
+  },
+  {
+   "klip": "dolap",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 2.6,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "sonraki_gecis": {
+    "ad": "bulanik_kayma_sag",
+    "sure_sn": 0.4,
+    "ses": "hava"
+   },
+   "neden": "Koridordaki pratik gömme dolap alanını kesintisiz gösterir.",
+   "video": "medya/gercek/u-dolap.mp4"
+  },
+  {
+   "klip": "mutfak",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 1.95,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "sonraki_gecis": {
+    "ad": "zoom_vurus",
+    "sure_sn": 0.4,
+    "ses": "vurus"
+   },
+   "neden": "Mutfak dolaplarını dinamik bir tempoda hızlıca sunar.",
+   "video": "medya/gercek/plan-4.mp4"
+  },
+  {
+   "klip": "manzara",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 2.6,
+   "efekt": {
+    "ad": "mercek",
+    "an_sn": 0.8
+   },
+   "yazi": {
+    "metin": "TEK BALKON",
+    "stil": "kontur",
+    "konum": "ust",
+    "giris_sn": 0.4
+   },
+   "sonraki_gecis": {
+    "ad": "kesme",
+    "sure_sn": 0.04,
+    "ses": ""
+   },
+   "neden": "Açık şehir manzarasını ve balkon avantajını ön plana çıkarır.",
+   "video": "medya/gercek/u-manzara.mp4"
+  },
+  {
+   "klip": "yatak2",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 3.25,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "sonraki_gecis": {
+    "ad": "isik_sizinti",
+    "sure_sn": 0.5,
+    "ses": "parilti"
+   },
+   "neden": "Geniş yatak odası alanını ferah ışık altında gösterir.",
+   "video": "medya/gercek/u-yatak2.mp4"
+  },
+  {
+   "klip": "banyo",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 2.6,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": {
+    "metin": "ÇİFT BANYO",
+    "stil": "yan_cizgi",
+    "konum": "alt",
+    "giris_sn": 0.5
+   },
+   "sonraki_gecis": {
+    "ad": "kesme",
+    "sure_sn": 0.04,
+    "ses": ""
+   },
+   "neden": "Duşakabinli ana banyo alanını öne çıkarır.",
+   "video": "medya/gercek/u-banyo.mp4"
+  },
+  {
+   "klip": "banyo2",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 1.95,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "sonraki_gecis": {
+    "ad": "whip_sag",
+    "sure_sn": 0.5,
+    "ses": "whoosh"
+   },
+   "neden": "Çift banyo konforunun tamamlayıcısı olan ikinci banyoyu gösterir.",
+   "video": "medya/gercek/ek-banyo.mp4"
+  }
+ ],
+ "gerekce": "Ataşehir Malatya Caddesi'ndeki bu 3+1 dairenin ilan verilerine birebir sadık kalınarak, tempolu müzik vuruşlarına oturan 22 saniyelik modern ve dikkat çekici bir Reels kurgusu oluşturulmuştur.",
+ "kapanis": {
+  "logo": "medya/logo.png",
+  "cagri": "YERİNDE GÖRÜN",
+  "telefon": "0 (5XX) XXX XX XX",
+  "sure_sn": 4.5,
+  "logo_animasyonu": "yukselis",
+  "notlar": [
+   "Müzik: Kevin MacLeod (incompetech.com) · CC BY 4.0"
+  ]
+ }
+}

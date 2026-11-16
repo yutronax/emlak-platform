@@ -1,0 +1,67 @@
+{
+ "koridor": {
+  "video": "medya/gercek/u-koridor.mp4",
+  "en_fazla_sn": 7.0,
+  "not": "mermer koridor, ileri yürüyüş"
+ },
+ "koridor2": {
+  "video": "medya/gercek/u-koridor2.mp4",
+  "en_fazla_sn": 4.0,
+  "not": "ikinci koridor açısı"
+ },
+ "dolap": {
+  "video": "medya/gercek/u-dolap.mp4",
+  "en_fazla_sn": 8.0,
+  "not": "beyaz gömme dolaplar, yan kayma"
+ },
+ "salon": {
+  "video": "medya/gercek/u-salon.mp4",
+  "en_fazla_sn": 7.0,
+  "not": "salon, koltuk takımı"
+ },
+ "salon2": {
+  "video": "medya/gercek/ek-salon.mp4",
+  "en_fazla_sn": 3.0,
+  "not": "salon ikinci açı"
+ },
+ "mutfak": {
+  "video": "medya/gercek/plan-4.mp4",
+  "en_fazla_sn": 2.3,
+  "not": "beyaz mutfak dolapları (kırpılmış)"
+ },
+ "balkon": {
+  "video": "medya/gercek/balkon-giris.mp4",
+  "en_fazla_sn": 3.3,
+  "not": "kapıdan cam balkona giriş: cam paneller, ahşap zemin, manzara — BALKONU GÖSTEREN ANA PLAN; kesit_bas_sn ≥ 0.8 (ilk karede zemin koruması görünüyor)"
+ },
+ "manzara": {
+  "video": "medya/gercek/u-manzara.mp4",
+  "en_fazla_sn": 6.0,
+  "not": "balkondan dış manzara (şehir/ağaç, alt kısımda çatı sacı) — tek başına balkonu GÖSTERMEZ"
+ },
+ "yatak1": {
+  "video": "medya/gercek/plan-7.mp4",
+  "en_fazla_sn": 3.0,
+  "not": "yatak odası 1"
+ },
+ "banyo": {
+  "video": "medya/gercek/u-banyo.mp4",
+  "en_fazla_sn": 4.0,
+  "not": "duşakabinli banyo"
+ },
+ "banyo2": {
+  "video": "medya/gercek/ek-banyo.mp4",
+  "en_fazla_sn": 2.5,
+  "not": "ikinci banyo"
+ },
+ "yatak2": {
+  "video": "medya/gercek/u-yatak2.mp4",
+  "en_fazla_sn": 6.0,
+  "not": "yatak odası 2 (çift kişilik)"
+ },
+ "balkon2": {
+  "video": "medya/gercek/balkon-genis.mp4",
+  "en_fazla_sn": 4.5,
+  "not": "cam balkonun geniş görünümü, köşe camlar, yan bina"
+ }
+}

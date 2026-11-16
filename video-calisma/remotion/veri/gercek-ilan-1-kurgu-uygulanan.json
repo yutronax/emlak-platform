@@ -1,0 +1,202 @@
+{
+ "konsept": "Modern Prestij - Aydınlık ve Zarif Şehir Yaşamı",
+ "muzik": {
+  "dosya": "medya/inspired.mp3",
+  "baslangic_sn": 0,
+  "neden": "Yükselen piyano ve yaylı tonlarıyla dairenin ferah mermer yapısını ve manzaralı atmosferini vurgulayan ilham verici sinematik ritim."
+ },
+ "renk_tonu": "parlak",
+ "font": {
+  "baslik": "Cinzel",
+  "alt": "Raleway"
+ },
+ "vurgu_rengi": "#D4AF37",
+ "acilis": {
+  "stil": "isik",
+  "metin": "ATAŞEHİR'DE|3+1 DAİRE",
+  "sure_sn": 2.2,
+  "ses": "parilti"
+ },
+ "planlar": [
+  {
+   "klip": "koridor",
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 4.5,
+   "efekt": {
+    "ad": "isik_huzmesi",
+    "an_sn": 0.5
+   },
+   "yazi": null,
+   "sonraki_gecis": {
+    "ad": "whip_sag",
+    "sure_sn": 0.4,
+    "ses": "whoosh"
+   },
+   "neden": "Giriş koridorunun mermer dokusunu ve genişliğini açılışta kesintisiz sergilemek.",
+   "video": "medya/gercek/u-koridor.mp4"
+  },
+  {
+   "klip": "dolap",
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 4.0,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": {
+    "metin": "MALATYA CADDESİ CEPHELİ",
+    "stil": "maske_yukari",
+    "konum": "alt"
+   },
+   "sonraki_gecis": {
+    "ad": "kayma_sol",
+    "sure_sn": 0.5,
+    "ses": "hava"
+   },
+   "neden": "Gömme dolap ve depolama alanlarını öne çıkarırken lokasyon bilgisini sunmak.",
+   "video": "medya/flow/dolap.mp4"
+  },
+  {
+   "klip": "salon",
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 5.5,
+   "efekt": {
+    "ad": "vinyet",
+    "an_sn": 1.0
+   },
+   "yazi": {
+    "metin": "GENİŞ VE FERAH SALON",
+    "stil": "cizgi",
+    "konum": "orta"
+   },
+   "sonraki_gecis": {
+    "ad": "isik_sizinti",
+    "sure_sn": 0.5,
+    "ses": "parilti"
+   },
+   "neden": "Geniş oturma odasını ve gün ışığı alan yapısını vurgulamak.",
+   "video": "medya/flow/salon.mp4"
+  },
+  {
+   "klip": "mutfak",
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 5.0,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "sonraki_gecis": {
+    "ad": "kayma_sag",
+    "sure_sn": 0.5,
+    "ses": "hava"
+   },
+   "neden": "Ankastre mutfak ve dolap detaylarını yazısız, ferah bir bakışla sunmak.",
+   "video": "medya/flow/mutfak.mp4"
+  },
+  {
+   "klip": "balkon",
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 4.5,
+   "efekt": {
+    "ad": "mercek",
+    "an_sn": 0.5
+   },
+   "yazi": {
+    "metin": "TEK BALKON",
+    "stil": "yan_cizgi",
+    "konum": "alt"
+   },
+   "sonraki_gecis": {
+    "ad": "bulanik_kayma_sag",
+    "sure_sn": 0.4,
+    "ses": "whoosh"
+   },
+   "neden": "Balkon alanını ve cam kaplama konforunu göstermek.",
+   "video": "medya/flow/balkon.mp4"
+  },
+  {
+   "klip": "manzara",
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 4.5,
+   "efekt": {
+    "ad": "parilti_toz",
+    "an_sn": 1.0
+   },
+   "yazi": null,
+   "sonraki_gecis": {
+    "ad": "cozulme",
+    "sure_sn": 0.6,
+    "ses": "yok"
+   },
+   "neden": "Kesintisiz şehir ve doğa manzarasının dinamizmini izleyiciye aktarmak.",
+   "video": "medya/flow/manzara.mp4"
+  },
+  {
+   "klip": "yatak1",
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 5.0,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "sonraki_gecis": {
+    "ad": "whip_asagi",
+    "sure_sn": 0.4,
+    "ses": "whoosh"
+   },
+   "neden": "Geniş yatak odası alanının konforunu dingin bir akışla sergilemek.",
+   "video": "medya/flow/yatak1.mp4"
+  },
+  {
+   "klip": "banyo",
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 4.5,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": {
+    "metin": "ÇİFT BANYO KONFORU",
+    "stil": "kontur",
+    "konum": "orta"
+   },
+   "sonraki_gecis": {
+    "ad": "kayma_alt",
+    "sure_sn": 0.5,
+    "ses": "hava"
+   },
+   "neden": "Ebeveyn/ana banyo lüksünü ve çift banyo özelliğini belirtmek.",
+   "video": "medya/flow/banyo.mp4"
+  },
+  {
+   "klip": "banyo2",
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 4.0,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "sonraki_gecis": {
+    "ad": "isik_sizinti",
+    "sure_sn": 0.6,
+    "ses": "vurus"
+   },
+   "neden": "İkinci banyo detayını temiz bir kapanış öncesi göstermek.",
+   "video": "medya/flow/banyo2.mp4"
+  }
+ ],
+ "gerekce": "Cinzel ve Raleway font bileşimi ile ışık efektli açılış kullanılarak önceki tasarımlardan farklı lüks bir kurumsal çizgi elde edildi. Geçişler yumuşak kaymalar ve ışık sızıntıları ile dengelendi; tüm metinler sadece verilen resmi bilgiler üzerinden doğru ve sınırlı sayıda yerleştirildi.",
+ "kapanis": {
+  "logo": "medya/logo.png",
+  "cagri": "YERİNDE GÖRÜN",
+  "telefon": "0 (5XX) XXX XX XX",
+  "sure_sn": 4.5,
+  "notlar": [
+   "Görüntüler yapay zekâ ile hareketlendirildi",
+   "Müzik: \"Inspired\" Kevin MacLeod (incompetech.com) · CC BY 4.0"
+  ]
+ }
+}

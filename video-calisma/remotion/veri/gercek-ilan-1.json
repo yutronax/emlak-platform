@@ -1,0 +1,81 @@
+{
+ "kanca": {
+  "metin": "ATAŞEHİR'DE|3+1",
+  "sure": 1.5
+ },
+ "planlar": [
+  {
+   "video": "medya/gercek/u-koridor.mp4",
+   "sure": 5.35,
+   "baslik": "MALATYA CADDESİ",
+   "altBaslik": "CEPHELİ",
+   "yazi": "cizgi"
+  },
+  {
+   "video": "medya/flow/koridor2.mp4",
+   "sure": 3.15,
+   "bas": 0.2
+  },
+  {
+   "video": "medya/flow/dolap.mp4",
+   "sure": 4.85,
+   "bas": 0.3
+  },
+  {
+   "video": "medya/flow/salon.mp4",
+   "sure": 5.85,
+   "bas": 0.3
+  },
+  {
+   "video": "medya/flow/mutfak.mp4",
+   "sure": 5.85,
+   "bas": 0.3
+  },
+  {
+   "video": "medya/flow/balkon.mp4",
+   "sure": 5.85,
+   "bas": 0.3
+  },
+  {
+   "video": "medya/flow/manzara.mp4",
+   "sure": 5.85,
+   "bas": 0.3,
+   "baslik": "TEK BALKON",
+   "yazi": "kelime"
+  },
+  {
+   "video": "medya/flow/yatak1.mp4",
+   "sure": 5.85,
+   "bas": 0.3
+  },
+  {
+   "video": "medya/flow/banyo.mp4",
+   "sure": 5.85,
+   "bas": 0.3,
+   "baslik": "ÇİFT BANYO",
+   "yazi": "yay"
+  },
+  {
+   "video": "medya/flow/banyo2.mp4",
+   "sure": 5.85,
+   "bas": 0.3
+  }
+ ],
+ "seslendirme": "",
+ "seslendirmeBas": 0.8,
+ "muzik": "medya/inspired.mp3",
+ "muzikBas": 0,
+ "kapanis": {
+  "logo": "medya/logo.png",
+  "cagri": "YERİNDE GÖRÜN",
+  "telefon": "0 (5XX) XXX XX XX",
+  "sure": 5.0,
+  "notlar": [
+   "Görüntüler yapay zekâ ile hareketlendirildi",
+   "Müzik: \"Inspired\" Kevin MacLeod (incompetech.com) · CC BY 4.0"
+  ]
+ },
+ "sesler": [],
+ "gecisSeti": "yumusak",
+ "gecisSure": 0.7
+}

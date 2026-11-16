@@ -1,0 +1,165 @@
+{
+  "model": "gemini-3.5-flash",
+  "parcalar": [
+    {
+      "etiket": "KLIP 807448",
+      "mekan": "Orman içinde havuzlu tropik villa dikey genel çekim",
+      "kalite": 9,
+      "kamera": "Drone ile kuş bakışı yaklaşma",
+      "kullanim": "Açılışta ivmeli drone yaklaşması"
+    },
+    {
+      "etiket": "KLIP 807449",
+      "mekan": "Taş sütunlu ve ahşap kapılı dış cephe detayı",
+      "kalite": 8,
+      "kamera": "Aşağıdan yukarıya tilt ve süzülme",
+      "kullanim": "Mimari doku ve taş işçiliği gösterimi"
+    },
+    {
+      "etiket": "KLIP 807450",
+      "mekan": "Yüksek tavanlı modern salon ve merdiven",
+      "kalite": 9,
+      "kamera": "Geniş açı sabit ve yavaş kaydırma",
+      "kullanim": "İç mekân ferahlığı ve yaşam alanı"
+    },
+    {
+      "etiket": "KLIP 807452",
+      "mekan": "Ön bahçe, ahşap pergola ve cephe",
+      "kalite": 8,
+      "kamera": "Geniş açı sabit dış çekim",
+      "kullanim": "Giriş ve otopark alanı geçişi"
+    },
+    {
+      "etiket": "KLIP 807458",
+      "mekan": "Üst kattan salona dik açı galeri bakışı",
+      "kalite": 9,
+      "kamera": "Yüksekten salona süzülen bakış",
+      "kullanim": "Galeri boşluğu ve mimari hacim etkisi"
+    },
+    {
+      "etiket": "KLIP 807459",
+      "mekan": "Güneşli gökyüzü altında çatı ve sütun detayı",
+      "kalite": 8,
+      "kamera": "Alt açıdan yukarı bakış",
+      "kullanim": "Güneş ışığı ve çatı mimarisi"
+    },
+    {
+      "etiket": "KLIP 807484",
+      "mekan": "Güneş ışığı alan konforlu kanepe köşesi",
+      "kalite": 8,
+      "kamera": "Detay açı yakın çekim",
+      "kullanim": "Gün ışığı huzmesi ve doku hissi"
+    },
+    {
+      "etiket": "KLIP 807489",
+      "mekan": "Salondan yeşil bahçeye ve kale direğine açılan pencere",
+      "kalite": 8,
+      "kamera": "İçten dışa odaklı sabit çekim",
+      "kullanim": "Doğa ile iç içe yaşam vurgusu"
+    }
+  ],
+  "edit_turu": "Araba Reklamı Stili Dinamik Edit (Kırılan Kalıplar: Oda oda sıralı tur yok sayıldı, tam ekran tek görüntü yerine çoklu panel/diptik yerleştirildi, sakin anlatım yerine agresif ritmik synth müzik ve ivmeli hız rampaları kullanıldı)",
+  "hikaye": "Mimarinin saf gücü ve doğanın özgürlüğü yüksek ivmeli bir kurgu ritmiyle buluşuyor. Dış cephe sertliğinden iç mekânın ferahlığına ışık hızıyla geçen dinamik bir deneyim.",
+  "planlar": [
+    {
+      "etiket": "KLIP 807448",
+      "baslangic_sn": 12.0,
+      "neden": "Orman ortasındaki villayı ivmeli drone yaklaşmasıyla anında deşifre etmek için."
+    },
+    {
+      "etiket": "KLIP 807449",
+      "baslangic_sn": 28.0,
+      "neden": "Taş sütunlar ve yüksek ahşap kapının heybetini hızlı ritimle sunmak için."
+    },
+    {
+      "etiket": "KLIP 807450",
+      "baslangic_sn": 35.0,
+      "neden": "Yüksek tavanlı geniş salona patlama etkisiyle geçmek için."
+    },
+    {
+      "etiket": "KLIP 807458",
+      "baslangic_sn": 52.0,
+      "neden": "Üst kattan galeri boşluğuna bakarak derinlik hissini katlamak için."
+    },
+    {
+      "etiket": "KLIP 807484",
+      "baslangic_sn": 105.0,
+      "neden": "Salondaki doğal ışık süzülmesini yakın plan detayla yakalamak için."
+    },
+    {
+      "etiket": "KLIP 807489",
+      "baslangic_sn": 113.0,
+      "neden": "Yeşil bahçeye açılan cam kapı ile doğayla birleşimi vurmak için."
+    }
+  ],
+  "plan_suresi_sn": 2.2,
+  "gecisler": [
+    {
+      "ad": "Hız İvmesi ve İtme",
+      "kutuphane": "motor_gecis_itme",
+      "yontem": "Drone görüntüsü %800 hız rampasıyla merkeze çekilir ve taş sütunlara sertçe vurur.",
+      "ses": "Derin sub-bass vuruşu ve hızlı hava süpürme (whoosh) sesi."
+    },
+    {
+      "ad": "Ritmik Sert Kesme",
+      "kutuphane": "motor_gecis_kesme",
+      "yontem": "Taş cepheden doğrudan yüksek tavanlı salona ritim vuruşunda bıçak gibi kesme yapılması.",
+      "ses": "Metalik mekanik kilit klik sesi."
+    },
+    {
+      "ad": "Kinetik Whip Pan",
+      "kutuphane": "hf:whip-pan",
+      "yontem": "Salon görüntüsü sağa doğru yüksek bulanıklıkla savrulurken galeri açısına yumuşakça oturur.",
+      "ses": "Hızlı kamçı geçiş sesi."
+    },
+    {
+      "ad": "Bölünmüş Panel Açılımı",
+      "kutuphane": "diptik",
+      "yontem": "Işık alan kanepe detayı sağdan bir panel olarak girer, 1.8 saniye çift kadraj kalır.",
+      "ses": "Yumuşak synth kayma efekti."
+    },
+    {
+      "ad": "Işık Patlaması Geçişi",
+      "kutuphane": "motor_gecis_flas",
+      "yontem": "Güneş ışığının maksimum olduğu andan bahçe manzarasına flash-over ile sıçrama.",
+      "ses": "Yüksek frekanslı ışık parlaması cınlaması."
+    }
+  ],
+  "isik_renk": "renk_amber_teal profiliyle sert gölgelerde soğuk turkuaz, güneş alan ahşap ve taş yüzeylerde ise sıcak amber ve altın tonları öne çıkarıldı. Yüksek kontrastlı dinamik görünüm sağlandı.",
+  "kutuphane_secimleri": {
+    "acilis": "altin_cizgi_acilisi",
+    "kapanis": "kapanis_koyu",
+    "isik": "isik_huzmesi",
+    "renk": "renk_amber_teal",
+    "yazi": "hf:headline-slam"
+  },
+  "isik_efektleri": "Salona geçişte sol üstten süzülen isik_huzmesi efekti ile mimari hacim ve tavan yüksekliği vurgulanır.",
+  "acilis": "Ekran kapkaranlıkken merkezde ince bir altın çizgi parlar ve hız rampasıyla orman üzerindeki villa görüntüsüne dikey olarak açılır.",
+  "kapanis": "Bahçe çekiminden sonra ekran hızla kararır; koyu elit panel üzerinde altın renkli marka logosu, 'YERİNDE GÖRÜN' çağrısı ve iletişim bilgileri belcontact ile sonlanır.",
+  "yazi": {
+    "gorunum": "Bebas Neue karakterinde, 110px dev boyutlarda, saf beyaz (#FFFFFF) ve hafif siyah dış gölgeli kinetik başlıklar.",
+    "animasyon": "Harfler ekrana hızla çarparak (slam) iner, 3 kare mikro titremeyle durur ve hızla yukarı kayarak çıkar."
+  },
+  "basliklar": [
+    {
+      "plan_no": 0,
+      "metin": "TROPİK PRESTİJ"
+    },
+    {
+      "plan_no": 2,
+      "metin": "MİMARİ HACİM"
+    },
+    {
+      "plan_no": 5,
+      "metin": "DOĞAYLA BİR"
+    }
+  ],
+  "muzik": {
+    "tarif": "Yüksek tempolu, ritmik synth vuruşlarına sahip, modern ve dinamik elektronik track.",
+    "secim": "wallpaper.mp3",
+    "baslangic_sn": 0.0,
+    "neden": "Araba reklamı stilindeki ivmeli kesimlere ve hızlı tempo değişimlerine mükemmel uyum sağladığı için."
+  },
+  "seslendirme_metni": "Sınırları aşan bir mimari. Doğanın kalbinde, yüksek tavanlı ferahlık ve zamansız konfor. Burada her an bir ayrıcalık.",
+  "gerekce": "Evin modern mimarisi ve yüksek tavan yapısı sıradan yavaş turlar yerine yüksek tempolu araba reklamı kurgusuyla birleştirildiğinde izleyicide güçlü bir prestij ve heyecan hissi yaratmaktadır."
+}

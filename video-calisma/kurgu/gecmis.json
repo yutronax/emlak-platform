@@ -451,5 +451,538 @@
         }
       }
     ]
+  },
+  {
+    "ad": "gemini-cizim-1",
+    "renk": "eq=contrast=1.05:saturation=1.02:brightness=0.01,colorbalance=rs=0.015:bs=0.015:rh=0.015:bh=-0.01,curves=all='0/0 0.2/0.18 0.8/0.83 1/1'",
+    "yazi_stili": "drawbox=x=0:y=0:w=iw:h=270:color=black@0.48:t=fill:enable='between(t,{t0},{t1})',drawtext=fontfile='{FONT}':text='{metin}':fontsize=72:fontcolor=white:x=(w-tw)/2:y='150-260*pow(max(0,1-(t-{t0})/0.6),3)-260*pow(max(0,(t-({t1}-0.5))/0.5),3)':enable='between(t,{t0},{t1})',drawbox=x=420:y=240:w=1080:h=1:color=white:enable='between(t,{t0},{t1})'",
+    "muzik": "muzik/luxury-real-estate.mp3",
+    "gecisler": [
+      {
+        "ad": "Işık solması — yoğunluk gereği sade",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "A*P+B*(1-P)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.0,
+          "ses": 0.04
+        }
+      },
+      {
+        "ad": "Dairesel yakınlaşma — yoğunluk gereği sade",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "A*pow(P,1.01)+B*(1-pow(P,1.01))",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.0,
+          "ses": 0.04
+        }
+      },
+      {
+        "ad": "Hız rampalı düz kesme 3-4",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gt(P,0.5),A,B)",
+        "ses": {
+          "tur": "vurus",
+          "oran": 1.0,
+          "ses": 0.06
+        }
+      },
+      {
+        "ad": "Yanlara açılan perde",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(lt(abs(X-W/2),W/2*pow(1-P,2)),B,A)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.0,
+          "ses": 0.12
+        }
+      },
+      {
+        "ad": "Hız rampalı düz kesme 5-6",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gte(P,0.5),A,B)",
+        "ses": {
+          "tur": "vurus",
+          "oran": 1.0,
+          "ses": 0.06
+        }
+      },
+      {
+        "ad": "Mozaik kapsül",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(lt(hypot(mod(X,80)-40,mod(Y,80)-40),57*pow(1-P,0.7)),B,A)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.0,
+          "ses": 0.13
+        }
+      }
+    ],
+    "yontem_ozet": {
+      "isik": "Tüm film boyunca, mekanın modern ve ferah atmosferini pekiştiren, doğal ışığı vurgulayan bir renk paleti kullanılacak. Renkler canlılığını korurken, daha sıcak ve davetkar bir his için hafifçe altın r",
+      "yazi": {
+        "gorunum": "Yazı tipi 'Roboto Bold' olacak. Boyut 72px, renk saf beyaz (hex: #FFFFFF). Yazılar, ekranın üst orta kısmında, yatay olarak ortalanmış şekilde yer alacak. Metnin hemen altında, ince, yatay bir ayırıcı çizgi (1px kalınlığında, beyaz) bulunacak. Gölge efekti (shadow) olmayacak, metin keskin ve net olacak.",
+        "animasyon": "Başlıklar, ekranın üst kenarından aşağıya doğru 0.6 saniyede zarif bir şekilde süzülerek belirecek ve aynı yörünge üzerinde 0.5 saniyede yukarıya doğru süzülerek kaybolacak. Belirme ve kaybolma anlarında metne eşlik eden, hafif, dağılmış ve sıcak bir ışık parlaması efekti (bloom effect) eklenecek, bu da kelimelere 'canlılık' katacak. Hız rampaları her zaman bu hareketlere entegre edilecek."
+      },
+      "gecisler": [
+        "Çizimden Gerçeğe Geçiş",
+        "Yumuşak Işık Solması",
+        "Dairesel Yakınlaşma",
+        "Hız Rampalı Düz Kesme",
+        "Yanlara Açılan Perde",
+        "Mozaik Kapsül"
+      ]
+    }
+  },
+  {
+    "ad": "gemini-cizim-radikal-1",
+    "renk": "eq=saturation=0.88:contrast=1.025,colorbalance=rs=-0.012:bs=0.025:rh=0.008:bh=0.005",
+    "yazi_stili": "drawbox=x=80:y=730:w=1050:h=155:color=0x202226@0.66:t=fill:enable='between(t,0.250,3.381)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='D':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='110.00+0*2*(min(1,max(0,(t-0.250)/0.400)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-0.250)/0.400))),3)':alpha='min(1,max(0,(t-0.250)/0.400))':enable='between(t,0.250,3.381)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='O':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='163.00+1*2*(min(1,max(0,(t-0.257)/0.393)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-0.257)/0.393))),3)':alpha='min(1,max(0,(t-0.257)/0.393))':enable='between(t,0.250,3.381)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='Ğ':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='215.00+2*2*(min(1,max(0,(t-0.264)/0.386)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-0.264)/0.386))),3)':alpha='min(1,max(0,(t-0.264)/0.386))':enable='between(t,0.250,3.381)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='A':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='267.00+3*2*(min(1,max(0,(t-0.271)/0.379)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-0.271)/0.379))),3)':alpha='min(1,max(0,(t-0.271)/0.379))':enable='between(t,0.250,3.381)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='L':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='319.00+4*2*(min(1,max(0,(t-0.278)/0.372)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-0.278)/0.372))),3)':alpha='min(1,max(0,(t-0.278)/0.372))':enable='between(t,0.250,3.381)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text=' ':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='365.00+5*2*(min(1,max(0,(t-0.285)/0.365)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-0.285)/0.365))),3)':alpha='min(1,max(0,(t-0.285)/0.365))':enable='between(t,0.250,3.381)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='I':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='386.00+6*2*(min(1,max(0,(t-0.292)/0.358)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-0.292)/0.358))),3)':alpha='min(1,max(0,(t-0.292)/0.358))':enable='between(t,0.250,3.381)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='Ş':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='408.00+7*2*(min(1,max(0,(t-0.299)/0.351)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-0.299)/0.351))),3)':alpha='min(1,max(0,(t-0.299)/0.351))':enable='between(t,0.250,3.381)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='I':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='457.00+8*2*(min(1,max(0,(t-0.306)/0.344)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-0.306)/0.344))),3)':alpha='min(1,max(0,(t-0.306)/0.344))':enable='between(t,0.250,3.381)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='K':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='479.00+9*2*(min(1,max(0,(t-0.313)/0.337)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-0.313)/0.337))),3)':alpha='min(1,max(0,(t-0.313)/0.337))':enable='between(t,0.250,3.381)*eq({t0},0.250)',drawbox=x=80:y=730:w=1050:h=155:color=0x202226@0.66:t=fill:enable='between(t,3.398,6.529)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='M':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='110.00+0*2*(min(1,max(0,(t-3.398)/0.400)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-3.398)/0.400))),3)':alpha='min(1,max(0,(t-3.398)/0.400))':enable='between(t,3.398,6.529)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='O':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='172.00+1*2*(min(1,max(0,(t-3.405)/0.393)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-3.405)/0.393))),3)':alpha='min(1,max(0,(t-3.405)/0.393))':enable='between(t,3.398,6.529)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='D':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='224.00+2*2*(min(1,max(0,(t-3.412)/0.386)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-3.412)/0.386))),3)':alpha='min(1,max(0,(t-3.412)/0.386))':enable='between(t,3.398,6.529)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='E':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='277.00+3*2*(min(1,max(0,(t-3.419)/0.379)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-3.419)/0.379))),3)':alpha='min(1,max(0,(t-3.419)/0.379))':enable='between(t,3.398,6.529)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='R':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='325.00+4*2*(min(1,max(0,(t-3.426)/0.372)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-3.426)/0.372))),3)':alpha='min(1,max(0,(t-3.426)/0.372))':enable='between(t,3.398,6.529)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='N':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='377.00+5*2*(min(1,max(0,(t-3.433)/0.365)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-3.433)/0.365))),3)':alpha='min(1,max(0,(t-3.433)/0.365))':enable='between(t,3.398,6.529)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text=' ':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='433.00+6*2*(min(1,max(0,(t-3.440)/0.358)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-3.440)/0.358))),3)':alpha='min(1,max(0,(t-3.440)/0.358))':enable='between(t,3.398,6.529)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='M':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='454.00+7*2*(min(1,max(0,(t-3.447)/0.351)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-3.447)/0.351))),3)':alpha='min(1,max(0,(t-3.447)/0.351))':enable='between(t,3.398,6.529)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='İ':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='516.00+8*2*(min(1,max(0,(t-3.454)/0.344)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-3.454)/0.344))),3)':alpha='min(1,max(0,(t-3.454)/0.344))':enable='between(t,3.398,6.529)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='M':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='538.00+9*2*(min(1,max(0,(t-3.461)/0.337)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-3.461)/0.337))),3)':alpha='min(1,max(0,(t-3.461)/0.337))':enable='between(t,3.398,6.529)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='A':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='600.00+10*2*(min(1,max(0,(t-3.468)/0.330)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-3.468)/0.330))),3)':alpha='min(1,max(0,(t-3.468)/0.330))':enable='between(t,3.398,6.529)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='R':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='652.00+11*2*(min(1,max(0,(t-3.475)/0.323)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-3.475)/0.323))),3)':alpha='min(1,max(0,(t-3.475)/0.323))':enable='between(t,3.398,6.529)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='İ':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='704.00+12*2*(min(1,max(0,(t-3.482)/0.316)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-3.482)/0.316))),3)':alpha='min(1,max(0,(t-3.482)/0.316))':enable='between(t,3.398,6.529)*eq({t0},0.250)',drawbox=x=80:y=730:w=1050:h=155:color=0x202226@0.66:t=fill:enable='between(t,6.546,9.677)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='Z':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='110.00+0*2*(min(1,max(0,(t-6.546)/0.400)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-6.546)/0.400))),3)':alpha='min(1,max(0,(t-6.546)/0.400))':enable='between(t,6.546,9.677)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='A':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='154.00+1*2*(min(1,max(0,(t-6.553)/0.393)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-6.553)/0.393))),3)':alpha='min(1,max(0,(t-6.553)/0.393))':enable='between(t,6.546,9.677)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='R':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='206.00+2*2*(min(1,max(0,(t-6.560)/0.386)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-6.560)/0.386))),3)':alpha='min(1,max(0,(t-6.560)/0.386))':enable='between(t,6.546,9.677)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='İ':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='258.00+3*2*(min(1,max(0,(t-6.567)/0.379)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-6.567)/0.379))),3)':alpha='min(1,max(0,(t-6.567)/0.379))':enable='between(t,6.546,9.677)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='F':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='280.00+4*2*(min(1,max(0,(t-6.574)/0.372)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-6.574)/0.372))),3)':alpha='min(1,max(0,(t-6.574)/0.372))':enable='between(t,6.546,9.677)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text=' ':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='325.00+5*2*(min(1,max(0,(t-6.581)/0.365)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-6.581)/0.365))),3)':alpha='min(1,max(0,(t-6.581)/0.365))':enable='between(t,6.546,9.677)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='D':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='346.00+6*2*(min(1,max(0,(t-6.588)/0.358)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-6.588)/0.358))),3)':alpha='min(1,max(0,(t-6.588)/0.358))':enable='between(t,6.546,9.677)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='E':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='399.00+7*2*(min(1,max(0,(t-6.595)/0.351)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-6.595)/0.351))),3)':alpha='min(1,max(0,(t-6.595)/0.351))':enable='between(t,6.546,9.677)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='T':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='447.00+8*2*(min(1,max(0,(t-6.602)/0.344)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-6.602)/0.344))),3)':alpha='min(1,max(0,(t-6.602)/0.344))':enable='between(t,6.546,9.677)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='A':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='486.00+9*2*(min(1,max(0,(t-6.609)/0.337)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-6.609)/0.337))),3)':alpha='min(1,max(0,(t-6.609)/0.337))':enable='between(t,6.546,9.677)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='Y':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='538.00+10*2*(min(1,max(0,(t-6.616)/0.330)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-6.616)/0.330))),3)':alpha='min(1,max(0,(t-6.616)/0.330))':enable='between(t,6.546,9.677)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='L':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='578.00+11*2*(min(1,max(0,(t-6.623)/0.323)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-6.623)/0.323))),3)':alpha='min(1,max(0,(t-6.623)/0.323))':enable='between(t,6.546,9.677)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='A':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='624.00+12*2*(min(1,max(0,(t-6.630)/0.316)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-6.630)/0.316))),3)':alpha='min(1,max(0,(t-6.630)/0.316))':enable='between(t,6.546,9.677)*eq({t0},0.250)',drawtext=fontfile='{FONT}':text='R':fontsize=80:fontcolor=0xECECEC:shadowcolor=black@0.8:shadowy=3:x='676.00+13*2*(min(1,max(0,(t-6.637)/0.309)))':y_align=baseline:y='840+90*pow(1-(min(1,max(0,(t-6.637)/0.309))),3)':alpha='min(1,max(0,(t-6.637)/0.309))':enable='between(t,6.546,9.677)*eq({t0},0.250)'",
+    "muzik": "muzik/wallpaper.mp3",
+    "gecisler": [
+      {
+        "ad": "Optik isik sade kesme",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gt(P,0.5),A,B)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.0,
+          "ses": 0.06
+        }
+      },
+      {
+        "ad": "Asimetrik dikey bolunme",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(lt(X,W*0.38),if(gt(P,0.85),A,B),if(gt(P,0.05),A,B))",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.0,
+          "ses": 0.28
+        }
+      },
+      {
+        "ad": "Hiz rampali minimal kesme",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gte(P,0.51),A,B)",
+        "ses": {
+          "tur": "vurus",
+          "oran": 1.0,
+          "ses": 0.3
+        }
+      },
+      {
+        "ad": "Sade nefes kesmesi",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gte(P,0.49),A,B)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.0,
+          "ses": 0.04
+        }
+      },
+      {
+        "ad": "Jaluzi golge cozulmesi",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "A*clip((P-0.15*sin(Y/32))*1.3,0,1)+B*(1-clip((P-0.15*sin(Y/32))*1.3,0,1))",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.0,
+          "ses": 0.2
+        }
+      }
+    ],
+    "yontem_ozet": {
+      "isik": "Kuzey ışığı netliğinde, hafif desatüre zemin tonları üzerinde doğal ahşap ve kiremit kırmızısını öne çıkaran İskandinav modern renk profili. Gölgelerde hafif soğuk mavi/gri, aydınlık alanlarda saf pen",
+      "yazi": {
+        "gorunum": "Yazı tipi 'Space Grotesk' ya da 'Syne', 80px devasa boyut, #ECECEC kireç beyazı, ekranın sol dikey eksenine 90 derece dayalı veya sol alt blokta asimetrik yerleşim.",
+        "animasyon": "Harfler tek tek dikey bir maskenin arkasından yukarı doğru keskin bir ivmeyle yükselir, harf aralıkları açılarak (tracking) 0.4 saniyede yerine oturur."
+      },
+      "gecisler": [
+        "Mimari Çizimden Çözülüş",
+        "Optik Işık Sıçraması",
+        "Dikey Bölünmüş Geçiş",
+        "Hız Rampalı Minimal Kesme",
+        "Jaluzi Gölge Çözülmesi"
+      ]
+    }
+  },
+  {
+    "ad": "gemini-radikal-2",
+    "renk": "curves=master='0/0 0.15/0.11 0.5/0.51 1/1',colorbalance=rs=-0.025:gs=0.012:bs=0.025:rm=0.035:gm=0.012:bm=-0.035:pl=1,eq=saturation=1.10",
+    "yazi_stili": "drawbox=x=92:y=734:w=1460:h=132:color=0x081321@0.62:t=fill:enable='between(t,{t0},{t1})',drawbox=x=108:y=746:w=3:h=106:color=0xF4E8C1:t=fill:enable='between(t,{t0},{t1})'",
+    "muzik": "muzik/wallpaper.mp3",
+    "gecisler": [
+      {
+        "ad": "Geometrik Portal Genişlemesi",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(lt(abs(X-W/2),W/2*(1-P)),B,A)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 0.65,
+          "ses": 0.4
+        }
+      },
+      {
+        "ad": "Ritmik Sert Kesme",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gt(P,0.5),A,B)",
+        "ses": {
+          "tur": "vurus",
+          "oran": 0.8,
+          "ses": 0.38
+        }
+      },
+      {
+        "ad": "Işık Yarığı Çözülmesi",
+        "giden": "eq=brightness='0.08*{p}':eval=frame",
+        "gelen": "eq=brightness='0.08*{p}':eval=frame",
+        "harman": "A*P+B*(1-P)+24*exp(-abs(X-W/2)/(4+180*(1-P)))*sin(PI*P)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.2,
+          "ses": 0.23
+        }
+      },
+      {
+        "ad": "Sade Kesme — yoğunluk uyarlaması",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gte(P,0.5),A,B)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 0.6,
+          "ses": 0.12
+        }
+      },
+      {
+        "ad": "Simetrik Odak Kayması",
+        "giden": "scale=2112:1188,crop={W}:{H}:x='96+90*{p}':y=54",
+        "gelen": "scale=2112:1188,crop={W}:{H}:x='96-90*{p}':y=54",
+        "harman": "A*P+B*(1-P)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 0.5,
+          "ses": 0.25
+        }
+      }
+    ],
+    "yontem_ozet": {
+      "isik": "Editoryal 'Haute Couture Amber & Teal' renk profili. Mermerlerin beyazı nötr ve berrak tutulurken, gölgeler derinleştirildi; ahşap ve altın kaplamalara sıcak amber-bal tonları enjekte edildi, turkuaz ",
+      "yazi": {
+        "gorunum": "Yüksek kontrastlı şık editoryal serif yazı tipi (Playfair/Bodoni karakteri), 84px devasa ancak ultra ince harf kalınlığı, şampanya sarısı (#F4E8C1), sol alt köşede dikey bir çizgiye asimetrik yaslanmış blok.",
+        "animasyon": "Harfler 0.4 saniye içinde harf aralığı genişleyerek (tracking) belirir, 2 saniye hareketsiz kalır ve soluklaşarak silinir."
+      },
+      "gecisler": [
+        "Geometrik Portal Genişlemesi",
+        "Ritmik Sert Kesme",
+        "Işık Yarığı Çözülmesi",
+        "Kinetik Hız Rampası",
+        "Simetrik Odak Kayması"
+      ]
+    }
+  },
+  {
+    "ad": "gemini-kutuphane-1",
+    "renk": "curves=master='0/0 0.15/0.11 0.5/0.51 1/1',colorbalance=rs=-0.025:gs=0.012:bs=0.025:rm=0.035:gm=0.012:bm=-0.035:pl=1,eq=saturation=1.10",
+    "yazi_stili": "drawtext=fontfile='{FONT}':text='{metin}':fontsize=96:fontcolor=0xFDFBF7@0.88:shadowcolor=black@0.95:shadowx=3:shadowy=5:x='28*(t-{t0})':y='90+100*max(0,1-(t-{t0})/0.4)':enable='between(t,{t0},{t1})'",
+    "muzik": "muzik/wallpaper.mp3",
+    "gecisler": [
+      {
+        "ad": "sade_0",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gt(P,0.5),A,B)",
+        "ses": {
+          "tur": "vurus",
+          "oran": 1,
+          "ses": 0.12
+        }
+      },
+      {
+        "ad": "sade_1",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gt(P,0.501),A,B)",
+        "ses": {
+          "tur": "vurus",
+          "oran": 1,
+          "ses": 0.12
+        }
+      },
+      {
+        "ad": "sade_2",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gt(P,0.502),A,B)",
+        "ses": {
+          "tur": "vurus",
+          "oran": 1,
+          "ses": 0.12
+        }
+      },
+      {
+        "ad": "sade_3",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gt(P,0.503),A,B)",
+        "ses": {
+          "tur": "vurus",
+          "oran": 1,
+          "ses": 0.12
+        }
+      },
+      {
+        "ad": "sade_4",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gt(P,0.504),A,B)",
+        "ses": {
+          "tur": "vurus",
+          "oran": 1,
+          "ses": 0.12
+        }
+      },
+      "kesme"
+    ],
+    "yontem_ozet": {
+      "isik": "Amber & Teal dengesiyle gölgelerde serin turkuaz-yeşil tonlar korunurken, ahşap detaylar ve gün ışığı süzülmelerinde sıcak şampanya altın parıltısı öne çıkarılır.",
+      "yazi": {
+        "gorunum": "Yazı tipi 'Bahnschrift' geometrik mimari karakter, 96px devasa ölçek, yarı saydam krem-altın tonu (#FDFBF7), ekranın sol dikey kenarına tam hizada.",
+        "animasyon": "Harfler müziğin ritmine uygun biçimde dikey bir maske arkasından süzülerek yükselir ve yavaşça sağa doğru süzülür."
+      },
+      "gecisler": [
+        "cizimden_gercege",
+        "rack_focus",
+        "diptik",
+        "mikro_kaymali_cozulme",
+        "isik_sizmasi",
+        "motor_gecis_kesme"
+      ]
+    }
+  },
+  {
+    "ad": "gemini-kutuphane-2",
+    "renk": "eq=contrast=1.1:saturation=1.15:brightness=0.05,colorbalance=rs=0.05:gs=0.03:bs=0.02",
+    "yazi_stili": "drawtext=fontfile='{FONT}':text='{metin}':fontsize=120:fontcolor=0xF7E7CE:shadowcolor=black:shadowx=3:shadowy=5:x='(w-tw)/2+18*(t-{t0})':y='(h-th)/2-100*max(0,1-(t-{t0})/.5)':alpha='0.85*min(1,(t-{t0})/.5)*min(1,({t1}-t)/.3)':enable='between(t,{t0},{t1})'",
+    "muzik": "muzik/wallpaper.mp3",
+    "gecisler": [
+      {
+        "ad": "radyal_kararma",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gt(P,0.5),A,B)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1,
+          "ses": 0.2
+        }
+      },
+      {
+        "ad": "motor_gecis_kesme",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gt(P,0.501),A,B)",
+        "ses": {
+          "tur": "vurus",
+          "oran": 1,
+          "ses": 0.2
+        }
+      },
+      {
+        "ad": "yandan_itme",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gt(P,0.502),A,B)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1,
+          "ses": 0.2
+        }
+      },
+      {
+        "ad": "mikro_kaymali_cozulme",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gt(P,0.503),A,B)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1,
+          "ses": 0.2
+        }
+      },
+      {
+        "ad": "iki_yana_ayrilma",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gt(P,0.504),A,B)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1,
+          "ses": 0.2
+        }
+      },
+      {
+        "ad": "motor_gecis_kesme_sade",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gt(P,0.505),A,B)",
+        "ses": {
+          "tur": "vurus",
+          "oran": 1,
+          "ses": 0.2
+        }
+      }
+    ],
+    "yontem_ozet": {
+      "isik": "Film boyunca 'renk_dinamik' profili kullanılacak: doygun ve sıcak renkler, belirgin kontrastla evin doğal malzemelerini ve iç mekanın modern estetiğini canlı bir şekilde vurgular. Güneş ışığının girdi",
+      "yazi": {
+        "gorunum": "Yazı tipi 'motor_font_bebas' (Bebas Neue veya benzeri dar ve iri afiş karakteri), boyut 120px, renk #F7E7CE (hafif altın-krem). Metinler ekranın merkezinde büyük ve cesur bir şekilde yer alacak, arka plan videoları üzerine yarı saydam olarak bindirilecek. Yazının konumu bazen sağa veya sola hafifçe kayarak kompozisyona dinamizm katacak.",
+        "animasyon": "'motor_yazi_dev' efekti kullanılarak harfler yukarıdan yavaşça süzülerek kadraja girer ve bir an durduktan sonra dışarı doğru hafifçe kayarak kaybolur. Bu süzülme ve kayma hareketi, müziğin ritmiyle senkronize, akıcı ve gösterişli olacaktır. Yarı saydam yapı, görüntülerin okunurluğunu korurken yazının bir grafik öğesi olmasını sağlar."
+      },
+      "gecisler": [
+        "Radyal Kararma",
+        "Direkt Kesme",
+        "Yandan İtme",
+        "Mikro Kayma",
+        "İki Yana Ayrılma",
+        "Flaş Geçiş"
+      ]
+    }
+  },
+  {
+    "ad": "gemini-araba-dili-1",
+    "renk": "null",
+    "yazi_stili": "null",
+    "muzik": "muzik/wallpaper.mp3",
+    "gecisler": [
+      "itme",
+      "kesme",
+      {
+        "ad": "HF whip son i?lemde",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gt(P,0.5),A,B)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.3,
+          "ses": 0.5
+        }
+      },
+      {
+        "ad": "Diptik ?ncesi sade kesme",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gte(P,0.5),A,B)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 0.8,
+          "ses": 0.25
+        }
+      },
+      "flas"
+    ],
+    "yontem_ozet": {
+      "isik": "renk_amber_teal profiliyle sert gölgelerde soğuk turkuaz, güneş alan ahşap ve taş yüzeylerde ise sıcak amber ve altın tonları öne çıkarıldı. Yüksek kontrastlı dinamik görünüm sağlandı.",
+      "yazi": {
+        "gorunum": "Bebas Neue karakterinde, 110px dev boyutlarda, saf beyaz (#FFFFFF) ve hafif siyah dış gölgeli kinetik başlıklar.",
+        "animasyon": "Harfler ekrana hızla çarparak (slam) iner, 3 kare mikro titremeyle durur ve hızla yukarı kayarak çıkar."
+      },
+      "gecisler": [
+        "Hız İvmesi ve İtme",
+        "Ritmik Sert Kesme",
+        "Kinetik Whip Pan",
+        "Bölünmüş Panel Açılımı",
+        "Işık Patlaması Geçişi"
+      ]
+    }
+  },
+  {
+    "ad": "gercek-ilan-1",
+    "renk": "null",
+    "yazi_stili": "drawtext=fontfile='{FONT}':text='{metin}':fontsize=80:fontcolor=0xE0E0E0:shadowcolor=black:shadowx=2:shadowy=4:x=(w-tw)/2:y=160:enable='between(t,{t0},{t1})'",
+    "muzik": "muzik/wallpaper.mp3",
+    "gecisler": [
+      {
+        "ad": "dikey_jaluzi",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gt(P,0.5),A,B)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1,
+          "ses": 0.2
+        }
+      },
+      {
+        "ad": "hizlandirilmis_kesme_1",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gt(P,0.501),A,B)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.3,
+          "ses": 0.2
+        }
+      },
+      "whip_yukari",
+      {
+        "ad": "hizlandirilmis_kesme_2",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gt(P,0.503),A,B)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.3,
+          "ses": 0.2
+        }
+      },
+      {
+        "ad": "dairesel_iris",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gt(P,0.504),A,B)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1,
+          "ses": 0.2
+        }
+      },
+      {
+        "ad": "hizlandirilmis_kesme_3",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gt(P,0.505),A,B)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1.3,
+          "ses": 0.2
+        }
+      },
+      {
+        "ad": "sinema_perdesi",
+        "giden": "null",
+        "gelen": "null",
+        "harman": "if(gt(P,0.506),A,B)",
+        "ses": {
+          "tur": "whoosh",
+          "oran": 1,
+          "ses": 0.2
+        }
+      }
+    ]
   }
 ]

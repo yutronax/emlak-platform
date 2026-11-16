@@ -1,0 +1,75 @@
+{
+  "genel_his": "Modern, ferah ve davetkar bir atmosfer sunarak, emlakın konforlu ve şık yaşam alanlarını vurgulayan dinamik ve prestijli bir sunum.",
+  "gecisler": [
+    {
+      "saniye": 5,
+      "kutuphane": "dairesel_iris",
+      "yontem": "Ortadan büyüyen dairesel açılış, ferah yaşam alanına geçişi vurgular. Gösterişli ve akıcı bir geçiş hissi yaratır.",
+      "ses": "Yumuşak, dairesel bir 'açılma' sesi."
+    },
+    {
+      "saniye": 9,
+      "kutuphane": "hizlandirilmis_kesme",
+      "yontem": "Mutfak alanına hızlı ve keskin bir geçiş için hareket yönünde kısa ivmelenme ve sert kesim kullanılır. Akışı bozmadan net bir değişim sağlar.",
+      "ses": "Hızlı, keskin bir 'geçiş' sesi."
+    },
+    {
+      "saniye": 11,
+      "kutuphane": "isik_sizmasi",
+      "yontem": "Balkonun aydınlık ve dış mekan hissini pekiştirmek için sıcak bir ışık sızıntısının soldan sağa akarak görüntüyü çözdüğü bir geçiş kullanılır. Gösterişli ve ortamla uyumlu bir vurgu yapar.",
+      "ses": "Yumuşak bir 'ışık akışı' sesi."
+    },
+    {
+      "saniye": 15,
+      "kutuphane": "rack_focus",
+      "yontem": "Yeni bir mekana yumuşak bir geçiş sağlamak için odak değişim hissi kullanılır. Zarif ve dikkat dağıtmayan bir yöntemdir.",
+      "ses": "Çok hafif, optik bir 'odaklanma' sesi."
+    },
+    {
+      "saniye": 18,
+      "kutuphane": "dikey_jaluzi",
+      "yontem": "Banyo alanının modern ve düzenli yapısını vurgulamak için dikey dilimlerin aynı anda açıldığı bir geçiş. Gösterişli ve temiz bir sunum sağlar.",
+      "ses": "Keskin, 'jaluzi açılma' sesi."
+    },
+    {
+      "saniye": 21,
+      "kutuphane": "motor_gecis_kesme",
+      "yontem": "Yatak odasına doğrudan ve keskin bir geçiş için kullanılır. Odak dağıtmayan sade ve etkili bir yöntemdir.",
+      "ses": "Net bir 'klik' sesi."
+    },
+    {
+      "saniye": 23,
+      "kutuphane": "motor_gecis_kesme",
+      "yontem": "İletişim bilgilerinin yer aldığı kapanış kartına doğrudan bir geçiş için kullanılır, hızlı ve etkili bir final sağlar.",
+      "ses": "Sade bir 'kesme' sesi."
+    }
+  ],
+  "isik_renk": {
+    "kutuphane": "renk_iskandinav",
+    "yontem": "İç mekanın beyaz ve modern dokusunu desteklemek, ferahlığı artırmak için hafif desatüre, serin gölgeler ve doğal açık tonlar kullanılır. Bu, mülkün çağdaş ve aydınlık atmosferini vurgular."
+  },
+  "isik_anlari": [
+    {
+      "saniye": 11,
+      "kutuphane": "mercek_pariltisi",
+      "yontem": "Balkon manzarasındaki doğal ışığı ve açık havayı vurgulamak için sağ üstte hafif sıcak bir mercek parıltısı ve ince yatay ışık izi eklenir. Dış mekanın çekiciliğini artırır.",
+      "ses": "Hafif bir 'parlama' sesi."
+    },
+    {
+      "saniye": 21,
+      "kutuphane": "sicak_glow",
+      "yontem": "Yatak odasına davetkar ve konforlu bir his katmak için iki geniş ve yumuşak sıcak ışık halesi kullanılır. Bu, odanın huzurlu ambiyansını pekiştirir.",
+      "ses": "Çok hafif, yumuşak bir 'ışık yayılma' sesi."
+    }
+  ],
+  "yazi_animasyonu": {
+    "kutuphane": "motor_yazi_cizgi",
+    "yontem": "'ATAŞEHİR / MALATYA CADDESİ CEPHELİ' metni için altında altın çizgi uzarken belirme animasyonu kullanılır. Açılış vurgusuyla uyumlu, şık ve okunur bir giriş sağlar. Diğer özellik metinleri ('3+1', 'TEK BALKON', 'ÇİFT BANYO') için ise 'motor_yazi_kayan' efekti tercih edilir; altın çubuk yanında soldan kayan gölgeli başlık animasyonuyla modern ve dinamik bir sunum elde edilir."
+  },
+  "acilis_vurgusu": {
+    "kutuphane": "altin_cizgi_acilisi",
+    "yontem": "İnce altın vurgu merkezde parlar ve görüntü iki yana açılan bir perdeyle belirir. Bu, videoya prestijli ve zarif bir başlangıç katarak izleyicinin dikkatini anında çeker.",
+    "ses": "Hafif bir 'parlama' ve ardından 'perde açılma' sesi."
+  },
+  "ses_efektleri": "Geçişler ve ışık anları için özel olarak seçilmiş ses efektleri, videonun genel akışını güçlendirir ve her bir sahnenin atmosferine uygun bir işitsel derinlik katar. Başlangıçtaki parlama ve açılma sesleri, mekan geçişlerindeki dinamik sesler ve özel ışık efektlerindeki ince tınılar, izleyicinin deneyimini zenginleştirir."
+}

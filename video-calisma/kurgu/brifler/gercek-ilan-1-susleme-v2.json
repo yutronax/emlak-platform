@@ -1,0 +1,95 @@
+{
+  "kanca": {
+    "saniye_aralik": "00:00 - 00:01.5",
+    "metin": "ATAŞEHİR'DE 3+1!",
+    "kutuphane": "hyperframes",
+    "yontem": "hf_headline-slam ile ekrana çarparak binen dev şampanya ve beyaz renkli başlık; darbe anında 3 kare hafif titreşim ve vurucu açılış."
+  },
+  "yazilar": [
+    {
+      "saniye_aralik": "00:01.5 - 00:04.5",
+      "metin": "MALATYA CADDESİ CEPHELİ",
+      "kutuphane": "kutuphane",
+      "yontem": "kinetik_baslik: Altın sarısı ve beyaz renkli büyük harfli tipografi soldan dinamik kaymayla koridor hattında hizalanır."
+    },
+    {
+      "saniye_aralik": "00:05.5 - 00:08.0",
+      "metin": "3+1 GENİŞ & FERAH",
+      "kutuphane": "hyperframes",
+      "yontem": "hf_per-word-rise: Salon görüntüsü üzerinde harfler alttan hafif bulanıklıktan netliğe doğru sırayla yükselir."
+    },
+    {
+      "saniye_aralik": "00:11.5 - 00:14.5",
+      "metin": "MANZARALI TEK BALKON",
+      "kutuphane": "motor",
+      "yontem": "motor_yazi_cizgi: Şehir manzaralı cam balkonda alt taraftan altın renkli çizgi uzarken beyaz başlık belirir."
+    },
+    {
+      "saniye_aralik": "00:18.5 - 00:21.0",
+      "metin": "ÇİFT BANYO KONFORU",
+      "kutuphane": "hyperframes",
+      "yontem": "hf_spring-pop: Ebeveyn banyosu çekiminde esnek büyüme efektiyle merkezde beliren lüks etiket tasarımı."
+    }
+  ],
+  "gecisler": [
+    {
+      "saniye": 5.0,
+      "kutuphane": "hyperframes",
+      "yontem": "hf_whip-pan",
+      "ses": "hizli_whip_whoosh"
+    },
+    {
+      "saniye": 8.5,
+      "kutuphane": "kutuphane",
+      "yontem": "zoom_through",
+      "ses": "derin_gecis_vurusu"
+    },
+    {
+      "saniye": 11.5,
+      "kutuphane": "kutuphane",
+      "yontem": "isik_sizmasi",
+      "ses": "sicak_isik_cinlamasi"
+    },
+    {
+      "saniye": 15.5,
+      "kutuphane": "kutuphane",
+      "yontem": "yandan_itme",
+      "ses": "dinamik_slide_whoosh"
+    },
+    {
+      "saniye": 18.5,
+      "kutuphane": "kutuphane",
+      "yontem": "mozaik_cozulme",
+      "ses": "pürüzsüz_gecis_tiki"
+    },
+    {
+      "saniye": 24.0,
+      "kutuphane": "kutuphane",
+      "yontem": "kapanis_koyu",
+      "ses": "prestij_logo_cinlamasi"
+    }
+  ],
+  "isik_anlari": [
+    {
+      "saniye": 1.0,
+      "kutuphane": "kutuphane",
+      "yontem": "altin_cizgi_acilisi"
+    },
+    {
+      "saniye": 12.0,
+      "kutuphane": "kutuphane",
+      "yontem": "mercek_pariltisi"
+    },
+    {
+      "saniye": 19.0,
+      "kutuphane": "kutuphane",
+      "yontem": "sicak_glow"
+    }
+  ],
+  "renk": {
+    "kutuphane": "kutuphane",
+    "yontem": "renk_sampanya"
+  },
+  "ses_efektleri": "Müzik ritmine tam oturan sinematik whoosh geçiş sesleri, kanca açılışında güçlü bass vuruşu ve kapanış logosunda prestij çınlama efekti.",
+  "gerekce": "Durağan ilanı sosyal medyada başparmak durduran dinamik bir Reels'e dönüştürmek için güçlü bir kanca (slam başlık), ritmik geçişler (whip-pan, zoom-through) ve yüksek kontrastlı şampanya renk paletiyle zenginleştirilmiş kinetik tipografi kullanılmıştır."
+}

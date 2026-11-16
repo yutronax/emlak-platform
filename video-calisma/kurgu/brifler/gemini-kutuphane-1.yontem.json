@@ -1,0 +1,176 @@
+{
+  "model": "gemini-3.5-flash",
+  "parcalar": [
+    {
+      "etiket": "KLIP 807448",
+      "mekan": "Havadan Orman ve Deniz Manzaralı Villa",
+      "kalite": 9,
+      "kamera": "Dron ile orman tepesinden villaya yaklaşan geniş açı",
+      "kullanim": "Açılışta tropik doğa ve mimarinin gizli konumunu vurulamak için"
+    },
+    {
+      "etiket": "KLIP 807449",
+      "mekan": "Dış Cephe ve Ahşap-Taş Mimari Detaylar",
+      "kalite": 9,
+      "kamera": "Aşağıdan yukarıya doğru mimari sütun ve cam açısı",
+      "kullanim": "Mimarinin yüksekliğini ve malzeme kalitesini vurgulamak için"
+    },
+    {
+      "etiket": "KLIP 807450",
+      "mekan": "Galeri Boşluklu Salon ve Taş Merdiven",
+      "kalite": 10,
+      "kamera": "İç mekân geniş açı sabit duruş",
+      "kullanim": "Devasa camlar ve gün ışığının ferahlığını göstermek için"
+    },
+    {
+      "etiket": "KLIP 807452",
+      "mekan": "Villa Ön Cephe ve Yeşillik Bahçe",
+      "kalite": 9,
+      "kamera": "Bahçeden eve doğru geniş perspektif",
+      "kullanim": "Doğa ile yapının kusursuz entegrasyonunu göstermek için"
+    },
+    {
+      "etiket": "KLIP 807458",
+      "mekan": "Üst Kattan Salon Kuşbakışı Görünümü",
+      "kalite": 10,
+      "kamera": "Asma kattan salona ve yüksek camlara bakan yüksek açı",
+      "kullanim": "Mekânsal hacim ve mimari derinlik hissini güçlendirmek için"
+    },
+    {
+      "etiket": "KLIP 807459",
+      "mekan": "Dış Cephe Taş Kolonlar ve Gökyüzü",
+      "kalite": 8,
+      "kamera": "Aşağıdan yukarı pan-tilt hareketi",
+      "kullanim": "Dış mimarideki doğal taş dokusunu öne çıkarmak için"
+    },
+    {
+      "etiket": "KLIP 807484",
+      "mekan": "Salon Oturma Alanı ve Işık Süzmesi",
+      "kalite": 9,
+      "kamera": "Yakın-orta detay çekimi, güneş ışığı aksı",
+      "kullanim": "İç mekândaki dinginlik ve huzurlu yaşam detayını sunmak için"
+    },
+    {
+      "etiket": "KLIP 807489",
+      "mekan": "Bahçe Açılımı ve Çim Alan",
+      "kalite": 8,
+      "kamera": "İçeriden dış bahçeye bakan çerçeve çekimi",
+      "kullanim": "İç-dış yaşam akışını tamamlamak için"
+    }
+  ],
+  "edit_turu": "Grafik İki-Tual Kolaj & Ritmik Mimarisi Kurgusu (Kırılan Kalıplar: Tekil oda gezintisi yerine diptik bölünmüş ekranlar kullanıldı; geleneksel durgun seslendirme yerine modern ritmik synth temposuna oturuldu; küçük başlıklar yerine devasa kinetik mimari tipografi tercih edildi).",
+  "hikaye": "Tropik ormanın derinliklerinde saklı gizli bir mimari mücevherin, doğayla kurduğu organik bağ ve yüksek tavanlı ışık dolu yaşam alanları ritmik bir illüstrasyon diliyle keşfediliyor.",
+  "planlar": [
+    {
+      "etiket": "KLIP 807448",
+      "baslangic_sn": 0.0,
+      "neden": "Karakalem taslak hissiyatından yeşil canopi ve okyanus çizgisine geçiş yaparak açılışı vurmak için."
+    },
+    {
+      "etiket": "KLIP 807452",
+      "baslangic_sn": 0.5,
+      "neden": "Villanın yeşillikler içindeki ana cephesini tam kadraj oturtmak için."
+    },
+    {
+      "etiket": "KLIP 807449",
+      "baslangic_sn": 0.0,
+      "neden": "Diptik bölünmüş ekranda taş sütunların yüksekliğini sol kanada almak için."
+    },
+    {
+      "etiket": "KLIP 807450",
+      "baslangic_sn": 0.0,
+      "neden": "Devasa camlar ve galeri boşluğunu sağ kanatta eşzamanlı gösterip mimari ölçeği hissettirmek için."
+    },
+    {
+      "etiket": "KLIP 807458",
+      "baslangic_sn": 0.0,
+      "neden": "Asma kattan salona bakışla 3 boyutlu iç mekân hacmini öne çıkarmak için."
+    },
+    {
+      "etiket": "KLIP 807484",
+      "baslangic_sn": 0.0,
+      "neden": "Gün ışığının kanepeye düşüşündeki dokusal detay ve huzur hissi için."
+    },
+    {
+      "etiket": "KLIP 807489",
+      "baslangic_sn": 0.0,
+      "neden": "İç mekândan yemyeşil bahçeye açılan yaşam özgürlüğünü vurgulamak için."
+    }
+  ],
+  "plan_suresi_sn": 2.8,
+  "gecisler": [
+    {
+      "ad": "cizimden_gercege",
+      "kutuphane": "cizimden_gercege",
+      "yontem": "Açılışta orman üzerindeki dron çekimi karakalem mimari çizgilerle başlar, ışıklı bir sınırla gerçek renklere çözülür.",
+      "ses": "Derin rüzgar esintisi ve yumuşak synth çınlaması."
+    },
+    {
+      "ad": "rack_focus",
+      "kutuphane": "rack_focus",
+      "yontem": "Dış cephe çekiminden iç mekâna geçerken lens optik odak kaybı yaşar ve doğrudan diptik ekrana netleşir.",
+      "ses": "Yumuşak kamera lens netleme sesi."
+    },
+    {
+      "ad": "diptik",
+      "kutuphane": "diptik",
+      "yontem": "Ekran ikiye bölünür; solda dış sütunlar yukarı kayarken sağda dev galeri salonu belirir ve 3 saniye kalır.",
+      "ses": "Hafif mekanik kayma ve vurmalı bas tonu."
+    },
+    {
+      "ad": "mikro_kaymali_cozulme",
+      "kutuphane": "mikro_kaymali_cozulme",
+      "yontem": "Diptikten üst kat salon görünümüne geçerken kadraj %1 kadar sağa kayarak yumuşakça birleşir.",
+      "ses": "Sakin geçiş hışırtısı."
+    },
+    {
+      "ad": "isik_sizmasi",
+      "kutuphane": "isik_sizmasi",
+      "yontem": "Üst kattan detay çekimine geçerken soldan sağa sıcak amber ışık hüzmesi süzülerek kadrajı tazeler.",
+      "ses": "Sıcak parıltı ve ışık sesi."
+    },
+    {
+      "ad": "motor_gecis_kesme",
+      "kutuphane": "motor_gecis_kesme",
+      "yontem": "Işık detayından yeşil bahçe açılımına müziğin ritim vuruşunda doğrudan net kesme yapılır.",
+      "ses": "Net synth beat vuruşu."
+    }
+  ],
+  "isik_renk": "Amber & Teal dengesiyle gölgelerde serin turkuaz-yeşil tonlar korunurken, ahşap detaylar ve gün ışığı süzülmelerinde sıcak şampanya altın parıltısı öne çıkarılır.",
+  "kutuphane_secimleri": {
+    "acilis": "cizimden_gercege",
+    "kapanis": "kapanis_koyu",
+    "isik": "isik_huzmesi",
+    "renk": "renk_amber_teal",
+    "yazi": "motor_yazi_dev"
+  },
+  "isik_efektleri": "Salon çekimlerinde (KLIP 807450 ve KLIP 807484) pencerelerden giren doğal gün ışığını vurgulamak için sağ üstten süzülen hafif altın rengi toz ve huzme efekti eklenecektir.",
+  "acilis": "Film, ormanın üzerinden villaya bakan dron çekiminin mimari bir çizim gibi beyaz zemin üzerinde belirmesiyle açılır; ışıklı bir tarama çizgisi 1.2 saniyede çizimi gerçek yeşil doğaya ve mavi gökyüzüne dönüştürür.",
+  "kapanis": "Bahçe görüntüsünden ekran ortasından genişleyen koyu füme bir panel yükselir; üstünde altın rengi logo, 'YERİNDE GÖRÜN' çağrısı ve iletişim bilgileri belirip son 0.6 saniyede siyaha kapanır.",
+  "yazi": {
+    "gorunum": "Yazı tipi 'Bahnschrift' geometrik mimari karakter, 96px devasa ölçek, yarı saydam krem-altın tonu (#FDFBF7), ekranın sol dikey kenarına tam hizada.",
+    "animasyon": "Harfler müziğin ritmine uygun biçimde dikey bir maske arkasından süzülerek yükselir ve yavaşça sağa doğru süzülür."
+  },
+  "basliklar": [
+    {
+      "plan_no": 0,
+      "metin": "DOĞANIN İÇİNDE GİZLİ"
+    },
+    {
+      "plan_no": 2,
+      "metin": "YÜKSEK TAVANLI GALERİ"
+    },
+    {
+      "plan_no": 5,
+      "metin": "IŞIK VE YEŞİL AKIŞI"
+    }
+  ],
+  "muzik": {
+    "tarif": "Modern indie-synth ritmi, 110 BPM, şık elektronik arpejler ve organik ritim vurguları içeren prestijli yapı.",
+    "secim": "wallpaper.mp3",
+    "baslangic_sn": 0.0,
+    "neden": "Kalıplaşmış ağır klasik müziklerin aksine, villanın tropik ve ultra modern mimarisini dinamik bir genç-lüks algısıyla birleştirir."
+  },
+  "seslendirme_metni": "Tropik ormanın kucağında, devasa camlar ve kesintisiz gün ışığıyla tasarlanmış bir mimari eser. Doğa ve lüksün en rafine buluşması sizi bekliyor.",
+  "gerekce": "Müşterinin sıradanlaşmış emlak videolarından duyduğu sıkıntıyı gidermek adına, geleneksel tekli oda sıralaması yıkılmış, diptik bölünmüş ekranlar ve çizimden gerçeğe geçen açılışla ilk saniyeden itibaren güçlü bir yayın kalitesi oluşturulmuştur."
+}
