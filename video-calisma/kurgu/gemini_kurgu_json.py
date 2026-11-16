@@ -1,6 +1,6 @@
 # Gemini'ye mekân kliplerinin birleşik reelini izletip IlanYaratici şablonu için AYRINTILI kurgu JSON'u yazdırır.
 # Kullanım: python -X utf8 kurgu/gemini_kurgu_json.py <reel.mp4> <klipler.json> <bilgiler> <cikti.json> [yön notu]
-import json, sys
+import json, os, random, sys
 sys.path.insert(0, __file__.rsplit("\\", 2)[0] if "\\" in __file__ else ".")
 sys.path.insert(0, "kurgu")
 import yonetmen as y
@@ -28,14 +28,38 @@ MENU = {
     "logo_animasyonlari": {"yukselis": "aşağıdan yükselip yaylanır (varsayılan)", "parilti": "bulanıktan netleşir", "maske": "soldan sağa çizilir", "isik": "karanlıktan parlar"},
     "plan_turleri": {"tek": "tek klip (varsayılan)", "izgara": "planda 'izgara': [klip adları] — 4 klip 2x2, 9 klip 3x3; hücreler sırayla pop ile açılır"},
     "hiz": "planda 'hiz': 0.5–2.0 (1=normal; >1 hızlandırma, <1 ağır çekim). Kesit süresi sure_sn*hiz kadar kaynak tüketir.",
+    "ortam_sesleri": {"adim": "ayak sesi", "anahtar": "anahtar şıngırtısı", "kapi": "kapı gıcırtısı", "kus": "kuş cıvıltısı", "perde_hisirti": "perde/kumaş", "sehir": "uzak şehir uğultusu", "su": "akan su", "zil": "kapı zili/çan"},
     "renk_tonlari": ["dogal", "sicak", "soguk", "sinematik", "parlak"],
     "muzik_katalogu": [{"dosya": m["dosya"], "tarif": m["tarif"]} for m in muzik],
 }
+# --- yaratıcılık: tekrar defteri + rastgele kısıt kartı (arastirma/yaraticilik/YARATICILIK-SINIRI.md) ---
+DEFTER = "kurgu/gecmis-yaratici.json"
+gecmis = json.load(open(DEFTER, encoding="utf-8"))[-3:] if os.path.exists(DEFTER) else []
+yasak = sorted({x for g in gecmis for x in g.get("teknikler", [])})
+KISITLAR = [
+    "Geçiş efekti yok: mekânlar yalnız eşleşmeli kesim (aynı yön/şekil/renk hizası) ve düz kesmeyle bağlanır.",
+    "Yazı yalnız açılışta ve kapanışta; arada anlatım tamamen görüntü ve ortam sesleriyle.",
+    "Tek renk paleti: tüm yazı/vurgu tek renkte, renk tonu filmin duygusunu taşır.",
+    "Müzik ilk 3 sn yok; film ortam sesleriyle açılır, müzik bir 'kapı açılışı' anında girer.",
+    "Her mekân bir detayla başlar (yakın/ızgara) ve geniş açıyla açılır — 'önce detay sonra mekân' kuralı.",
+    "Ters tur: en etkileyici mekândan başla, girişe (koridor) doğru geri yürü; kapanış kapıda.",
+    "Yalnız 3 geçiş tipi seç ve hepsini bir motif gibi aynı yönde kullan (tutarlı dil).",
+    "Ritim kontrastı: ilk yarı sakin ve uzun planlar, ikinci yarı hız; ortada 1 sn sessizlik nefesi.",
+]
+kisit = random.choice(KISITLAR)
 ist = f"""Sen ödüllü bir emlak Reels yönetmenisin. Bu video, bir evin hazır kamera hareketli mekân kliplerini sırayla içeriyor (her biri ~8 sn, sol üstte etiket).
 Kullanılabilir klipler ve sınırları: {json.dumps(klipler, ensure_ascii=False)}
 Gerçek ilan bilgileri (YALNIZ bunlar; fiyat/m²/kat UYDURMA): {bilgi}
 {('Müşteri yönü: ' + yon) if yon else ''}
 {('Referans video analizi (ilham al, kopyalama): ' + ek) if ek else ''}
+ÖNCE KONSEPT: bu ev için birbirinden ÇOK farklı 3 konsept/hikâye yaz (ör. bir günün ışığı, anahtar teslimi gözünden, sessiz tur + ev sesleri, önce-sonra hafıza),
+birini seç; müzik, açılış, yazı, geçiş, ses ve sıra kararlarının HEPSİ bu konsepte hizmet etsin ve 'neden'lerde konsepte bağlansın. Hikâye önce, efekt sonra.
+TEKRAR YASAĞI (son videolarda kullanıldı, KULLANMA): {json.dumps(yasak, ensure_ascii=False)}
+BU VİDEONUN YARATICI KISITI (uymak zorunlu): {kisit}
+BEĞENİLEN ÖRNEK (müşteri: 'işte akıcılık budur, geçişler kendini hissettirmedi'): az sayıda geçiş tipi, hepsi AYNI YÖNDE bir motif gibi; izleyici yolculuğu izler, efekti değil. Tanıtım filmlerinde geçiş dilini tutarlı ve yönlü kur.
+ENERJİ EĞRİSİ: filmi bölümlere ayır (örn. sakin giriş → yükseliş → nefes → zirve → kapanış); her bölüm farklı yapı/tempo; hep aynı yoğunluk YOK.
+Her teknik filmde en fazla 1 kez; tekrar gerekiyorsa her tekrarı yükselt. Plan başına uygun ortam sesi seç (diegetik ses gerçeklik kurar).
+YENİ TEKNİK: menüde olmayan, bu ev için yeni en az 1 teknik öner ('yeni_teknikler' alanında ayrıntılı tarif; planda menüden en yakınını kullan) — kütüphaneye eklenecek.
 Görevin: bu ev için YARATICI, KENDİNE ÖZGÜ bir kurgu tasarlamak — sabit kalıp kullanma; müzik, açılış biçimi, yazı tasarımı, fontlar,
 her plandaki yazı/efekt, her geçiş ve geçiş sesi senin seçimin. Yalnız aşağıdaki MENÜDEN seç (adları aynen yaz):
 {json.dumps(MENU, ensure_ascii=False)}
@@ -46,15 +70,17 @@ aynı geçiş arka arkaya gelmez, gösterişli geçişler (whip, zoom_vurus, don
 yazılar yalnız gerçek bilgilerden (bir bilgi bir kez); tüm mekânlara yazı koyma (en fazla 4 yazı + açılış); her mekân ≥1.5 sn yazısız görünsün;
 açılış metni ikinci satır için '|' kullanabilir. Bant/kutu yok. Kapanış kartı içeriği sabit (logo, YERİNDE GÖRÜN, telefon yer tutucusu, notlar).
 SADECE şu JSON'u döndür:
-{{"konsept": "...", "muzik": {{"dosya": "...", "baslangic_sn": 0, "neden": "..."}}, "renk_tonu": "...",
+{{"konsept_adaylari": ["...", "...", "..."], "konsept": "<seçilen>", "kisit_uygulamasi": "...", "enerji_egrisi": [{{"bolum": "...", "planlar": "1-2", "enerji": "dusuk|orta|yuksek"}}],
+ "yeni_teknikler": [{{"ad": "...", "tarif": "...", "nerede": "..."}}], "muzik": {{"dosya": "...", "baslangic_sn": 0, "neden": "..."}}, "renk_tonu": "...",
  "font": {{"baslik": "<font adı>", "alt": "<font adı>"}}, "vurgu_rengi": "#hex",
  "acilis": {{"teknik": "<acilis_teknikleri>", "klipler": [{{"klip": "<klip adı>", "kesit_bas_sn": 0.0}}], "stil": "<yazı stili>", "metin": "...", "sure_sn": 1.2, "ses": "..."}},
  "logo_animasyonu": "<logo_animasyonlari>",
  "planlar": [{{"klip": "<klip adı>", "izgara": ["<opsiyonel klip adları>"], "hiz": 1.0, "kesit_bas_sn": 0.0, "sure_sn": 4.0, "efekt": {{"ad": "...", "an_sn": 0.5}},
    "yazi": {{"metin": "...", "alt": "...|null", "stil": "...", "konum": "...", "giris_sn": 0.5, "font": "<opsiyonel>"}} | null,
-   "sonraki_gecis": {{"ad": "...", "sure_sn": 0.5, "ses": "..."}}, "neden": "..."}}],
+   "ortam_sesi": "<ortam_sesleri|yok>", "sonraki_gecis": {{"ad": "...", "sure_sn": 0.5, "ses": "..."}}, "neden": "..."}}],
  "kapanis_gecisi": {{"ad": "...", "sure_sn": 0.6, "ses": "..."}},
  "gerekce": "..."}}"""
 m, c = y.sor(reel, ist)
+c["_kisit"] = kisit
 json.dump(c, open(cikti, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
 print(m); print(json.dumps(c, ensure_ascii=False, indent=1)[:4000])

@@ -14,6 +14,8 @@ Gemini anahtarı `%USERPROFILE%\.gemini-anahtar` (repo dışı). Kurallar: fiyat
 
 - Şablonlar: `remotion/src/IlanYaratici.tsx` (Gemini JSON'lu, esnek), `remotion/src/IlanDikey.tsx` (basit veri dosyası), geçişler `remotion/src/hizliGecisler.tsx`. Ayrıntı: `remotion/README.md`.
 - Menü: 9 açılış yazı stili · 6 açılış tekniği (sonucla_basla, kalip_kirma, bolunmus_giris, hizli_zoom_giris, donusum, sessizlik_vurus) · 10 yazı stili · 6 font · 20 geçiş · 5 geçiş sesi · 4 plan efekti · ızgara (2x2/3x3) · hız · 4 logo animasyonu (varsayılan **yukselis**).
+- **Yaratıcılık katmanı** (`arastirma/yaraticilik/YARATICILIK-SINIRI.md`): Gemini önce 3 konsept yazıp seçer; `kurgu/gecmis-yaratici.json` tekrar defteri (son 3 videonun teknikleri yasak); her videoya rastgele **kısıt kartı**; **enerji eğrisi**; plan başına **ortam sesi** (`remotion/public/medya/ortam/`: adim, anahtar, kapi, kus, perde_hisirti, sehir, su, zil — ffmpeg sentezi); her videoda ≥1 **yeni teknik** önerisi → `kurgu/efektler/YENI-TEKNIK-ADAYLARI.md`. `izlet.py` eleştirisi 'tahmin edilebilir anlar' başlığı da yazar.
+- Çekim rehberi (danışman için): `arastirma/CEKIM-REHBERI-60SN.md`.
 - Klip kuralı: Remotion'a giden klipler **her kare anahtar kare** kodlanır (`-g 1 -bf 0 -video_track_timescale 30000`), yoksa kare atlar (takılma).
 
 ## 2. Görüntü hazırlama (gerçek telefon çekimi)

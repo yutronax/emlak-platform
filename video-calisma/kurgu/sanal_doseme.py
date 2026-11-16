@@ -16,10 +16,10 @@ KOMUT = ("Bu boş dairenin fotoğrafını sanal olarak döşe (virtual staging).
 
 
 def anahtar():
-    k = os.environ.get("GEMINI_API_KEY")
-    if not k:
-        k = open(os.path.join(os.path.expanduser("~"), ".gemini-anahtar"), encoding="ascii").read().strip()
-    return k
+    import sys as _s, os as _o
+    _s.path.insert(0, _o.path.join(_o.path.dirname(_o.path.abspath(__file__)), '..' if _o.path.basename(_o.path.dirname(_o.path.abspath(__file__))) == 'kurgu' else '.'))
+    from gemini_anahtar import anahtar as _a
+    return _a()
 
 
 def dose(girdi, cikti, not_=""):

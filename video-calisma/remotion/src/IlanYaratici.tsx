@@ -31,7 +31,7 @@ const golge = '0 0 28px rgba(0,0,0,.55), 0 3px 10px rgba(0,0,0,.75), 0 1px 2px r
 
 type Gecis = {ad: string; sure_sn: number; ses?: string};
 type Yazi = {metin: string; alt?: string; stil: string; konum?: string; giris_sn?: number; font?: string};
-type Plan = {videolar?: string[]; hiz?: number; video2?: string; giris?: string; video: string; kesit_bas_sn?: number; sure_sn: number; efekt?: {ad: string; an_sn?: number}; yazi?: Yazi | null; sonraki_gecis?: Gecis};
+type Plan = {ortam_sesi?: string; ortam_an_sn?: number; videolar?: string[]; hiz?: number; video2?: string; giris?: string; video: string; kesit_bas_sn?: number; sure_sn: number; efekt?: {ad: string; an_sn?: number}; yazi?: Yazi | null; sonraki_gecis?: Gecis};
 export type Kurgu = {
 	muzik: {dosya: string; baslangic_sn?: number}; renk_tonu?: string; font?: {baslik?: string; alt?: string}; vurgu_rengi?: string;
 	acilis: {stil: string; metin: string; sure_sn: number; ses?: string; teknik?: string; klipler?: {video: string; kesit_bas_sn?: number}[]};
@@ -181,6 +181,7 @@ const G = (ad: string): unknown => ({
 	perde: perde(), yakin_cozulme: yakinCozulme(), kayma_sag: slide({direction: 'from-right'}), kayma_sol: slide({direction: 'from-left'}), kayma_alt: slide({direction: 'from-bottom'}),
 	silme: wipe({direction: 'from-left'}), iris: iris({width: W, height: H}), saat: clockWipe({width: W, height: H}), cozulme: fade(), kesme: none(),
 } as Record<string, unknown>)[ad] ?? fade();
+const ORTAM: Record<string, string> = {adim: 'medya/ortam/adim.wav', anahtar: 'medya/ortam/anahtar.wav', kapi: 'medya/ortam/kapi.wav', kus: 'medya/ortam/kus.wav', perde_hisirti: 'medya/ortam/perde_hisirti.wav', sehir: 'medya/ortam/sehir.wav', su: 'medya/ortam/su.wav', zil: 'medya/ortam/zil.wav'};
 const SES: Record<string, string> = {whoosh: 'medya/whoosh.wav', vurus: 'medya/vurus.wav', hava: 'medya/hava.wav', parilti: 'medya/parilti.wav', perde: 'medya/perde.wav'};
 
 // ---------- logo animasyonu ----------
@@ -245,6 +246,7 @@ export const IlanYaratici: React.FC<Kurgu> = (q0) => {
 							<TransitionSeries.Sequence durationInFrames={k(p.sure_sn)}>
 								<AbsoluteFill>
 									<Giris tur={p.giris}>{p.videolar ? <Izgara vs={p.videolar} vurgu={vurgu} /> : p.video2 ? (<AbsoluteFill style={{flexDirection: 'row'}}>{[p.video, p.video2].map((v, j) => <div key={j} style={{width: W / 2, height: H, overflow: 'hidden', borderRight: j === 0 ? `4px solid ${vurgu}` : undefined}}><OffthreadVideo src={staticFile(v)} startFrom={k(p.kesit_bas_sn ?? 0)} muted style={{width: W, height: H, objectFit: 'cover', marginLeft: -W / 4}} /></div>)}</AbsoluteFill>) : <OffthreadVideo src={staticFile(p.video)} startFrom={k(p.kesit_bas_sn ?? 0)} playbackRate={p.hiz ?? 1} muted style={{width: W, height: H, objectFit: 'cover'}} />}</Giris>
+									{p.ortam_sesi && ORTAM[p.ortam_sesi] && <Sequence from={k(p.ortam_an_sn ?? 0.2)}><Audio src={staticFile(ORTAM[p.ortam_sesi])} volume={0.5} /></Sequence>}
 									{p.efekt && p.efekt.ad !== 'yok' && <Sequence from={k(p.efekt.an_sn ?? 0)}><Efekt ad={p.efekt.ad} vurgu={vurgu} /></Sequence>}
 									{p.yazi && (
 										<Sequence from={k(gb(i, p))} durationInFrames={Math.max(15, k(p.sure_sn - gb(i, p)) - 6)}>

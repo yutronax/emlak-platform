@@ -23,8 +23,10 @@ Genel öneri değil; bu videoda GÖRDÜĞÜN şeyleri, saniyesiyle yaz."""
 
 
 def anahtar():
-    k = os.environ.get("GEMINI_API_KEY")
-    return k or open(os.path.join(os.path.expanduser("~"), ".gemini-anahtar"), encoding="ascii").read().strip()
+    import sys as _s, os as _o
+    _s.path.insert(0, _o.path.join(_o.path.dirname(_o.path.abspath(__file__)), '..' if _o.path.basename(_o.path.dirname(_o.path.abspath(__file__))) == 'kurgu' else '.'))
+    from gemini_anahtar import anahtar as _a
+    return _a()
 
 
 def izle(vid, cikti, ek=""):

@@ -23,4 +23,18 @@ hedef = "public/medya/" + c["muzik"]["dosya"]
 if not os.path.exists(hedef): shutil.copy("../muzik/" + c["muzik"]["dosya"], hedef)
 c["muzik"]["dosya"] = "medya/" + c["muzik"]["dosya"]
 json.dump(c, open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+# tekrar defteri: bu videoda kullanılan teknikleri kaydet (sonraki videoda yasak listesi olur)
+tek = {"font:" + v for v in c["font"].values()} | {"acilis:" + str(a.get("teknik")), "acilis_yazi:" + a.get("stil", ""), "logo:" + c["kapanis"]["logo_animasyonu"], "muzik:" + c["muzik"]["dosya"].split("/")[-1], "ton:" + str(c.get("renk_tonu"))}
+for p in c["planlar"]:
+    tek.add("gecis:" + p.get("sonraki_gecis", {}).get("ad", ""))
+    if p.get("yazi"): tek.add("yazi:" + p["yazi"].get("stil", ""))
+    if p.get("efekt", {}).get("ad", "yok") != "yok": tek.add("efekt:" + p["efekt"]["ad"])
+D = "../kurgu/gecmis-yaratici.json"
+g = json.load(open(D, encoding="utf-8")) if os.path.exists(D) else []
+g.append({"video": os.path.basename(out), "konsept": c.get("konsept"), "kisit": c.get("_kisit"), "teknikler": sorted(tek)})
+json.dump(g, open(D, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+yeni = c.get("yeni_teknikler") or []
+if yeni:
+    with open("../kurgu/efektler/YENI-TEKNIK-ADAYLARI.md", "a", encoding="utf-8") as f:
+        for n in yeni: f.write(f"- **{n.get('ad')}** ({os.path.basename(out)}): {n.get('tarif')} — {n.get('nerede')}\n")
 print("açılış:", a.get("teknik"), "| logo:", c["kapanis"]["logo_animasyonu"], "| müzik:", c["muzik"]["dosya"], "| font:", c["font"])

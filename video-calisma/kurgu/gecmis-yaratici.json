@@ -1,0 +1,94 @@
+[
+ {
+  "video": "sajjad-kurgu-2-uygulanan.json",
+  "konsept": "İhtişamlı Mimarisi ve İnce Detaylarıyla Lüks Yaşam Turları",
+  "teknikler": [
+   "acilis:sonucla_basla",
+   "acilis_yazi:isik",
+   "efekt:isik_huzmesi",
+   "efekt:parilti_toz",
+   "efekt:vinyet",
+   "font:Cinzel",
+   "font:Montserrat",
+   "gecis:bulanik_kayma_sag",
+   "gecis:cozulme",
+   "gecis:isik_sizinti",
+   "gecis:yakin_cozulme",
+   "logo:isik",
+   "muzik:luxury-real-estate.mp3",
+   "ton:sinematik",
+   "yazi:cizgi",
+   "yazi:kontur",
+   "yazi:yay"
+  ]
+ },
+ {
+  "video": "gercek-ritim-uygulanan.json",
+  "konsept": "Dinamik Ritmli Modern Şehir Yaşamı",
+  "teknikler": [
+   "acilis:kalip_kirma",
+   "acilis_yazi:carpma",
+   "efekt:isik_huzmesi",
+   "efekt:mercek",
+   "efekt:vinyet",
+   "font:Anton",
+   "font:Montserrat",
+   "gecis:bulanik_kayma_sag",
+   "gecis:isik_sizinti",
+   "gecis:kesme",
+   "gecis:whip_sag",
+   "gecis:zoom_vurus",
+   "logo:yukselis",
+   "muzik:wallpaper.mp3",
+   "ton:parlak",
+   "yazi:cizgi",
+   "yazi:kelime",
+   "yazi:kontur",
+   "yazi:yan_cizgi"
+  ]
+ },
+ {
+  "video": "gercek-tanitim-uygulanan.json",
+  "konsept": "Ataşehir Malatya Caddesi'nde Ferah ve Lüks 3+1 Daire Sunumu",
+  "teknikler": [
+   "acilis:donusum",
+   "acilis_yazi:maske_yukari",
+   "efekt:isik_huzmesi",
+   "efekt:mercek",
+   "efekt:parilti_toz",
+   "efekt:vinyet",
+   "font:Montserrat",
+   "font:Raleway",
+   "gecis:bulanik_kayma_sag",
+   "gecis:bulanik_kayma_sol",
+   "gecis:cozulme",
+   "gecis:isik_sizinti",
+   "gecis:kayma_alt",
+   "gecis:kayma_sag",
+   "logo:yukselis",
+   "muzik:luxury-real-estate.mp3",
+   "ton:parlak",
+   "yazi:cizgi",
+   "yazi:daktilo",
+   "yazi:maske_yukari"
+  ]
+ },
+ {
+  "video": "gercek-yaratici-uygulanan.json",
+  "konsept": "Işık ve Ferahlık Yolculuğu",
+  "kisit": "Yalnız 3 geçiş tipi seç ve hepsini bir motif gibi aynı yönde kullan (tutarlı dil).",
+  "teknikler": [
+   "acilis:sessizlik_vurus",
+   "acilis_yazi:harf_yagmuru",
+   "font:Oswald",
+   "font:PlayfairDisplay",
+   "gecis:kayma_sol",
+   "gecis:silme",
+   "gecis:whip_sol",
+   "logo:maske",
+   "muzik:inspired.mp3",
+   "ton:sicak",
+   "yazi:harf_yagmuru"
+  ]
+ }
+]

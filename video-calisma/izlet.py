@@ -20,6 +20,7 @@ alıcı/kiracı ve emlakçılar. Kullanıcı tercihleri: yazılar telefonda raha
 çok hızlı kurgu sevilmiyor; sinematik ama sıcak, akılda kalan bir his isteniyor.
 
 Türkçe yaz, sanatsal yön ön planda (UX ikincil). Her bulguda zaman damgası ver (ör. 0:04).
+YARATICILIK DENETİMİ: hangi an tahmin edilebilir/kalıp gibi? Aynı teknik tekrar ediyor mu? Bir konsept/hikâye hissediliyor mu, yoksa 'oda turu + efekt' mi? Ayrı bir 'Tahmin edilebilir anlar' başlığı yaz.
 1. İlk izlenim: ilk 1,5 sn kanca tutuyor mu, genel his ne?
 2. Zaman çizelgesi: her kesim/sahne için (0:00–0:02 gibi) ne görülüyor, ne iyi, ne kötü.
 3. Hareket ve geçişler: akıcı mı, takılan/sert/tekrarlı an var mı?
@@ -30,11 +31,10 @@ Türkçe yaz, sanatsal yön ön planda (UX ikincil). Her bulguda zaman damgası 
 
 
 def anahtar():
-    k = os.environ.get("GEMINI_API_KEY")
-    if not k:
-        with open(os.path.join(os.path.expanduser("~"), ".gemini-anahtar"), encoding="ascii") as f:
-            k = f.read().strip()
-    return k
+    import sys as _s, os as _o
+    _s.path.insert(0, _o.path.join(_o.path.dirname(_o.path.abspath(__file__)), '..' if _o.path.basename(_o.path.dirname(_o.path.abspath(__file__))) == 'kurgu' else '.'))
+    from gemini_anahtar import anahtar as _a
+    return _a()
 
 
 def istek(url, *, veri=None, basliklar=None, yontem=None):

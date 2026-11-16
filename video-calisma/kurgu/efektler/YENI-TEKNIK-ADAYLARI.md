@@ -1,0 +1,1 @@
+- **Panoramik Cam Parlaması** (gercek-yaratici-uygulanan.json): Cam balkona geçiş anında cam panellerin kenar çizgisinde anlık ışık kırılması oluşturarak dış manzarayı berraklaştırma efekti. — balkon2 planından manzara planına geçişte

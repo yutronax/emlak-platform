@@ -1,0 +1,290 @@
+{
+ "konsept_adaylari": [
+  "Şehrin Kalbinde Prestijli Yaşam: Malatya Caddesi'nin konumu ve geniş 3+1 iç mekanları ön plana çıkaran konsept",
+  "Işık ve Ferahlık Yolculuğu: Koridordan başlayıp ferah salona ve panoramik balkona uzanan akıcı mimari sunum",
+  "Modern Detaylar ve Ev Sıcaklığı: Ahşap ve mermer dokuları diegetik seslerle harmanlayan dingin ev turu"
+ ],
+ "konsept": "Işık ve Ferahlık Yolculuğu",
+ "kisit_uygulamasi": "Tüm geçişler soldan sağa yatay hareket hissini koruyan 3 özel geçişle (kayma_sol, whip_sol, silme) kurgulanmıştır.",
+ "enerji_egrisi": [
+  {
+   "bolum": "Sakin Giriş",
+   "planlar": "1-3",
+   "enerji": "dusuk"
+  },
+  {
+   "bolum": "Yükseliş ve Yaşam Alanı",
+   "planlar": "4-6",
+   "enerji": "orta"
+  },
+  {
+   "bolum": "Ferah Balkon Zirvesi",
+   "planlar": "7-8",
+   "enerji": "yuksek"
+  },
+  {
+   "bolum": "Özel Alanlar ve Kapanış",
+   "planlar": "9-11",
+   "enerji": "orta"
+  }
+ ],
+ "yeni_teknikler": [
+  {
+   "ad": "Panoramik Cam Parlaması",
+   "tarif": "Cam balkona geçiş anında cam panellerin kenar çizgisinde anlık ışık kırılması oluşturarak dış manzarayı berraklaştırma efekti.",
+   "nerede": "balkon2 planından manzara planına geçişte"
+  }
+ ],
+ "muzik": {
+  "dosya": "inspired.mp3",
+  "baslangic_sn": 0,
+  "neden": "İlham verici sinematik piyano ve yaylı yapısı ferah mimari doku ile mükemmel uyum sağlar."
+ },
+ "renk_tonu": "sicak",
+ "font": {
+  "baslik": "Oswald (kalın dar sans)",
+  "alt": "PlayfairDisplay (zarif serif)"
+ },
+ "vurgu_rengi": "#D4AF37",
+ "acilis": {
+  "teknik": "sessizlik_vurus",
+  "klipler": [
+   {
+    "klip": "koridor",
+    "kesit_bas_sn": 0.0
+   }
+  ],
+  "stil": "harf_yagmuru",
+  "metin": "ATAŞEHİR'DE|3+1 DAİRE",
+  "sure_sn": 1.4,
+  "ses": "vurus"
+ },
+ "logo_animasyonu": "maske",
+ "planlar": [
+  {
+   "klip": "koridor",
+   "izgara": [],
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 4.0,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": {
+    "metin": "MALATYA CADDESİ",
+    "alt": "CEPHELİ",
+    "stil": "harf_yagmuru",
+    "konum": "orta",
+    "giris_sn": 0.5,
+    "font": "Oswald (kalın dar sans)"
+   },
+   "ortam_sesi": "adim",
+   "sonraki_gecis": {
+    "ad": "kayma_sol",
+    "sure_sn": 0.5,
+    "ses": "whoosh"
+   },
+   "neden": "Geniş mermer koridorla eve şık bir giriş yapılır."
+  },
+  {
+   "klip": "dolap",
+   "izgara": [],
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 3.5,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "yok",
+   "sonraki_gecis": {
+    "ad": "whip_sol",
+    "sure_sn": 0.5,
+    "ses": "whoosh"
+   },
+   "neden": "Özel tasarım gömme dolap depolama kalitesini gösterir."
+  },
+  {
+   "klip": "salon",
+   "izgara": [],
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 4.5,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": {
+    "metin": "FERAH YAŞAM ALANI",
+    "alt": "Geniş ve Aydınlık Salon",
+    "stil": "harf_yagmuru",
+    "konum": "alt",
+    "giris_sn": 0.5,
+    "font": "Oswald (kalın dar sans)"
+   },
+   "ortam_sesi": "yok",
+   "sonraki_gecis": {
+    "ad": "silme",
+    "sure_sn": 0.5,
+    "ses": "hava"
+   },
+   "neden": "Evin kalbi olan ana salonun oturma düzenini tanıtır."
+  },
+  {
+   "klip": "mutfak",
+   "izgara": [],
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 2.2,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "su",
+   "sonraki_gecis": {
+    "ad": "kayma_sol",
+    "sure_sn": 0.4,
+    "ses": "whoosh"
+   },
+   "neden": "Beyaz modern mutfak dolaplarına hızlı bir bakış sunar."
+  },
+  {
+   "klip": "balkon",
+   "izgara": [],
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.8,
+   "sure_sn": 2.5,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": {
+    "metin": "TEK BALKON",
+    "alt": "Cam Kaplama Geniş Balkon",
+    "stil": "harf_yagmuru",
+    "konum": "orta",
+    "giris_sn": 0.5,
+    "font": "Oswald (kalın dar sans)"
+   },
+   "ortam_sesi": "perde_hisirti",
+   "sonraki_gecis": {
+    "ad": "whip_sol",
+    "sure_sn": 0.5,
+    "ses": "whoosh"
+   },
+   "neden": "Görsel kurala uygun olarak balkon kapısından giriş açısı sergilenir."
+  },
+  {
+   "klip": "balkon2",
+   "izgara": [],
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 3.5,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "sehir",
+   "sonraki_gecis": {
+    "ad": "silme",
+    "sure_sn": 0.5,
+    "ses": "hava"
+   },
+   "neden": "Balkonun köşe açısını ve geniş yapısını vurgular."
+  },
+  {
+   "klip": "manzara",
+   "izgara": [],
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 4.0,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "kus",
+   "sonraki_gecis": {
+    "ad": "kayma_sol",
+    "sure_sn": 0.5,
+    "ses": "whoosh"
+   },
+   "neden": "Balkondan görünen ferah şehir ve doğa manzarasını öne çıkarır."
+  },
+  {
+   "klip": "yatak2",
+   "izgara": [],
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 4.5,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "yok",
+   "sonraki_gecis": {
+    "ad": "whip_sol",
+    "sure_sn": 0.5,
+    "ses": "whoosh"
+   },
+   "neden": "Yatak odasının rahat ve kullanışlı hacmini gösterir."
+  },
+  {
+   "klip": "banyo",
+   "izgara": [],
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 3.5,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": {
+    "metin": "ÇİFT BANYO",
+    "alt": "Lüks Duşakabinli Ana Banyo",
+    "stil": "harf_yagmuru",
+    "konum": "orta",
+    "giris_sn": 0.5,
+    "font": "Oswald (kalın dar sans)"
+   },
+   "ortam_sesi": "su",
+   "sonraki_gecis": {
+    "ad": "silme",
+    "sure_sn": 0.4,
+    "ses": "hava"
+   },
+   "neden": "Banyo bilgisini doğrulayarak geniş ana banyoyu tanıtır."
+  },
+  {
+   "klip": "banyo2",
+   "izgara": [],
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 2.2,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "yok",
+   "sonraki_gecis": {
+    "ad": "kayma_sol",
+    "sure_sn": 0.5,
+    "ses": "whoosh"
+   },
+   "neden": "İkinci banyo detayını göstererek çift banyo özelliğini tamamlar."
+  }
+ ],
+ "kapanis_gecisi": {
+  "ad": "silme",
+  "sure_sn": 0.6,
+  "ses": "vurus"
+ },
+ "gerekce": "Seçilen 3 geçiş tipi (kayma_sol, whip_sol, silme) video boyunca tutarlı bir soldan sağa akış dili oluşturur. Gerçek bilgiler tam olarak korunmuş, yasaklı ögelerden kaçınılmış ve ferah yaşam konseptine hizmet eden dengeli bir ritim kurulmuştur.",
+ "_kisit": "Yalnız 3 geçiş tipi seç ve hepsini bir motif gibi aynı yönde kullan (tutarlı dil)."
+}
