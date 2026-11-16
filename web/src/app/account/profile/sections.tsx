@@ -230,24 +230,26 @@ export function CompanySection({ profile, service, onSaved, onDirty }: SectionPr
         )}
       </div>
 
-      <TextField
-        name="companyName"
-        label="Şirket adı"
-        autoComplete="organization"
-        value={form.companyName}
-        onChange={set("companyName")}
-        error={save.errors.companyName}
-        disabled={save.pending}
-      />
-      <TextField
-        name="contactName"
-        label="Yetkili adı"
-        autoComplete="name"
-        value={form.contactName}
-        onChange={set("contactName")}
-        error={save.errors.contactName}
-        disabled={save.pending}
-      />
+      <div className="grid gap-4 sm:grid-cols-2">
+        <TextField
+          name="companyName"
+          label="Şirket adı"
+          autoComplete="organization"
+          value={form.companyName}
+          onChange={set("companyName")}
+          error={save.errors.companyName}
+          disabled={save.pending}
+        />
+        <TextField
+          name="contactName"
+          label="Yetkili adı"
+          autoComplete="name"
+          value={form.contactName}
+          onChange={set("contactName")}
+          error={save.errors.contactName}
+          disabled={save.pending}
+        />
+      </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <TextField
           name="city"

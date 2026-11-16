@@ -24,6 +24,15 @@ video-calisma/capcut/*
 !video-calisma/muzik/
 video-calisma/muzik/*
 !video-calisma/muzik/katalog.json
+!video-calisma/remotion/
+video-calisma/remotion/*
+!video-calisma/remotion/src/
+!video-calisma/remotion/veri/
+!video-calisma/remotion/*.py
+!video-calisma/remotion/*.md
+!video-calisma/remotion/package.json
+!video-calisma/remotion/tsconfig.json
+!video-calisma/remotion/.gitignore
 video-calisma/**/*.jpg
 video-calisma/**/*.png
 video-calisma/**/*.mp4

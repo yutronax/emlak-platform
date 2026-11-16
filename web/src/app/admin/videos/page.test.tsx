@@ -9,6 +9,12 @@ import { createServiceRoleClient } from "@/lib/supabase/server";
 
 import Page from "./page";
 
+// connection() test ortamında istek kapsamı olmadan atar; dashboard testleriyle aynı mock.
+vi.mock("next/server", async (orig) => ({
+  ...(await orig<typeof import("next/server")>()),
+  connection: vi.fn(async () => {}),
+}));
+
 vi.mock("@/lib/auth/requireAdmin", () => ({
   requireAdmin: vi.fn(),
 }));
