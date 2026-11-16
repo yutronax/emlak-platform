@@ -1,0 +1,135 @@
+{
+ "konsept": "Modern mimari ve sıcak aydınlatma detaylarını öne çıkaran, zarif ve lüks konut tanıtım kurgusu.",
+ "muzik": {
+  "dosya": "medya/luxury-real-estate.mp3",
+  "baslangic_sn": 0,
+  "neden": "Orta tempolu piyano ve yaylı düzenlemesi, ağır çekim mimari detaylar ve aydınlatma tasarımlarıyla lüks algısını güçlendirir."
+ },
+ "renk_tonu": "sicak",
+ "font": {
+  "baslik": "Raleway",
+  "alt": "Montserrat"
+ },
+ "vurgu_rengi": "#D4AF37",
+ "acilis": {
+  "stil": "maske_yukari",
+  "metin": "MODERN VE LÜKS|YAŞAM ALANLARI",
+  "sure_sn": 1.5,
+  "ses": "whoosh"
+ },
+ "planlar": [
+  {
+   "klip": "tavan",
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 7.0,
+   "efekt": {
+    "ad": "parilti_toz",
+    "an_sn": 1.0
+   },
+   "yazi": {
+    "metin": "İHTİŞAMLI TAVAN TASARIMI",
+    "alt": "Özel Cam Avizeler ve Gizli Aydınlatma",
+    "stil": "daktilo",
+    "konum": "alt",
+    "giris_sn": 0.8
+   },
+   "sonraki_gecis": {
+    "ad": "isik_sizinti",
+    "sure_sn": 0.6,
+    "ses": "parilti"
+   },
+   "neden": "Girişte özel tasarım avize detayını ve tavan yüksekliğini sıcak ışık sızıntısıyla sergilemek.",
+   "video": "medya/sajjad/tavan.mp4"
+  },
+  {
+   "klip": "salon",
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 6.0,
+   "efekt": {
+    "ad": "isik_huzmesi",
+    "an_sn": 1.5
+   },
+   "yazi": {
+    "metin": "GENİŞ VE FERAH SALON",
+    "alt": "Entegre LED Aydınlatmalı TV Ünitesi",
+    "stil": "yay",
+    "konum": "ust",
+    "giris_sn": 0.5
+   },
+   "sonraki_gecis": {
+    "ad": "bulanik_kayma_sag",
+    "sure_sn": 0.5,
+    "ses": "hava"
+   },
+   "neden": "Salondaki LED paneli ve tv ünitesinin zarif hatlarını akıcı şekilde göstermek.",
+   "video": "medya/sajjad/salon.mp4"
+  },
+  {
+   "klip": "tavan",
+   "kesit_bas_sn": 7.0,
+   "sure_sn": 6.5,
+   "efekt": {
+    "ad": "vinyet",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "sonraki_gecis": {
+    "ad": "cozulme",
+    "sure_sn": 0.6,
+    "ses": "yok"
+   },
+   "neden": "Tavandan aşağı salona süzülen kamera hareketiyle mekanlar arası kesintisiz ve yazısız bir geçiş hissi yaratmak.",
+   "video": "medya/sajjad/tavan.mp4"
+  },
+  {
+   "klip": "salon",
+   "kesit_bas_sn": 6.0,
+   "sure_sn": 5.5,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "sonraki_gecis": {
+    "ad": "whip_sol",
+    "sure_sn": 0.4,
+    "ses": "whoosh"
+   },
+   "neden": "Salondaki oturma alanını ve genel ambiyansı dinamik bir whip geçiş öncesinde odağı dağıtmadan sunmak.",
+   "video": "medya/sajjad/salon.mp4"
+  },
+  {
+   "klip": "yatak",
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 8.5,
+   "efekt": {
+    "ad": "mercek",
+    "an_sn": 2.0
+   },
+   "yazi": {
+    "metin": "ZARİF YATAK ODASI",
+    "alt": "Işıklı Nişler ve Dairesel Tavan Detayı",
+    "stil": "kontur",
+    "konum": "alt",
+    "giris_sn": 1.0
+   },
+   "sonraki_gecis": {
+    "ad": "cozulme",
+    "sure_sn": 0.6,
+    "ses": "vurus"
+   },
+   "neden": "Yatak odasının konforunu, dairesel tavan formunu ve niş aydınlatmalarını öne çıkararak turu tamamlamak.",
+   "video": "medya/sajjad/yatak.mp4"
+  }
+ ],
+ "gerekce": "Videoda tavandan salona ve yatak odasına uzanan estetik bir anlatım kurulmuş, tekrarsız yumuşak geçişlerle premium mimari detaylar vurgulanmıştır.",
+ "kapanis": {
+  "logo": "medya/logo.png",
+  "cagri": "YERİNDE GÖRÜN",
+  "telefon": "0 (5XX) XXX XX XX",
+  "sure_sn": 4.5,
+  "notlar": [
+   "Görüntü: Pexels · İNZA ÖRNEK KURGU"
+  ]
+ }
+}

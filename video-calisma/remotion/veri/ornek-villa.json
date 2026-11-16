@@ -1,0 +1,67 @@
+{
+ "kanca": {
+  "metin": "MODERN|VİLLA",
+  "sure": 1.5
+ },
+ "planlar": [
+  {
+   "video": "medya/villa/40807448.mp4",
+   "sure": 3.5
+  },
+  {
+   "video": "medya/villa/40807459.mp4",
+   "sure": 3.5,
+   "baslik": "DOĞAYLA İÇ İÇE",
+   "yazi": "cizgi"
+  },
+  {
+   "video": "medya/villa/40807449.mp4",
+   "sure": 3.5
+  },
+  {
+   "video": "medya/villa/40807452.mp4",
+   "sure": 3.5,
+   "baslik": "TAŞ VE AHŞAP",
+   "yazi": "carpma"
+  },
+  {
+   "video": "medya/villa/40807450.mp4",
+   "sure": 3.5,
+   "baslik": "YÜKSEK TAVAN",
+   "yazi": "kelime"
+  },
+  {
+   "video": "medya/villa/40807458.mp4",
+   "sure": 3.5
+  },
+  {
+   "video": "medya/villa/40807484.mp4",
+   "sure": 3.5,
+   "baslik": "GÜN IŞIĞI",
+   "yazi": "yay"
+  },
+  {
+   "video": "medya/villa/40807458b.mp4",
+   "sure": 3.5
+  },
+  {
+   "video": "medya/villa/40807489.mp4",
+   "sure": 3.5,
+   "baslik": "BAHÇEYE AÇILAN",
+   "yazi": "cizgi"
+  }
+ ],
+ "muzik": "medya/easy-lemon.mp3",
+ "muzikBas": 0,
+ "kapanis": {
+  "logo": "medya/logo.png",
+  "cagri": "YERİNDE GÖRÜN",
+  "telefon": "0 (5XX) XXX XX XX",
+  "sure": 3.5,
+  "notlar": [
+   "Görüntü: Pexels · İNZA ÖRNEK KURGU",
+   "Müzik: Kevin MacLeod (incompetech.com) · CC BY 4.0"
+  ]
+ },
+ "seslendirme": ""
+}

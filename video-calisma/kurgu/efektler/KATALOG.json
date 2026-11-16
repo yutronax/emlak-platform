@@ -1,0 +1,4088 @@
+[
+  {
+    "ad": "yandan_itme",
+    "tur": "gecis",
+    "kaynak": "kutuphane",
+    "tarif": "Yeni görüntü yandan girerken önceki görüntüyü fiziksel olarak dışarı iter.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.3,
+      1.2
+    ],
+    "parametreler": {
+      "--a": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--a-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/yandan_itme.py --a varliklar/pexels-yeni/7614406.mp4 --b varliklar/pexels-yeni/7614407.mp4 --sure 0.6 -o cikti/efekt-ornek/video/yandan_itme.mp4",
+    "ornek": "cikti/efekt-ornek/yandan_itme.jpg",
+    "ilk_kullanildigi": "gemini-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-1/gecisler.py",
+    "test_argumanlari": [
+      "--a",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--b",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "--sure",
+      "0.6",
+      "-o",
+      "cikti/efekt-ornek/video/yandan_itme.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.12,
+      0.24,
+      0.36,
+      0.48
+    ]
+  },
+  {
+    "ad": "dikey_jaluzi",
+    "tur": "gecis",
+    "kaynak": "kutuphane",
+    "tarif": "Dikey dilimler aynı anda açılarak yeni mekânı gösterir.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.3,
+      1.2
+    ],
+    "parametreler": {
+      "--a": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--a-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/dikey_jaluzi.py --a varliklar/pexels-yeni/7614406.mp4 --b varliklar/pexels-yeni/7614407.mp4 --sure 0.6 -o cikti/efekt-ornek/video/dikey_jaluzi.mp4",
+    "ornek": "cikti/efekt-ornek/dikey_jaluzi.jpg",
+    "ilk_kullanildigi": "gemini-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-1/gecisler.py",
+    "test_argumanlari": [
+      "--a",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--b",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "--sure",
+      "0.6",
+      "-o",
+      "cikti/efekt-ornek/video/dikey_jaluzi.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.12,
+      0.24,
+      0.36,
+      0.48
+    ]
+  },
+  {
+    "ad": "dairesel_iris",
+    "tur": "gecis",
+    "kaynak": "kutuphane",
+    "tarif": "Ortadan büyüyen daire kadrajı yeni mekâna açar.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.3,
+      1.2
+    ],
+    "parametreler": {
+      "--a": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--a-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/dairesel_iris.py --a varliklar/pexels-yeni/7614406.mp4 --b varliklar/pexels-yeni/7614407.mp4 --sure 0.6 -o cikti/efekt-ornek/video/dairesel_iris.mp4",
+    "ornek": "cikti/efekt-ornek/dairesel_iris.jpg",
+    "ilk_kullanildigi": "gemini-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-1/gecisler.py",
+    "test_argumanlari": [
+      "--a",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--b",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "--sure",
+      "0.6",
+      "-o",
+      "cikti/efekt-ornek/video/dairesel_iris.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.12,
+      0.24,
+      0.36,
+      0.48
+    ]
+  },
+  {
+    "ad": "iki_yana_ayrilma",
+    "tur": "gecis",
+    "kaynak": "kutuphane",
+    "tarif": "Eski görüntünün iki yarısı yanlara ayrılır, aradan yeni mekân görünür.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.3,
+      1.2
+    ],
+    "parametreler": {
+      "--a": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--a-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/iki_yana_ayrilma.py --a varliklar/pexels-yeni/7614406.mp4 --b varliklar/pexels-yeni/7614407.mp4 --sure 0.6 -o cikti/efekt-ornek/video/iki_yana_ayrilma.mp4",
+    "ornek": "cikti/efekt-ornek/iki_yana_ayrilma.jpg",
+    "ilk_kullanildigi": "gemini-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-1/gecisler.py",
+    "test_argumanlari": [
+      "--a",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--b",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "--sure",
+      "0.6",
+      "-o",
+      "cikti/efekt-ornek/video/iki_yana_ayrilma.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.12,
+      0.24,
+      0.36,
+      0.48
+    ]
+  },
+  {
+    "ad": "mozaik_cozulme",
+    "tur": "gecis",
+    "kaynak": "kutuphane",
+    "tarif": "Küçük kareler sıralı olarak büyüyüp yeni görüntüyü kurar.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.3,
+      1.2
+    ],
+    "parametreler": {
+      "--a": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--a-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/mozaik_cozulme.py --a varliklar/pexels-yeni/7614406.mp4 --b varliklar/pexels-yeni/7614407.mp4 --sure 0.6 -o cikti/efekt-ornek/video/mozaik_cozulme.mp4",
+    "ornek": "cikti/efekt-ornek/mozaik_cozulme.jpg",
+    "ilk_kullanildigi": "gemini-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-1/gecisler.py",
+    "test_argumanlari": [
+      "--a",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--b",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "--sure",
+      "0.6",
+      "-o",
+      "cikti/efekt-ornek/video/mozaik_cozulme.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.12,
+      0.24,
+      0.36,
+      0.48
+    ]
+  },
+  {
+    "ad": "iki_yuzlu_donus",
+    "tur": "gecis",
+    "kaynak": "kutuphane",
+    "tarif": "İki görüntü daralıp genişleyen yüzeylerle birbiri yerine döner.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.3,
+      1.2
+    ],
+    "parametreler": {
+      "--a": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--a-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/iki_yuzlu_donus.py --a varliklar/pexels-yeni/7614406.mp4 --b varliklar/pexels-yeni/7614407.mp4 --sure 0.6 -o cikti/efekt-ornek/video/iki_yuzlu_donus.mp4",
+    "ornek": "cikti/efekt-ornek/iki_yuzlu_donus.jpg",
+    "ilk_kullanildigi": "gemini-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-1/gecisler.py",
+    "test_argumanlari": [
+      "--a",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--b",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "--sure",
+      "0.6",
+      "-o",
+      "cikti/efekt-ornek/video/iki_yuzlu_donus.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.12,
+      0.24,
+      0.36,
+      0.48
+    ]
+  },
+  {
+    "ad": "polaroid_atisi",
+    "tur": "gecis",
+    "kaynak": "kutuphane",
+    "tarif": "Fotoğraf çerçevesindeki eski görüntü dönerek ekran dışına atılır.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.3,
+      1.2
+    ],
+    "parametreler": {
+      "--a": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--a-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/polaroid_atisi.py --a varliklar/pexels-yeni/7614406.mp4 --b varliklar/pexels-yeni/7614407.mp4 --sure 0.6 -o cikti/efekt-ornek/video/polaroid_atisi.mp4",
+    "ornek": "cikti/efekt-ornek/polaroid_atisi.jpg",
+    "ilk_kullanildigi": "gemini-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-1/gecisler.py",
+    "test_argumanlari": [
+      "--a",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--b",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "--sure",
+      "0.6",
+      "-o",
+      "cikti/efekt-ornek/video/polaroid_atisi.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.12,
+      0.24,
+      0.36,
+      0.48
+    ]
+  },
+  {
+    "ad": "altin_renk_blogu",
+    "tur": "gecis",
+    "kaynak": "kutuphane",
+    "tarif": "Altın renkli geniş bir blok kadrajı süpürerek mekân değiştirir.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.3,
+      1.2
+    ],
+    "parametreler": {
+      "--a": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--a-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/altin_renk_blogu.py --a varliklar/pexels-yeni/7614406.mp4 --b varliklar/pexels-yeni/7614407.mp4 --sure 0.6 -o cikti/efekt-ornek/video/altin_renk_blogu.mp4",
+    "ornek": "cikti/efekt-ornek/altin_renk_blogu.jpg",
+    "ilk_kullanildigi": "gemini-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-1/gecisler.py",
+    "test_argumanlari": [
+      "--a",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--b",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "--sure",
+      "0.6",
+      "-o",
+      "cikti/efekt-ornek/video/altin_renk_blogu.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.12,
+      0.24,
+      0.36,
+      0.48
+    ]
+  },
+  {
+    "ad": "zoom_through",
+    "tur": "gecis",
+    "kaynak": "kutuphane",
+    "tarif": "Merkeze hızla yaklaşan görüntü bulanıklık içinde yeni mekâna geçer.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.3,
+      1.2
+    ],
+    "parametreler": {
+      "--a": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--a-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/zoom_through.py --a varliklar/pexels-yeni/7614406.mp4 --b varliklar/pexels-yeni/7614407.mp4 --sure 0.6 -o cikti/efekt-ornek/video/zoom_through.mp4",
+    "ornek": "cikti/efekt-ornek/zoom_through.jpg",
+    "ilk_kullanildigi": "gemini-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-1/gecisler.py",
+    "test_argumanlari": [
+      "--a",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--b",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "--sure",
+      "0.6",
+      "-o",
+      "cikti/efekt-ornek/video/zoom_through.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.12,
+      0.24,
+      0.36,
+      0.48
+    ]
+  },
+  {
+    "ad": "isik_sizmasi",
+    "tur": "gecis",
+    "kaynak": "kutuphane",
+    "tarif": "Sıcak bir ışık sızıntısı soldan sağa akarken görüntüler çözülür.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.3,
+      1.2
+    ],
+    "parametreler": {
+      "--a": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--a-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/isik_sizmasi.py --a varliklar/pexels-yeni/7614406.mp4 --b varliklar/pexels-yeni/7614407.mp4 --sure 0.6 -o cikti/efekt-ornek/video/isik_sizmasi.mp4",
+    "ornek": "cikti/efekt-ornek/isik_sizmasi.jpg",
+    "ilk_kullanildigi": "gemini-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-1/gecisler.py",
+    "test_argumanlari": [
+      "--a",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--b",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "--sure",
+      "0.6",
+      "-o",
+      "cikti/efekt-ornek/video/isik_sizmasi.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.12,
+      0.24,
+      0.36,
+      0.48
+    ]
+  },
+  {
+    "ad": "capraz_maske",
+    "tur": "gecis",
+    "kaynak": "kutuphane",
+    "tarif": "Çapraz ilerleyen maske yeni mekânı köşeden açar.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.3,
+      1.2
+    ],
+    "parametreler": {
+      "--a": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--a-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/capraz_maske.py --a varliklar/pexels-yeni/7614406.mp4 --b varliklar/pexels-yeni/7614407.mp4 --sure 0.6 -o cikti/efekt-ornek/video/capraz_maske.mp4",
+    "ornek": "cikti/efekt-ornek/capraz_maske.jpg",
+    "ilk_kullanildigi": "gemini-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-1/gecisler.py",
+    "test_argumanlari": [
+      "--a",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--b",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "--sure",
+      "0.6",
+      "-o",
+      "cikti/efekt-ornek/video/capraz_maske.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.12,
+      0.24,
+      0.36,
+      0.48
+    ]
+  },
+  {
+    "ad": "yatay_serit_perde",
+    "tur": "gecis",
+    "kaynak": "kutuphane",
+    "tarif": "Yatay şeritler yeni görüntüyü eşzamanlı olarak açar.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.3,
+      1.2
+    ],
+    "parametreler": {
+      "--a": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--a-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/yatay_serit_perde.py --a varliklar/pexels-yeni/7614406.mp4 --b varliklar/pexels-yeni/7614407.mp4 --sure 0.6 -o cikti/efekt-ornek/video/yatay_serit_perde.mp4",
+    "ornek": "cikti/efekt-ornek/yatay_serit_perde.jpg",
+    "ilk_kullanildigi": "gemini-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-1/gecisler.py",
+    "test_argumanlari": [
+      "--a",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--b",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "--sure",
+      "0.6",
+      "-o",
+      "cikti/efekt-ornek/video/yatay_serit_perde.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.12,
+      0.24,
+      0.36,
+      0.48
+    ]
+  },
+  {
+    "ad": "sayfa_cevirme",
+    "tur": "gecis",
+    "kaynak": "kutuphane",
+    "tarif": "Eski görüntü koyu bir kıvrımla sayfa gibi kenara çekilir.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.3,
+      1.2
+    ],
+    "parametreler": {
+      "--a": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--a-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/sayfa_cevirme.py --a varliklar/pexels-yeni/7614406.mp4 --b varliklar/pexels-yeni/7614407.mp4 --sure 0.6 -o cikti/efekt-ornek/video/sayfa_cevirme.mp4",
+    "ornek": "cikti/efekt-ornek/sayfa_cevirme.jpg",
+    "ilk_kullanildigi": "gemini-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-1/gecisler.py",
+    "test_argumanlari": [
+      "--a",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--b",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "--sure",
+      "0.6",
+      "-o",
+      "cikti/efekt-ornek/video/sayfa_cevirme.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.12,
+      0.24,
+      0.36,
+      0.48
+    ]
+  },
+  {
+    "ad": "elmas_acilim",
+    "tur": "gecis",
+    "kaynak": "kutuphane",
+    "tarif": "Merkezden büyüyen elmas biçimi yeni görüntüyü açar.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.3,
+      1.2
+    ],
+    "parametreler": {
+      "--a": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--a-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/elmas_acilim.py --a varliklar/pexels-yeni/7614406.mp4 --b varliklar/pexels-yeni/7614407.mp4 --sure 0.6 -o cikti/efekt-ornek/video/elmas_acilim.mp4",
+    "ornek": "cikti/efekt-ornek/elmas_acilim.jpg",
+    "ilk_kullanildigi": "gemini-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-1/gecisler.py",
+    "test_argumanlari": [
+      "--a",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--b",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "--sure",
+      "0.6",
+      "-o",
+      "cikti/efekt-ornek/video/elmas_acilim.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.12,
+      0.24,
+      0.36,
+      0.48
+    ]
+  },
+  {
+    "ad": "tarama_cizgisi",
+    "tur": "gecis",
+    "kaynak": "kutuphane",
+    "tarif": "İnce ışıklı tarama sınırı yukarıdan aşağıya ilerler.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.3,
+      1.2
+    ],
+    "parametreler": {
+      "--a": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--a-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/tarama_cizgisi.py --a varliklar/pexels-yeni/7614406.mp4 --b varliklar/pexels-yeni/7614407.mp4 --sure 0.6 -o cikti/efekt-ornek/video/tarama_cizgisi.mp4",
+    "ornek": "cikti/efekt-ornek/tarama_cizgisi.jpg",
+    "ilk_kullanildigi": "gemini-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-1/gecisler.py",
+    "test_argumanlari": [
+      "--a",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--b",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "--sure",
+      "0.6",
+      "-o",
+      "cikti/efekt-ornek/video/tarama_cizgisi.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.12,
+      0.24,
+      0.36,
+      0.48
+    ]
+  },
+  {
+    "ad": "donen_saat",
+    "tur": "gecis",
+    "kaynak": "kutuphane",
+    "tarif": "Saat yönünde dönen dairesel maske yeni mekânı açar.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.3,
+      1.2
+    ],
+    "parametreler": {
+      "--a": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--a-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/donen_saat.py --a varliklar/pexels-yeni/7614406.mp4 --b varliklar/pexels-yeni/7614407.mp4 --sure 0.6 -o cikti/efekt-ornek/video/donen_saat.mp4",
+    "ornek": "cikti/efekt-ornek/donen_saat.jpg",
+    "ilk_kullanildigi": "gemini-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-1/gecisler.py",
+    "test_argumanlari": [
+      "--a",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--b",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "--sure",
+      "0.6",
+      "-o",
+      "cikti/efekt-ornek/video/donen_saat.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.12,
+      0.24,
+      0.36,
+      0.48
+    ]
+  },
+  {
+    "ad": "sinema_perdesi",
+    "tur": "gecis",
+    "kaynak": "kutuphane",
+    "tarif": "Merkezdeki yatay açıklık yukarı ve aşağı genişler.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.3,
+      1.2
+    ],
+    "parametreler": {
+      "--a": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--a-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/sinema_perdesi.py --a varliklar/pexels-yeni/7614406.mp4 --b varliklar/pexels-yeni/7614407.mp4 --sure 0.6 -o cikti/efekt-ornek/video/sinema_perdesi.mp4",
+    "ornek": "cikti/efekt-ornek/sinema_perdesi.jpg",
+    "ilk_kullanildigi": "gemini-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-1/gecisler.py",
+    "test_argumanlari": [
+      "--a",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--b",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "--sure",
+      "0.6",
+      "-o",
+      "cikti/efekt-ornek/video/sinema_perdesi.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.12,
+      0.24,
+      0.36,
+      0.48
+    ]
+  },
+  {
+    "ad": "rack_focus",
+    "tur": "gecis",
+    "kaynak": "kutuphane",
+    "tarif": "Giden mekân odağını kaybederken gelen mekân netleşir. Yumuşak çözülme optik odak değişimi hissi verir.",
+    "gosterisli": false,
+    "sure_aralik": [
+      0.3,
+      1.2
+    ],
+    "parametreler": {
+      "--a": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--a-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/rack_focus.py --a varliklar/pexels-yeni/7614406.mp4 --b varliklar/pexels-yeni/7614407.mp4 --sure 0.6 -o cikti/efekt-ornek/video/rack_focus.mp4",
+    "ornek": "cikti/efekt-ornek/rack_focus.jpg",
+    "ilk_kullanildigi": "gemini-cizim-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-cizim-radikal-1/gecis_duzelt.py",
+    "test_argumanlari": [
+      "--a",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--b",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "--sure",
+      "0.6",
+      "-o",
+      "cikti/efekt-ornek/video/rack_focus.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.12,
+      0.24,
+      0.36,
+      0.48
+    ]
+  },
+  {
+    "ad": "mikro_kaymali_cozulme",
+    "tur": "gecis",
+    "kaynak": "kutuphane",
+    "tarif": "Görüntüler kadraj genişliğinin yüzde biri kadar kayarak çözülür. Kayma yönü giden çekimin hareketinden ölçülür.",
+    "gosterisli": false,
+    "sure_aralik": [
+      0.3,
+      1.2
+    ],
+    "parametreler": {
+      "--a": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--a-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--yon": {
+        "zorunlu": false,
+        "varsayilan": "oto",
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": [
+          "oto",
+          "sag",
+          "sol"
+        ]
+      },
+      "--kayma": {
+        "zorunlu": false,
+        "varsayilan": 19.2,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/mikro_kaymali_cozulme.py --a varliklar/pexels-yeni/7614406.mp4 --b varliklar/pexels-yeni/7614407.mp4 --sure 0.6 -o cikti/efekt-ornek/video/mikro_kaymali_cozulme.mp4",
+    "ornek": "cikti/efekt-ornek/mikro_kaymali_cozulme.jpg",
+    "ilk_kullanildigi": "gemini-cizim-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-cizim-radikal-1/gecis_duzelt.py",
+    "test_argumanlari": [
+      "--a",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--b",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "--sure",
+      "0.6",
+      "-o",
+      "cikti/efekt-ornek/video/mikro_kaymali_cozulme.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.12,
+      0.24,
+      0.36,
+      0.48
+    ]
+  },
+  {
+    "ad": "sutun_kaymasi",
+    "tur": "gecis",
+    "kaynak": "kutuphane",
+    "tarif": "Önce soldaki dar sütun, ardından sağdaki geniş sütun yukarı kayar. İkinci sütun 0,4 saniye gecikir, görüntüler hareket etmeyi sürdürür.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.6,
+      1.5
+    ],
+    "parametreler": {
+      "--a": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--a-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--oran": {
+        "zorunlu": false,
+        "varsayilan": 0.38,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--gecikme": {
+        "zorunlu": false,
+        "varsayilan": 0.4,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/sutun_kaymasi.py --a varliklar/pexels-yeni/7614406.mp4 --b varliklar/pexels-yeni/7614407.mp4 --sure 0.8 -o cikti/efekt-ornek/video/sutun_kaymasi.mp4",
+    "ornek": "cikti/efekt-ornek/sutun_kaymasi.jpg",
+    "ilk_kullanildigi": "gemini-cizim-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-cizim-radikal-1/duzelt.py",
+    "test_argumanlari": [
+      "--a",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--b",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "--sure",
+      "0.8",
+      "-o",
+      "cikti/efekt-ornek/video/sutun_kaymasi.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.16000000000000003,
+      0.32000000000000006,
+      0.48,
+      0.6400000000000001
+    ]
+  },
+  {
+    "ad": "cizimden_gercege",
+    "tur": "acilis",
+    "kaynak": "kutuphane",
+    "tarif": "Sıcak kâğıt üzerinde beliren karakalem çizim, yumuşak bir ışık sınırıyla gerçek görüntüye dönüşür. Kaynak görüntü açılış boyunca kesintisiz ilerler.",
+    "gosterisli": true,
+    "sure_aralik": [
+      2,
+      6
+    ],
+    "parametreler": {
+      "--girdi": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--kaynak-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--yon": {
+        "zorunlu": false,
+        "varsayilan": "sag",
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": [
+          "sag",
+          "sol"
+        ]
+      },
+      "--silme-orani": {
+        "zorunlu": false,
+        "varsayilan": 0.55,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/cizimden_gercege.py --girdi varliklar/pexels-yeni/7614406.mp4 --sure 3 -o cikti/efekt-ornek/video/cizimden_gercege.mp4",
+    "ornek": "cikti/efekt-ornek/cizimden_gercege.jpg",
+    "ilk_kullanildigi": "gemini-cizim-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-cizim-radikal-1/duzelt.py + kurgu/cizimden_gercege.py",
+    "test_argumanlari": [
+      "--girdi",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--sure",
+      "3",
+      "-o",
+      "cikti/efekt-ornek/video/cizimden_gercege.mp4"
+    ],
+    "ornek_zamanlari": [
+      1.2,
+      1.65,
+      2.1,
+      2.65
+    ]
+  },
+  {
+    "ad": "altin_cizgi_acilisi",
+    "tur": "acilis",
+    "kaynak": "kutuphane",
+    "tarif": "İnce altın vurgu merkezde parlar, görüntü iki yana açılan bir perdeyle belirir.",
+    "gosterisli": true,
+    "sure_aralik": [
+      1.2,
+      5
+    ],
+    "parametreler": {
+      "--girdi": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--kaynak-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/altin_cizgi_acilisi.py --girdi varliklar/pexels-yeni/7614406.mp4 --sure 3 -o cikti/efekt-ornek/video/altin_cizgi_acilisi.mp4",
+    "ornek": "cikti/efekt-ornek/altin_cizgi_acilisi.jpg",
+    "ilk_kullanildigi": "gemini-radikal-2.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-2/duzelt.py",
+    "test_argumanlari": [
+      "--girdi",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--sure",
+      "3",
+      "-o",
+      "cikti/efekt-ornek/video/altin_cizgi_acilisi.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.1,
+      0.4,
+      0.7,
+      1.0
+    ]
+  },
+  {
+    "ad": "oval_acilis",
+    "tur": "acilis",
+    "kaynak": "kutuphane",
+    "tarif": "Yumuşak kenarlı oval açıklık merkezden genişleyerek görüntüyü siyahın içinden ortaya çıkarır.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.8,
+      5
+    ],
+    "parametreler": {
+      "--girdi": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--kaynak-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/oval_acilis.py --girdi varliklar/pexels-yeni/7614406.mp4 --sure 3 -o cikti/efekt-ornek/video/oval_acilis.mp4",
+    "ornek": "cikti/efekt-ornek/oval_acilis.jpg",
+    "ilk_kullanildigi": "gemini-yeni-tur-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-yeni-tur-1/son_dokunus.py",
+    "test_argumanlari": [
+      "--girdi",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--sure",
+      "3",
+      "-o",
+      "cikti/efekt-ornek/video/oval_acilis.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.1,
+      0.3,
+      0.5,
+      0.7
+    ]
+  },
+  {
+    "ad": "mozaik_acilis",
+    "tur": "acilis",
+    "kaynak": "kutuphane",
+    "tarif": "Kare parçalar merkezden başlayarak büyür ve tek görüntüde birleşir.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.6,
+      4
+    ],
+    "parametreler": {
+      "--girdi": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--kaynak-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/mozaik_acilis.py --girdi varliklar/pexels-yeni/7614406.mp4 --sure 3 -o cikti/efekt-ornek/video/mozaik_acilis.mp4",
+    "ornek": "cikti/efekt-ornek/mozaik_acilis.jpg",
+    "ilk_kullanildigi": "gemini-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-1/kolaj_tam.py",
+    "test_argumanlari": [
+      "--girdi",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--sure",
+      "3",
+      "-o",
+      "cikti/efekt-ornek/video/mozaik_acilis.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.1,
+      0.2,
+      0.3,
+      0.4
+    ]
+  },
+  {
+    "ad": "sicak_glow",
+    "tur": "isik",
+    "kaynak": "kutuphane",
+    "tarif": "İki geniş ve yumuşak sıcak ışık halesi mekândaki aydınlık hissini destekler.",
+    "gosterisli": false,
+    "sure_aralik": [
+      3,
+      8
+    ],
+    "parametreler": {
+      "--girdi": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--kaynak-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--siddet": {
+        "zorunlu": false,
+        "varsayilan": 1,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/sicak_glow.py --girdi varliklar/pexels-yeni/7614406.mp4 --sure 3 -o cikti/efekt-ornek/video/sicak_glow.mp4",
+    "ornek": "cikti/efekt-ornek/sicak_glow.jpg",
+    "ilk_kullanildigi": "gemini-isik-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-isik-1/son_dokunus.py",
+    "test_argumanlari": [
+      "--girdi",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--sure",
+      "3",
+      "-o",
+      "cikti/efekt-ornek/video/sicak_glow.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.6000000000000001,
+      1.2000000000000002,
+      1.7999999999999998,
+      2.4000000000000004
+    ]
+  },
+  {
+    "ad": "mercek_pariltisi",
+    "tur": "isik",
+    "kaynak": "kutuphane",
+    "tarif": "Sağ üstteki hafif sıcak mercek parıltısı ve ince yatay ışık izi görüntüye eklenir.",
+    "gosterisli": false,
+    "sure_aralik": [
+      3,
+      8
+    ],
+    "parametreler": {
+      "--girdi": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--kaynak-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--siddet": {
+        "zorunlu": false,
+        "varsayilan": 1,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/mercek_pariltisi.py --girdi varliklar/pexels-yeni/7614406.mp4 --sure 3 -o cikti/efekt-ornek/video/mercek_pariltisi.mp4",
+    "ornek": "cikti/efekt-ornek/mercek_pariltisi.jpg",
+    "ilk_kullanildigi": "gemini-isik-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-isik-1/son_dokunus.py",
+    "test_argumanlari": [
+      "--girdi",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--sure",
+      "3",
+      "-o",
+      "cikti/efekt-ornek/video/mercek_pariltisi.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.6000000000000001,
+      1.2000000000000002,
+      1.7999999999999998,
+      2.4000000000000004
+    ]
+  },
+  {
+    "ad": "isik_huzmesi",
+    "tur": "isik",
+    "kaynak": "kutuphane",
+    "tarif": "Kadrajdan çapraz geçen yumuşak ışık huzmesi iç mekâna sıcaklık katar.",
+    "gosterisli": false,
+    "sure_aralik": [
+      3,
+      8
+    ],
+    "parametreler": {
+      "--girdi": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--kaynak-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--siddet": {
+        "zorunlu": false,
+        "varsayilan": 1,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/isik_huzmesi.py --girdi varliklar/pexels-yeni/7614406.mp4 --sure 3 -o cikti/efekt-ornek/video/isik_huzmesi.mp4",
+    "ornek": "cikti/efekt-ornek/isik_huzmesi.jpg",
+    "ilk_kullanildigi": "gemini-yeni-tur-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-yeni-tur-1/son_dokunus.py",
+    "test_argumanlari": [
+      "--girdi",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--sure",
+      "3",
+      "-o",
+      "cikti/efekt-ornek/video/isik_huzmesi.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.6000000000000001,
+      1.2000000000000002,
+      1.7999999999999998,
+      2.4000000000000004
+    ]
+  },
+  {
+    "ad": "isik_tozu",
+    "tur": "isik",
+    "kaynak": "kutuphane",
+    "tarif": "Küçük, yarı saydam ışık tanecikleri yavaşça yukarı süzülür.",
+    "gosterisli": false,
+    "sure_aralik": [
+      3,
+      8
+    ],
+    "parametreler": {
+      "--girdi": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--kaynak-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--siddet": {
+        "zorunlu": false,
+        "varsayilan": 1,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/isik_tozu.py --girdi varliklar/pexels-yeni/7614406.mp4 --sure 3 -o cikti/efekt-ornek/video/isik_tozu.mp4",
+    "ornek": "cikti/efekt-ornek/isik_tozu.jpg",
+    "ilk_kullanildigi": "gemini-cizim-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-cizim-radikal-1/son_dokunus.py",
+    "test_argumanlari": [
+      "--girdi",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--sure",
+      "3",
+      "-o",
+      "cikti/efekt-ornek/video/isik_tozu.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.6000000000000001,
+      1.2000000000000002,
+      1.7999999999999998,
+      2.4000000000000004
+    ]
+  },
+  {
+    "ad": "harf_maskesi",
+    "tur": "yazi",
+    "kaynak": "kutuphane",
+    "tarif": "Harfler sabit bir açıklıktan yukarı yükselir, harf araları açılarak başlık yerleşir.",
+    "gosterisli": false,
+    "sure_aralik": [
+      1,
+      5
+    ],
+    "parametreler": {
+      "--video": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--metin": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--bas": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--bitis": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": null,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--font": {
+        "zorunlu": false,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "Türkçe glifleri bulunan TTF/OTF dosyası",
+        "secenekler": null
+      },
+      "--boyut": {
+        "zorunlu": false,
+        "varsayilan": 80,
+        "tur": "int",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--x": {
+        "zorunlu": false,
+        "varsayilan": 110,
+        "tur": "int",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--y": {
+        "zorunlu": false,
+        "varsayilan": 820,
+        "tur": "int",
+        "aciklama": "Yazının taban çizgisi",
+        "secenekler": null
+      },
+      "--renk": {
+        "zorunlu": false,
+        "varsayilan": "#ECECEC",
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/harf_maskesi.py --video varliklar/pexels-yeni/7614406.mp4 --metin \"İNZA · ŞIK GÖRÜNÜŞ ÇAĞRI\" --bas 0.2 --bitis 2.8 --sure 3 -o cikti/efekt-ornek/video/harf_maskesi.mp4",
+    "ornek": "cikti/efekt-ornek/harf_maskesi.jpg",
+    "ilk_kullanildigi": "gemini-cizim-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-cizim-radikal-1/duzelt.py",
+    "test_argumanlari": [
+      "--video",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--metin",
+      "İNZA · ŞIK GÖRÜNÜŞ ÇAĞRI",
+      "--bas",
+      "0.2",
+      "--bitis",
+      "2.8",
+      "--sure",
+      "3",
+      "-o",
+      "cikti/efekt-ornek/video/harf_maskesi.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.6000000000000001,
+      1.2000000000000002,
+      1.7999999999999998,
+      2.4000000000000004
+    ]
+  },
+  {
+    "ad": "golgeli_baslik",
+    "tur": "yazi",
+    "kaynak": "kutuphane",
+    "tarif": "Şampanya tonlu başlık yumuşakça belirir, harf aralığı açılır ve gölgeyle okunur kalır.",
+    "gosterisli": false,
+    "sure_aralik": [
+      1,
+      5
+    ],
+    "parametreler": {
+      "--video": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--metin": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--bas": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--bitis": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": null,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--font": {
+        "zorunlu": false,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "Türkçe glifleri bulunan TTF/OTF dosyası",
+        "secenekler": null
+      },
+      "--boyut": {
+        "zorunlu": false,
+        "varsayilan": 80,
+        "tur": "int",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--x": {
+        "zorunlu": false,
+        "varsayilan": 110,
+        "tur": "int",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--y": {
+        "zorunlu": false,
+        "varsayilan": 820,
+        "tur": "int",
+        "aciklama": "Yazının taban çizgisi",
+        "secenekler": null
+      },
+      "--renk": {
+        "zorunlu": false,
+        "varsayilan": "#ECECEC",
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/golgeli_baslik.py --video varliklar/pexels-yeni/7614406.mp4 --metin \"İNZA · ŞIK GÖRÜNÜŞ ÇAĞRI\" --bas 0.2 --bitis 2.8 --sure 3 -o cikti/efekt-ornek/video/golgeli_baslik.mp4 --font C:/Windows/Fonts/georgia.ttf --renk \"#F4E8C1\"",
+    "ornek": "cikti/efekt-ornek/golgeli_baslik.jpg",
+    "ilk_kullanildigi": "gemini-radikal-2.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-2/duzelt.py",
+    "test_argumanlari": [
+      "--video",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--metin",
+      "İNZA · ŞIK GÖRÜNÜŞ ÇAĞRI",
+      "--bas",
+      "0.2",
+      "--bitis",
+      "2.8",
+      "--sure",
+      "3",
+      "-o",
+      "cikti/efekt-ornek/video/golgeli_baslik.mp4",
+      "--font",
+      "C:/Windows/Fonts/georgia.ttf",
+      "--renk",
+      "#F4E8C1"
+    ],
+    "ornek_zamanlari": [
+      0.6000000000000001,
+      1.2000000000000002,
+      1.7999999999999998,
+      2.4000000000000004
+    ]
+  },
+  {
+    "ad": "kinetik_baslik",
+    "tur": "yazi",
+    "kaynak": "kutuphane",
+    "tarif": "İri başlık yana kayarak ve hafif salınımla kadraja oturur, sonunda dışarı çıkar.",
+    "gosterisli": true,
+    "sure_aralik": [
+      1,
+      5
+    ],
+    "parametreler": {
+      "--video": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--metin": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--bas": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--bitis": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": null,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--font": {
+        "zorunlu": false,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "Türkçe glifleri bulunan TTF/OTF dosyası",
+        "secenekler": null
+      },
+      "--boyut": {
+        "zorunlu": false,
+        "varsayilan": 80,
+        "tur": "int",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--x": {
+        "zorunlu": false,
+        "varsayilan": 110,
+        "tur": "int",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--y": {
+        "zorunlu": false,
+        "varsayilan": 820,
+        "tur": "int",
+        "aciklama": "Yazının taban çizgisi",
+        "secenekler": null
+      },
+      "--renk": {
+        "zorunlu": false,
+        "varsayilan": "#ECECEC",
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/kinetik_baslik.py --video varliklar/pexels-yeni/7614406.mp4 --metin \"İNZA · ŞIK GÖRÜNÜŞ ÇAĞRI\" --bas 0.2 --bitis 2.8 --sure 3 -o cikti/efekt-ornek/video/kinetik_baslik.mp4 --boyut 170 --y 650",
+    "ornek": "cikti/efekt-ornek/kinetik_baslik.jpg",
+    "ilk_kullanildigi": "gemini-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-1/kolaj_okunur.py",
+    "test_argumanlari": [
+      "--video",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--metin",
+      "İNZA · ŞIK GÖRÜNÜŞ ÇAĞRI",
+      "--bas",
+      "0.2",
+      "--bitis",
+      "2.8",
+      "--sure",
+      "3",
+      "-o",
+      "cikti/efekt-ornek/video/kinetik_baslik.mp4",
+      "--boyut",
+      "170",
+      "--y",
+      "650"
+    ],
+    "ornek_zamanlari": [
+      0.6000000000000001,
+      1.2000000000000002,
+      1.7999999999999998,
+      2.4000000000000004
+    ]
+  },
+  {
+    "ad": "diptik",
+    "tur": "kompozisyon",
+    "kaynak": "kutuphane",
+    "tarif": "İkinci görüntü sağdan açılır, en az üç saniye açık kalır ve geri çekilir. Her iki kenar hareketi 0,7 saniyelik kosinüs eğrisiyle yumuşar.",
+    "gosterisli": true,
+    "sure_aralik": [
+      4.4,
+      10
+    ],
+    "parametreler": {
+      "--girdi": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--kaynak-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--panel-genisligi": {
+        "zorunlu": false,
+        "varsayilan": 740,
+        "tur": "int",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/diptik.py --girdi varliklar/pexels-yeni/7614406.mp4 varliklar/pexels-yeni/7614407.mp4 --sure 4.4 -o cikti/efekt-ornek/video/diptik.mp4",
+    "ornek": "cikti/efekt-ornek/diptik.jpg",
+    "ilk_kullanildigi": "gemini-radikal-2.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-2/duzelt.py",
+    "test_argumanlari": [
+      "--girdi",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "--sure",
+      "4.4",
+      "-o",
+      "cikti/efekt-ornek/video/diptik.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.35,
+      0.7,
+      2.2,
+      4.05
+    ]
+  },
+  {
+    "ad": "uclu_kolaj",
+    "tur": "kompozisyon",
+    "kaynak": "kutuphane",
+    "tarif": "Üç ayrı görüntü dikey sütunlarda, sırayla karşı yönlerden kayarak yerleşir.",
+    "gosterisli": true,
+    "sure_aralik": [
+      3,
+      8
+    ],
+    "parametreler": {
+      "--girdi": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--kaynak-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/uclu_kolaj.py --girdi varliklar/pexels-yeni/7614406.mp4 varliklar/pexels-yeni/7614407.mp4 varliklar/pexels-yeni/7614409.mp4 --sure 3 -o cikti/efekt-ornek/video/uclu_kolaj.mp4",
+    "ornek": "cikti/efekt-ornek/uclu_kolaj.jpg",
+    "ilk_kullanildigi": "gemini-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-1/kolaj_tam.py",
+    "test_argumanlari": [
+      "--girdi",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "varliklar/pexels-yeni/7614409.mp4",
+      "--sure",
+      "3",
+      "-o",
+      "cikti/efekt-ornek/video/uclu_kolaj.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.6000000000000001,
+      1.2000000000000002,
+      1.7999999999999998,
+      2.4000000000000004
+    ]
+  },
+  {
+    "ad": "mozaik_yedi_plan",
+    "tur": "kompozisyon",
+    "kaynak": "kutuphane",
+    "tarif": "Yedi hareketli görüntü ekranı doldurur. Özgün düzeltmedeki ters akan ilk hücre büyüyerek tam ekran olur, ileri akış --ileri-ilk ile seçilebilir.",
+    "gosterisli": true,
+    "sure_aralik": [
+      2.8,
+      6
+    ],
+    "parametreler": {
+      "--girdi": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--kaynak-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--ileri-ilk": {
+        "zorunlu": false,
+        "varsayilan": true,
+        "tur": "bool",
+        "aciklama": "İlk hücreyi ileri oynatır. Özgün mozaikte ilk hücre ters akar",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/mozaik_yedi_plan.py --girdi varliklar/pexels-yeni/7614406.mp4 varliklar/pexels-yeni/7614407.mp4 varliklar/pexels-yeni/7614409.mp4 varliklar/pexels-yeni/7614410.mp4 varliklar/pexels-yeni/7614415.mp4 varliklar/pexels-yeni/7614417.mp4 varliklar/pexels-yeni/7614419.mp4 --sure 2.8 -o cikti/efekt-ornek/video/mozaik_yedi_plan.mp4",
+    "ornek": "cikti/efekt-ornek/mozaik_yedi_plan.jpg",
+    "ilk_kullanildigi": "gemini-mozaik-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-mozaik-1/istek_duzelt.py",
+    "test_argumanlari": [
+      "--girdi",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "varliklar/pexels-yeni/7614409.mp4",
+      "varliklar/pexels-yeni/7614410.mp4",
+      "varliklar/pexels-yeni/7614415.mp4",
+      "varliklar/pexels-yeni/7614417.mp4",
+      "varliklar/pexels-yeni/7614419.mp4",
+      "--sure",
+      "2.8",
+      "-o",
+      "cikti/efekt-ornek/video/mozaik_yedi_plan.mp4"
+    ],
+    "ornek_zamanlari": [
+      1.65,
+      1.95,
+      2.3,
+      2.7
+    ]
+  },
+  {
+    "ad": "dortlu_secici",
+    "tur": "kompozisyon",
+    "kaynak": "kutuphane",
+    "tarif": "Dört mekân bir arada görünür, ışıklı çerçeve kısa seçimler yapar. Seçilen panel büyüyerek tam ekran olur.",
+    "gosterisli": true,
+    "sure_aralik": [
+      1.7,
+      4
+    ],
+    "parametreler": {
+      "--girdi": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--kaynak-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--secim": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "int",
+        "aciklama": "",
+        "secenekler": [
+          0,
+          1,
+          2,
+          3
+        ]
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/dortlu_secici.py --girdi varliklar/pexels-yeni/7614406.mp4 varliklar/pexels-yeni/7614407.mp4 varliklar/pexels-yeni/7614409.mp4 varliklar/pexels-yeni/7614410.mp4 --sure 1.7 -o cikti/efekt-ornek/video/dortlu_secici.mp4",
+    "ornek": "cikti/efekt-ornek/dortlu_secici.jpg",
+    "ilk_kullanildigi": "gemini-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-1/gecisler.py",
+    "test_argumanlari": [
+      "--girdi",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "varliklar/pexels-yeni/7614409.mp4",
+      "varliklar/pexels-yeni/7614410.mp4",
+      "--sure",
+      "1.7",
+      "-o",
+      "cikti/efekt-ornek/video/dortlu_secici.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.48,
+      0.84,
+      1.36,
+      1.6
+    ]
+  },
+  {
+    "ad": "kapanis_koyu",
+    "tur": "kapanis",
+    "kaynak": "kutuphane",
+    "tarif": "Logoyu, çağrıyı, telefon yer tutucusunu ve kredi satırlarını gösteren koyu kapanış kartı. Son 0,6 saniyede siyaha kapanır.",
+    "gosterisli": false,
+    "sure_aralik": [
+      2,
+      6
+    ],
+    "parametreler": {
+      "--girdi": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--kaynak-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--font": {
+        "zorunlu": false,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "Türkçe glifleri bulunan TTF/OTF dosyası",
+        "secenekler": null
+      },
+      "--logo": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--cagri": {
+        "zorunlu": false,
+        "varsayilan": "YERİNDE GÖRÜN",
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--telefon": {
+        "zorunlu": false,
+        "varsayilan": "0 (5XX) XXX XX XX",
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--yz-notu": {
+        "zorunlu": false,
+        "varsayilan": "Seslendirme yapay zekâ ile üretildi",
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--muzik-kredisi": {
+        "zorunlu": false,
+        "varsayilan": "",
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/kapanis_koyu.py --girdi varliklar/pexels-yeni/7614406.mp4 --sure 3.6 -o cikti/efekt-ornek/video/kapanis_koyu.mp4 --logo marka/inza-logo-saydam.png --muzik-kredisi \"Müzik kredisi · Kullanılan parçanın lisansına göre doldurun\"",
+    "ornek": "cikti/efekt-ornek/kapanis_koyu.jpg",
+    "ilk_kullanildigi": "gemini-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-radikal-1/kolaj_okunur.py",
+    "test_argumanlari": [
+      "--girdi",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--sure",
+      "3.6",
+      "-o",
+      "cikti/efekt-ornek/video/kapanis_koyu.mp4",
+      "--logo",
+      "marka/inza-logo-saydam.png",
+      "--muzik-kredisi",
+      "Müzik kredisi · Kullanılan parçanın lisansına göre doldurun"
+    ],
+    "ornek_zamanlari": [
+      0.7200000000000001,
+      1.4400000000000002,
+      2.16,
+      2.8800000000000003
+    ]
+  },
+  {
+    "ad": "kapanis_beyaz",
+    "tur": "kapanis",
+    "kaynak": "kutuphane",
+    "tarif": "Logoyu, çağrıyı, telefon yer tutucusunu ve kredi satırlarını gösteren beyaz kapanış kartı. Son 0,6 saniyede siyaha kapanır.",
+    "gosterisli": false,
+    "sure_aralik": [
+      2,
+      6
+    ],
+    "parametreler": {
+      "--girdi": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--kaynak-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--font": {
+        "zorunlu": false,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "Türkçe glifleri bulunan TTF/OTF dosyası",
+        "secenekler": null
+      },
+      "--logo": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--cagri": {
+        "zorunlu": false,
+        "varsayilan": "YERİNDE GÖRÜN",
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--telefon": {
+        "zorunlu": false,
+        "varsayilan": "0 (5XX) XXX XX XX",
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--yz-notu": {
+        "zorunlu": false,
+        "varsayilan": "Seslendirme yapay zekâ ile üretildi",
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--muzik-kredisi": {
+        "zorunlu": false,
+        "varsayilan": "",
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/kapanis_beyaz.py --girdi varliklar/pexels-yeni/7614406.mp4 --sure 3.6 -o cikti/efekt-ornek/video/kapanis_beyaz.mp4 --logo marka/inza-logo-saydam.png --muzik-kredisi \"Müzik kredisi · Kullanılan parçanın lisansına göre doldurun\"",
+    "ornek": "cikti/efekt-ornek/kapanis_beyaz.jpg",
+    "ilk_kullanildigi": "gemini-mozaik-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-mozaik-1/son_dokunus.py",
+    "test_argumanlari": [
+      "--girdi",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--sure",
+      "3.6",
+      "-o",
+      "cikti/efekt-ornek/video/kapanis_beyaz.mp4",
+      "--logo",
+      "marka/inza-logo-saydam.png",
+      "--muzik-kredisi",
+      "Müzik kredisi · Kullanılan parçanın lisansına göre doldurun"
+    ],
+    "ornek_zamanlari": [
+      0.7200000000000001,
+      1.4400000000000002,
+      2.16,
+      2.8800000000000003
+    ]
+  },
+  {
+    "ad": "kapanis_panel",
+    "tur": "kapanis",
+    "kaynak": "kutuphane",
+    "tarif": "Logoyu, çağrıyı, telefon yer tutucusunu ve kredi satırlarını gösteren panel kapanış kartı. Son 0,6 saniyede siyaha kapanır.",
+    "gosterisli": false,
+    "sure_aralik": [
+      2,
+      6
+    ],
+    "parametreler": {
+      "--girdi": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--kaynak-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--font": {
+        "zorunlu": false,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "Türkçe glifleri bulunan TTF/OTF dosyası",
+        "secenekler": null
+      },
+      "--logo": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--cagri": {
+        "zorunlu": false,
+        "varsayilan": "YERİNDE GÖRÜN",
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--telefon": {
+        "zorunlu": false,
+        "varsayilan": "0 (5XX) XXX XX XX",
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--yz-notu": {
+        "zorunlu": false,
+        "varsayilan": "Seslendirme yapay zekâ ile üretildi",
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--muzik-kredisi": {
+        "zorunlu": false,
+        "varsayilan": "",
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/kapanis_panel.py --girdi varliklar/pexels-yeni/7614406.mp4 --sure 3.6 -o cikti/efekt-ornek/video/kapanis_panel.mp4 --logo marka/inza-logo-saydam.png --muzik-kredisi \"Müzik kredisi · Kullanılan parçanın lisansına göre doldurun\"",
+    "ornek": "cikti/efekt-ornek/kapanis_panel.jpg",
+    "ilk_kullanildigi": "gemini-cizim-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-cizim-radikal-1/son_dokunus.py",
+    "test_argumanlari": [
+      "--girdi",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--sure",
+      "3.6",
+      "-o",
+      "cikti/efekt-ornek/video/kapanis_panel.mp4",
+      "--logo",
+      "marka/inza-logo-saydam.png",
+      "--muzik-kredisi",
+      "Müzik kredisi · Kullanılan parçanın lisansına göre doldurun"
+    ],
+    "ornek_zamanlari": [
+      0.7200000000000001,
+      1.4400000000000002,
+      2.16,
+      2.8800000000000003
+    ]
+  },
+  {
+    "ad": "renk_iskandinav",
+    "tur": "renk",
+    "kaynak": "kutuphane",
+    "tarif": "Hafif desatüre görüntüde serin gölgeler ve doğal açık tonlar oluşturur.",
+    "gosterisli": false,
+    "sure_aralik": [
+      1,
+      30
+    ],
+    "parametreler": {
+      "--girdi": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--kaynak-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/renk_iskandinav.py --girdi varliklar/pexels-yeni/7614406.mp4 --sure 3 -o cikti/efekt-ornek/video/renk_iskandinav.mp4",
+    "ornek": "cikti/efekt-ornek/renk_iskandinav.jpg",
+    "ilk_kullanildigi": "gemini-cizim-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/brifler/gemini-cizim-radikal-1.json",
+    "test_argumanlari": [
+      "--girdi",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--sure",
+      "3",
+      "-o",
+      "cikti/efekt-ornek/video/renk_iskandinav.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.6000000000000001,
+      1.2000000000000002,
+      1.7999999999999998,
+      2.4000000000000004
+    ]
+  },
+  {
+    "ad": "renk_amber_teal",
+    "tur": "renk",
+    "kaynak": "kutuphane",
+    "tarif": "Serin gölgeler ile sıcak ahşap ve altın tonlarını dengeler.",
+    "gosterisli": false,
+    "sure_aralik": [
+      1,
+      30
+    ],
+    "parametreler": {
+      "--girdi": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--kaynak-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/renk_amber_teal.py --girdi varliklar/pexels-yeni/7614406.mp4 --sure 3 -o cikti/efekt-ornek/video/renk_amber_teal.mp4",
+    "ornek": "cikti/efekt-ornek/renk_amber_teal.jpg",
+    "ilk_kullanildigi": "gemini-radikal-2.mp4",
+    "kaynak_dosya": "kurgu/brifler/gemini-radikal-2.json",
+    "test_argumanlari": [
+      "--girdi",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--sure",
+      "3",
+      "-o",
+      "cikti/efekt-ornek/video/renk_amber_teal.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.6000000000000001,
+      1.2000000000000002,
+      1.7999999999999998,
+      2.4000000000000004
+    ]
+  },
+  {
+    "ad": "renk_sampanya",
+    "tur": "renk",
+    "kaynak": "kutuphane",
+    "tarif": "Yumuşak şampanya orta tonları ve soğuk gölgelerle sakin bir iç mekân görünümü verir.",
+    "gosterisli": false,
+    "sure_aralik": [
+      1,
+      30
+    ],
+    "parametreler": {
+      "--girdi": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--kaynak-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/renk_sampanya.py --girdi varliklar/pexels-yeni/7614406.mp4 --sure 3 -o cikti/efekt-ornek/video/renk_sampanya.mp4",
+    "ornek": "cikti/efekt-ornek/renk_sampanya.jpg",
+    "ilk_kullanildigi": "gemini-yeni-tur-1.mp4",
+    "kaynak_dosya": "kurgu/brifler/gemini-yeni-tur-1.json",
+    "test_argumanlari": [
+      "--girdi",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--sure",
+      "3",
+      "-o",
+      "cikti/efekt-ornek/video/renk_sampanya.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.6000000000000001,
+      1.2000000000000002,
+      1.7999999999999998,
+      2.4000000000000004
+    ]
+  },
+  {
+    "ad": "renk_dinamik",
+    "tur": "renk",
+    "kaynak": "kutuphane",
+    "tarif": "Doygun ve sıcak renkler, belirgin kontrastla canlı bir kolaj görünümü verir.",
+    "gosterisli": false,
+    "sure_aralik": [
+      1,
+      30
+    ],
+    "parametreler": {
+      "--girdi": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--kaynak-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/renk_dinamik.py --girdi varliklar/pexels-yeni/7614406.mp4 --sure 3 -o cikti/efekt-ornek/video/renk_dinamik.mp4",
+    "ornek": "cikti/efekt-ornek/renk_dinamik.jpg",
+    "ilk_kullanildigi": "gemini-radikal-1.mp4",
+    "kaynak_dosya": "kurgu/brifler/gemini-radikal-1.json",
+    "test_argumanlari": [
+      "--girdi",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--sure",
+      "3",
+      "-o",
+      "cikti/efekt-ornek/video/renk_dinamik.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.6000000000000001,
+      1.2000000000000002,
+      1.7999999999999998,
+      2.4000000000000004
+    ]
+  },
+  {
+    "ad": "renk_dogal",
+    "tur": "renk",
+    "kaynak": "kutuphane",
+    "tarif": "Hafif kontrast ve dengeli açık tonlarla doğal bir mekân görünümü sağlar.",
+    "gosterisli": false,
+    "sure_aralik": [
+      1,
+      30
+    ],
+    "parametreler": {
+      "--girdi": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--kaynak-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/renk_dogal.py --girdi varliklar/pexels-yeni/7614406.mp4 --sure 3 -o cikti/efekt-ornek/video/renk_dogal.mp4",
+    "ornek": "cikti/efekt-ornek/renk_dogal.jpg",
+    "ilk_kullanildigi": "gemini-cizim-1.mp4",
+    "kaynak_dosya": "kurgu/brifler/gemini-cizim-1.json",
+    "test_argumanlari": [
+      "--girdi",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--sure",
+      "3",
+      "-o",
+      "cikti/efekt-ornek/video/renk_dogal.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.6000000000000001,
+      1.2000000000000002,
+      1.7999999999999998,
+      2.4000000000000004
+    ]
+  },
+  {
+    "ad": "radyal_kararma",
+    "tur": "gecis",
+    "kaynak": "kutuphane",
+    "tarif": "Çözülme sırasında kenarlardan merkeze kısa bir kararma ilerler, ardından yeni görüntü açılır.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.2,
+      0.8
+    ],
+    "parametreler": {
+      "--a": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--a-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/radyal_kararma.py --a varliklar/pexels-yeni/7614406.mp4 --b varliklar/pexels-yeni/7614407.mp4 --sure 0.6 -o cikti/efekt-ornek/video/radyal_kararma.mp4",
+    "ornek": "cikti/efekt-ornek/radyal_kararma.jpg",
+    "ilk_kullanildigi": "gemini-yeni-tur-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-yeni-tur-1/son_dokunus.py",
+    "test_argumanlari": [
+      "--a",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--b",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "--sure",
+      "0.6",
+      "-o",
+      "cikti/efekt-ornek/video/radyal_kararma.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.12,
+      0.24,
+      0.36,
+      0.48
+    ]
+  },
+  {
+    "ad": "bulanik_dikey_ortu",
+    "tur": "gecis",
+    "kaynak": "kutuphane",
+    "tarif": "Giden görüntü bulanıklaşırken yeni görüntü yukarıdan aşağı ilerleyen bir örtüyle görünür.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.2,
+      0.8
+    ],
+    "parametreler": {
+      "--a": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--a-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--b-bas": {
+        "zorunlu": false,
+        "varsayilan": 0,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "-o": {
+        "zorunlu": true,
+        "varsayilan": null,
+        "tur": "str",
+        "aciklama": "",
+        "secenekler": null
+      },
+      "--sure": {
+        "zorunlu": false,
+        "varsayilan": 3,
+        "tur": "float",
+        "aciklama": "",
+        "secenekler": null
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/efektler/bulanik_dikey_ortu.py --a varliklar/pexels-yeni/7614406.mp4 --b varliklar/pexels-yeni/7614407.mp4 --sure 0.6 -o cikti/efekt-ornek/video/bulanik_dikey_ortu.mp4",
+    "ornek": "cikti/efekt-ornek/bulanik_dikey_ortu.jpg",
+    "ilk_kullanildigi": "gemini-yeni-tur-1.mp4",
+    "kaynak_dosya": "kurgu/projeler/yatay/gemini-yeni-tur-1/son_dokunus.py",
+    "test_argumanlari": [
+      "--a",
+      "varliklar/pexels-yeni/7614406.mp4",
+      "--b",
+      "varliklar/pexels-yeni/7614407.mp4",
+      "--sure",
+      "0.6",
+      "-o",
+      "cikti/efekt-ornek/video/bulanik_dikey_ortu.mp4"
+    ],
+    "ornek_zamanlari": [
+      0.12,
+      0.24,
+      0.36,
+      0.48
+    ]
+  },
+  {
+    "ad": "motor_gecis_itme",
+    "tur": "gecis",
+    "kaynak": "motor",
+    "tarif": "Hız rampasıyla merkeze doğru güçlü yaklaşma.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.2,
+      1.2
+    ],
+    "parametreler": {
+      "gecisler": {
+        "deger": [
+          "itme"
+        ],
+        "aciklama": "Mevcut brif JSON alanı"
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/gecis_motoru.py kurgu/brifler/efekt-deneme.json",
+    "ornek": "cikti/efekt-ornek/motor_gecis_itme.jpg",
+    "ilk_kullanildigi": "yatay-pexels-v5.mp4",
+    "kaynak_dosya": "kurgu/gecis_motoru.py",
+    "motor_alan": "gecisler",
+    "motor_deger": "itme"
+  },
+  {
+    "ad": "motor_gecis_whip_sag",
+    "tur": "gecis",
+    "kaynak": "motor",
+    "tarif": "Hareket iziyle sağa savrulan kamera geçişi.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.2,
+      1.2
+    ],
+    "parametreler": {
+      "gecisler": {
+        "deger": [
+          "whip_sag"
+        ],
+        "aciklama": "Mevcut brif JSON alanı"
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/gecis_motoru.py kurgu/brifler/efekt-deneme.json",
+    "ornek": "cikti/efekt-ornek/motor_gecis_whip_sag.jpg",
+    "ilk_kullanildigi": "yatay-pexels-v5.mp4",
+    "kaynak_dosya": "kurgu/gecis_motoru.py",
+    "motor_alan": "gecisler",
+    "motor_deger": "whip_sag"
+  },
+  {
+    "ad": "motor_gecis_whip_sol",
+    "tur": "gecis",
+    "kaynak": "motor",
+    "tarif": "Hareket iziyle sola savrulan kamera geçişi.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.2,
+      1.2
+    ],
+    "parametreler": {
+      "gecisler": {
+        "deger": [
+          "whip_sol"
+        ],
+        "aciklama": "Mevcut brif JSON alanı"
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/gecis_motoru.py kurgu/brifler/efekt-deneme.json",
+    "ornek": "cikti/efekt-ornek/motor_gecis_whip_sol.jpg",
+    "ilk_kullanildigi": "yatay-pexels-v5.mp4",
+    "kaynak_dosya": "kurgu/gecis_motoru.py",
+    "motor_alan": "gecisler",
+    "motor_deger": "whip_sol"
+  },
+  {
+    "ad": "motor_gecis_whip_yukari",
+    "tur": "gecis",
+    "kaynak": "motor",
+    "tarif": "Yukarı savrulma ve hız rampası.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.2,
+      1.2
+    ],
+    "parametreler": {
+      "gecisler": {
+        "deger": [
+          "whip_yukari"
+        ],
+        "aciklama": "Mevcut brif JSON alanı"
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/gecis_motoru.py kurgu/brifler/efekt-deneme.json",
+    "ornek": "cikti/efekt-ornek/motor_gecis_whip_yukari.jpg",
+    "ilk_kullanildigi": "yatay-pexels-v5.mp4",
+    "kaynak_dosya": "kurgu/gecis_motoru.py",
+    "motor_alan": "gecisler",
+    "motor_deger": "whip_yukari"
+  },
+  {
+    "ad": "motor_gecis_donme",
+    "tur": "gecis",
+    "kaynak": "motor",
+    "tarif": "Merkez etrafında dönüş ve radyal harman.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.2,
+      1.2
+    ],
+    "parametreler": {
+      "gecisler": {
+        "deger": [
+          "donme"
+        ],
+        "aciklama": "Mevcut brif JSON alanı"
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/gecis_motoru.py kurgu/brifler/efekt-deneme.json",
+    "ornek": "cikti/efekt-ornek/motor_gecis_donme.jpg",
+    "ilk_kullanildigi": "yatay-pexels-v5.mp4",
+    "kaynak_dosya": "kurgu/gecis_motoru.py",
+    "motor_alan": "gecisler",
+    "motor_deger": "donme"
+  },
+  {
+    "ad": "motor_gecis_flas",
+    "tur": "gecis",
+    "kaynak": "motor",
+    "tarif": "Beyaz ışık parlamasıyla görüntü değişimi.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.2,
+      1.2
+    ],
+    "parametreler": {
+      "gecisler": {
+        "deger": [
+          "flas"
+        ],
+        "aciklama": "Mevcut brif JSON alanı"
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/gecis_motoru.py kurgu/brifler/efekt-deneme.json",
+    "ornek": "cikti/efekt-ornek/motor_gecis_flas.jpg",
+    "ilk_kullanildigi": "yatay-pexels-v5.mp4",
+    "kaynak_dosya": "kurgu/gecis_motoru.py",
+    "motor_alan": "gecisler",
+    "motor_deger": "flas"
+  },
+  {
+    "ad": "motor_gecis_sarsinti",
+    "tur": "gecis",
+    "kaynak": "motor",
+    "tarif": "Kısa titreşim ve çözülmeyle görüntü değişimi.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.2,
+      1.2
+    ],
+    "parametreler": {
+      "gecisler": {
+        "deger": [
+          "sarsinti"
+        ],
+        "aciklama": "Mevcut brif JSON alanı"
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/gecis_motoru.py kurgu/brifler/efekt-deneme.json",
+    "ornek": "cikti/efekt-ornek/motor_gecis_sarsinti.jpg",
+    "ilk_kullanildigi": "yatay-pexels-v5.mp4",
+    "kaynak_dosya": "kurgu/gecis_motoru.py",
+    "motor_alan": "gecisler",
+    "motor_deger": "sarsinti"
+  },
+  {
+    "ad": "motor_gecis_kesme",
+    "tur": "gecis",
+    "kaynak": "motor",
+    "tarif": "Vuruşta yapılan doğrudan kesme.",
+    "gosterisli": false,
+    "sure_aralik": [
+      0.2,
+      1.2
+    ],
+    "parametreler": {
+      "gecisler": {
+        "deger": [
+          "kesme"
+        ],
+        "aciklama": "Mevcut brif JSON alanı"
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/gecis_motoru.py kurgu/brifler/efekt-deneme.json",
+    "ornek": "cikti/efekt-ornek/motor_gecis_kesme.jpg",
+    "ilk_kullanildigi": "yatay-pexels-v5.mp4",
+    "kaynak_dosya": "kurgu/gecis_motoru.py",
+    "motor_alan": "gecisler",
+    "motor_deger": "kesme"
+  },
+  {
+    "ad": "motor_renk_sicak",
+    "tur": "renk",
+    "kaynak": "motor",
+    "tarif": "Sıcak gölgeler ve hafif koyu kenarlarla canlı görünüm.",
+    "gosterisli": false,
+    "sure_aralik": [
+      1,
+      30
+    ],
+    "parametreler": {
+      "renk": {
+        "deger": "sicak",
+        "aciklama": "Mevcut brif JSON alanı"
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/gecis_motoru.py kurgu/brifler/efekt-deneme.json",
+    "ornek": "cikti/efekt-ornek/motor_renk_sicak.jpg",
+    "ilk_kullanildigi": "yatay-pexels-v3.mp4",
+    "kaynak_dosya": "kurgu/gecis_motoru.py",
+    "motor_alan": "renk",
+    "motor_deger": "sicak"
+  },
+  {
+    "ad": "motor_renk_soguk",
+    "tur": "renk",
+    "kaynak": "motor",
+    "tarif": "Serin mavi tonlu, dengeli doygunlukta görünüm.",
+    "gosterisli": false,
+    "sure_aralik": [
+      1,
+      30
+    ],
+    "parametreler": {
+      "renk": {
+        "deger": "soguk",
+        "aciklama": "Mevcut brif JSON alanı"
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/gecis_motoru.py kurgu/brifler/efekt-deneme.json",
+    "ornek": "cikti/efekt-ornek/motor_renk_soguk.jpg",
+    "ilk_kullanildigi": "sablon-soguk-daktilo.mp4",
+    "kaynak_dosya": "kurgu/gecis_motoru.py",
+    "motor_alan": "renk",
+    "motor_deger": "soguk"
+  },
+  {
+    "ad": "motor_renk_film",
+    "tur": "renk",
+    "kaynak": "motor",
+    "tarif": "Kalkık siyahlar, ince gren ve film tonları.",
+    "gosterisli": false,
+    "sure_aralik": [
+      1,
+      30
+    ],
+    "parametreler": {
+      "renk": {
+        "deger": "film",
+        "aciklama": "Mevcut brif JSON alanı"
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/gecis_motoru.py kurgu/brifler/efekt-deneme.json",
+    "ornek": "cikti/efekt-ornek/motor_renk_film.jpg",
+    "ilk_kullanildigi": "yatay-pexels-v5.mp4",
+    "kaynak_dosya": "kurgu/gecis_motoru.py",
+    "motor_alan": "renk",
+    "motor_deger": "film"
+  },
+  {
+    "ad": "motor_renk_yumusak",
+    "tur": "renk",
+    "kaynak": "motor",
+    "tarif": "Yumuşak kontrast ve düşük doygunluk.",
+    "gosterisli": false,
+    "sure_aralik": [
+      1,
+      30
+    ],
+    "parametreler": {
+      "renk": {
+        "deger": "yumusak",
+        "aciklama": "Mevcut brif JSON alanı"
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/gecis_motoru.py kurgu/brifler/efekt-deneme.json",
+    "ornek": "cikti/efekt-ornek/motor_renk_yumusak.jpg",
+    "ilk_kullanildigi": "sablon-yumusak-dev.mp4",
+    "kaynak_dosya": "kurgu/gecis_motoru.py",
+    "motor_alan": "renk",
+    "motor_deger": "yumusak"
+  },
+  {
+    "ad": "motor_renk_yok",
+    "tur": "renk",
+    "kaynak": "motor",
+    "tarif": "Kaynağın renk görünümünü koruyan seçim.",
+    "gosterisli": false,
+    "sure_aralik": [
+      1,
+      30
+    ],
+    "parametreler": {
+      "renk": {
+        "deger": "yok",
+        "aciklama": "Mevcut brif JSON alanı"
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/gecis_motoru.py kurgu/brifler/efekt-deneme.json",
+    "ornek": "cikti/efekt-ornek/motor_renk_yok.jpg",
+    "ilk_kullanildigi": null,
+    "kaynak_dosya": "kurgu/gecis_motoru.py",
+    "motor_alan": "renk",
+    "motor_deger": "yok"
+  },
+  {
+    "ad": "motor_yazi_kayan",
+    "tur": "yazi",
+    "kaynak": "motor",
+    "tarif": "Altın çubuk yanında soldan kayan gölgeli başlık.",
+    "gosterisli": false,
+    "sure_aralik": [
+      1,
+      30
+    ],
+    "parametreler": {
+      "yazi_stili": {
+        "deger": "kayan",
+        "aciklama": "Mevcut brif JSON alanı"
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/gecis_motoru.py kurgu/brifler/efekt-deneme.json",
+    "ornek": "cikti/efekt-ornek/motor_yazi_kayan.jpg",
+    "ilk_kullanildigi": "yatay-pexels-v3.mp4",
+    "kaynak_dosya": "kurgu/gecis_motoru.py",
+    "motor_alan": "yazi_stili",
+    "motor_deger": "kayan"
+  },
+  {
+    "ad": "motor_yazi_daktilo",
+    "tur": "yazi",
+    "kaynak": "motor",
+    "tarif": "Harf harf yazılan gölgeli başlık.",
+    "gosterisli": false,
+    "sure_aralik": [
+      1,
+      30
+    ],
+    "parametreler": {
+      "yazi_stili": {
+        "deger": "daktilo",
+        "aciklama": "Mevcut brif JSON alanı"
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/gecis_motoru.py kurgu/brifler/efekt-deneme.json",
+    "ornek": "cikti/efekt-ornek/motor_yazi_daktilo.jpg",
+    "ilk_kullanildigi": "sablon-soguk-daktilo.mp4",
+    "kaynak_dosya": "kurgu/gecis_motoru.py",
+    "motor_alan": "yazi_stili",
+    "motor_deger": "daktilo"
+  },
+  {
+    "ad": "motor_yazi_cizgi",
+    "tur": "yazi",
+    "kaynak": "motor",
+    "tarif": "Altında altın çizgi uzarken beliren başlık.",
+    "gosterisli": false,
+    "sure_aralik": [
+      1,
+      30
+    ],
+    "parametreler": {
+      "yazi_stili": {
+        "deger": "cizgi",
+        "aciklama": "Mevcut brif JSON alanı"
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/gecis_motoru.py kurgu/brifler/efekt-deneme.json",
+    "ornek": "cikti/efekt-ornek/motor_yazi_cizgi.jpg",
+    "ilk_kullanildigi": "yatay-pexels-v5.mp4",
+    "kaynak_dosya": "kurgu/gecis_motoru.py",
+    "motor_alan": "yazi_stili",
+    "motor_deger": "cizgi"
+  },
+  {
+    "ad": "motor_yazi_dev",
+    "tur": "yazi",
+    "kaynak": "motor",
+    "tarif": "Üstte yavaşça süzülen iri yarı saydam başlık.",
+    "gosterisli": true,
+    "sure_aralik": [
+      1,
+      30
+    ],
+    "parametreler": {
+      "yazi_stili": {
+        "deger": "dev",
+        "aciklama": "Mevcut brif JSON alanı"
+      }
+    },
+    "kullanim": "python -X utf8 kurgu/gecis_motoru.py kurgu/brifler/efekt-deneme.json",
+    "ornek": "cikti/efekt-ornek/motor_yazi_dev.jpg",
+    "ilk_kullanildigi": "sablon-yumusak-dev.mp4",
+    "kaynak_dosya": "kurgu/gecis_motoru.py",
+    "motor_alan": "yazi_stili",
+    "motor_deger": "dev"
+  },
+  {
+    "ad": "motor_font_bebas",
+    "tur": "yazi",
+    "kaynak": "motor",
+    "tarif": "Dar ve iri afiş karakteri.",
+    "gosterisli": false,
+    "sure_aralik": [
+      1,
+      30
+    ],
+    "parametreler": {
+      "font": {
+        "deger": "bebas",
+        "aciklama": "Mevcut brif JSON alanı"
+      },
+      "font_dosyasi": "C:\\Users\\kuyus\\OneDrive\\Belgeler\\Masaüstü\\projelerim\\emlak-platform\\video-calisma\\varliklar\\font\\BebasNeue-Regular.ttf"
+    },
+    "kullanim": "python -X utf8 kurgu/gecis_motoru.py kurgu/brifler/efekt-deneme.json",
+    "ornek": "cikti/efekt-ornek/motor_font_bebas.jpg",
+    "ilk_kullanildigi": null,
+    "kaynak_dosya": "kurgu/gecis_motoru.py",
+    "motor_alan": "font",
+    "motor_deger": "bebas"
+  },
+  {
+    "ad": "motor_font_segoe_kalin",
+    "tur": "yazi",
+    "kaynak": "motor",
+    "tarif": "Sade ve kalın modern karakter.",
+    "gosterisli": false,
+    "sure_aralik": [
+      1,
+      30
+    ],
+    "parametreler": {
+      "font": {
+        "deger": "segoe_kalin",
+        "aciklama": "Mevcut brif JSON alanı"
+      },
+      "font_dosyasi": "C:/Windows/Fonts/segoeuib.ttf"
+    },
+    "kullanim": "python -X utf8 kurgu/gecis_motoru.py kurgu/brifler/efekt-deneme.json",
+    "ornek": "cikti/efekt-ornek/motor_font_segoe_kalin.jpg",
+    "ilk_kullanildigi": "gemini-yonetmen-1.mp4",
+    "kaynak_dosya": "kurgu/gecis_motoru.py",
+    "motor_alan": "font",
+    "motor_deger": "segoe_kalin"
+  },
+  {
+    "ad": "motor_font_segoe_ince",
+    "tur": "yazi",
+    "kaynak": "motor",
+    "tarif": "İnce, zarif sans serif karakter.",
+    "gosterisli": false,
+    "sure_aralik": [
+      1,
+      30
+    ],
+    "parametreler": {
+      "font": {
+        "deger": "segoe_ince",
+        "aciklama": "Mevcut brif JSON alanı"
+      },
+      "font_dosyasi": "C:/Windows/Fonts/segoeuisl.ttf"
+    },
+    "kullanim": "python -X utf8 kurgu/gecis_motoru.py kurgu/brifler/efekt-deneme.json",
+    "ornek": "cikti/efekt-ornek/motor_font_segoe_ince.jpg",
+    "ilk_kullanildigi": null,
+    "kaynak_dosya": "kurgu/gecis_motoru.py",
+    "motor_alan": "font",
+    "motor_deger": "segoe_ince"
+  },
+  {
+    "ad": "motor_font_bahnschrift",
+    "tur": "yazi",
+    "kaynak": "motor",
+    "tarif": "Geometrik mimari karakter.",
+    "gosterisli": false,
+    "sure_aralik": [
+      1,
+      30
+    ],
+    "parametreler": {
+      "font": {
+        "deger": "bahnschrift",
+        "aciklama": "Mevcut brif JSON alanı"
+      },
+      "font_dosyasi": "C:/Windows/Fonts/bahnschrift.ttf"
+    },
+    "kullanim": "python -X utf8 kurgu/gecis_motoru.py kurgu/brifler/efekt-deneme.json",
+    "ornek": "cikti/efekt-ornek/motor_font_bahnschrift.jpg",
+    "ilk_kullanildigi": "gemini-serbest-1.mp4",
+    "kaynak_dosya": "kurgu/gecis_motoru.py",
+    "motor_alan": "font",
+    "motor_deger": "bahnschrift"
+  },
+  {
+    "ad": "motor_font_georgia",
+    "tur": "yazi",
+    "kaynak": "motor",
+    "tarif": "Klasik ve güçlü serif karakter.",
+    "gosterisli": false,
+    "sure_aralik": [
+      1,
+      30
+    ],
+    "parametreler": {
+      "font": {
+        "deger": "georgia",
+        "aciklama": "Mevcut brif JSON alanı"
+      },
+      "font_dosyasi": "C:/Windows/Fonts/georgiab.ttf"
+    },
+    "kullanim": "python -X utf8 kurgu/gecis_motoru.py kurgu/brifler/efekt-deneme.json",
+    "ornek": "cikti/efekt-ornek/motor_font_georgia.jpg",
+    "ilk_kullanildigi": "gemini-yontem-1.mp4",
+    "kaynak_dosya": "kurgu/gecis_motoru.py",
+    "motor_alan": "font",
+    "motor_deger": "georgia"
+  },
+  {
+    "ad": "motor_font_palatino",
+    "tur": "yazi",
+    "kaynak": "motor",
+    "tarif": "Editoryal serif karakter.",
+    "gosterisli": false,
+    "sure_aralik": [
+      1,
+      30
+    ],
+    "parametreler": {
+      "font": {
+        "deger": "palatino",
+        "aciklama": "Mevcut brif JSON alanı"
+      },
+      "font_dosyasi": "C:/Windows/Fonts/palab.ttf"
+    },
+    "kullanim": "python -X utf8 kurgu/gecis_motoru.py kurgu/brifler/efekt-deneme.json",
+    "ornek": "cikti/efekt-ornek/motor_font_palatino.jpg",
+    "ilk_kullanildigi": null,
+    "kaynak_dosya": "kurgu/gecis_motoru.py",
+    "motor_alan": "font",
+    "motor_deger": "palatino"
+  },
+  {
+    "ad": "hf_whip-pan",
+    "tur": "gecis",
+    "kaynak": "hyperframes",
+    "kaynak_dosya": "kurgu/efektler/hf_whip-pan.py",
+    "tarif": "Kurulu HyperFrames whip-pan shaderı, iki gerçek sınır karesi ve yönlü bulanıklık.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.3,
+      4
+    ],
+    "kullanim": "--alfa --sure <saniye> -o <katman.mov>",
+    "ornek": "cikti/efekt-ornek/hf_whip-pan.jpg",
+    "ilk_kullanildigi": "gemini-araba-dili-1.mp4",
+    "dosya": "hf_whip-pan.py",
+    "portre_alfa": true,
+    "cozunurluk": [
+      1080,
+      1920
+    ],
+    "proje": "hyperframes/gercek-ilan-1-v2",
+    "render": "ProRes 4444 yuva444p10le"
+  },
+  {
+    "ad": "hf_headline-slam",
+    "tur": "yazi",
+    "kaynak": "hyperframes",
+    "kaynak_dosya": "kurgu/efektler/hf_headline-slam.py",
+    "tarif": "Kurulu headline-slam, Bebas Neue, beyaz gölgeli yazı, üç kare titreşim ve yukarı çıkış.",
+    "gosterisli": true,
+    "sure_aralik": [
+      0.3,
+      4
+    ],
+    "kullanim": "--alfa --sure <saniye> -o <katman.mov>",
+    "ornek": "cikti/efekt-ornek/hf_headline-slam.jpg",
+    "ilk_kullanildigi": "gemini-araba-dili-1.mp4",
+    "dosya": "hf_headline-slam.py",
+    "portre_alfa": true,
+    "cozunurluk": [
+      1080,
+      1920
+    ],
+    "proje": "hyperframes/gercek-ilan-1-v2",
+    "render": "ProRes 4444 yuva444p10le"
+  },
+  {
+    "ad": "hizlandirilmis_kesme",
+    "tur": "gecis",
+    "kaynak": "kutuphane",
+    "tarif": "Hareket yönünde kısa ivmelenme, dokuz kare içinde sert kesim ve sakinleşme.",
+    "gosterisli": false,
+    "sure_aralik": [
+      0.3,
+      0.3
+    ],
+    "kullanim": "python -X utf8 kurgu/efektler/hizlandirilmis_kesme.py --a varliklar/gercek-ilan-1/ilan.mp4 --b varliklar/gercek-ilan-1/ilan.mp4 --a-bas 20 --b-bas 35 --sure 0.3 -o cikti/efekt-ornek/video/hizlandirilmis_kesme.mp4",
+    "ornek": "cikti/efekt-ornek/hizlandirilmis_kesme.jpg",
+    "ilk_kullanildigi": "gercek-ilan-1.mp4"
+  },
+  {
+    "ad": "hf_oval_acilis",
+    "tur": "acilis",
+    "kaynak": "hyperframes",
+    "tarif": "HyperFrames iris-reveal bileşeninin yumuşak kenarlı oval açılış luma maskesi. İstenen oval_acilis kayıt adı bulunmadığı için iris-reveal uyarlanır.",
+    "gosterisli": true,
+    "sure_aralik": [
+      1.5,
+      1.5
+    ],
+    "kullanim": "python -X utf8 kurgu/efektler/hf_oval_acilis.py --girdi varliklar/gercek-ilan-1/ilan.mp4 --sure 1.5 -o cikti/efekt-ornek/video/hf_oval_acilis.mp4",
+    "ornek": "cikti/efekt-ornek/hf_oval_acilis.jpg",
+    "ilk_kullanildigi": "gercek-ilan-1.mp4"
+  },
+  {
+    "ad": "hf_per-word-rise",
+    "tur": "yazi",
+    "kaynak": "hyperframes",
+    "dosya": "hf_per-word-rise.py",
+    "portre_alfa": true,
+    "cozunurluk": [
+      1080,
+      1920
+    ],
+    "kullanim": "--alfa --sure <saniye> -o <katman.mov>",
+    "proje": "hyperframes/gercek-ilan-1-v2",
+    "render": "ProRes 4444 yuva444p10le"
+  },
+  {
+    "ad": "hf_spring-pop",
+    "tur": "yazi",
+    "kaynak": "hyperframes",
+    "dosya": "hf_spring-pop.py",
+    "portre_alfa": true,
+    "cozunurluk": [
+      1080,
+      1920
+    ],
+    "kullanim": "--alfa --sure <saniye> -o <katman.mov>",
+    "proje": "hyperframes/gercek-ilan-1-v2",
+    "render": "ProRes 4444 yuva444p10le"
+  }
+]

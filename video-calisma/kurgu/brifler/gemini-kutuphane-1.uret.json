@@ -1,0 +1,144 @@
+{
+  "ad": "gemini-kutuphane-1",
+  "vurus": 6,
+  "rampa": 0.3,
+  "harman": 0.3333,
+  "font": "bahnschrift",
+  "muzik": "muzik/wallpaper.mp3",
+  "muzik_bas": 0,
+  "alt_bant": "İNZA · ÖRNEK KURGU",
+  "tekrar_izin": true,
+  "planlar": [
+    [
+      "varliklar/pexels-tropik/40807448.mp4",
+      0
+    ],
+    [
+      "varliklar/pexels-tropik/40807452.mp4",
+      0.5
+    ],
+    [
+      "varliklar/pexels-tropik/40807449.mp4",
+      0
+    ],
+    [
+      "varliklar/pexels-tropik/40807450.mp4",
+      0
+    ],
+    [
+      "varliklar/pexels-tropik/40807458.mp4",
+      0
+    ],
+    [
+      "varliklar/pexels-tropik/40807484.mp4",
+      0
+    ],
+    [
+      "varliklar/pexels-tropik/40807489.mp4",
+      0
+    ]
+  ],
+  "gecisler": [
+    {
+      "ad": "sade_0",
+      "giden": "null",
+      "gelen": "null",
+      "harman": "if(gt(P,0.5),A,B)",
+      "ses": {
+        "tur": "vurus",
+        "oran": 1,
+        "ses": 0.12
+      }
+    },
+    {
+      "ad": "sade_1",
+      "giden": "null",
+      "gelen": "null",
+      "harman": "if(gt(P,0.501),A,B)",
+      "ses": {
+        "tur": "vurus",
+        "oran": 1,
+        "ses": 0.12
+      }
+    },
+    {
+      "ad": "sade_2",
+      "giden": "null",
+      "gelen": "null",
+      "harman": "if(gt(P,0.502),A,B)",
+      "ses": {
+        "tur": "vurus",
+        "oran": 1,
+        "ses": 0.12
+      }
+    },
+    {
+      "ad": "sade_3",
+      "giden": "null",
+      "gelen": "null",
+      "harman": "if(gt(P,0.503),A,B)",
+      "ses": {
+        "tur": "vurus",
+        "oran": 1,
+        "ses": 0.12
+      }
+    },
+    {
+      "ad": "sade_4",
+      "giden": "null",
+      "gelen": "null",
+      "harman": "if(gt(P,0.504),A,B)",
+      "ses": {
+        "tur": "vurus",
+        "oran": 1,
+        "ses": 0.12
+      }
+    },
+    "kesme"
+  ],
+  "renk_filtre": "curves=master='0/0 0.15/0.11 0.5/0.51 1/1',colorbalance=rs=-0.025:gs=0.012:bs=0.025:rm=0.035:gm=0.012:bm=-0.035:pl=1,eq=saturation=1.10",
+  "yazi_filtre": "drawtext=fontfile='{FONT}':text='{metin}':fontsize=96:fontcolor=0xFDFBF7@0.88:shadowcolor=black@0.95:shadowx=3:shadowy=5:x='28*(t-{t0})':y='90+100*max(0,1-(t-{t0})/0.4)':enable='between(t,{t0},{t1})'",
+  "yazi_stili": "dev",
+  "yazilar": [
+    [
+      0,
+      "DOĞANIN İÇİNDE GİZLİ"
+    ],
+    [
+      2,
+      "YÜKSEK TAVANLI GALERİ"
+    ],
+    [
+      5,
+      "IŞIK VE YEŞİL AKIŞI"
+    ]
+  ],
+  "seslendirme_bas": 0.5,
+  "seslendirme_metni": "Tropik ormanın kucağında, devasa camlar ve kesintisiz gün ışığıyla tasarlanmış bir mimari eser. Doğa ve lüksün en rafine buluşması sizi bekliyor.",
+  "son_islem": "kurgu/projeler/yatay/gemini-kutuphane-1/son_dokunus.py",
+  "uygulama": {
+    "edit_turu": "Grafik İki-Tual Kolaj & Ritmik Mimarisi Kurgusu",
+    "acilis": "cizimden_gercege",
+    "kapanis": "kapanis_koyu",
+    "gecisler": [
+      "rack_focus",
+      "diptik",
+      "mikro_kaymali_cozulme",
+      "isik_sizmasi",
+      "motor_gecis_kesme"
+    ],
+    "isik": "isik_huzmesi",
+    "renk": "renk_amber_teal",
+    "sureler": [
+      3,
+      2.8,
+      4.4,
+      2.8,
+      2.8,
+      2.8,
+      3.6
+    ],
+    "not": "449 ve 450 eşzamanlı diptik. Kütüphane hareketleri ayrı betikle birleştirilir. Açılış 1.2 sn + 1.8 sn temiz."
+  },
+  "seslendirme": "varliklar/yz/gemini-kutuphane-1_seslendirme.wav"
+}

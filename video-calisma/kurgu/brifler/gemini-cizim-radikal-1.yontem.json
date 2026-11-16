@@ -1,0 +1,174 @@
+{
+  "model": "gemini-flash-latest",
+  "parcalar": [
+    {
+      "etiket": "KLIP 614406",
+      "mekan": "Yemek Alanı ve Salon Perspektifi",
+      "kalite": 9,
+      "kamera": "Göz hizası statik genel plan, doğal ışık dengeli",
+      "kullanim": "Mekanın derinliğini ve salonla ilişkisini göstermek için ideal genel plan."
+    },
+    {
+      "etiket": "KLIP 614407",
+      "mekan": "Yemek Masası ve Jaluzi Detayı",
+      "kalite": 8,
+      "kamera": "Yatay yavaş kayma, orta-yakın plan",
+      "kullanim": "Doku ve malzeme detaylarını aktarmak için ara geçiş planı."
+    },
+    {
+      "etiket": "KLIP 614409",
+      "mekan": "Salon ve Botanik Detay",
+      "kalite": 9,
+      "kamera": "Ön plan fluluk (saksı bitkisi), arka plan oturma grubu",
+      "kullanim": "Derinlik hissi ve organik doku vurgusu."
+    },
+    {
+      "etiket": "KLIP 614410",
+      "mekan": "Masa Üstü Vazo Odaklı Yemek Alanı",
+      "kalite": 9,
+      "kamera": "Merkez odaklı orta plan, arka plan yumuşak bokeh",
+      "kullanim": "Tasarım objesi ve ferah arka plan kontrastı."
+    },
+    {
+      "etiket": "KLIP 614415",
+      "mekan": "Yemek Masası",
+      "kalite": 4,
+      "kamera": "İnsan eli objeye müdahale ediyor",
+      "kullanim": "Kullanılmayacak (insan müdahalesi kompozisyonu bozuyor)."
+    },
+    {
+      "etiket": "KLIP 614417",
+      "mekan": "Mutfak Hattı ve Pencere Önü Saksı",
+      "kalite": 8,
+      "kamera": "Ön plan fluluk ile derinlikli süzülme",
+      "kullanim": "Işığın açısını ve doğal tuğla kaplamayı göstermek için."
+    },
+    {
+      "etiket": "KLIP 614419",
+      "mekan": "Salon Oturma Alanı ve Sehpa Detayı",
+      "kalite": 9,
+      "kamera": "Netleme kaydırmalı (rack focus) sakin açı",
+      "kullanim": "Dingin oturma köşesini vurgulamak için."
+    },
+    {
+      "etiket": "KLIP 614420",
+      "mekan": "Masa ve Sandalye Detayı",
+      "kalite": 8,
+      "kamera": "Düşük açı yakın plan",
+      "kullanim": "Kumaş ve ahşap detay geçişi."
+    },
+    {
+      "etiket": "KLIP 614421",
+      "mekan": "Yemek Masası ve Mutfak",
+      "kalite": 3,
+      "kamera": "İnsan kadrajda hareket ediyor",
+      "kullanim": "Kullanılmayacak (insan unsuru kurumsal mimari estetiğe uymuyor)."
+    },
+    {
+      "etiket": "KLIP 614529",
+      "mekan": "Aydınlık Salon ve Geniş Pencere Cephesi",
+      "kalite": 10,
+      "kamera": "Geniş açı yumuşak pan",
+      "kullanim": "Açılışta kâğıt çizimden gerçeğe geçiş için temel plan."
+    },
+    {
+      "etiket": "KLIP 614541",
+      "mekan": "Mutfak ve Yemek Bölümü Bütünü",
+      "kalite": 9,
+      "kamera": "Dengeli geniş plan",
+      "kullanim": "Fonksiyonel modern mutfak dolapları ve ankastre hattını sergilemek için."
+    }
+  ],
+  "edit_turu": "Mimari Tipografik Ritim (Kırılan Kalıplar: 2-Her plan tam ekran kuralı kırılarak dikey bölünmüş çift kadraj kontrastı kullanıldı; 3-Üstte küçük başlık yerine mimari hatlara kenetlenen dev kinetik tipografi seçildi; 5-Eşit ritim yerine kontrastlı poliritmik kurgu uygulandı)",
+  "hikaye": "Mimarın eskiz masasındaki bir düşten doğup, doğal ışık ve geometrik dokuların somut konforuna dönüşen dingin bir yaşam alanı.",
+  "planlar": [
+    {
+      "etiket": "KLIP 614529",
+      "baslangic_sn": 0.0,
+      "neden": "Açılış isteği gereği çizimden gerçeğe dönüşerek mekanın nefes kesici ışığını ve boyutunu sergiler."
+    },
+    {
+      "etiket": "KLIP 614409",
+      "baslangic_sn": 0.5,
+      "neden": "Geniş hacimden sonra organik yaprak dokusu ile salona derinlikli ve sıcak bir odaklanma sağlar."
+    },
+    {
+      "etiket": "KLIP 614541",
+      "baslangic_sn": 0.2,
+      "neden": "Mutfak ve yemek alanının fonksiyonel yerleşimini ve monokrom zarafetini tek bakışta açığa çıkarır."
+    },
+    {
+      "etiket": "KLIP 614407",
+      "baslangic_sn": 0.8,
+      "neden": "Tuğla dokusu, jaluziden süzülen lineer gölgeler ve mobilya kumaşının dokunsal hissini yansıtır."
+    },
+    {
+      "etiket": "KLIP 614419",
+      "baslangic_sn": 0.4,
+      "neden": "Dinlenme alanının pastel tonlarını ve dinginliğini hissettiren yazısız, ferah bir nefes planı."
+    },
+    {
+      "etiket": "KLIP 614406",
+      "baslangic_sn": 0.0,
+      "neden": "Tüm yaşam alanının geometrik dengesini toparlayan prestijli kapanış kadrajı."
+    }
+  ],
+  "plan_suresi_sn": 3.2,
+  "gecisler": [
+    {
+      "ad": "Mimari Çizimden Çözülüş",
+      "yontem": "kurgu/cizimden_gercege.py ile eskiz çizgileri canlanıp 1.2 saniyede tam fotogerçekçi videoya akar.",
+      "ses": "Karakalem kağıt hışırtısından derin baslı hava vakumuna geçiş"
+    },
+    {
+      "ad": "Optik Işık Sıçraması",
+      "yontem": "Önceki planın parlak pencere alanından sağa doğru 0.3 saniyelik mikro bulanık ışık kaymasıyla düz kesme.",
+      "ses": "Hafif fısıltılı cam çınlaması"
+    },
+    {
+      "ad": "Dikey Bölünmüş Geçiş",
+      "yontem": "Ekran dikeyde iki asimetrik sütuna ayrılır; sol sütun mutfağa kayarken sağ sütun 0.4 saniye sonra hizalanıp tek kareye kilitlenir.",
+      "ses": "Hızlı mekanik perde hışırtısı"
+    },
+    {
+      "ad": "Hız Rampalı Minimal Kesme",
+      "yontem": "Plan son çeyrek saniyede 2.5x hızlanır, tam vuruşta sonraki detay planına sert ve berrak şekilde oturur.",
+      "ses": "Tok ve tok bas vuruşu (kick)"
+    },
+    {
+      "ad": "Jaluzi Gölge Çözülmesi",
+      "yontem": "Işık kırılmaları arasından yatay bantlar halinde 0.5 saniyede yumuşakça birbirine eriyen geçiş.",
+      "ses": "Derin ambient nefes sesi"
+    }
+  ],
+  "isik_renk": "Kuzey ışığı netliğinde, hafif desatüre zemin tonları üzerinde doğal ahşap ve kiremit kırmızısını öne çıkaran İskandinav modern renk profili. Gölgelerde hafif soğuk mavi/gri, aydınlık alanlarda saf pencere ışığı.",
+  "isik_efektleri": "KLIP 614407'de jaluzi aralıklarından odaya süzülen hafif hacimsel ışık tozları ve KLIP 614529'da pencere kenarında yumuşak lens parlaması (anamorphic flare).",
+  "acilis": "Boş beyaz mimari eskiz kağıdında salonun ana konturları hızla çizilir; çizim tamamlandığı anda gerçek görüntüye hayat bularak canlanır.",
+  "kapanis": "Son planın sağ kenarından içeriye mat grafit tonunda dikey bir mimari panel kayar; panel üzerinde logonuz ve iletişim bilgileri net ve yalın bir tipografiyle belirir.",
+  "yazi": {
+    "gorunum": "Yazı tipi 'Space Grotesk' ya da 'Syne', 80px devasa boyut, #ECECEC kireç beyazı, ekranın sol dikey eksenine 90 derece dayalı veya sol alt blokta asimetrik yerleşim.",
+    "animasyon": "Harfler tek tek dikey bir maskenin arkasından yukarı doğru keskin bir ivmeyle yükselir, harf aralıkları açılarak (tracking) 0.4 saniyede yerine oturur."
+  },
+  "basliklar": [
+    {
+      "plan_no": 1,
+      "metin": "DOĞAL IŞIK"
+    },
+    {
+      "plan_no": 2,
+      "metin": "MODERN MİMARİ"
+    },
+    {
+      "plan_no": 3,
+      "metin": "ZARİF DETAYLAR"
+    }
+  ],
+  "muzik": {
+    "tarif": "Minimal synth tınıları, sofistike ritmik vuruşlar, modern mimariyle senkronize hafif elektronik indie tonu (~105 BPM).",
+    "secim": "wallpaper.mp3",
+    "baslangic_sn": 0.0,
+    "neden": "Klişe piyano/yaylı temasını kırarak modern kent yaşamının dinamik ve rafine dokusunu hissettirir."
+  },
+  "seslendirme_metni": "Çizgilerin sadeliği, ışığın mimariyle buluştuğu an. Doğal dokuların modern konforla harmanlandığı, sakin ve kusursuz bir yaşam alanı.",
+  "gerekce": "Mekan yüksek tavanı, tuğla ve jaluzi detayları, monokrom mutfak çizgileriyle endüstriyel-modern bir karaktere sahiptir. Bu estetiğe klasik ağırbaşlı tur yerine ritmik, tipografik ve dinamik bir dil yakışır."
+}

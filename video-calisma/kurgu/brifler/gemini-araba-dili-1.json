@@ -1,0 +1,127 @@
+{
+  "ad": "gemini-araba-dili-1",
+  "planlar": [
+    [
+      "varliklar/pexels-tropik/40807448.mp4",
+      12
+    ],
+    [
+      "varliklar/pexels-tropik/40807449.mp4",
+      0.233333
+    ],
+    [
+      "varliklar/pexels-tropik/40807450.mp4",
+      0.3
+    ],
+    [
+      "varliklar/pexels-tropik/40807458.mp4",
+      0.333333
+    ],
+    [
+      "varliklar/pexels-tropik/40807484.mp4",
+      0
+    ],
+    [
+      "varliklar/pexels-tropik/40807489.mp4",
+      0
+    ]
+  ],
+  "vurus": 5,
+  "rampa": 0.3,
+  "harman": 0.3333,
+  "font": "bebas",
+  "muzik": "muzik/wallpaper.mp3",
+  "muzik_bas": 0,
+  "yazilar": [
+    [
+      0,
+      "TROPİK PRESTİJ"
+    ],
+    [
+      2,
+      "MİMARİ HACİM"
+    ],
+    [
+      5,
+      "DOĞAYLA BİR"
+    ]
+  ],
+  "alt_bant": "İNZA · ÖRNEK KURGU",
+  "gecisler": [
+    "itme",
+    "kesme",
+    {
+      "ad": "HF whip son işlemde",
+      "giden": "null",
+      "gelen": "null",
+      "harman": "if(gt(P,0.5),A,B)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 1.3,
+        "ses": 0.5
+      }
+    },
+    {
+      "ad": "Diptik öncesi sade kesme",
+      "giden": "null",
+      "gelen": "null",
+      "harman": "if(gte(P,0.5),A,B)",
+      "ses": {
+        "tur": "whoosh",
+        "oran": 0.8,
+        "ses": 0.25
+      }
+    },
+    "flas"
+  ],
+  "renk_filtre": "null",
+  "yazi_filtre": "null",
+  "tekrar_izin": true,
+  "seslendirme_bas": 0.5,
+  "seslendirme_metni": "Sınırları aşan bir mimari. Doğanın kalbinde, yüksek tavanlı ferahlık ve zamansız konfor. Burada her an bir ayrıcalık.",
+  "acilis": {
+    "kutuphane": "altin_cizgi_acilisi",
+    "tarif": "Siyah ekranda ince altın çizgiden villa görüntüsüne dikey açılım.",
+    "sure": 1.2
+  },
+  "kapanis": {
+    "kutuphane": "kapanis_koyu",
+    "cagri": "YERİNDE GÖRÜN",
+    "telefon": "0 (5XX) XXX XX XX",
+    "sure": 3.6,
+    "logo": "marka/inza-logo-saydam.png"
+  },
+  "isik_efektleri": {
+    "kutuphane": "isik_huzmesi",
+    "plan_no": 2,
+    "sure": 0.5
+  },
+  "renk_uygulama": {
+    "kutuphane": "renk_amber_teal",
+    "filtre": "curves=master='0/0 0.15/0.11 0.5/0.51 1/1',colorbalance=rs=-0.025:gs=0.012:bs=0.025:rm=0.035:gm=0.012:bm=-0.035:pl=1,eq=saturation=1.10"
+  },
+  "yazi_uygulama": {
+    "kutuphane": "hf:headline-slam",
+    "font": "Bebas Neue",
+    "boyut": 110,
+    "renk": "#FFFFFF",
+    "golge": "siyah",
+    "mikro_titreme_kare": 3,
+    "arka_plan_kutusu": false
+  },
+  "yonetmen_uygulama": {
+    "plan_suresi_sn": 2.2,
+    "son_islem_vurus": 14,
+    "neden": "Efekt yoğunluğu ve temiz an için plan uzatma. Kütüphane renk, ışık, açılış, diptik, kapanış ve HF başlık/whip son işlemde uygulanır.",
+    "acilis": "altin_cizgi_acilisi",
+    "kapanis": "kapanis_koyu",
+    "isik": "isik_huzmesi",
+    "renk": "renk_amber_teal",
+    "hf": [
+      "whip-pan",
+      "headline-slam"
+    ],
+    "kaynak_zaman_notu": "12 doğrudan. 28, 35 ve 52 birleşik akışta yerel 0.233333, 0.3 ve 0.333333 saniyeye eşlendi. 105 ve 113 toplam kaynak akışı dışında, ilgili kliplerin 0. saniyesi kullanıldı.",
+    "son_plan_suresi_sn": 6.2958
+  }
+}

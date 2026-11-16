@@ -1,0 +1,2346 @@
+{
+ "kaynak": "hyperframes",
+ "kurulum": "cd hyperframes/<proje> && npx hyperframes add <ad>; HTML olarak render edilir (npx hyperframes render). Önizleme: https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/<ad>.mp4",
+ "efektler": [
+  {
+   "ad": "aurora",
+   "tip": "block",
+   "tarif": "Green and violet aurora curtains ripple across a night sky. A WebGPU shader from the Shaders library (shaders.com, MIT).",
+   "etiketler": [
+    "webgpu",
+    "webgpu-shader",
+    "background",
+    "light",
+    "aurora",
+    "sky"
+   ]
+  },
+  {
+   "ad": "beat-freeze-cut",
+   "tip": "block",
+   "tarif": "A beat-driven speed ramp, freeze-frame hit, and hard-cut sequence for music-led promos and montages.",
+   "etiketler": [
+    "transition",
+    "music",
+    "beat-driven",
+    "freeze-frame"
+   ]
+  },
+  {
+   "ad": "blob",
+   "tip": "block",
+   "tarif": "A soft coral and pink blob with a warm highlight slowly changes shape on black. A WebGPU shader from the Shaders library (shaders.com, MIT).",
+   "etiketler": [
+    "webgpu",
+    "webgpu-shader",
+    "background",
+    "abstract",
+    "organic",
+    "gradient"
+   ]
+  },
+  {
+   "ad": "camcorder-hud",
+   "tip": "block",
+   "tarif": "Responsive REC, battery, editable date placeholder, and timeline-driven counter overlay for creator-camera and camcorder treatments",
+   "etiketler": [
+    "camcorder",
+    "camera",
+    "recording",
+    "hud",
+    "overlay",
+    "creator",
+    "media-treatment-overlay"
+   ]
+  },
+  {
+   "ad": "camera-dolly-zoom",
+   "tip": "block",
+   "tarif": "Camera tracks toward or away from the subject while the field of view changes the opposite way, so the subject holds its frame size while th",
+   "etiketler": [
+    "camera",
+    "depth",
+    "3d",
+    "cinematic"
+   ]
+  },
+  {
+   "ad": "canopy-part-title",
+   "tip": "block",
+   "tarif": "Leaves sweep through the frame and part to reveal the headline.",
+   "etiketler": [
+    "3d-motion",
+    "title-card",
+    "leaves",
+    "organic",
+    "depth-of-field",
+    "two-headlines",
+    "sweep"
+   ]
+  },
+  {
+   "ad": "chromatic-radial-split",
+   "tip": "block",
+   "tarif": "Shader transition with chromatic aberration radial split",
+   "etiketler": [
+    "transition",
+    "shader"
+   ]
+  },
+  {
+   "ad": "cinemagraph",
+   "tip": "block",
+   "tarif": "A still photograph with one living region: the frame is frozen while a single feathered window keeps moving - here, steam rising over a cup ",
+   "etiketler": [
+    "effect",
+    "cinemagraph",
+    "photo",
+    "loop",
+    "freeze-frame"
+   ]
+  },
+  {
+   "ad": "cinematic-zoom",
+   "tip": "block",
+   "tarif": "Shader transition with dramatic zoom blur",
+   "etiketler": [
+    "transition",
+    "shader"
+   ]
+  },
+  {
+   "ad": "code-slice-hero",
+   "tip": "block",
+   "tarif": "A tiled headline surface flips cell by cell under a sweeping depth field to reveal the rear headline.",
+   "etiketler": [
+    "3d-motion",
+    "transition",
+    "typography",
+    "tiles",
+    "flip",
+    "webgl2",
+    "shadows",
+    "two-headlines"
+   ]
+  },
+  {
+   "ad": "color-wheel",
+   "tip": "block",
+   "tarif": "A wide gradient slides slowly through the colours of the rainbow. A WebGPU shader from the Shaders library (shaders.com, MIT).",
+   "etiketler": [
+    "webgpu",
+    "webgpu-shader",
+    "background",
+    "gradient",
+    "rainbow",
+    "color"
+   ]
+  },
+  {
+   "ad": "cross-warp-morph",
+   "tip": "block",
+   "tarif": "Shader transition with cross-warped morphing",
+   "etiketler": [
+    "transition",
+    "shader"
+   ]
+  },
+  {
+   "ad": "domain-warp-dissolve",
+   "tip": "block",
+   "tarif": "Shader transition with fractal noise domain warping",
+   "etiketler": [
+    "transition",
+    "shader"
+   ]
+  },
+  {
+   "ad": "extruded-logo",
+   "tip": "block",
+   "tarif": "Beveled 3D letters flip up one by one, the word swings so light runs across the bevels, then settles for a readable hold. Chrome, gold or ma",
+   "etiketler": [
+    "3d-object",
+    "three-js",
+    "webgl",
+    "logo",
+    "text",
+    "extruded",
+    "title-card"
+   ]
+  },
+  {
+   "ad": "falling-lines",
+   "tip": "block",
+   "tarif": "White lines fall down the frame at varied speeds, each fading into a trail. A WebGPU shader from the Shaders library (shaders.com, MIT).",
+   "etiketler": [
+    "webgpu",
+    "webgpu-shader",
+    "background",
+    "texture",
+    "lines",
+    "rain",
+    "monochrome"
+   ]
+  },
+  {
+   "ad": "flash-through-white",
+   "tip": "block",
+   "tarif": "Shader transition with white flash crossfade",
+   "etiketler": [
+    "transition",
+    "shader"
+   ]
+  },
+  {
+   "ad": "flowing-gradient",
+   "tip": "block",
+   "tarif": "Bands of orange and violet flow across the frame in a smooth gradient. A WebGPU shader from the Shaders library (shaders.com, MIT).",
+   "etiketler": [
+    "webgpu",
+    "webgpu-shader",
+    "background",
+    "gradient",
+    "color",
+    "flow"
+   ]
+  },
+  {
+   "ad": "fractal-noise",
+   "tip": "block",
+   "tarif": "Soft grey fractal noise drifts across the frame like slow clouds. A WebGPU shader from the Shaders library (shaders.com, MIT).",
+   "etiketler": [
+    "webgpu",
+    "webgpu-shader",
+    "background",
+    "noise",
+    "texture",
+    "clouds"
+   ]
+  },
+  {
+   "ad": "gabor-noise",
+   "tip": "block",
+   "tarif": "Grey streaky noise drifts across the frame like a moving fingerprint. A WebGPU shader from the Shaders library (shaders.com, MIT).",
+   "etiketler": [
+    "webgpu",
+    "webgpu-shader",
+    "background",
+    "texture",
+    "noise",
+    "monochrome"
+   ]
+  },
+  {
+   "ad": "glass-hero",
+   "tip": "block",
+   "tarif": "A solid glass object rises in front of a giant headline and keeps turning, so the type bends and splits into colour through it.",
+   "etiketler": [
+    "3d-object",
+    "three-js",
+    "webgl",
+    "glass",
+    "refraction",
+    "hero",
+    "title-card"
+   ]
+  },
+  {
+   "ad": "glass-shard-title",
+   "tip": "block",
+   "tarif": "Glass shards fly in through fog and tile themselves into the headline.",
+   "etiketler": [
+    "3d-motion",
+    "title-card",
+    "glass",
+    "voronoi",
+    "shards",
+    "fog",
+    "hdr"
+   ]
+  },
+  {
+   "ad": "glitch",
+   "tip": "block",
+   "tarif": "Shader transition with digital glitch artifacts",
+   "etiketler": [
+    "transition",
+    "shader"
+   ]
+  },
+  {
+   "ad": "godrays",
+   "tip": "block",
+   "tarif": "Rays of light fan out from a corner and drift across a deep blue field. A WebGPU shader from the Shaders library (shaders.com, MIT).",
+   "etiketler": [
+    "webgpu",
+    "webgpu-shader",
+    "background",
+    "light",
+    "rays"
+   ]
+  },
+  {
+   "ad": "gooey-split",
+   "tip": "block",
+   "tarif": "A dot splits into a three-dot menu with a gooey metaball neck, spins into a swirl mark under directional shutter motion blur, then breaks ba",
+   "etiketler": [
+    "effect",
+    "gooey",
+    "metaball",
+    "motion-blur",
+    "morph",
+    "logo",
+    "icon"
+   ]
+  },
+  {
+   "ad": "gravitational-lens",
+   "tip": "block",
+   "tarif": "Shader transition with gravitational lensing distortion",
+   "etiketler": [
+    "transition",
+    "shader"
+   ]
+  },
+  {
+   "ad": "halftone-field",
+   "tip": "block",
+   "tarif": "A full-bleed halftone light field: a grid of dots whose size and colour track a slow flowing simplex-noise field, so broad bands of light sw",
+   "etiketler": [
+    "webgl",
+    "shader",
+    "background",
+    "texture",
+    "halftone"
+   ]
+  },
+  {
+   "ad": "hw-frame",
+   "tip": "block",
+   "tarif": "Media in a hand-drawn border with corner doodles and a handwritten caption; the unit tilts slightly and boils (images inside the block; keep",
+   "etiketler": [
+    "handwritten",
+    "frame",
+    "media"
+   ]
+  },
+  {
+   "ad": "hw-path-text",
+   "tip": "block",
+   "tarif": "Handwriting flowing along any SVG path with a per-character reveal; the path is the only geometry input",
+   "etiketler": [
+    "handwritten",
+    "typography",
+    "path",
+    "overlay"
+   ]
+  },
+  {
+   "ad": "hw-pipeline",
+   "tip": "block",
+   "tarif": "Wobbled boxes with handwritten labels joined by curved connectors, drawing on in sequence from a node list",
+   "etiketler": [
+    "handwritten",
+    "diagram",
+    "data-viz",
+    "overlay"
+   ]
+  },
+  {
+   "ad": "hw-scribble-transition",
+   "tip": "block",
+   "tarif": "Overlay transition: scribble bands accumulate to cover the frame with a solid backstop, the host cuts beneath, and the scribble clears",
+   "etiketler": [
+    "handwritten",
+    "transition",
+    "wipe"
+   ]
+  },
+  {
+   "ad": "hw-text-cloud",
+   "tip": "block",
+   "tarif": "Hand-drawn speech bubble with a positionable tail: outline draws on, paper fill fades in, handwritten text types per character; boils",
+   "etiketler": [
+    "handwritten",
+    "speech-bubble",
+    "overlay"
+   ]
+  },
+  {
+   "ad": "hw-title",
+   "tip": "block",
+   "tarif": "Handwritten display text with a scalar-driven word-by-word highlight sweep and a seeded squiggle underline sized to the text; boils",
+   "etiketler": [
+    "handwritten",
+    "typography",
+    "title-card",
+    "overlay"
+   ]
+  },
+  {
+   "ad": "hw-write-title",
+   "tip": "block",
+   "tarif": "True glyph write-on: filled Caveat letterforms revealed by baked per-glyph centerline strokes traced in real stroke order with a curvature-a",
+   "etiketler": [
+    "handwritten",
+    "typography",
+    "title-card",
+    "write-on",
+    "overlay"
+   ]
+  },
+  {
+   "ad": "lens-flare",
+   "tip": "block",
+   "tarif": "A camera lens flare: a bright star burst and a faint rainbow halo that slowly shimmer on black. A WebGPU shader from the Shaders library (sh",
+   "etiketler": [
+    "webgpu",
+    "webgpu-shader",
+    "background",
+    "light",
+    "flare",
+    "glow"
+   ]
+  },
+  {
+   "ad": "light-edge",
+   "tip": "block",
+   "tarif": "Purple and cyan light races around the edge of an orb on black. A WebGPU shader from the Shaders library (shaders.com, MIT).",
+   "etiketler": [
+    "webgpu",
+    "webgpu-shader",
+    "object",
+    "light",
+    "glow",
+    "neon",
+    "edge"
+   ]
+  },
+  {
+   "ad": "light-leak",
+   "tip": "block",
+   "tarif": "Shader transition with cinematic light leak overlay",
+   "etiketler": [
+    "transition",
+    "shader"
+   ]
+  },
+  {
+   "ad": "lower-third-bild",
+   "tip": "block",
+   "tarif": "News-style lower third with tight-fit text boxes: white headline bar with red drop-shadow, red sub-line with white drop-shadow.",
+   "etiketler": [
+    "broadcast",
+    "lower-third",
+    "news",
+    "overlay"
+   ]
+  },
+  {
+   "ad": "lt-neon-border",
+   "tip": "block",
+   "tarif": "Two arcs of light travel the edge of a rounded panel and snap corner to corner, trailing a soft three-layer bloom. A lower third for a name ",
+   "etiketler": [
+    "lower-third",
+    "glow",
+    "loop",
+    "video-primitive"
+   ]
+  },
+  {
+   "ad": "marble",
+   "tip": "block",
+   "tarif": "Ink-dark veins wind through white in a marbled pattern that slowly shifts. A WebGPU shader from the Shaders library (shaders.com, MIT).",
+   "etiketler": [
+    "webgpu",
+    "webgpu-shader",
+    "background",
+    "marble",
+    "texture"
+   ]
+  },
+  {
+   "ad": "mesh-gradient",
+   "tip": "block",
+   "tarif": "Soft coral, orange and violet fields blend and drift in a mesh gradient. A WebGPU shader from the Shaders library (shaders.com, MIT).",
+   "etiketler": [
+    "webgpu",
+    "webgpu-shader",
+    "background",
+    "gradient",
+    "color"
+   ]
+  },
+  {
+   "ad": "mk-background",
+   "tip": "block",
+   "tarif": "Procedural soft-blob gradient backdrop in a minimalist presentation style: two radial blobs drifting over a base color, with an animatable r",
+   "etiketler": [
+    "background",
+    "gradient",
+    "minimal",
+    "professional",
+    "presentation"
+   ]
+  },
+  {
+   "ad": "mk-clone-wall-transition",
+   "tip": "block",
+   "tarif": "Overlay transition: a tiled word wall covers the frame, inverts via difference blending, and clears — hard-cut the content beneath while cov",
+   "etiketler": [
+    "transition",
+    "typography",
+    "wipe"
+   ]
+  },
+  {
+   "ad": "mk-line-graph",
+   "tip": "block",
+   "tarif": "One or two SVG series draw on with dots popping and value labels riding the draw front; dim baseline axis, x-labels, color-dot legend",
+   "etiketler": [
+    "data-viz",
+    "chart",
+    "graph",
+    "minimal"
+   ]
+  },
+  {
+   "ad": "mk-placeholder-grid",
+   "tip": "block",
+   "tarif": "N-up rounded-corner media grid (2-up, 3-up, 4-up, 3x2, hero plus two): per-cell inside-scale framing, staggered box-in entrance, slow settle",
+   "etiketler": [
+    "placeholder",
+    "media",
+    "grid",
+    "minimal"
+   ]
+  },
+  {
+   "ad": "mk-progress-stat",
+   "tip": "block",
+   "tarif": "Big-numeral statistic with count-up, label, thin progress track filling to value/max, and caption; light and dark schemes",
+   "etiketler": [
+    "data-viz",
+    "stat",
+    "minimal"
+   ]
+  },
+  {
+   "ad": "mk-specs-list",
+   "tip": "block",
+   "tarif": "Left-aligned specs/traits checklist over footage or a board: rows slide in staggered with an accent underline sweep; light and dark schemes",
+   "etiketler": [
+    "data-viz",
+    "list",
+    "minimal",
+    "professional"
+   ]
+  },
+  {
+   "ad": "news-ticker",
+   "tip": "block",
+   "tarif": "Premium broadcast-style lower-third ticker with live label, headline ribbon, and scrolling news crawl.",
+   "etiketler": [
+    "lower-third",
+    "overlay",
+    "news",
+    "ticker"
+   ]
+  },
+  {
+   "ad": "organic-light-leak-overlay",
+   "tip": "block",
+   "tarif": "Finite CSS light-leak overlay for memory beats and motivated transitions",
+   "etiketler": [
+    "light-leak",
+    "film",
+    "memory",
+    "transition",
+    "overlay",
+    "media-treatment-overlay"
+   ]
+  },
+  {
+   "ad": "plasma",
+   "tip": "block",
+   "tarif": "Deep violet plasma folds and churns across the whole frame. A WebGPU shader from the Shaders library (shaders.com, MIT).",
+   "etiketler": [
+    "webgpu",
+    "webgpu-shader",
+    "background",
+    "texture",
+    "plasma",
+    "purple"
+   ]
+  },
+  {
+   "ad": "prism",
+   "tip": "block",
+   "tarif": "A white beam of light splits into a slowly turning rainbow. A WebGPU shader from the Shaders library (shaders.com, MIT).",
+   "etiketler": [
+    "webgpu",
+    "webgpu-shader",
+    "background",
+    "light",
+    "prism",
+    "rainbow"
+   ]
+  },
+  {
+   "ad": "ridged-burn",
+   "tip": "block",
+   "tarif": "Shader transition with ridged turbulence burn effect",
+   "etiketler": [
+    "transition",
+    "shader"
+   ]
+  },
+  {
+   "ad": "ripple-waves",
+   "tip": "block",
+   "tarif": "Shader transition with concentric ripple wave distortion",
+   "etiketler": [
+    "transition",
+    "shader"
+   ]
+  },
+  {
+   "ad": "ripples",
+   "tip": "block",
+   "tarif": "Concentric rings ripple outward from the centre, white on black. A WebGPU shader from the Shaders library (shaders.com, MIT).",
+   "etiketler": [
+    "webgpu",
+    "webgpu-shader",
+    "background",
+    "texture",
+    "rings",
+    "waves",
+    "monochrome"
+   ]
+  },
+  {
+   "ad": "sdf-iris",
+   "tip": "block",
+   "tarif": "Shader transition with signed distance field iris reveal",
+   "etiketler": [
+    "transition",
+    "shader"
+   ]
+  },
+  {
+   "ad": "sine-wave",
+   "tip": "block",
+   "tarif": "A glowing white sine wave travels across a black frame. A WebGPU shader from the Shaders library (shaders.com, MIT).",
+   "etiketler": [
+    "webgpu",
+    "webgpu-shader",
+    "background",
+    "wave",
+    "line",
+    "glow"
+   ]
+  },
+  {
+   "ad": "snow",
+   "tip": "block",
+   "tarif": "Seek-safe falling-snow overlay: sparse or dense flakes drift down with size, speed and opacity correlated per flake for depth, radial-masked",
+   "etiketler": [
+    "snow",
+    "snowfall",
+    "winter",
+    "weather",
+    "overlay",
+    "ambient",
+    "particles",
+    "media-treatment-overlay",
+    "loopable"
+   ]
+  },
+  {
+   "ad": "spiral",
+   "tip": "block",
+   "tarif": "A bold black and white spiral turns in the frame. A WebGPU shader from the Shaders library (shaders.com, MIT).",
+   "etiketler": [
+    "webgpu",
+    "webgpu-shader",
+    "background",
+    "pattern",
+    "spiral",
+    "monochrome"
+   ]
+  },
+  {
+   "ad": "spiral-galaxy",
+   "tip": "block",
+   "tarif": "A spiral galaxy seen from outside, turning with real differential rotation: inner stars orbit faster than outer ones, so the arms wind up ov",
+   "etiketler": [
+    "hero",
+    "space",
+    "particles",
+    "webgl",
+    "background"
+   ]
+  },
+  {
+   "ad": "split-flap-board",
+   "tip": "block",
+   "tarif": "Solari-style departure board: every cell walks its drum forward through the intervening characters of a fixed alphabet until it lands on its",
+   "etiketler": [
+    "text",
+    "kinetic",
+    "mechanical",
+    "split-flap",
+    "solari",
+    "departure-board",
+    "reveal"
+   ]
+  },
+  {
+   "ad": "starfield",
+   "tip": "block",
+   "tarif": "Seek-safe night-sky overlay: sparse or dense stars in three size tiers that twinkle and drift in two parallax layers, radial-masked to keep ",
+   "etiketler": [
+    "starfield",
+    "night-sky",
+    "stars",
+    "twinkle",
+    "sky",
+    "weather",
+    "overlay",
+    "ambient",
+    "particles",
+    "media-treatment-overlay",
+    "loopable"
+   ]
+  },
+  {
+   "ad": "strands",
+   "tip": "block",
+   "tarif": "Thin ribbons of pink and blue light weave across a black field. A WebGPU shader from the Shaders library (shaders.com, MIT).",
+   "etiketler": [
+    "webgpu",
+    "webgpu-shader",
+    "background",
+    "light",
+    "lines",
+    "ribbons"
+   ]
+  },
+  {
+   "ad": "stripes",
+   "tip": "block",
+   "tarif": "Bold black and white diagonal stripes slide across the frame. A WebGPU shader from the Shaders library (shaders.com, MIT).",
+   "etiketler": [
+    "webgpu",
+    "webgpu-shader",
+    "background",
+    "pattern",
+    "stripes",
+    "monochrome"
+   ]
+  },
+  {
+   "ad": "sun-burst",
+   "tip": "block",
+   "tarif": "Cream and black rays fan out from the centre and slowly turn. A WebGPU shader from the Shaders library (shaders.com, MIT).",
+   "etiketler": [
+    "webgpu",
+    "webgpu-shader",
+    "background",
+    "light",
+    "rays",
+    "radial"
+   ]
+  },
+  {
+   "ad": "swirl",
+   "tip": "block",
+   "tarif": "Orange and blue color fields swirl and flow into each other across the whole frame. A WebGPU shader from the Shaders library (shaders.com, M",
+   "etiketler": [
+    "webgpu",
+    "webgpu-shader",
+    "background",
+    "gradient",
+    "flow",
+    "abstract"
+   ]
+  },
+  {
+   "ad": "swirl-vortex",
+   "tip": "block",
+   "tarif": "Shader transition with swirling vortex distortion",
+   "etiketler": [
+    "transition",
+    "shader"
+   ]
+  },
+  {
+   "ad": "thermal-distortion",
+   "tip": "block",
+   "tarif": "Shader transition with heat haze thermal distortion",
+   "etiketler": [
+    "transition",
+    "shader"
+   ]
+  },
+  {
+   "ad": "vfx-liquid-background",
+   "tip": "block",
+   "tarif": "Organic liquid simulation with vertex displacement on a subdivided plane. HTML content floats above rippling fluid surface with real-time wa",
+   "etiketler": [
+    "html-in-canvas",
+    "liquid",
+    "webgl",
+    "displacement",
+    "background"
+   ]
+  },
+  {
+   "ad": "voronoi",
+   "tip": "block",
+   "tarif": "Magenta cells with glowing blue centres shift and reshape across the frame. A WebGPU shader from the Shaders library (shaders.com, MIT).",
+   "etiketler": [
+    "webgpu",
+    "webgpu-shader",
+    "background",
+    "pattern",
+    "cells",
+    "voronoi"
+   ]
+  },
+  {
+   "ad": "weight-wave",
+   "tip": "block",
+   "tarif": "A crest of thickness travels along a headline: each character swells from light to black and leans forward as the wave passes, driven by the",
+   "etiketler": [
+    "typography",
+    "kinetic-type",
+    "title",
+    "variable-font",
+    "text"
+   ]
+  },
+  {
+   "ad": "whip-pan",
+   "tip": "block",
+   "tarif": "Shader transition simulating a fast camera whip pan",
+   "etiketler": [
+    "transition",
+    "shader"
+   ]
+  },
+  {
+   "ad": "wireframe-portal-title",
+   "tip": "block",
+   "tarif": "A wireframe portal bursts open, the title comes through, then its letters swap into a second phrase.",
+   "etiketler": [
+    "3d-motion",
+    "title-card",
+    "wireframe",
+    "portal",
+    "burst",
+    "typography",
+    "post-processing",
+    "phrase-swap"
+   ]
+  },
+  {
+   "ad": "worley-noise",
+   "tip": "block",
+   "tarif": "A field of drifting cells, light at their centres and dark at their edges. A WebGPU shader from the Shaders library (shaders.com, MIT).",
+   "etiketler": [
+    "webgpu",
+    "webgpu-shader",
+    "background",
+    "texture",
+    "noise",
+    "cells",
+    "monochrome"
+   ]
+  },
+  {
+   "ad": "yt-lcd-background",
+   "tip": "block",
+   "tarif": "Textured paper board: scanlines with slow drift, optional pixel grid, static grain, and display text with a blur-focus entrance and chromati",
+   "etiketler": [
+    "background",
+    "texture",
+    "creator"
+   ]
+  },
+  {
+   "ad": "yt-prism-title",
+   "tip": "block",
+   "tarif": "Display title on a transparent root: blur-focus entrance, red/blue fringe that settles then breathes, perspective bow, slow scale drift",
+   "etiketler": [
+    "typography",
+    "title-card",
+    "creator"
+   ]
+  },
+  {
+   "ad": "arc-motion-path",
+   "tip": "component",
+   "tarif": "A GSAP MotionPath primitive that flies a callout along a curved arc with autorotation.",
+   "etiketler": [
+    "video-primitive",
+    "motionpath",
+    "gsap-plugin",
+    "hyperframes-native"
+   ]
+  },
+  {
+   "ad": "ascii-trail-reveal",
+   "tip": "component",
+   "tarif": "An authored S-curve sweeps through a deterministic ASCII grid, flipping cells away to reveal a labeled panel.",
+   "etiketler": [
+    "motion-primitive",
+    "intro",
+    "reveal",
+    "ascii",
+    "trail",
+    "grid"
+   ]
+  },
+  {
+   "ad": "aurora-drift",
+   "tip": "component",
+   "tarif": "Three soft accent-derived aurora fields drift in an exact ambient loop over a deep base and faint vignette.",
+   "etiketler": [
+    "motion-primitive",
+    "background",
+    "aurora",
+    "gradient",
+    "ambient",
+    "loopable"
+   ]
+  },
+  {
+   "ad": "avatar-group-hover",
+   "tip": "component",
+   "tarif": "A distance-falloff avatar group lift with bouncy hover return",
+   "etiketler": [
+    "video-primitive",
+    "transition-primitive",
+    "transitions-dev-port",
+    "avatar",
+    "hover"
+   ]
+  },
+  {
+   "ad": "badge-pop",
+   "tip": "component",
+   "tarif": "A transitions.dev-inspired notification badge pop with elastic scale and count reveal",
+   "etiketler": [
+    "video-primitive",
+    "transition-primitive",
+    "transitions-dev-port",
+    "badge",
+    "microinteraction"
+   ]
+  },
+  {
+   "ad": "beat-pulse-background",
+   "tip": "component",
+   "tarif": "An accent-derived backdrop pulses its glow intensity and saturation on a deterministic, supplied beat grid.",
+   "etiketler": [
+    "motion-primitive",
+    "background",
+    "beat",
+    "pulse",
+    "rhythmic",
+    "reactive"
+   ]
+  },
+  {
+   "ad": "blur-in",
+   "tip": "component",
+   "tarif": "An Operator Black word-level content reveal that resolves its own text from controlled blur",
+   "etiketler": [
+    "video-primitive",
+    "blur-in",
+    "text-effect"
+   ]
+  },
+  {
+   "ad": "blur-out-up",
+   "tip": "component",
+   "tarif": "Words arrive clean and depart upward with increasing blur for airy exits.",
+   "etiketler": [
+    "motion-primitive",
+    "typography"
+   ]
+  },
+  {
+   "ad": "bottom-up-letters",
+   "tip": "component",
+   "tarif": "Splits text into letters and reveals each glyph from below with deterministic staggered timing",
+   "etiketler": [
+    "motion-primitive",
+    "text",
+    "letters",
+    "reveal"
+   ]
+  },
+  {
+   "ad": "camera-shake",
+   "tip": "component",
+   "tarif": "Procedural handheld, telephoto and rig camera shake for any wrapper: nine measured profiles with per-lens projection, closed-form and seek-s",
+   "etiketler": [
+    "camera",
+    "shake",
+    "handheld",
+    "effect",
+    "cinematic"
+   ]
+  },
+  {
+   "ad": "caption-blend-difference",
+   "tip": "component",
+   "tarif": "Auto-inverting text using mix-blend-mode: difference — flips between white and black per-pixel against the background",
+   "etiketler": [
+    "text",
+    "text-effect",
+    "effect",
+    "blend-mode",
+    "contrast",
+    "inversion"
+   ]
+  },
+  {
+   "ad": "card-resize",
+   "tip": "component",
+   "tarif": "A transitions.dev-inspired card resize primitive that expands a compact card into a detail panel",
+   "etiketler": [
+    "video-primitive",
+    "transition-primitive",
+    "transitions-dev-port",
+    "card",
+    "layout"
+   ]
+  },
+  {
+   "ad": "caret-swap",
+   "tip": "component",
+   "tarif": "A gradient caret expands over one phrase, collapses to the left, then types its replacement with a blinking caret.",
+   "etiketler": [
+    "motion-primitive",
+    "text-effects",
+    "typography",
+    "swap",
+    "typewriter",
+    "remocn-port"
+   ]
+  },
+  {
+   "ad": "char-slam-explode",
+   "tip": "component",
+   "tarif": "Headline glyphs hold in a deterministic scatter, then reassemble with an overshooting slam and a three-frame landing shake.",
+   "etiketler": [
+    "motion-primitive",
+    "typography",
+    "text-treatment",
+    "scatter",
+    "slam",
+    "impact"
+   ]
+  },
+  {
+   "ad": "chromatic-aberration-wipe",
+   "tip": "component",
+   "tarif": "A fast slide wipe with RGB channel split on peak frames.",
+   "etiketler": [
+    "video-primitive",
+    "transition-primitive"
+   ]
+  },
+  {
+   "ad": "colorama-wipe",
+   "tip": "component",
+   "tarif": "Headline reveal through a feathered, leaning wipe front that is blurred and colour-mapped as it passes, then settles to clean type and wipes",
+   "etiketler": [
+    "text",
+    "reveal",
+    "wipe",
+    "colorama",
+    "gradient",
+    "blur",
+    "headline",
+    "saas"
+   ]
+  },
+  {
+   "ad": "confetti",
+   "tip": "component",
+   "tarif": "A deterministic celebration burst with seeded particles and gravity.",
+   "etiketler": [
+    "effect"
+   ]
+  },
+  {
+   "ad": "constellation-hub",
+   "tip": "component",
+   "tarif": "Feature nodes brighten in narration order as real-length SVG connectors draw outward from a fixed central hub, then settle into one lockup.",
+   "etiketler": [
+    "motion-primitive",
+    "feature-tour",
+    "hub",
+    "nodes",
+    "connector",
+    "reveal"
+   ]
+  },
+  {
+   "ad": "curtain-reveal",
+   "tip": "component",
+   "tarif": "Two pleated stage curtains gather outward from center, the way real velvet bunches at the tieback, revealing the stage underneath. A static ",
+   "etiketler": [
+    "curtain",
+    "stage reveal",
+    "transition",
+    "motion-primitive"
+   ]
+  },
+  {
+   "ad": "cut-the-curve",
+   "tip": "component",
+   "tarif": "A velocity-matched directional hard cut: the outgoing subject accelerates with power4.in, swaps at peak velocity, and the incoming subject c",
+   "etiketler": [
+    "transition",
+    "directional-cut",
+    "velocity-match",
+    "whip",
+    "bridge",
+    "demonstrate"
+   ]
+  },
+  {
+   "ad": "directional-wipe",
+   "tip": "component",
+   "tarif": "A directional scene push that slides one panel over another.",
+   "etiketler": [
+    "transition-primitive"
+   ]
+  },
+  {
+   "ad": "drift-hold",
+   "tip": "component",
+   "tarif": "A centered content card stays subtly alive through loop-exact rotation, scale breathing, and a slow light sweep.",
+   "etiketler": [
+    "motion-primitive",
+    "camera",
+    "ambient",
+    "drift",
+    "hold",
+    "loopable"
+   ]
+  },
+  {
+   "ad": "dynamic-grid",
+   "tip": "component",
+   "tarif": "A responsive animated grid background driven by CSS variables for SaaS, code, and data scenes",
+   "etiketler": [
+    "video-primitive",
+    "motion-primitive",
+    "background",
+    "grid",
+    "ui"
+   ]
+  },
+  {
+   "ad": "echo-smear",
+   "tip": "component",
+   "tarif": "Distance-adaptive streak — records each element's real trajectory (position, rotation, scale, opacity), then trails time-offset copies behin",
+   "etiketler": [
+    "effect",
+    "smear",
+    "echo",
+    "motion-blur",
+    "velocity",
+    "after-effects",
+    "animation"
+   ]
+  },
+  {
+   "ad": "extended-keyframe",
+   "tip": "component",
+   "tarif": "The never-fully-lands arrival: an element covers most of its move in the first fifth of the duration and creeps the rest to the last frame, ",
+   "etiketler": [
+    "motion",
+    "ease",
+    "arrival",
+    "kinetic-type",
+    "text",
+    "motion-blur",
+    "after-effects",
+    "slide-in",
+    "scale-in"
+   ]
+  },
+  {
+   "ad": "fade-through",
+   "tip": "component",
+   "tarif": "A calm transition primitive that fades one layer out, passes through a wash, and reveals the next layer",
+   "etiketler": [
+    "motion-primitive",
+    "transition",
+    "fade",
+    "crossfade",
+    "scene"
+   ]
+  },
+  {
+   "ad": "filmed-screen",
+   "tip": "component",
+   "tarif": "Your scene, filmed off a screen: perspective, depth of field that follows an element you name, LED sub-pixels and per-shot colour grades. Sh",
+   "etiketler": [
+    "filmed",
+    "screen",
+    "monitor",
+    "led",
+    "camera",
+    "depth-of-field",
+    "html-in-canvas",
+    "shader",
+    "webgl",
+    "effect"
+   ]
+  },
+  {
+   "ad": "focus-blur-resolve",
+   "tip": "component",
+   "tarif": "A premium focus pull from heavy blur to crisp text, then a soft blur-out exit.",
+   "etiketler": [
+    "motion-primitive",
+    "typography"
+   ]
+  },
+  {
+   "ad": "focus-rack",
+   "tip": "component",
+   "tarif": "Focus shifts once between two cards at different apparent depths through synchronized blur, dimming, scale, and parallax.",
+   "etiketler": [
+    "motion-primitive",
+    "camera",
+    "focus",
+    "focus-rack",
+    "depth",
+    "parallax",
+    "emphasize"
+   ]
+  },
+  {
+   "ad": "grade-split-reveal",
+   "tip": "component",
+   "tarif": "The same picture twice, one flat and one finished, with a hard edge sweeping between them. It stops in the middle long enough to compare, th",
+   "etiketler": [
+    "color-grading",
+    "media",
+    "compare",
+    "reveal",
+    "motion-primitive",
+    "grade"
+   ]
+  },
+  {
+   "ad": "grain-field",
+   "tip": "component",
+   "tarif": "A clearly visible accent-tinted dot field drifts over a subtle luminance gradient in an exact ambient loop.",
+   "etiketler": [
+    "motion-primitive",
+    "background",
+    "grain",
+    "dots",
+    "texture",
+    "ambient",
+    "loopable"
+   ]
+  },
+  {
+   "ad": "grain-overlay",
+   "tip": "component",
+   "tarif": "Animated film grain texture overlay using CSS keyframes — adds warmth and analog character to any composition",
+   "etiketler": [
+    "texture",
+    "grain",
+    "overlay",
+    "film"
+   ]
+  },
+  {
+   "ad": "grid-pixelate-wipe",
+   "tip": "component",
+   "tarif": "Transition effect where the screen dissolves into a grid of squares that fade out with staggered timing — use between scenes",
+   "etiketler": [
+    "transition",
+    "wipe",
+    "grid",
+    "pixelate"
+   ]
+  },
+  {
+   "ad": "halftone-dissolve",
+   "tip": "component",
+   "tarif": "Scene A dissolves into scene B through a growing halftone dot field: accent ink dots pop onto a fixed grid smallest-first, each opens into a",
+   "etiketler": [
+    "motion-primitive",
+    "transition",
+    "texture",
+    "halftone",
+    "dissolve"
+   ]
+  },
+  {
+   "ad": "headline-slam",
+   "tip": "component",
+   "tarif": "A heavyweight headline scales down into frame, lands with a deterministic three-frame shake, holds with subtle drift, and whips upward on ex",
+   "etiketler": [
+    "motion-primitive",
+    "typography",
+    "headline",
+    "slam",
+    "impact",
+    "exit"
+   ]
+  },
+  {
+   "ad": "hw-arrow",
+   "tip": "component",
+   "tarif": "Wobbled draw-on arrow with straight, gentle, and swoop curve poses, a four-way stroke texture matrix (plain/soft/sharp/spray), and a travel-",
+   "etiketler": [
+    "handwritten",
+    "annotation",
+    "arrow",
+    "overlay"
+   ]
+  },
+  {
+   "ad": "hw-boil",
+   "tip": "component",
+   "tarif": "Hand-drawn jitter that re-poses every N frames, as seek-safe helpers: pose derives from quantized timeline time through a seeded hash; inclu",
+   "etiketler": [
+    "handwritten",
+    "effect",
+    "annotation"
+   ]
+  },
+  {
+   "ad": "hw-box-label",
+   "tip": "component",
+   "tarif": "Wobbled rounded rectangle draws on — across the authored stroke matrix (plain/soft/sharp/spray) — or drops in and lands with a volume-true c",
+   "etiketler": [
+    "handwritten",
+    "annotation",
+    "overlay"
+   ]
+  },
+  {
+   "ad": "hw-callout-circle",
+   "tip": "component",
+   "tarif": "Wobbled ellipse draws around a target with optional scribble fill and curved connector; the handwritten label pops in WITH momentum and the ",
+   "etiketler": [
+    "handwritten",
+    "annotation",
+    "callout",
+    "overlay"
+   ]
+  },
+  {
+   "ad": "hw-underline",
+   "tip": "component",
+   "tarif": "Hand-drawn squiggle underline, double-pass strikethrough, and bracket marks that draw on",
+   "etiketler": [
+    "handwritten",
+    "annotation",
+    "text-treatment"
+   ]
+  },
+  {
+   "ad": "icon-swap",
+   "tip": "component",
+   "tarif": "A scale-and-blur icon swap primitive for toolbar and action state changes",
+   "etiketler": [
+    "video-primitive",
+    "transition-primitive",
+    "transitions-dev-port",
+    "icon",
+    "swap"
+   ]
+  },
+  {
+   "ad": "inline-highlight",
+   "tip": "component",
+   "tarif": "A clean marker-style inline highlight that animates behind text using a CSS scale variable",
+   "etiketler": [
+    "motion-primitive",
+    "text",
+    "highlight",
+    "caption"
+   ]
+  },
+  {
+   "ad": "input-feedback",
+   "tip": "component",
+   "tarif": "A transitions.dev-inspired input feedback primitive with shake, clear affordance, and success state",
+   "etiketler": [
+    "transition-primitive",
+    "transitions-dev-port",
+    "input",
+    "feedback"
+   ]
+  },
+  {
+   "ad": "iris-reveal",
+   "tip": "component",
+   "tarif": "A circle clip-path opens from an authored origin revealing state B over state A in one confident pass, then holds on B. Classic register dim",
+   "etiketler": [
+    "transition",
+    "iris",
+    "circle-reveal",
+    "clip-path",
+    "bridge",
+    "slots"
+   ]
+  },
+  {
+   "ad": "kinetic-center-build",
+   "tip": "component",
+   "tarif": "Words enter from the right and push the growing phrase left until the final line locks centered.",
+   "etiketler": [
+    "motion-primitive",
+    "text-effects",
+    "kinetic-type",
+    "reveal",
+    "remocn-port"
+   ]
+  },
+  {
+   "ad": "kinetic-type-swap",
+   "tip": "component",
+   "tarif": "A held sentence keeps its fixed text in place while one widest-word masked slot rolls through alternatives and settles on the final option.",
+   "etiketler": [
+    "motion-primitive",
+    "text-effects",
+    "kinetic-type",
+    "word-swap",
+    "reveal"
+   ]
+  },
+  {
+   "ad": "light-sweep-pass",
+   "tip": "component",
+   "tarif": "A traveling key light re-shades a slotted scene: a soft diagonal gradient band crosses the frame once while every per-element highlight and ",
+   "etiketler": [
+    "motion-primitive",
+    "overlay",
+    "light",
+    "sweep",
+    "slots",
+    "deterministic"
+   ]
+  },
+  {
+   "ad": "line-by-line-slide",
+   "tip": "component",
+   "tarif": "Each line enters from the left with staggered slide and exits to the right.",
+   "etiketler": [
+    "motion-primitive",
+    "typography"
+   ]
+  },
+  {
+   "ad": "locked-nucleus-orbit",
+   "tip": "component",
+   "tarif": "A fixed center nucleus anchors deterministic satellite orbits that settle into a composed lockup.",
+   "etiketler": [
+    "motion-primitive",
+    "intro",
+    "reveal",
+    "orbit",
+    "lockup",
+    "deterministic"
+   ]
+  },
+  {
+   "ad": "logo-brand-close",
+   "tip": "component",
+   "tarif": "A display-scale wordmark cascades letter by letter into a centered lockup, the accent brand period lands last, an optional tagline and wide-",
+   "etiketler": [
+    "motion-primitive",
+    "typography",
+    "brand",
+    "logo",
+    "end-card",
+    "close"
+   ]
+  },
+  {
+   "ad": "logo-sting",
+   "tip": "component",
+   "tarif": "A wordmark slams into its final scale, fires one accent ring and one white impact frame, then holds completely still.",
+   "etiketler": [
+    "motion-primitive",
+    "brand",
+    "logo",
+    "sting",
+    "impact",
+    "reveal"
+   ]
+  },
+  {
+   "ad": "marker-checklist-card",
+   "tip": "component",
+   "tarif": "A hand-lettered paper card: marker headline with an underline and a drawn ellipse around one word, then three checklist rows whose checks dr",
+   "etiketler": [
+    "motion-primitive",
+    "handwritten",
+    "checklist",
+    "paper",
+    "marker"
+   ]
+  },
+  {
+   "ad": "marker-highlight",
+   "tip": "component",
+   "tarif": "Display text settles in, then one hand-drawn marker stroke (highlight, circle, underline, or scribble) draws over the emphasized word on cue",
+   "etiketler": [
+    "motion-primitive",
+    "typography",
+    "emphasis",
+    "marker",
+    "deterministic"
+   ]
+  },
+  {
+   "ad": "match-cut",
+   "tip": "component",
+   "tarif": "A circle accelerates into a hard single-frame scene swap, matches the incoming circle exactly, and continues into a smaller resting pose.",
+   "etiketler": [
+    "motion-primitive",
+    "transition",
+    "match-cut",
+    "hard-cut",
+    "continuity"
+   ]
+  },
+  {
+   "ad": "matrix-decode",
+   "tip": "component",
+   "tarif": "Random scramble resolves left-to-right into the target text.",
+   "etiketler": [
+    "motion-primitive",
+    "typography"
+   ]
+  },
+  {
+   "ad": "menu-morph",
+   "tip": "component",
+   "tarif": "A transitions.dev-inspired hamburger and plus-menu morph primitive for compact action menus",
+   "etiketler": [
+    "video-primitive",
+    "transition-primitive",
+    "transitions-dev-port",
+    "menu",
+    "morph"
+   ]
+  },
+  {
+   "ad": "mesh-gradient-bg",
+   "tip": "component",
+   "tarif": "A render-safe mesh gradient using animated radial layers.",
+   "etiketler": [
+    "effect"
+   ]
+  },
+  {
+   "ad": "micro-transitions",
+   "tip": "component",
+   "tarif": "A transitions.dev-inspired pack of badge, dropdown, modal, tabs, tooltip, and success-check micro transitions",
+   "etiketler": [
+    "transition-primitive",
+    "motion-primitive",
+    "transitions-dev-port",
+    "ui",
+    "transition",
+    "microinteraction"
+   ]
+  },
+  {
+   "ad": "mk-emphasis-type",
+   "tip": "component",
+   "tarif": "Oversized low-contrast background word drifting slowly behind the subject — typography as texture",
+   "etiketler": [
+    "typography",
+    "text-treatment",
+    "minimal"
+   ]
+  },
+  {
+   "ad": "mk-usage-arc",
+   "tip": "component",
+   "tarif": "Thin circular gauge that draws on while its percentage counts up; one helper call drives both",
+   "etiketler": [
+    "data-viz",
+    "gauge",
+    "minimal"
+   ]
+  },
+  {
+   "ad": "morph-swap",
+   "tip": "component",
+   "tarif": "Two slotted siblings stacked at one shared center: A holds, then condenses or reshapes into B on a shared 50% 50% transform origin. Condense",
+   "etiketler": [
+    "transition",
+    "morph",
+    "swap",
+    "condense",
+    "reshape",
+    "holdable",
+    "slots"
+   ]
+  },
+  {
+   "ad": "morph-text",
+   "tip": "component",
+   "tarif": "Gooey text morph — cycles through an editable word list using SVG threshold + GSAP-driven blur for a fluid, satisfying transition effect",
+   "etiketler": [
+    "text",
+    "text-effect",
+    "typography",
+    "morph",
+    "gooey",
+    "kinetic",
+    "animation"
+   ]
+  },
+  {
+   "ad": "motion-blur",
+   "tip": "component",
+   "tarif": "After Effects-style motion blur — integrates each element over a shutter window (shutter angle, phase, samples per frame) by sampling the GS",
+   "etiketler": [
+    "effect",
+    "motion-blur",
+    "shutter",
+    "after-effects",
+    "velocity",
+    "animation"
+   ]
+  },
+  {
+   "ad": "number-pop-in",
+   "tip": "component",
+   "tarif": "A transitions.dev-inspired digit pop-in with blur, lift, and staggered value reveal",
+   "etiketler": [
+    "video-primitive",
+    "transition-primitive",
+    "transitions-dev-port",
+    "number",
+    "pop"
+   ]
+  },
+  {
+   "ad": "page-slide",
+   "tip": "component",
+   "tarif": "A transitions.dev-inspired page slide primitive with outgoing and incoming panels",
+   "etiketler": [
+    "video-primitive",
+    "transition-primitive",
+    "transitions-dev-port",
+    "page",
+    "slide"
+   ]
+  },
+  {
+   "ad": "pan-stations",
+   "tip": "component",
+   "tarif": "A lateral camera move across a continuous row of labeled feature stations, with a steady dwell at each stop before the next pan.",
+   "etiketler": [
+    "camera",
+    "pan",
+    "stations",
+    "features",
+    "exhibit",
+    "agitate",
+    "cross-shelved"
+   ]
+  },
+  {
+   "ad": "panel-reveal",
+   "tip": "component",
+   "tarif": "A panel reveal primitive with height expansion and content fade",
+   "etiketler": [
+    "transition-primitive",
+    "transitions-dev-port",
+    "panel",
+    "reveal"
+   ]
+  },
+  {
+   "ad": "paper-collage-reveal",
+   "tip": "component",
+   "tarif": "A scrapbook patchwork of torn paper scraps, each with its own texture and tilt, flutters away in a staggered scatter to reveal the content u",
+   "etiketler": [
+    "collage",
+    "scrapbook",
+    "torn paper",
+    "reveal",
+    "transition",
+    "motion-primitive"
+   ]
+  },
+  {
+   "ad": "parallax-device-dive",
+   "tip": "component",
+   "tarif": "A canonical phone rises into view before the camera pushes through its screen and layered app UI expands to fill the frame.",
+   "etiketler": [
+    "motion-primitive",
+    "camera",
+    "device",
+    "phone",
+    "parallax",
+    "transition"
+   ]
+  },
+  {
+   "ad": "parallax-unzoom",
+   "tip": "component",
+   "tarif": "Reveal transition — focus card scales down from full frame as siblings parallax in to form a grid (reverse of parallax-zoom)",
+   "etiketler": [
+    "transition",
+    "reveal",
+    "unzoom",
+    "parallax",
+    "grid",
+    "hero"
+   ]
+  },
+  {
+   "ad": "parallax-zoom",
+   "tip": "component",
+   "tarif": "Center card scales up to fill the frame while siblings parallax outward — inspired by the eBay Playbook hero transition",
+   "etiketler": [
+    "transition",
+    "zoom",
+    "parallax",
+    "grid",
+    "hero"
+   ]
+  },
+  {
+   "ad": "particle-image-reveal",
+   "tip": "component",
+   "tarif": "A seeded deterministic particle field converges and settles while a slotted image reveals beneath it, the trail thinning until the image hol",
+   "etiketler": [
+    "motion-primitive",
+    "intros-reveals",
+    "particles",
+    "reveal",
+    "canvas",
+    "deterministic"
+   ]
+  },
+  {
+   "ad": "pendulum-swing",
+   "tip": "component",
+   "tarif": "Content hangs from a fixed pivot and swings into rest with gravity-damped oscillation, like a hanging sign settling on its hook.",
+   "etiketler": [
+    "motion-primitive",
+    "physics",
+    "swing",
+    "settle",
+    "reveal"
+   ]
+  },
+  {
+   "ad": "per-word-crossfade",
+   "tip": "component",
+   "tarif": "Words gently fade into place with a short vertical drift for calm keynote rhythm.",
+   "etiketler": [
+    "motion-primitive",
+    "typography"
+   ]
+  },
+  {
+   "ad": "per-word-rise",
+   "tip": "component",
+   "tarif": "Words or characters rise into place in a controlled blur-to-sharp cascade, settle softly on landing, and hold still until the cut (optional ",
+   "etiketler": [
+    "motion-primitive",
+    "text-effects",
+    "typography",
+    "stagger",
+    "reveal"
+   ]
+  },
+  {
+   "ad": "perspective-marquee",
+   "tip": "component",
+   "tarif": "A 3D tilted marquee with depth feel as items roll toward the horizon.",
+   "etiketler": [
+    "motion-primitive",
+    "typography"
+   ]
+  },
+  {
+   "ad": "pull-back-reveal",
+   "tip": "component",
+   "tarif": "A tight stat detail holds, then one decelerating camera pull-back reveals the headline and supporting cards that recontextualize it.",
+   "etiketler": [
+    "motion-primitive",
+    "camera",
+    "pull-back",
+    "reveal",
+    "recontextualize"
+   ]
+  },
+  {
+   "ad": "push-in",
+   "tip": "component",
+   "tarif": "A centered headline gains focus through one slow, continuous camera push and a gentle fade out.",
+   "etiketler": [
+    "motion-primitive",
+    "camera",
+    "push-in",
+    "focus",
+    "emphasize",
+    "holdable"
+   ]
+  },
+  {
+   "ad": "rgb-glitch-text",
+   "tip": "component",
+   "tarif": "RGB-offset text copies jitter briefly for a controlled glitch window.",
+   "etiketler": [
+    "motion-primitive",
+    "typography"
+   ]
+  },
+  {
+   "ad": "rubber-band-bumper",
+   "tip": "component",
+   "tarif": "An outgoing panel pulls against increasing resistance, holds at tension, then snaps past an edge with overshoot as the incoming panel settle",
+   "etiketler": [
+    "motion-primitive",
+    "transition",
+    "rubber-band",
+    "resistance",
+    "overshoot"
+   ]
+  },
+  {
+   "ad": "scan-band",
+   "tip": "component",
+   "tarif": "A diagonal distortion band sweeps once across a clean wordmark, revealing clipped red and cyan offsets only inside the moving band.",
+   "etiketler": [
+    "motion-primitive",
+    "typography",
+    "scan",
+    "chromatic",
+    "distortion",
+    "wordmark"
+   ]
+  },
+  {
+   "ad": "scramble-reveal",
+   "tip": "component",
+   "tarif": "A deterministic hacker-style text reveal that cycles fixed glyph rows and locks the target string from left to right.",
+   "etiketler": [
+    "motion-primitive",
+    "text-effects",
+    "scramble",
+    "reveal",
+    "deterministic"
+   ]
+  },
+  {
+   "ad": "scroll-camera-story",
+   "tip": "component",
+   "tarif": "A compressed forced-scroll cinematic pass: a tall scene of slotted sections travels past the camera top to bottom, depth layers parallax at ",
+   "etiketler": [
+    "camera",
+    "scroll",
+    "parallax",
+    "story",
+    "sections",
+    "slot",
+    "servo"
+   ]
+  },
+  {
+   "ad": "separator",
+   "tip": "component",
+   "tarif": "A one-pixel structural separator with horizontal and vertical variants plus a seek-safe progress reveal",
+   "etiketler": [
+    "video-primitive",
+    "separator",
+    "layout"
+   ]
+  },
+  {
+   "ad": "shared-axis-y",
+   "tip": "component",
+   "tarif": "Per-word vertical shared-axis transition for sharp editorial swaps.",
+   "etiketler": [
+    "motion-primitive",
+    "typography"
+   ]
+  },
+  {
+   "ad": "shared-axis-z",
+   "tip": "component",
+   "tarif": "Scale-based shared-axis transition for focus shifts and context depth.",
+   "etiketler": [
+    "motion-primitive",
+    "typography"
+   ]
+  },
+  {
+   "ad": "shimmer-sweep",
+   "tip": "component",
+   "tarif": "Animated light sweep across text or elements using a CSS gradient mask — ideal for AI accents and premium reveals",
+   "etiketler": [
+    "text",
+    "shimmer",
+    "highlight",
+    "effect"
+   ]
+  },
+  {
+   "ad": "shutter-slam",
+   "tip": "component",
+   "tarif": "One word thrown through six single-property beats under integrated shutter blur — two translate slams, a scale punch, then a full turn about",
+   "etiketler": [
+    "effect",
+    "motion-blur",
+    "shutter",
+    "after-effects",
+    "slam",
+    "animation"
+   ]
+  },
+  {
+   "ad": "skeleton-reveal",
+   "tip": "component",
+   "tarif": "A skeleton loader transition that pulses, then cross-fades into content",
+   "etiketler": [
+    "video-primitive",
+    "transition-primitive",
+    "transitions-dev-port",
+    "skeleton",
+    "reveal"
+   ]
+  },
+  {
+   "ad": "slot-machine-roll",
+   "tip": "component",
+   "tarif": "A vertical reel scrolls characters from one value to another.",
+   "etiketler": [
+    "video-primitive",
+    "motion-primitive",
+    "typography"
+   ]
+  },
+  {
+   "ad": "soft-blur-in",
+   "tip": "component",
+   "tarif": "A soft opacity, blur, and lift reveal for headlines, captions, and product UI callouts",
+   "etiketler": [
+    "motion-primitive",
+    "text",
+    "reveal",
+    "blur"
+   ]
+  },
+  {
+   "ad": "spotlight-card",
+   "tip": "component",
+   "tarif": "A card with a scripted cursor spotlight and lit border.",
+   "etiketler": [
+    "effect"
+   ]
+  },
+  {
+   "ad": "spring-pop",
+   "tip": "component",
+   "tarif": "A badge pops in from a visible near-rest scale, overshoots full size once, and settles cleanly.",
+   "etiketler": [
+    "motion-primitive",
+    "effects",
+    "spring",
+    "overshoot",
+    "pop",
+    "reveal"
+   ]
+  },
+  {
+   "ad": "staggered-fade-up",
+   "tip": "component",
+   "tarif": "Words fade in and slide up one after another with configurable delay.",
+   "etiketler": [
+    "video-primitive",
+    "motion-primitive",
+    "typography"
+   ]
+  },
+  {
+   "ad": "strikethrough-replace",
+   "tip": "component",
+   "tarif": "Draw a strike line across old text, then reveal the replacement.",
+   "etiketler": [
+    "motion-primitive",
+    "typography"
+   ]
+  },
+  {
+   "ad": "success-check",
+   "tip": "component",
+   "tarif": "A success check primitive with ring pop, path draw, and subtle rotate blur",
+   "etiketler": [
+    "video-primitive",
+    "transition-primitive",
+    "transitions-dev-port",
+    "success",
+    "check"
+   ]
+  },
+  {
+   "ad": "svg-line-draw-loader",
+   "tip": "component",
+   "tarif": "An Anime.js-style path drawing loader implemented as a seekable GSAP stroke timeline.",
+   "etiketler": [
+    "video-primitive",
+    "advanced-motion",
+    "anime-inspired",
+    "hyperframes-native"
+   ]
+  },
+  {
+   "ad": "svg-mask-reveal",
+   "tip": "component",
+   "tarif": "A soft token-colored sweep reveals media only through an editable SVG wordmark mask.",
+   "etiketler": [
+    "effect",
+    "svg",
+    "mask",
+    "wordmark",
+    "reveal",
+    "exhibit"
+   ]
+  },
+  {
+   "ad": "svg-stroke-trace",
+   "tip": "component",
+   "tarif": "An authored SVG path draws from its measured length, holds with subtle drift, and optionally fills when the path is closed.",
+   "etiketler": [
+    "motion-primitive",
+    "intro",
+    "reveal",
+    "svg",
+    "stroke",
+    "line-draw"
+   ]
+  },
+  {
+   "ad": "tabs-slide-indicator",
+   "tip": "component",
+   "tarif": "A pill indicator transition that slides between active tabs",
+   "etiketler": [
+    "transition-primitive",
+    "transitions-dev-port",
+    "tabs",
+    "indicator"
+   ]
+  },
+  {
+   "ad": "text-match-cut",
+   "tip": "component",
+   "tarif": "One line of text becomes another mid-move: both ride a single 85 % easy-ease curve and hard-swap at the speed peak, as scale, tracking, or a",
+   "etiketler": [
+    "motion-primitive",
+    "transition",
+    "typography",
+    "match-cut",
+    "hard-cut",
+    "continuity"
+   ]
+  },
+  {
+   "ad": "text-stagger",
+   "tip": "component",
+   "tarif": "A transitions.dev-inspired text stagger primitive with enter, shimmer, and exit-ready words",
+   "etiketler": [
+    "video-primitive",
+    "transition-primitive",
+    "transitions-dev-port",
+    "text",
+    "stagger"
+   ]
+  },
+  {
+   "ad": "text-state-swap",
+   "tip": "component",
+   "tarif": "A text state swap primitive with outgoing blur and incoming lift",
+   "etiketler": [
+    "video-primitive",
+    "transition-primitive",
+    "transitions-dev-port",
+    "text",
+    "swap"
+   ]
+  },
+  {
+   "ad": "texture-mask-text",
+   "tip": "component",
+   "tarif": "CSS luminance masks that cut holes through letterforms - 66 pre-built texture masks from ambientCG PBR color maps",
+   "etiketler": [
+    "text",
+    "text-effect",
+    "effect",
+    "texture",
+    "mask"
+   ]
+  },
+  {
+   "ad": "three-orbiting-cards",
+   "tip": "component",
+   "tarif": "A Three.js-powered orbit scene driven by a paused GSAP timeline for deterministic renders.",
+   "etiketler": [
+    "video-primitive",
+    "three-js",
+    "webgl",
+    "hyperframes-native"
+   ]
+  },
+  {
+   "ad": "ticker-takeover",
+   "tip": "component",
+   "tarif": "A mono ticker rolls through options, locks on a final word with an accent flash, and promotes it into a full-frame headline.",
+   "etiketler": [
+    "motion-primitive",
+    "typography",
+    "ticker",
+    "slot-machine",
+    "headline",
+    "reveal"
+   ]
+  },
+  {
+   "ad": "tilt-card",
+   "tip": "component",
+   "tarif": "A transitions.dev-inspired tilt card primitive with depth layers and hover-style parallax",
+   "etiketler": [
+    "video-primitive",
+    "transition-primitive",
+    "transitions-dev-port",
+    "card",
+    "tilt"
+   ]
+  },
+  {
+   "ad": "titlecard-calm",
+   "tip": "component",
+   "tarif": "A restrained title card where a mono kicker and generous grotesque headline fade upward, drift almost imperceptibly, and exit cleanly.",
+   "etiketler": [
+    "motion-primitive",
+    "typography",
+    "title-card",
+    "calm",
+    "orient"
+   ]
+  },
+  {
+   "ad": "titlecard-lockup",
+   "tip": "component",
+   "tarif": "The calm breather titlecard: an optional mono kicker fades up, the wordmark settles dead-center with one restrained move, a hairline rule dr",
+   "etiketler": [
+    "motion-primitive",
+    "typography",
+    "title-card",
+    "lockup",
+    "breather",
+    "orient"
+   ]
+  },
+  {
+   "ad": "top-down-letters",
+   "tip": "component",
+   "tarif": "Letters descend from above in a pronounced staircase with zero blur.",
+   "etiketler": [
+    "video-primitive",
+    "motion-primitive",
+    "typography"
+   ]
+  },
+  {
+   "ad": "torn-paper-rip",
+   "tip": "component",
+   "tarif": "A fibrous paper tear runs across the frame: the torn sheet shows its white paper core along the edge and lifts away on a soft shadow, leavin",
+   "etiketler": [
+    "torn paper",
+    "paper rip",
+    "paper tear",
+    "transition",
+    "texture",
+    "motion-primitive"
+   ]
+  },
+  {
+   "ad": "tracking-in",
+   "tip": "component",
+   "tarif": "A precise letter-spacing reveal for premium headings and interface labels",
+   "etiketler": [
+    "motion-primitive",
+    "text",
+    "reveal",
+    "typography"
+   ]
+  },
+  {
+   "ad": "type-match-cut",
+   "tip": "component",
+   "tarif": "A headline splits vertically around an incoming panel, which grows from the negative space and takes the frame as the words exit through opp",
+   "etiketler": [
+    "motion-primitive",
+    "transition",
+    "typography",
+    "match-cut",
+    "continuity"
+   ]
+  },
+  {
+   "ad": "typewriter",
+   "tip": "component",
+   "tarif": "Character-by-character text reveal with a deterministic blinking cursor.",
+   "etiketler": [
+    "video-primitive",
+    "motion-primitive",
+    "typography"
+   ]
+  },
+  {
+   "ad": "variable-axis-type",
+   "tip": "component",
+   "tarif": "A locked one-line headline whose weight or width axis morphs into a decisive emphasis beat.",
+   "etiketler": [
+    "typography",
+    "variable-font",
+    "kinetic-type",
+    "axis",
+    "emphasize"
+   ]
+  },
+  {
+   "ad": "vignette",
+   "tip": "component",
+   "tarif": "Cinematic radial vignette overlay using a pure-CSS gradient — darkens the edges to pull focus toward the center",
+   "etiketler": [
+    "vignette",
+    "overlay",
+    "cinematic",
+    "effect"
+   ]
+  },
+  {
+   "ad": "vox-annotate",
+   "tip": "component",
+   "tarif": "The Vox-style annotate gesture: a keyword in a held sentence gets a hand-drawn marker while a thin connector draws up to a mono callout labe",
+   "etiketler": [
+    "motion-primitive",
+    "typography",
+    "annotation",
+    "marker",
+    "deterministic"
+   ]
+  },
+  {
+   "ad": "whip-pan-cut",
+   "tip": "component",
+   "tarif": "A full-frame whip pan: scene A whips off laterally with capped directional motion blur while scene B enters in the same direction at matched",
+   "etiketler": [
+    "transition",
+    "whip-pan",
+    "motion-blur",
+    "velocity-match",
+    "speed-ramp",
+    "bridge",
+    "slots"
+   ]
+  },
+  {
+   "ad": "whiteboard-ink",
+   "tip": "component",
+   "tarif": "A whiteboard sketch draws one measured stroke at a time while a pen nib follows the active tip. Preset sketches (bulb, flow, rocket) or your",
+   "etiketler": [
+    "motion-primitive",
+    "intro",
+    "reveal",
+    "svg",
+    "whiteboard",
+    "line-draw",
+    "slot"
+   ]
+  },
+  {
+   "ad": "wordmark-tiles",
+   "tip": "component",
+   "tarif": "A wordmark resolves from deterministic color noise into correctly cropped glyph tiles through a spatially modulated GSAP wave.",
+   "etiketler": [
+    "typography",
+    "wordmark",
+    "tiles",
+    "raster",
+    "reveal"
+   ]
+  },
+  {
+   "ad": "yt-camera-move",
+   "tip": "component",
+   "tarif": "Dynamic zoom, slide, and 3D tilt-pan helpers for any wrapper (video, include, card) with cubic-easing defaults and an edge-defocus pulse ove",
+   "etiketler": [
+    "camera",
+    "zoom",
+    "effect",
+    "creator"
+   ]
+  },
+  {
+   "ad": "yt-circle-pointer",
+   "tip": "component",
+   "tarif": "Draw-on annotation ellipse around a target plus a countdown chip that pulses each tick",
+   "etiketler": [
+    "annotation",
+    "countdown",
+    "overlay"
+   ]
+  },
+  {
+   "ad": "yt-feather-highlight",
+   "tip": "component",
+   "tarif": "Dims the frame except a feathered ellipse; the hole's position and size are CSS variables, so helpers glide the spotlight between targets",
+   "etiketler": [
+    "highlight",
+    "spotlight",
+    "effect",
+    "overlay"
+   ]
+  },
+  {
+   "ad": "yt-screen-warp",
+   "tip": "component",
+   "tarif": "Grid, scanline, vignette, and sheen overlay plus a 3D-warp wrapper class that makes footage read as if playing on a physical display",
+   "etiketler": [
+    "effect",
+    "overlay",
+    "texture"
+   ]
+  },
+  {
+   "ad": "zoom-through-transition",
+   "tip": "component",
+   "tarif": "A transition that zooms through a focal card into the next scene.",
+   "etiketler": [
+    "transition-primitive"
+   ]
+  }
+ ]
+}

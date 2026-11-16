@@ -1,0 +1,143 @@
+{
+  "model": "gemini-2.5-flash",
+  "parcalar": [
+    {
+      "etiket": "KLIP ilan",
+      "dosya": "varliklar/gercek-ilan-1/ilan.mp4",
+      "tur": "video",
+      "kalite": 6,
+      "kamera": "Elde çekim, dinamik",
+      "kullanim": "Video boyunca kullanılacak"
+    }
+  ],
+  "edit_turu": "Emlak Tanıtım Filmi - Dinamik Akış ve Temiz Detaylar",
+  "hikaye": "Ataşehir'deki modern ve aydınlık bir 3+1 dairenin ferah iç mekanlarını, şık mutfağını, geniş balkonunu ve konforlu yatak odalarını vurgulayan, hızlı tempolu ve davetkar bir tanıtım filmi. Evin çağdaş tasarımı ve pratik kullanım alanları öne çıkarılıyor.",
+  "planlar": [
+    {
+      "etiket": "Koridor",
+      "baslangic_sn": 0.0,
+      "neden": "Evin modern ve aydınlık girişini, mermer zemini ve gömme aydınlatmaları net bir şekilde gösteriyor."
+    },
+    {
+      "etiket": "Mutfak",
+      "baslangic_sn": 20.0,
+      "neden": "Beyaz ve şık mutfak dolapları, entegre beyaz eşyalar ve yemek alanı açıkça görülüyor; dağınıklık minimize edilmiş."
+    },
+    {
+      "etiket": "Balkon",
+      "baslangic_sn": 35.0,
+      "neden": "Geniş, camla kapatılmış balkonun ferahlığını ve şehir manzarasını gözler önüne seriyor, aydınlık ve temiz bir görüntü."
+    },
+    {
+      "etiket": "Yatak Odası 1",
+      "baslangic_sn": 105.0,
+      "neden": "Modern yatak ve yatak örtüleri ile temiz, düzenli bir yatak odası. Evin konforunu vurguluyor."
+    },
+    {
+      "etiket": "Gömme Dolaplı Koridor",
+      "baslangic_sn": 115.0,
+      "neden": "Beyaz, şeffaf panelli gömme dolaplar evin depolama çözümlerini ve şık tasarımını sergiliyor."
+    },
+    {
+      "etiket": "Salon",
+      "baslangic_sn": 129.0,
+      "neden": "Modern oturma grupları ve halı ile geniş bir yaşam alanı. Misafir ağırlama ve dinlenme için ideal."
+    },
+    {
+      "etiket": "Ana Banyo",
+      "baslangic_sn": 148.0,
+      "neden": "Şık lavabo, klozet ve duşakabin ile modern ve temiz banyo tasarımı."
+    },
+    {
+      "etiket": "Yatak Odası 2",
+      "baslangic_sn": 203.0,
+      "neden": "Çift kişilik yatak ve ayna detaylı dolaplarla ferah ve düzenli diğer bir yatak odası."
+    }
+  ],
+  "plan_suresi_sn": 3.2,
+  "gecisler": [
+    {
+      "ad": "Dikey Süzülme",
+      "kutuphane": "dikey_jaluzi",
+      "yontem": "İlk planın yerini yeni plan, dikey jaluzi perdeler gibi eş zamanlı açılan dikey dilimlerle alacak. Bu geçiş, yeni mekânı zarif ve düzenli bir şekilde ortaya çıkaracak, geçiş süresi 0.7 saniye.",
+      "ses": "Hafif, yumuşak bir 'swish' sesi geçişe eşlik edecek."
+    },
+    {
+      "ad": "Hızlandırılmış Kesme",
+      "kutuphane": "yeni",
+      "yontem": "Önceki video hareketinin yönünde hızlanarak gerçekleşen keskin bir geçiş. Görüntü, kamera hareketini takip ederek bir sonraki plana ani ve enerjik bir şekilde atlayacak. Geçiş süresi 0.3 saniye.",
+      "ses": "Keskin ve hızlı bir 'woosh' sesi."
+    },
+    {
+      "ad": "Yukarı Savrulma",
+      "kutuphane": "motor_gecis_whip_yukari",
+      "yontem": "Giden mekân yukarı doğru hızla savrulurken, yeni mekân aynı hız ve hareket rampasıyla aşağıdan yukarı doğru dinamik bir geçişle yerleşecek. Balıkçı teknesindeki hareket yönüyle uyumlu.",
+      "ses": "Yüksek tonlu, ivmelenen bir rüzgar sesi."
+    },
+    {
+      "ad": "Hızlandırılmış Kesme",
+      "kutuphane": "yeni",
+      "yontem": "Önceki video hareketinin yönünde hızlanarak gerçekleşen keskin bir geçiş. Görüntü, kamera hareketini takip ederek bir sonraki plana ani ve enerjik bir şekilde atlayacak. Geçiş süresi 0.3 saniye.",
+      "ses": "Keskin ve hızlı bir 'woosh' sesi."
+    },
+    {
+      "ad": "Dairesel Açılım",
+      "kutuphane": "dairesel_iris",
+      "yontem": "Giden planın ortasından büyüyen dairesel bir iris, yeni planı kadraja açarak zarif ve odaklanmış bir geçiş sağlayacak. Geçiş süresi 0.8 saniye.",
+      "ses": "Yavaşça yükselen ve dağılan ince bir çan sesi."
+    },
+    {
+      "ad": "Hızlandırılmış Kesme",
+      "kutuphane": "yeni",
+      "yontem": "Önceki video hareketinin yönünde hızlanarak gerçekleşen keskin bir geçiş. Görüntü, kamera hareketini takip ederek bir sonraki plana ani ve enerjik bir şekilde atlayacak. Geçiş süresi 0.3 saniye.",
+      "ses": "Keskin ve hızlı bir 'woosh' sesi."
+    },
+    {
+      "ad": "Sinema Perdesi",
+      "kutuphane": "sinema_perdesi",
+      "yontem": "Mevcut planın ortasındaki yatay bir açıklık yukarı ve aşağı doğru genişleyerek yeni planı sinematik bir perde açılımı gibi gösterecek. Geçiş süresi 0.9 saniye.",
+      "ses": "Yumuşak ve yayvan bir 'kumaş açılma' sesi."
+    }
+  ],
+  "isik_renk": "Tüm film boyunca 'renk_sampanya' profili uygulanacak: yumuşak şampanya orta tonları ve soğuk gölgelerle sakin bir iç mekan görünümü verilecek. Video kalitesindeki düşüklük göz önüne alınarak, görüntüye hafif bir keskinleştirme ve titremeyi gideren bir sabitleme uygulanacak. Ortam ışığı dengelenerek daha doğal ve çekici bir atmosfer yaratılacak.",
+  "kutuphane_secimleri": {
+    "acilis": "hf:oval_acilis",
+    "kapanis": "kapanis_panel",
+    "isik": "isik_tozu",
+    "renk": "renk_sampanya",
+    "yazi": "harf_maskesi"
+  },
+  "isik_efektleri": "Özellikle koridor ve balkon gibi aydınlık alanlarda 'isik_tozu' efekti kullanılacak: küçük, yarı saydam ışık tanecikleri yavaşça yukarı süzülerek mekana canlılık ve derinlik katacak. Bu efekt, planların durağan anlarında yaklaşık 1.5 saniye boyunca aktif olacak.",
+  "acilis": "Video siyahtan 'hf:oval_acilis' efektiyle başlayacak. Yumuşak kenarlı oval bir açıklık merkezden genişleyerek ilk görüntüyü siyahın içinden zarifçe ortaya çıkaracak. Bu açılış 1.5 saniye sürecek ve ardından ilk plan kadraja tamamen yerleşecek.",
+  "kapanis": "Son plandan 'kapanis_panel' kapanış kartına geçiş, sağdan kayarak gelen düzgün bir panel ile olacak. Panel üzerinde 'YERİNDE GÖRÜN' logosu üst kısımda, '0 (5XX) XXX XX XX' telefon yer tutucusu ortada ve 'Krediler' en altta yer alacak. Kart, 3 saniye boyunca ekranda kalacak ve son 0.6 saniyede siyaha yumuşak bir geçişle kapanacak.",
+  "yazi": {
+    "gorunum": "Yazı tipi 'motor_font_segoe_ince' (ince, zarif sans serif karakter), boyut 80px, renk #E0E0E0 (açık gri, neredeyse beyaz). Metinler ekranın üst orta kısmında, hafif şeffaf bir arka plan bloğu üzerinde yer alacak.",
+    "animasyon": "'harf_maskesi' efekti kullanılarak harfler sabit bir açıklıktan yukarı yükselir, harf araları açılarak başlık yerleşir ve 1.5 saniye sonra yavaşça dışarı kaybolur. Bu, modern ve minimal bir his yaratır, görüntüyü engellemez."
+  },
+  "basliklar": [
+    {
+      "plan_no": 0,
+      "metin": "GENİŞ YAŞAM ALANI"
+    },
+    {
+      "plan_no": 2,
+      "metin": "ŞEHİR MANZARASI"
+    },
+    {
+      "plan_no": 5,
+      "metin": "KONFORLU SALON"
+    },
+    {
+      "plan_no": 7,
+      "metin": "FERAH YATAK ODASI"
+    }
+  ],
+  "muzik": {
+    "tarif": "Modern, minimal elektronik/indie, orta-hızlı (~110-120 BPM), ritmik synth ve hafif perküsyonlarla enerjik ve çağdaş bir atmosfer.",
+    "secim": "wallpaper.mp3",
+    "baslangic_sn": 5.0,
+    "neden": "Evin modern ve temiz estetiğine uygun, genç ve dinamik bir his veren, ancak lüks vurgusunu kaybetmeyen bir ritim sunuyor. Video temposuna iyi eşlik eder ve görüntülere uyumlu bir enerji katıyor."
+  },
+  "seslendirme_metni": "Ataşehir'de, Malatya Caddesi cepheli bu ferah 3+1 dairede, çift banyo ve tek balkon ile şehir yaşamının konforunu keşfedin. Geniş ve aydınlık odalar, modern mimariyle buluşuyor. Burası sizin yeni yuvanız.",
+  "gerekce": "Bu kurgu, telefonla çekilmiş dikey videonun sınırlılıklarını minimize ederken, evin en çekici özelliklerini modern ve akıcı bir anlatımla ön plana çıkarıyor. 'Renk_sampanya' tonları, evin aydınlık ve ferah yapısını desteklerken, 'isik_tozu' gibi ince efektler videoya premium bir dokunuş katıyor. Seçilen geçişler ('dikey_jaluzi', 'motor_gecis_whip_yukari', 'dairesel_iris', 'sinema_perdesi') hem gösterişli hem de birbirinden farklı olup, 'hızlandırılmış kesme'lerle dengelenerek dinamik bir tempo sağlıyor. Özellikle 'motor_gecis_whip_yukari' geçişi, videonun doğal kamera hareketlerini takip ederek akışkanlığı artırıyor. Yazı tipi ve animasyonu, evin modern mimarisine uygun sade ve şık bir görünüm sunarken, okunabilirliği koruyor. Müzik seçimi, evin hedef kitlesine hitap eden çağdaş ve enerjik bir atmosfer yaratıyor. Dağınık veya insan içeren anlar dikkatle çıkarılarak profesyonel bir sunum elde edildi."
+}

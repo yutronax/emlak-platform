@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { PanelTransition } from "@/components/app-shell/panel-transition";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -46,6 +47,7 @@ function badgeClass(status: OrderStatus): string {
 }
 
 export default async function AgentVideosPage() {
+  await connection();
   const supabase = await createClient();
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) {

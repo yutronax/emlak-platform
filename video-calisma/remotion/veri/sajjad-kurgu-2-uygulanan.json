@@ -1,0 +1,126 @@
+{
+ "konsept": "İhtişamlı Mimarisi ve İnce Detaylarıyla Lüks Yaşam Turları",
+ "muzik": {
+  "dosya": "medya/luxury-real-estate.mp3",
+  "baslangic_sn": 0,
+  "neden": "Kurumsal ve güven veren piyano-yaylı armonisi, modern ve lüks mimari detayları kusursuzca destekler."
+ },
+ "renk_tonu": "sinematik",
+ "font": {
+  "baslik": "Cinzel",
+  "alt": "Montserrat"
+ },
+ "vurgu_rengi": "#D4AF37",
+ "acilis": {
+  "teknik": "sonucla_basla",
+  "klipler": [
+   {
+    "video": "medya/sajjad/tavan.mp4",
+    "kesit_bas_sn": 2.0
+   }
+  ],
+  "stil": "isik",
+  "metin": "MİMARİ DOKUNUŞLARLA|TASARLANMIŞ YAŞAM",
+  "sure_sn": 1.4,
+  "ses": "parilti"
+ },
+ "planlar": [
+  {
+   "klip": "tavan",
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 6.5,
+   "efekt": {
+    "ad": "parilti_toz",
+    "an_sn": 1.0
+   },
+   "yazi": {
+    "metin": "ÖZEL TASARIM",
+    "alt": "Cam Damla Avize Detayları",
+    "stil": "yay",
+    "konum": "orta",
+    "giris_sn": 1.0
+   },
+   "sonraki_gecis": {
+    "ad": "isik_sizinti",
+    "sure_sn": 0.6,
+    "ses": "hava"
+   },
+   "neden": "Göz alıcı cam damla avizeler ve gizli tavan ışıklandırmasıyla mekanın yüksek mimari kalitesi ilk saniyeden hissettirilir.",
+   "video": "medya/sajjad/tavan.mp4"
+  },
+  {
+   "klip": "salon",
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 11.0,
+   "efekt": {
+    "ad": "isik_huzmesi",
+    "an_sn": 2.0
+   },
+   "yazi": {
+    "metin": "GENİŞ VE FERAH",
+    "alt": "Gizli Işıklandırmalı TV Ünitesi",
+    "stil": "cizgi",
+    "konum": "alt",
+    "giris_sn": 1.5
+   },
+   "sonraki_gecis": {
+    "ad": "bulanik_kayma_sag",
+    "sure_sn": 0.5,
+    "ses": "whoosh"
+   },
+   "neden": "Salonun geniş yapısı, estetik ışıklı raflar ve TV ünitesi mekana derinlik katarak tanıtılır.",
+   "video": "medya/sajjad/salon.mp4"
+  },
+  {
+   "klip": "tavan",
+   "kesit_bas_sn": 6.5,
+   "sure_sn": 7.0,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "sonraki_gecis": {
+    "ad": "yakin_cozulme",
+    "sure_sn": 0.6,
+    "ses": "hava"
+   },
+   "neden": "Tavandan salona kesintisiz süzülen kamera açısı mekanlar arasındaki mimari bütünlüğü vurgular.",
+   "video": "medya/sajjad/tavan.mp4"
+  },
+  {
+   "klip": "yatak",
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 9.8,
+   "efekt": {
+    "ad": "vinyet",
+    "an_sn": 1.0
+   },
+   "yazi": {
+    "metin": "DİNLENME ALANI",
+    "alt": "Oval Tavan ve Işıklı Nişler",
+    "stil": "kontur",
+    "konum": "orta",
+    "giris_sn": 1.2
+   },
+   "sonraki_gecis": {
+    "ad": "cozulme",
+    "sure_sn": 0.6,
+    "ses": "parilti"
+   },
+   "neden": "Yatak odasındaki özel oval tavan tasarımı ve sıcak ışıklı nişler huzurlu bir mahremiyet alanı sunar.",
+   "video": "medya/sajjad/yatak.mp4"
+  }
+ ],
+ "gerekce": "Cam damla avizelerin ihtişamlı etkisini açılışta kullanarak izleyicinin dikkatini hemen çeken sinematik bir konsept oluşturuldu. Cinzel ve Montserrat font kombinasyonu altın sarısı vurgu rengi ile birleşerek premium emlak algısını tamamlar.",
+ "kapanis": {
+  "logo": "medya/logo.png",
+  "cagri": "YERİNDE GÖRÜN",
+  "telefon": "0 (5XX) XXX XX XX",
+  "sure_sn": 4.5,
+  "logo_animasyonu": "isik",
+  "notlar": [
+   "Görüntü: Pexels · İNZA ÖRNEK KURGU"
+  ]
+ }
+}

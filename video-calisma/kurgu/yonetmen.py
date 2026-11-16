@@ -71,12 +71,34 @@ kullanımı SERBEST. İzleyici ilk 2 saniyede "bu öncekilerden bambaşka" demel
 "edit_turu" alanında türünü ve hangi kalıpları kırdığını açıkça yaz."""
 
 
+def efekt_katalogu(kaynak=None):
+    """kurgu/efektler/KATALOG.json → yönetmene verilecek kısa liste (ad, tür, tarif, gösterişli)."""
+    yol = os.path.join(KOK, "kurgu", "efektler", "KATALOG.json")
+    k = json.load(open(yol, encoding="utf-8")) if os.path.exists(yol) else []
+    k = k.get("efektler", k) if isinstance(k, dict) else k
+    liste = [{x: e.get(x) for x in ("ad", "tur", "tarif", "gosterisli")} | {"kaynak": e.get("kaynak", "kutuphane")} for e in k]
+    hf = os.path.join(KOK, "kurgu", "efektler", "HYPERFRAMES-KATALOG.json")
+    if os.path.exists(hf):     # HyperFrames hazır parçaları (HTML; Codex render edip bindirir)
+        liste += [{"ad": "hf:" + e["ad"], "tur": e["tip"], "tarif": e["tarif"], "kaynak": "hyperframes"}
+                  for e in json.load(open(hf, encoding="utf-8"))["efektler"]]
+    if kaynak == "kutuphane":
+        liste = [e for e in liste if e["kaynak"] != "hyperframes"]
+    elif kaynak:
+        liste = [e for e in liste if e["kaynak"] == kaynak]
+    return json.dumps(liste, ensure_ascii=False)
+
+
 def gorev(etiketler, gecmis, yon="", radikal=False):
     onceki = json.dumps([e.get("yontem_ozet") or {k: e.get(k) for k in ("renk", "yazi_stili")} for e in gecmis[-3:]],
                         ensure_ascii=False)
     return f"""Sen ödüllü bir emlak tanıtım filmi YÖNETMENİSİN. Kod yazmıyorsun: sadece YÖNTEMİ tarif ediyorsun; bir
 kurgucu (ffmpeg uzmanı) tarifini birebir uygulayacak. TÜM yaratıcı kararlar senin: ışık/renk, her geçişin nasıl olacağı,
-yazının nasıl görünüp hareket edeceği, yazı tipi karakteri, ritim, seslendirme. Hazır menü YOK. Önceki videolara BENZEME.
+yazının nasıl görünüp hareket edeceği, yazı tipi karakteri, ritim, seslendirme. Önceki videolara BENZEME.
+İKİ EFEKT KAYNAĞIN VAR, ikisi de eşit, seçim tamamen senin:
+A) KENDİ BETİKLERİMİZ (ffmpeg/OpenCV, test edilmiş): {efekt_katalogu("kutuphane")}
+B) HYPERFRAMES PARÇALARI (hazır HTML animasyonları — geçiş, yazı, ışık/doku kaplaması, kamera; "hf:" önekli): {efekt_katalogu("hyperframes")}
+Geçiş, açılış, kapanış, ışık, renk ve yazı için bu iki listeden dilediğini seç, karıştır; seçtiğin adı "kutuphane" alanına yaz.
+İkisinde de uygun bir şey yoksa yeni teknik tarif edebilirsin: "kutuphane": "yeni" (filmde en fazla 2 yeni).
 Önceki videolarda kullanılanlar (tekrarlama): {onceki}
 {('Müşterinin isteği — bir YÖN, sınır değil; nasıl yorumlayacağın tamamen sana kalmış: ' + yon) if yon else ''}
 
@@ -100,8 +122,9 @@ SADECE şu JSON'u döndür:
  "hikaye": "...",
  "planlar": [{{"etiket": "...", "baslangic_sn": <klip içi sn>, "neden": "..."}}],
  "plan_suresi_sn": 2.2-4.0,
- "gecisler": [{{"ad": "kısa özgün ad", "yontem": "bu kesimde ne olacak, somut tarif", "ses": "nasıl bir ses"}}],
+ "gecisler": [{{"ad": "kısa özgün ad", "kutuphane": "<kütüphane adı> | yeni", "yontem": "bu kesimde ne olacak, somut tarif", "ses": "nasıl bir ses"}}],
  "isik_renk": "tüm filmin ışık ve renk yöntemi, somut",
+ "kutuphane_secimleri": {{"acilis": "<ad>|yeni", "kapanis": "<ad>|yeni", "isik": "<ad>|yeni|yok", "renk": "<ad>|yeni", "yazi": "<ad>|yeni"}},
  "isik_efektleri": "film boyunca ışıkla yapılacak anlar (parlama, ışık süzmesi, gölge geçişi vb.) — hangi planda, nasıl; yoksa boş",
  "acilis": "filmin ilk 1-2 saniyesi nasıl açılsın (siyahtan, ışıktan, bulanıktan, maskeden...) — somut tarif",
  "kapanis": "son plandan logolu kapanış kartına nasıl geçilsin ve kart nasıl belirsin/kapansın — somut tarif (kartın içeriği sabit: logo, YERİNDE GÖRÜN, telefon yer tutucusu, krediler)",
@@ -143,6 +166,14 @@ def sor(video, metin, gecmis_mesaj=None):
 CODEX_GOREV = """Sen kurgucusun. Yönetmen (Gemini) bir video için YÖNTEM tarif etti: {yontem}
 Görevin bu tarifleri BİREBİR uygulayan bir brif JSON'u yazmak ve videoyu render etmek. Yaratıcı karar verme; tarifi değiştirme,
 sadece teknik olarak gerçekleştir. Tarif teknik olarak imkânsızsa en yakın uygulamayı yap ve raporda belirt.
+EFEKT KÜTÜPHANESİ: kurgu/efektler/ (katalog: kurgu/efektler/KATALOG.json, açıklama: EFEKT-KUTUPHANESI.md). Yönetmen bir efekt için
+"kutuphane": "<ad>" dediyse O BETİĞİ ÇAĞIR (kaynak "motor" ise motordaki karşılığını kullan); yeniden yazma. "yeni" dediyse
+uygula, VE çalışıyorsa aynı ortak arayüzle kurgu/efektler/<ad>.py olarak kütüphaneye ekle, KATALOG.json ve
+EFEKT-KUTUPHANESI.md'ye kaydını yaz, cikti/efekt-ornek/<ad>.jpg örneğini üret. Kütüphane betiğinde hata bulursan betiği düzelt.
+"hf:<ad>" seçildiyse bu bir HyperFrames parçasıdır (katalog: kurgu/efektler/HYPERFRAMES-KATALOG.json): hyperframes/ altında
+`npx hyperframes add <ad>` ile kur, gerekli kısmı 1920x1080 olarak render et (saydam kaplama ise alfa/yeşil zeminle) ve ffmpeg ile
+filme bindir. Renk/font değişkenlerini filmin görünümüne uydur, İngilizce örnek metin bırakma. Çalışan kurulumu
+kurgu/efektler/hf_<ad>.py sarmalayıcısı olarak kütüphaneye ekle ve KATALOG.json'a kaynak:"hyperframes" ile kaydet.
 
 Motor: kurgu/gecis_motoru.py (oku). Brif alanları (örnek: kurgu/brifler/yatay-pexels-v5.json):
 - planlar: [["<dosya yolu>", <baslangic_sn>]] — etiket→dosya: {harita}
@@ -157,7 +188,7 @@ Motor: kurgu/gecis_motoru.py (oku). Brif alanları (örnek: kurgu/brifler/yatay-
 - yazilar: [[plan_no, "METİN"]], ad: "{ad}", alt_bant: "İNZA · ÖRNEK KURGU".
 - acilis / kapanis / isik_efektleri: motorda karşılığı yoksa, motorun çıktısı (cikti/{ad}.mp4) üzerinde AYRI bir ffmpeg
   geçişiyle uygula (ör. kurgu/projeler/yatay/{ad}/son_dokunus.py yazıp çalıştır; sonuç yine cikti/{ad}.mp4 olsun, ses korunsun).
-  Kapanış kartının İÇERİĞİ (logo, YERİNDE GÖRÜN, telefon yer tutucusu, krediler) mutlaka bulunmalı ve okunmalı; ama kartın
+  Kapanış kartının İÇERİĞİ (logo, YERİNDE GÖRÜN, telefon yer tutucusu, "Seslendirme yapay zekâ ile üretildi" notu, müzik/görüntü kredileri) mutlaka bulunmalı ve okunmalı; ama kartın
   tasarımı (zemin, yerleşim, renk, beliriş/kapanış) yönetmenin tarifine göre tamamen değişebilir.
 - Yönetmenin tarif ettiği edit türü motorun yapısına (hız rampalı tur) hiç uymuyorsa motoru kullanmak zorunda değilsin:
   kurgu/projeler/yatay/{ad}/ altına kendi ffmpeg betiğini yaz ve cikti/{ad}.mp4'ü onunla üret (seslendirme: kurgu/yz_ses.py,
@@ -167,9 +198,23 @@ Brifi kurgu/brifler/{ad}.json olarak yaz, sonra çalıştır:
 Hata verirse düzelt ve tekrar çalıştır. Bittiğinde cikti/{ad}.mp4 var olmalı.
 Yönetmen tarifinde EFEKT YOĞUNLUĞU KURALI var: her ~4–5 sn'de en fazla bir gösterişli geçiş, iki gösterişli geçiş arka arkaya
 gelmez (araya sade geçiş), her mekâna ≥1,8 sn efektsiz an. Tarif bunu çiğniyorsa kurala uydur ve raporla.
-Kurallar: motorun logolu kapanış kartını KESME. Başlıklar her arka planda okunur olmalı (gerekirse gölge/koyu bant ekle;
+Kurallar: motorun logolu kapanış kartını KESME. Başlıklar her arka planda okunur olmalı (gölge kullan; başlık arkasına bant/kutu KOYMA;
 tarifin görünümünü koru) — her başlıktan bir kare alıp bakarak doğrula. Mevcut betikleri değiştirme (zorunluysa raporla). Gemini anahtarını yazdırma. Fiyat/m²/telefon uydurma.
 Rapor (Türkçe, kısa): her tarif nasıl uygulandı, tam uygulanamayan neydi."""
+
+
+def elestiri_al(ad, yontem):
+    """Bitmiş filmi Gemini'ye izletir → cikti/<ad>-elestiri.md. Hata filmi bozmaz, sadece uyarır."""
+    video = os.path.join(KOK, "cikti", f"{ad}.mp4")
+    ek = ("NOT: Bu film 16:9 yatay (CapCut değil, ffmpeg/OpenCV ile kurgulandı). Yönetmenin hedeflediği yöntem: "
+          f"{yontem.get('edit_turu', '')} — {str(yontem.get('hikaye', ''))[:300]}. "
+          "Yöntem filme gerçekten yansımış mı, efekt yoğunluğu (gösterişli geçiş ~4–5 sn'de bir, arka arkaya değil) "
+          "ve yazı okunurluğu açısından da değerlendir.")
+    try:
+        subprocess.run([sys.executable, "-X", "utf8", os.path.join(KOK, "izlet.py"), video, ek], cwd=KOK, check=True)
+        print("eleştiri:", os.path.join(KOK, "cikti", f"{ad}-elestiri.md"))
+    except Exception as h:
+        print("UYARI: eleştiri alınamadı:", h)
 
 
 def codex_calistir(ad, yontem, harita):
@@ -206,7 +251,7 @@ def main():
          ["", "## Planlar", ""] + [f"- {p['etiket']} @ {p['baslangic_sn']} sn — {p['neden']}" for p in c["planlar"]] + \
          ["", f"**Seslendirme:** {c['seslendirme_metni']}", "", f"**Gerekçe:** {c['gerekce']}", "", "## Tüm parçalar", "",
           "| Etiket | Mekân | Kalite | Kamera | Kullanım |", "|---|---|---|---|---|"] + \
-         [f"| {p['etiket']} | {p['mekan']} | {p['kalite']} | {p['kamera']} | {p['kullanim']} |" for p in c["parcalar"]]
+         [f"| {p.get('etiket','')} | {p.get('mekan','')} | {p.get('kalite','')} | {p.get('kamera','')} | {p.get('kullanim','')} |" for p in c["parcalar"]]
     mp = os.path.join(KOK, "cikti", f"{ad}-yonetmen.md")
     open(mp, "w", encoding="utf-8").write("\n".join(md) + "\n")
     print("yöntem:", yp, "\nnot:", mp)
@@ -214,6 +259,7 @@ def main():
         harita = {e["etiket"]: e["dosya"] for e in etiketler}
         print("kurgucu (Codex) çalışıyor…")
         print("rapor:", codex_calistir(ad, c, harita))
+        elestiri_al(ad, c)
         if os.path.exists(gp):      # geçmişe Gemini'nin yöntem özetini ekle (bir sonraki video benzemesin)
             g = json.load(open(gp, encoding="utf-8"))
             for e in g:

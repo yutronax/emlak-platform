@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
@@ -108,6 +109,7 @@ export default async function AdminVideosPage({
 }: {
   searchParams: Promise<{ tab?: string | string[] }>;
 }) {
+  await connection();
   const auth = await requireAdmin();
   if (!auth.ok) {
     if (auth.reason === "no-session") {

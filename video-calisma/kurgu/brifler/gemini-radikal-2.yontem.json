@@ -1,0 +1,139 @@
+{
+  "model": "gemini-flash-latest",
+  "parcalar": [
+    {
+      "etiket": "KLIP 466047",
+      "mekan": "Giriş Portalı ve Koridor Aksı",
+      "kalite": 8,
+      "kamera": "Geniş açıdan simetrik kapı aksına doğru ileri süzülme",
+      "kullanim": "Mekanın derinliğini ve görkemli geçiş kapısını hissettiren açılış sekansı için ideal."
+    },
+    {
+      "etiket": "KLIP 466021",
+      "mekan": "Yemek Salonu ve Avize Detayı",
+      "kalite": 9,
+      "kamera": "Aşağıdan kristal avizeye ve 10 kişilik altın detaylı masaya doğru dikey kaydırma",
+      "kullanim": "Saray estetiğini ve anıtsal tavan yüksekliğini vurgulamak için ana salon sahnesi."
+    },
+    {
+      "etiket": "KLIP 466027",
+      "mekan": "İkincil Oturma Salonu",
+      "kalite": 8,
+      "kamera": "Yemek alanından kemerli aynalara ve varaklı koltuklara doğru pan",
+      "kullanim": "Detay işçiliği ve altın varak süslemeleri sergilemek için ara plan."
+    },
+    {
+      "etiket": "KLIP 466038",
+      "mekan": "Ebeveyn Yatak Odası",
+      "kalite": 9,
+      "kamera": "Tavan pervanesinden yavaşça lüks kapitoneli yatağa dikey iniş",
+      "kullanim": "Görkemli yatak başı, mermer zemin ve dinlenme alanını gösteren dingin süit planı."
+    },
+    {
+      "etiket": "KLIP 466011",
+      "mekan": "Ana Yaşam Alanı / Mermer Duvar Salonu",
+      "kalite": 9,
+      "kamera": "Geniş açılı köşegen stabil süzülme",
+      "kullanim": "Turkuaz berjerler, mermer duvar panosu ve çift oturma grubunun ihtişamı."
+    },
+    {
+      "etiket": "KLIP 466013",
+      "mekan": "Şömine Odaklı Salon Bölümü",
+      "kalite": 8,
+      "kamera": "Mermer şömine ve simetrik turkuaz koltuklara odaklı orta plan",
+      "kullanim": "Merkezi simetri ve şömine sıcaklığıyla filmi doruk noktasına taşıyan kapanış planı."
+    }
+  ],
+  "edit_turu": "Editoryal Mimari Lookbook & Asimetrik Bölünmüş Ekran (Kırılan Kalıplar: (1) Oda oda sıralı tur kırıldı; mekanlar fonksiyonel sırayla değil, mimari form ve doku kontrastı aksında kurgulandı. (2) Her plan tam ekran tek görüntü kalıbı kırıldı; 2. ve 5. planlarda iki farklı kamera açısının yan yana aktığı çift pencereli dikey diptik kompozisyon kullanıldı. (3) Üstteki küçük etiket başlık kırıldı; moda dergisi tipografisinde asimetrik dev serif metin blokları uygulandı. (5) Eşit 2-3 sn ritim kırıldı; 1.5 saniyelik dinamik görsel aks vuruşlarıyla 3.8 saniyelik heykelsi uzun duraklamalar harmanlandı.)",
+  "hikaye": "Görkemli bir malikanenin kapılarından içeri adım atıldığında sıradan bir konut değil; mermer, kristal ve altın işçiliğinin heykelsi bir haute couture sergisine dönüştüğü mekânsal bir sanat eseri deneyimlenir.",
+  "planlar": [
+    {
+      "etiket": "KLIP 466047",
+      "baslangic_sn": 24.2,
+      "neden": "Karanlık ahşap kemerlerin arasından ışıldayan iç mekana derin bir aksla adım atarak gizem ve merak uyandırmak."
+    },
+    {
+      "etiket": "KLIP 466021",
+      "baslangic_sn": 13.0,
+      "neden": "Avizenin kristal ışıltısını ve yemek salonunun anıtsal mobilya heybetini dikey hareketle tam ihtişamıyla göstermek."
+    },
+    {
+      "etiket": "KLIP 466027",
+      "baslangic_sn": 17.1,
+      "neden": "Kemerli ayna ve varaklı detaylarla mekanın zengin el işçiliğini hızlı bir ritmik vuruşla vurgulamak."
+    },
+    {
+      "etiket": "KLIP 466038",
+      "baslangic_sn": 20.3,
+      "neden": "Yatak odasının heykelsi simetrisini, özel aydınlatma detaylarını ve saray konseptini sakin bir inişle izletmek."
+    },
+    {
+      "etiket": "KLIP 466011",
+      "baslangic_sn": 2.5,
+      "neden": "Devasa mermer duvar ve turkuaz kadife koltukların geniş salonla kurduğu monümental kontrastı sergilemek."
+    },
+    {
+      "etiket": "KLIP 466013",
+      "baslangic_sn": 8.8,
+      "neden": "Şöminenin alev parıltısı ve simetrik berjerlerin kusursuz dengesiyle filmi görkemli bir dinginlikte sonlandırmak."
+    }
+  ],
+  "plan_suresi_sn": 3.2,
+  "gecisler": [
+    {
+      "ad": "Geometrik Portal Genişlemesi",
+      "yontem": "Giriş kapısının koyu ahşap pervazları merkezden dış kenarlara doğru ikiye ayrılarak bir sonraki kristal avize planını açığa çıkarır.",
+      "ses": "Ağır ahşap rezonansı ve ardından gelen tiz kristal çınlaması"
+    },
+    {
+      "ad": "Ritmik Sert Kesme",
+      "yontem": "Hiçbir yumuşatma olmadan, müziğin vuruş anında masanın odağından kemerli aynaların parıltısına anlık keskin geçiş.",
+      "ses": "Kısa, tok bas vuruşu"
+    },
+    {
+      "ad": "Işık Yarığı Çözülmesi",
+      "yontem": "Ekranın ortasından altın rengi dikey ince bir ışık çizgisi parlar; çizgi sağa ve sola yumuşakça yayılarak yatak odasının aydınlık atmosferine erir.",
+      "ses": "Hafif fısıltılı hava süpürme efekti"
+    },
+    {
+      "ad": "Kinetik Hız Rampası",
+      "yontem": "Yatak odası planı son 0.4 saniyede 3 kat hızlanarak odak dışına kayar ve aniden ana salonun geniş açısına oturur.",
+      "ses": "Düşük frekanslı ivmelenme sesi"
+    },
+    {
+      "ad": "Simetrik Odak Kayması",
+      "yontem": "Ana salonun geniş planı hafifçe sola doğru kayarken, şöminenin merkez ekseni aynı hızda sağdan gelerek tam ortada kilitlenir.",
+      "ses": "Mermer üzerinde yankılanan derin yaylı tınısı"
+    }
+  ],
+  "isik_renk": "Editoryal 'Haute Couture Amber & Teal' renk profili. Mermerlerin beyazı nötr ve berrak tutulurken, gölgeler derinleştirildi; ahşap ve altın kaplamalara sıcak amber-bal tonları enjekte edildi, turkuaz kadife döşemelerin doygunluğu öne çıkarıldı.",
+  "isik_efektleri": "Plan 2'de kristal avize kadraja girerken optik prizmatik bir lens parıltısı (anamorphic streak) avizenin üzerinden hafifçe kayar; Plan 6'da şömine haznesinden çıkan sıcak sarı ışık dalgalanması zemin mermerindeki yansımalarda belirginleşir.",
+  "acilis": "Tamamen zifiri karanlık bir ekrandan, dikey olarak ince bir altın çizgi aralanır ve koridor portalının ışığını içeri alarak 1.2 saniyede kadrajı doldurur.",
+  "kapanis": "Şöminenin simetrik görüntüsü üzerine zarif koyu lacivert yarı saydam bir filtre iner; altın yaldızlı ince çizgilerle çevrili logolu kart merkezden dışa doğru bir imza gibi belirir ve kararır.",
+  "yazi": {
+    "gorunum": "Yüksek kontrastlı şık editoryal serif yazı tipi (Playfair/Bodoni karakteri), 84px devasa ancak ultra ince harf kalınlığı, şampanya sarısı (#F4E8C1), sol alt köşede dikey bir çizgiye asimetrik yaslanmış blok.",
+    "animasyon": "Harfler 0.4 saniye içinde harf aralığı genişleyerek (tracking) belirir, 2 saniye hareketsiz kalır ve soluklaşarak silinir."
+  },
+  "basliklar": [
+    {
+      "plan_no": 1,
+      "metin": "MONUMENTAL ZARAFET"
+    },
+    {
+      "plan_no": 3,
+      "metin": "KUSURSUZ DETAYLAR"
+    },
+    {
+      "plan_no": 4,
+      "metin": "SARAY İHTİŞAMI"
+    }
+  ],
+  "muzik": {
+    "tarif": "Modern elektronik indie ritimleri, minimal synth vuruşları ve klasik zarafeti çarpıştıran şık, dinamik galeri atmosferi.",
+    "secim": "wallpaper.mp3",
+    "baslangic_sn": 0.0,
+    "neden": "Geleneksel ağır lüks emlak müziği klişesini kırarak mekana genç, avangart ve ultra prestijli bir haute-couture tasarım dili kazandırır."
+  },
+  "seslendirme_metni": "Mermerin asaleti, altının ihtişamıyla buluşuyor. Her detayında yüksek zanaat, her köşesinde anıtsal bir konfor. Yaşam alanının sınırlarını yeniden tanımlayan benzersiz bir saray estetiği.",
+  "gerekce": "Bu ev yoğun altın varak, mermer kaplamalar ve gösterişli mobilyalara sahip. Geleneksel ağır ve hantal bir kurgu evi boğucu gösterebilirdi. Modern synth ritimleri, editoryal asimetrik tipografi ve mimari aks kurgusu sayesinde mekan ağırbaşlılığını kaybetmeden çağdaş bir lüks sanat galerisi gibi konumlandırıldı."
+}
