@@ -22,6 +22,7 @@ export function HeaderNav() {
   const pathname = usePathname();
 
   const pricingActive = isActivePath(pathname, "/pricing");
+  const whyActive = isActivePath(pathname, "/neden-biz");
   const loginActive = isActivePath(pathname, "/login");
   const signupActive = isActivePath(pathname, "/signup");
 
@@ -57,6 +58,13 @@ export function HeaderNav() {
           Fiyatlar
         </Link>
         <Link
+          href="/neden-biz"
+          aria-current={whyActive ? "page" : undefined}
+          className={`hidden md:inline ${navLink} ${whyActive ? activeClass : ""}`}
+        >
+          Neden biz?
+        </Link>
+        <Link
           href="/agent/dashboard"
           className="inline-flex items-center whitespace-nowrap rounded-leaf bg-ink-900 px-2.5 py-1.5 font-medium text-white hover:bg-ink-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-600 md:px-4 md:py-2"
         >
@@ -74,6 +82,13 @@ export function HeaderNav() {
         className={`hidden md:inline ${navLink} ${pricingActive ? activeClass : ""}`}
       >
         Fiyatlar
+      </Link>
+      <Link
+        href="/neden-biz"
+        aria-current={whyActive ? "page" : undefined}
+        className={`hidden md:inline ${navLink} ${whyActive ? activeClass : ""}`}
+      >
+        Neden biz?
       </Link>
 
       {!loginActive && (

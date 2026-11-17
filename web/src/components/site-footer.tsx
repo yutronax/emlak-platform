@@ -15,6 +15,9 @@ export function SiteFooter() {
           {SUPPORT_WHATSAPP_DISPLAY}
         </div>
         <nav className="flex flex-wrap gap-x-6 gap-y-2">
+          <Link href="/neden-biz" className={linkClass}>
+            Neden biz?
+          </Link>
           <Link href="/gizlilik" className={linkClass}>
             Gizlilik Politikası
           </Link>
