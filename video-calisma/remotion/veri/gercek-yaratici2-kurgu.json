@@ -1,0 +1,247 @@
+{
+ "konsept_adaylari": [
+  "Mimarinin Şiirselliği: Odaların geometrisi ve akıcı hatları öne çıkaran dingin anlatım",
+  "Şehrin Kalbinde Huzur: Ataşehir konumlu dairenin iç mekân ve dış manzara dengesi",
+  "Yaz Sabahı Işığı: Aydınlık köşeleri ve ferah alanları vurgulayan dinamik kurgu"
+ ],
+ "konsept": "Mimarinin Şiirselliği: Odaların geometrisi ve akıcı hatları öne çıkaran dingin anlatım",
+ "kisit_uygulamasi": "İlk yarıda 4-5 saniyelik uzun ve dingin kadrajlar kullanıldı; ortada dolap geçişinde 1 saniyelik sessizlik molası verildi; ikinci yarıda tempo hızlandırılarak zirveye ulaşıldı.",
+ "enerji_egrisi": [
+  {
+   "bolum": "Dingin Giriş ve Odak",
+   "planlar": "1-3",
+   "enerji": "dusuk"
+  },
+  {
+   "bolum": "Orta Nefes Molası",
+   "planlar": "4",
+   "enerji": "dusuk"
+  },
+  {
+   "bolum": "Hızlanan Ritim ve Zirve",
+   "planlar": "5-8",
+   "enerji": "yuksek"
+  }
+ ],
+ "yeni_teknikler": [
+  {
+   "ad": "dikey_odak_gecisi",
+   "tarif": "Kamera yukarıdan aşağıya doğru süzülürken dikey eksende hafif bulanıklıktan netliğe geçen kesintisiz geçiş efekti",
+   "nerede": "banyo ve balkon arasındaki geçişte"
+  }
+ ],
+ "muzik": {
+  "dosya": "easy-lemon.mp3",
+  "baslangic_sn": 0,
+  "neden": "Yumuşak akustik ve piyano ritmi mimari detayların dinginliğini ve ferahlığını en iyi şekilde destekliyor."
+ },
+ "renk_tonu": "sinematik",
+ "font": {
+  "baslik": "Cinzel (klasik, lüks serif)",
+  "alt": "Cinzel (klasik, lüks serif)"
+ },
+ "vurgu_rengi": "#D4AF37",
+ "acilis": {
+  "teknik": "hizli_zoom_giris",
+  "klipler": [
+   {
+    "klip": "koridor",
+    "kesit_bas_sn": 0.0
+   }
+  ],
+  "stil": "isik",
+  "metin": "ATAŞEHİR'DE|MALATYA CADDESİ CEPHELİ",
+  "sure_sn": 1.4,
+  "ses": "vurus"
+ },
+ "logo_animasyonu": "isik",
+ "planlar": [
+  {
+   "klip": "koridor",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 5.0,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "adim",
+   "sonraki_gecis": {
+    "ad": "yakin_cozulme",
+    "sure_sn": 0.5,
+    "ses": "hava"
+   },
+   "neden": "Geniş mermer koridorda sakin bir yürüyüşle eve giriş hissi yaratmak için."
+  },
+  {
+   "klip": "salon",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 5.5,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "sehir",
+   "sonraki_gecis": {
+    "ad": "perde",
+    "sure_sn": 0.5,
+    "ses": "perde"
+   },
+   "neden": "Salondaki ferah atmosferi ve cephe bilgisini sakin bir kamerayla göstermek için."
+  },
+  {
+   "klip": "mutfak",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 2.3,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "su",
+   "sonraki_gecis": {
+    "ad": "yakin_cozulme",
+    "sure_sn": 0.5,
+    "ses": "hava"
+   },
+   "neden": "Mutfak dolaplarının detayını hızlıca tanıtmak için."
+  },
+  {
+   "klip": "dolap",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 4.0,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "yok",
+   "sonraki_gecis": {
+    "ad": "flas_itme",
+    "sure_sn": 0.5,
+    "ses": "whoosh"
+   },
+   "neden": "İkinci yarıdaki tempolu kısma geçmeden önce nefes molası vermek için."
+  },
+  {
+   "klip": "yatak2",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 4.5,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": {
+    "metin": "3+1 DAİRE",
+    "alt": null,
+    "stil": "isik",
+    "konum": "orta",
+    "giris_sn": 0.5
+   },
+   "ortam_sesi": "perde_hisirti",
+   "sonraki_gecis": {
+    "ad": "whip_asagi",
+    "sure_sn": 0.4,
+    "ses": "whoosh"
+   },
+   "neden": "Ana yatak odasını ve 3+1 oda planını vurgulamak için."
+  },
+  {
+   "klip": "banyo",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 3.8,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": {
+    "metin": "ÇİFT BANYO",
+    "alt": null,
+    "stil": "carpma",
+    "konum": "alt",
+    "giris_sn": 0.3
+   },
+   "ortam_sesi": "su",
+   "sonraki_gecis": {
+    "ad": "don_zoom",
+    "sure_sn": 0.5,
+    "ses": "parilti"
+   },
+   "neden": "Çift banyo bilgisini duşakabinli ana banyo görseli üzerinde iletmek için."
+  },
+  {
+   "klip": "balkon",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.8,
+   "sure_sn": 2.5,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": {
+    "metin": "TEK BALKON",
+    "alt": null,
+    "stil": "yay",
+    "konum": "ust",
+    "giris_sn": 0.3
+   },
+   "ortam_sesi": "kus",
+   "sonraki_gecis": {
+    "ad": "whip_yukari",
+    "sure_sn": 0.4,
+    "ses": "whoosh"
+   },
+   "neden": "Zemin koruması görünmeden cam balkona akıcı şekilde geçmek için."
+  },
+  {
+   "klip": "manzara",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 4.0,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "kus",
+   "sonraki_gecis": {
+    "ad": "yakin_cozulme",
+    "sure_sn": 0.5,
+    "ses": "hava"
+   },
+   "neden": "Balkondan görünen ferah şehir manzarasını göstermek için."
+  },
+  {
+   "klip": "yatak1",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 3.0,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "yok",
+   "sonraki_gecis": {
+    "ad": "iris",
+    "sure_sn": 0.5,
+    "ses": "vurus"
+   },
+   "neden": "Diğer yatak odasını göstererek turu tamamlamak için."
+  }
+ ],
+ "kapanis_gecisi": {
+  "ad": "iris",
+  "sure_sn": 0.6,
+  "ses": "vurus"
+ },
+ "gerekce": "Tüm yasaklı geçiş, font, ton ve açılış stilleri elenmiş; verilen 3+1, Ataşehir Malatya Caddesi cepheli, çift banyo ve tek balkon bilgileri yalnız ait oldukları mekânlarda doğru sürelerle kullanılmıştır.",
+ "_kisit": "Ritim kontrastı: ilk yarı sakin ve uzun planlar, ikinci yarı hız; ortada 1 sn sessizlik nefesi."
+}

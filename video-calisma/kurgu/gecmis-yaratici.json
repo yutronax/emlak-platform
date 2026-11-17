@@ -90,5 +90,28 @@
    "ton:sicak",
    "yazi:harf_yagmuru"
   ]
+ },
+ {
+  "video": "gercek-yaratici2-uygulanan.json",
+  "konsept": "Mimarinin Şiirselliği: Odaların geometrisi ve akıcı hatları öne çıkaran dingin anlatım",
+  "kisit": "Ritim kontrastı: ilk yarı sakin ve uzun planlar, ikinci yarı hız; ortada 1 sn sessizlik nefesi.",
+  "teknikler": [
+   "acilis:hizli_zoom_giris",
+   "acilis_yazi:isik",
+   "font:Cinzel",
+   "gecis:don_zoom",
+   "gecis:flas_itme",
+   "gecis:iris",
+   "gecis:perde",
+   "gecis:whip_asagi",
+   "gecis:whip_yukari",
+   "gecis:yakin_cozulme",
+   "logo:isik",
+   "muzik:easy-lemon.mp3",
+   "ton:sinematik",
+   "yazi:carpma",
+   "yazi:isik",
+   "yazi:yay"
+  ]
  }
 ]

@@ -1,1 +1,2 @@
 - **Panoramik Cam Parlaması** (gercek-yaratici-uygulanan.json): Cam balkona geçiş anında cam panellerin kenar çizgisinde anlık ışık kırılması oluşturarak dış manzarayı berraklaştırma efekti. — balkon2 planından manzara planına geçişte
+- **dikey_odak_gecisi** (gercek-yaratici2-uygulanan.json): Kamera yukarıdan aşağıya doğru süzülürken dikey eksende hafif bulanıklıktan netliğe geçen kesintisiz geçiş efekti — banyo ve balkon arasındaki geçişte
