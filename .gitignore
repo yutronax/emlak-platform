@@ -33,6 +33,13 @@ video-calisma/remotion/*
 !video-calisma/remotion/package.json
 !video-calisma/remotion/tsconfig.json
 !video-calisma/remotion/.gitignore
+!video-calisma/arsa/
+video-calisma/arsa/*
+!video-calisma/arsa/*.py
+!video-calisma/arsa/*.mjs
+!video-calisma/arsa/*.html
+!video-calisma/arsa/*.sh
+!video-calisma/arsa/package.json
 video-calisma/**/*.jpg
 video-calisma/**/*.png
 video-calisma/**/*.mp4
@@ -53,3 +60,6 @@ obss_project/artifacts/**/codex/*.err.txt
 # Başka sitelerin ve test hesabının ekran görüntüleri herkese açık repoya girmez
 obss_project/artifacts/panel-oturum-dogrulama/referans-kareler/
 obss_project/artifacts/panel-oturum-dogrulama/yeni/
+
+# Güvenlik bulgu raporları herkese açık repoya girmez
+GUVENLIK_*.md

@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="https://cdn.jsdelivr.net/npm/cesium@1.123.0/Build/Cesium/Cesium.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/cesium@1.123.0/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+<style>html,body,#v{margin:0;width:100%;height:100%;overflow:hidden;background:#000}
+.cesium-viewer-bottom,.cesium-widget-credits{display:none!important}</style>
+</head>
+<body>
+<div id="v"></div>
+<script>
+// Parametreler render.mjs tarafından window.AYAR ile verilir.
+window.hazir = false;
+async function kur(ayar) {
+  const { anahtar, parsel } = ayar;
+  Cesium.GoogleMaps.defaultApiKey = anahtar;
+  const viewer = new Cesium.Viewer("v", {
+    globe: false, baseLayerPicker: false, geocoder: false, homeButton: false,
+    sceneModePicker: false, navigationHelpButton: false, animation: false,
+    timeline: false, fullscreenButton: false, infoBox: false, selectionIndicator: false,
+    requestRenderMode: false, contextOptions: { webgl: { preserveDrawingBuffer: true } },
+  });
+  viewer.scene.skyAtmosphere.show = true;
+  const ts = await Cesium.createGooglePhotorealistic3DTileset();
+  ts.maximumScreenSpaceError = Number(ayar.sse || 8);
+  ts.cacheBytes = 3 * 1024 * 1024 * 1024;
+  ts.maximumCacheOverflowBytes = 2 * 1024 * 1024 * 1024;
+  ts.skipLevelOfDetail = false;
+  viewer.scene.primitives.add(ts);
+
+  const halka = parsel.geometry.coordinates[0];
+  const noktalar = halka.flatMap(([x, y]) => [x, y]);
+  // Dolgu ve sınır 3D modele "yapışık" (sınıflandırma) çizilir.
+  viewer.entities.add({
+    polygon: {
+      hierarchy: Cesium.Cartesian3.fromDegreesArray(noktalar),
+      material: Cesium.Color.fromCssColorString("#ffcc33").withAlpha(0.28),
+      classificationType: Cesium.ClassificationType.CESIUM_3D_TILE,
+    },
+  });
+  viewer.entities.add({
+    polyline: {
+      positions: Cesium.Cartesian3.fromDegreesArray(noktalar),
+      width: 5, clampToGround: true,
+      material: Cesium.Color.fromCssColorString("#ffd84a"),
+      classificationType: Cesium.ClassificationType.CESIUM_3D_TILE,
+    },
+  });
+
+  // Merkez ve yaklaşık boyut
+  let sx = 0, sy = 0;
+  const n = halka.length - 1;
+  for (let i = 0; i < n; i++) { sx += halka[i][0]; sy += halka[i][1]; }
+  const lon = sx / n, lat = sy / n;
+  let maxd = 0;
+  for (const [x, y] of halka) {
+    const d = Cesium.Cartesian3.distance(Cesium.Cartesian3.fromDegrees(lon, lat), Cesium.Cartesian3.fromDegrees(x, y));
+    maxd = Math.max(maxd, d);
+  }
+  // Zemin yüksekliği: 3D modelden örnekle
+  const orta = Cesium.Cartographic.fromDegrees(lon, lat);
+  let h = 0;
+  try {
+    const s = await viewer.scene.sampleHeightMostDetailed([orta], [], 0.5);
+    h = s[0].height || 0;
+  } catch (e) { h = 0; }
+
+  window.sahne = { viewer, ts, lon, lat, h, maxd };
+  window.hazir = true;
+}
+
+// t: 0..1 arası ilerleme; kamera akışı: yüksekten iniş -> yörünge
+window.kare = function (t) {
+  const { viewer, lon, lat, h, maxd } = window.sahne;
+  const hedef = Cesium.Cartesian3.fromDegrees(lon, lat, h);
+  const temel = Math.max(260, maxd * 3.2);
+  const yum = (x) => x * x * (3 - 2 * x);
+  let menzil, egim, yon;
+  const y = yum(t);
+  // Ayrı kamera planları (ilan-video-edit klipleri). PLAN yoksa eski tek akış.
+  const plan = window.PLAN;
+  if (plan === "inis") {            // tepeden parsele hızlı iniş
+    menzil = temel * (3.0 - 1.8 * y); egim = -89 + 34 * y; yon = 10 + 25 * y;
+  } else if (plan === "kusbakisi") { // tepeden yavaş dönüş, sınır net
+    menzil = temel * (1.25 - 0.1 * y); egim = -89; yon = 0 + 40 * t;
+  } else if (plan === "yorunge") {   // alçak yörünge, yamaç ve ufuk
+    menzil = temel * 0.95; egim = -20; yon = 60 + 110 * t;
+  } else if (plan === "ufuk") {      // geri çekiliş: çevre ve manzara açılır
+    menzil = temel * (0.9 + 1.9 * y); egim = -14 - 8 * y; yon = 200 + 25 * t;
+  } else if (plan === "yaklasma") {  // alçaktan parsele yaklaşma
+    menzil = temel * (1.7 - 0.85 * y); egim = -12 - 10 * y; yon = 300 - 15 * t;
+  } else if (t < 0.2) {             // kısa iniş: tepeden -> yatık
+    const k = yum(t / 0.2);
+    menzil = temel * (2.6 - 1.6 * k);
+    egim = -80 + 58 * k;
+    yon = 20 + 20 * k;
+  } else {                   // alçak yörünge
+    const k = (t - 0.2) / 0.8;
+    menzil = temel * (1 - 0.12 * Math.sin(k * Math.PI));
+    egim = -22 + 6 * Math.sin(k * Math.PI);
+    yon = 40 + 240 * yum(k);
+  }
+  viewer.camera.lookAt(hedef, new Cesium.HeadingPitchRange(
+    Cesium.Math.toRadians(yon), Cesium.Math.toRadians(egim), menzil));
+  viewer.scene.render();
+};
+// Döşemeler yüklenene kadar çizer; sayfa içinde döndüğü için hızlıdır.
+window.bekle = function (azami) {
+  const { viewer, ts } = window.sahne;
+  return new Promise((ok) => {
+    const bas = performance.now();
+    let sakin = 0;
+    const tur = () => {
+      viewer.scene.render();
+      sakin = ts.tilesLoaded ? sakin + 1 : 0;
+      if (sakin >= 3 || performance.now() - bas > azami) return ok(performance.now() - bas);
+      setTimeout(tur, 5);
+    };
+    tur();
+  });
+};
+</script>
+</body>
+</html>
