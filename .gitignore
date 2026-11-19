@@ -33,6 +33,11 @@ video-calisma/remotion/*
 !video-calisma/remotion/package.json
 !video-calisma/remotion/tsconfig.json
 !video-calisma/remotion/.gitignore
+!video-calisma/after-effects/
+video-calisma/after-effects/*
+!video-calisma/after-effects/*.py
+!video-calisma/after-effects/*.jsx
+!video-calisma/after-effects/*.ps1
 !video-calisma/arsa/
 video-calisma/arsa/*
 !video-calisma/arsa/*.py

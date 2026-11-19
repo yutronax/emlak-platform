@@ -1,0 +1,203 @@
+{
+ "muzik": {
+  "dosya": "medya/inspired.mp3",
+  "baslangic_sn": 0
+ },
+ "renk_tonu": "sicak",
+ "font": {
+  "baslik": "Oswald",
+  "alt": "PlayfairDisplay"
+ },
+ "vurgu_rengi": "#E8B54A",
+ "acilis": {
+  "teknik": "sessizlik_vurus",
+  "stil": "harf_yagmuru",
+  "metin": "ATAŞEHİR'DE|3+1 DAİRE",
+  "sure_sn": 2.2,
+  "ses": "vurus"
+ },
+ "planlar": [
+  {
+   "video": "medya/secim/dron.mp4",
+   "sure_sn": 6.9,
+   "yazi": {
+    "metin": "MALATYA CADDESİ",
+    "stil": "harf_yagmuru",
+    "konum": "ust",
+    "giris_sn": 2.4,
+    "alt": "Ataşehir · Ana cadde üzerinde"
+   },
+   "ortam_sesi": "sehir",
+   "sonraki_gecis": {
+    "ad": "kayma_sol",
+    "sure_sn": 0.5,
+    "ses": "whoosh"
+   }
+  },
+  {
+   "video": "medya/secim/koridor.mp4",
+   "kesit_bas_sn": 0.3,
+   "sure_sn": 5.4,
+   "yazi": {
+    "metin": "KAPIDAN İÇERİ ADIM ATIN",
+    "stil": "harf_yagmuru",
+    "konum": "orta",
+    "giris_sn": 0.4,
+    "alt": "Mermer zeminli geniş karşılama"
+   },
+   "ortam_sesi": "adim",
+   "sonraki_gecis": {
+    "ad": "whip_sol",
+    "sure_sn": 0.5,
+    "ses": "whoosh"
+   }
+  },
+  {
+   "video": "medya/secim/dolap.mp4",
+   "kesit_bas_sn": 1.0,
+   "sure_sn": 4.6,
+   "yazi": {
+    "metin": "HER ŞEYİN BİR YERİ VAR",
+    "stil": "maske_yukari",
+    "konum": "alt",
+    "giris_sn": 0.5,
+    "alt": "Gömme dolaplar"
+   },
+   "sonraki_gecis": {
+    "ad": "silme",
+    "sure_sn": 0.5,
+    "ses": "hava"
+   }
+  },
+  {
+   "video": "medya/secim/salon.mp4",
+   "kesit_bas_sn": 1.0,
+   "sure_sn": 5.5,
+   "yazi": {
+    "metin": "GÜN IŞIĞIYLA DOLAN SALON",
+    "stil": "harf_yagmuru",
+    "konum": "orta",
+    "giris_sn": 0.6
+   },
+   "efekt": {
+    "ad": "isik_huzmesi",
+    "an_sn": 0.3
+   },
+   "sonraki_gecis": {
+    "ad": "kayma_sol",
+    "sure_sn": 0.5,
+    "ses": "whoosh"
+   }
+  },
+  {
+   "video": "medya/secim/balkon.mp4",
+   "kesit_bas_sn": 0.2,
+   "sure_sn": 2.6,
+   "sonraki_gecis": {
+    "ad": "whip_sol",
+    "sure_sn": 0.45,
+    "ses": "whoosh"
+   }
+  },
+  {
+   "video": "medya/secim/balkon2.mp4",
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 4.2,
+   "yazi": {
+    "metin": "CAM BALKON",
+    "stil": "harf_yagmuru",
+    "konum": "orta",
+    "giris_sn": 0.2,
+    "alt": "Geniş kullanım alanı · Ana cadde cepheli"
+   },
+   "ortam_sesi": "sehir",
+   "sonraki_gecis": {
+    "ad": "silme",
+    "sure_sn": 0.5,
+    "ses": "hava"
+   }
+  },
+  {
+   "video": "medya/secim/manzara.mp4",
+   "kesit_bas_sn": 1.5,
+   "sure_sn": 4.0,
+   "yazi": {
+    "metin": "ŞEHRE KARŞI SABAH KAHVESİ",
+    "stil": "isik",
+    "konum": "ust",
+    "giris_sn": 0.4
+   },
+   "ortam_sesi": "kus",
+   "sonraki_gecis": {
+    "ad": "kayma_sol",
+    "sure_sn": 0.5,
+    "ses": "whoosh"
+   },
+   "ae_efekt": "UltraGlow"
+  },
+  {
+   "video": "medya/secim/yatak1.mp4",
+   "kesit_bas_sn": 0.3,
+   "sure_sn": 4.2,
+   "yazi": {
+    "metin": "3+1 · HERKESE BİR ODA",
+    "stil": "harf_yagmuru",
+    "konum": "ust",
+    "giris_sn": 0.4
+   },
+   "sonraki_gecis": {
+    "ad": "whip_sol",
+    "sure_sn": 0.45,
+    "ses": "whoosh"
+   }
+  },
+  {
+   "video": "medya/secim/yatak2.mp4",
+   "kesit_bas_sn": 0.5,
+   "sure_sn": 4.0,
+   "sonraki_gecis": {
+    "ad": "silme",
+    "sure_sn": 0.5,
+    "ses": "hava"
+   }
+  },
+  {
+   "video": "medya/secim/banyo.mp4",
+   "kesit_bas_sn": 0.2,
+   "sure_sn": 4.4,
+   "yazi": {
+    "metin": "ÇİFT BANYO",
+    "stil": "harf_yagmuru",
+    "konum": "orta",
+    "giris_sn": 0.3,
+    "alt": "Sabah sırası beklemek yok"
+   },
+   "ortam_sesi": "su",
+   "sonraki_gecis": {
+    "ad": "kayma_sol",
+    "sure_sn": 0.5,
+    "ses": "whoosh"
+   }
+  },
+  {
+   "video": "medya/secim/banyo2.mp4",
+   "kesit_bas_sn": 0.2,
+   "sure_sn": 3.2,
+   "sonraki_gecis": {
+    "ad": "cozulme",
+    "sure_sn": 0.6,
+    "ses": "vurus"
+   }
+  }
+ ],
+ "kapanis": {
+  "logo": "medya/logo.png",
+  "cagri": "BU EVİ YERİNDE GÖRÜN",
+  "telefon": "0 (507) 118 23 62",
+  "sure_sn": 4.5,
+  "logo_animasyonu": "yukselis",
+  "notlar": [
+   "Müzik: \"Inspired\" Kevin MacLeod (incompetech.com) · CC BY 4.0"
+  ]
+ }
+}

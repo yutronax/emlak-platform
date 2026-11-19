@@ -55,5 +55,16 @@ Gemini anahtarı `%USERPROFILE%\.gemini-anahtar` (repo dışı). Kurallar: fiyat
 ## 6. Eski şablon üreticileri (HyperFrames / CapCut — referans)
 `kurgu/kur.py` (brif → HyperFrames), `kurgu/defter_hazirla.py`, `galeri_hazirla.py`, `tahmin_hazirla.py`, `yatay_rampa.py`; `capcut/*.py` (pycapcut ile CapCut projeleri; beğenilen: `tanitim_marka.py`); `ilan-video.ps1` (ilk ffmpeg storyboard akışı).
 
+## 7. After Effects köprüsü
+| Araç | Ne yapar |
+|---|---|
+| `after-effects/ae.ps1 -Betik <jsx>` | AE kapalıysa açar, hazır olana kadar bekler, betiği çalıştırır, log'u okur |
+| `after-effects/ae.ps1 -Render <aep> -Comp <ad> -Cikti <mp4>` | aerender → Lossless AVI → MP4 |
+| `after-effects/ae_sablon.jsx` | Örnek: klipler + Sapphire geçiş/ışık + harf animasyonlu yazı |
+| `after-effects/ae_kurgu.py <props.json> <ad> [--sadece-kur]` | **Remotion props'undan AE kurgusu**: aynı planlar/yazılar/müzik, geçişler ve görünüm test edilmiş kısa menüden (`arastirma/AFTER-EFFECTS-KISA-MENU.md`; Gemini `sonraki_gecis.ae` + `ae.gorunum` verir) → `cikti/ae-<ad>.mp4`. Şablon: `ae_kurgu_sablon.jsx` |
+| `kurgu/kesit_hazirla.py` | Ham turdan seçilen kesitleri rijit sabitler, anahtar kare kurallı dikey klip yapar |
+
+Kurallar ve yaşanan hatalar: `.claude/skills/ilan-video-edit/SKILL.md` → "Medya yükleme kuralları" ve "After Effects yolu". Proje/medya her zaman `C:\inza-ae\` (ASCII yol).
+
 ## Arşiv
 `kurgu/arsiv/` — tek seferlik tur/düzeltme betikleri (esik_*, hareket_*, plan_*, yz_hazirla/kompozisyon/kontrol/teslim, hf_v2_setup, projeyi_hazirla_gemini). Çalıştırılmaz, yalnız geçmiş için.

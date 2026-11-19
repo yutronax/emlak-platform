@@ -3,8 +3,12 @@ import {Composition} from 'remotion';
 import {IlanDikey, ilanSemasi, toplamKare, FPS} from './IlanDikey';
 import ornek from '../veri/gercek-ilan-1.json';
 import {IlanYaratici, toplam} from './IlanYaratici';
+import {Dergi, dergiSure, Sebepler, sebepSure, Mesajlasma, mesajSure} from './Formatlar';
 
 export const Kok: React.FC = () => (<>
+	<Composition id="Dergi" component={Dergi} width={1080} height={1920} fps={30} durationInFrames={Math.round(dergiSure() * 30)} />
+	<Composition id="Sebepler" component={Sebepler} width={1080} height={1920} fps={30} durationInFrames={Math.round(sebepSure() * 30)} />
+	<Composition id="Mesajlasma" component={Mesajlasma} width={1080} height={1920} fps={30} durationInFrames={Math.round(mesajSure() * 30)} />
 	<Composition id="IlanYaratici" component={IlanYaratici as never} width={1080} height={1920} fps={30} durationInFrames={300}
 		defaultProps={{} as never} calculateMetadata={({props}: {props: never}) => ({durationInFrames: toplam(props)})} />
 	<Composition

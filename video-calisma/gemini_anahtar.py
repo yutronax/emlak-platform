@@ -42,3 +42,11 @@ def anahtar():
         _secilen = adaylar[0]
         return _secilen
     raise RuntimeError("Gemini anahtarı bulunamadı")
+
+
+def hepsi():
+    """Tüm anahtarlar (kota döngüsü için); seçilen önce."""
+    a = _adaylar()
+    if _secilen in a:
+        a.remove(_secilen); a.insert(0, _secilen)
+    return a

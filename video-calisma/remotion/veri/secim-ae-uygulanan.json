@@ -1,0 +1,302 @@
+{
+ "konsept_adaylari": [
+  "Ataşehir'de Güneşle Başlayan Bir Gün: Sabahın ilk ışıklarından akşamın şehir manzarasına uzanan huzurlu bir yaşam ritmi.",
+  "Sessiz Sinema ve Mekân Akustiği: Hiçbir metin müdahalesi olmadan sadece evin mimari detayları ve doğal ortam sesleriyle duyusal bir tur.",
+  "Şehrin Kalbinde Geniş Nefer Alanı: Malatya Caddesi'nin dinamizmi ile evin içindeki mermer ve ferah yapının kontrastı."
+ ],
+ "konsept": "Sessiz Sinema ve Mekân Akustiği: Hiçbir metin müdahalesi olmadan sadece evin mimari detayları ve doğal ortam sesleriyle duyusal bir tur.",
+ "kisit_uygulamasi": "Tüm ara planlarda 'yazi' alanı null olarak ayarlandı. Anlatım yalnızca açılış metni, yüksek kalitede sinematik çekimler ve diegetik ortam sesleri (adım, kapı gıcırtısı, şehir uğultusu, su sesi) üzerinden yürütülmektedir.",
+ "enerji_egrisi": [
+  {
+   "bolum": "Sakin Giriş - Eve Adım Atış",
+   "planlar": "1-3",
+   "enerji": "dusuk"
+  },
+  {
+   "bolum": "Yükseliş ve Aydınlık - Yaşam Alanı ve Manzara",
+   "planlar": "4-6",
+   "enerji": "yuksek"
+  },
+  {
+   "bolum": "Nefes ve Mahremiyet - Dinlenme Alanları",
+   "planlar": "7-9",
+   "enerji": "orta"
+  },
+  {
+   "bolum": "Zirve ve Kapanış - Konfor ve Dış Bakış",
+   "planlar": "10-11",
+   "enerji": "yuksek"
+  }
+ ],
+ "yeni_teknikler": [
+  {
+   "ad": "Sesli_Odak_Gecisi",
+   "tarif": "Görüntüde bir detay veya odaya girerken ortam sesinin ani yükselip müziğin hafif sönümlenmesiyle izleyiciyi mekânın akustiğine alan atmosfer geçişi.",
+   "nerede": "balkon kapısından manzara planına geçişte"
+  }
+ ],
+ "muzik": {
+  "dosya": "medya/inspired.mp3",
+  "baslangic_sn": 0,
+  "neden": "İlham verici piyano ve yaylı yapısı, metinsiz anlatımda mekânın mimari zarafetini ve genişliğini duygu olarak izleyiciye aktarır."
+ },
+ "renk_tonu": "sicak",
+ "font": {
+  "baslik": "PlayfairDisplay",
+  "alt": "Oswald"
+ },
+ "vurgu_rengi": "#D4AF37",
+ "acilis": {
+  "teknik": "sessizlik_vurus",
+  "klipler": [
+   {
+    "video": "medya/secim/koridor.mp4",
+    "kesit_bas_sn": 0.0
+   }
+  ],
+  "stil": "maske_yukari",
+  "metin": "Ataşehir'de Prestijli Yaşam | Malatya Caddesi 3+1 Daire",
+  "sure_sn": 2.0,
+  "ses": "vurus"
+ },
+ "planlar": [
+  {
+   "klip": "koridor",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 4.5,
+   "efekt": {
+    "ad": "parilti_toz",
+    "an_sn": 0.5
+   },
+   "yazi": null,
+   "ortam_sesi": "adim",
+   "sonraki_gecis": {
+    "ad": "whip_sol",
+    "sure_sn": 0.5,
+    "ses": "whoosh",
+    "ae": "Swish3D"
+   },
+   "neden": "Mermer zeminli geniş koridora adım atarak tura dingin ve kaliteli bir baslangic yapilmaktadır.",
+   "video": "medya/secim/koridor.mp4"
+  },
+  {
+   "klip": "dolap",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 4.0,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "yok",
+   "sonraki_gecis": {
+    "ad": "kayma_sol",
+    "sure_sn": 0.5,
+    "ses": "hava",
+    "ae": "DissolveFilm"
+   },
+   "neden": "Gömme dolapların depolama kapasitesi ve estetiği kesintisiz akışla gösterilir.",
+   "video": "medya/secim/dolap.mp4"
+  },
+  {
+   "klip": "salon",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 5.5,
+   "efekt": {
+    "ad": "mercek",
+    "an_sn": 1.0
+   },
+   "yazi": null,
+   "ortam_sesi": "yok",
+   "sonraki_gecis": {
+    "ad": "bulanik_kayma_sol",
+    "sure_sn": 0.5,
+    "ses": "whoosh",
+    "ae": "DissolveDefocus"
+   },
+   "neden": "Gün ışığı alan geniş salonun ferahlığı doğal ışık parlaması ile öne çıkarılır.",
+   "video": "medya/secim/salon.mp4"
+  },
+  {
+   "klip": "balkon",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 3.0,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "kapi",
+   "sonraki_gecis": {
+    "ad": "kayma_sol",
+    "sure_sn": 0.4,
+    "ses": "perde",
+    "ae": "Swish3D"
+   },
+   "neden": "Cam balkona geçiş anı kapı sesiyle birleşerek gerçekçilik hissi yaratır.",
+   "video": "medya/secim/balkon.mp4"
+  },
+  {
+   "klip": "balkon2",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 4.0,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "perde_hisirti",
+   "sonraki_gecis": {
+    "ad": "whip_sol",
+    "sure_sn": 0.5,
+    "ses": "whoosh",
+    "ae": "HyperPull"
+   },
+   "neden": "Geniş cam balkonun iç oturma alanı hissi pekiştirilir.",
+   "video": "medya/secim/balkon2.mp4"
+  },
+  {
+   "klip": "manzara",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 5.0,
+   "efekt": {
+    "ad": "mercek",
+    "an_sn": 0.8
+   },
+   "yazi": null,
+   "ortam_sesi": "sehir",
+   "sonraki_gecis": {
+    "ad": "silme",
+    "sure_sn": 0.5,
+    "ses": "hava",
+    "ae": "DissolveLightLeak"
+   },
+   "neden": "Açık şehir manzarası ve gün ışığı dış seslerle birleşerek zirve noktasını oluşturur.",
+   "video": "medya/secim/manzara.mp4"
+  },
+  {
+   "klip": "yatak2",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 4.5,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "yok",
+   "sonraki_gecis": {
+    "ad": "kayma_sol",
+    "sure_sn": 0.5,
+    "ses": "whoosh",
+    "ae": "Swish3D"
+   },
+   "neden": "Ebeveyn yatak odasının konforu ve tasarımı dingin bir tempoyla sunulur.",
+   "video": "medya/secim/yatak2.mp4"
+  },
+  {
+   "klip": "yatak1",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 4.0,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "yok",
+   "sonraki_gecis": {
+    "ad": "bulanik_kayma_sol",
+    "sure_sn": 0.5,
+    "ses": "hava",
+    "ae": "DissolveDefocus"
+   },
+   "neden": "İkinci yatak odasının esnek kullanım imkanı gösterilir.",
+   "video": "medya/secim/yatak1.mp4"
+  },
+  {
+   "klip": "banyo",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 4.0,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "su",
+   "sonraki_gecis": {
+    "ad": "kayma_sol",
+    "sure_sn": 0.4,
+    "ses": "parilti",
+    "ae": "DissolveFilm"
+   },
+   "neden": "Şık banyo kaplamaları ve duşakabin alanı su sesi efekti ile canlılaştırılır.",
+   "video": "medya/secim/banyo.mp4"
+  },
+  {
+   "klip": "banyo2",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 3.0,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "yok",
+   "sonraki_gecis": {
+    "ad": "whip_sol",
+    "sure_sn": 0.5,
+    "ses": "whoosh",
+    "ae": "Swish3D"
+   },
+   "neden": "Çift banyo konforunun tamamlayıcısı olan ikinci banyo hızlıca taranır.",
+   "video": "medya/secim/banyo2.mp4"
+  },
+  {
+   "klip": "dron",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 5.0,
+   "efekt": {
+    "ad": "parilti_toz",
+    "an_sn": 0.5
+   },
+   "yazi": null,
+   "ortam_sesi": "kus",
+   "sonraki_gecis": {
+    "ad": "kayma_alt",
+    "sure_sn": 0.6,
+    "ses": "vurus"
+   },
+   "neden": "Dış cephe ve Malatya Caddesi üzerindeki konumun görkemiyle kapanışa geçilir.",
+   "video": "medya/secim/dron.mp4"
+  }
+ ],
+ "ae": {
+  "gorunum": [
+   "SoftFocus",
+   "UltraGlow"
+  ],
+  "neden": "Işık geçişlerini yumuşatıp pencerelerden giren doğal gün ışığını vurgulayarak lüks konut atmosferi sağlar."
+ },
+ "gerekce": "Özel yaratıcı kısıt gereği ara planların tamamında metin kaldırılmış, izleyicinin dikkati mekânın akışına ve diegetik seslere yönlendirilmiştir. Tüm geçişlerde sol yönlü hareket motifi korunarak göz yormayan, son derece akıcı ve sinematik bir emlak turu elde edilmiştir.",
+ "_kisit": "Yazı yalnız açılışta ve kapanışta; arada anlatım tamamen görüntü ve ortam sesleriyle.",
+ "kapanis": {
+  "logo": "medya/logo.png",
+  "cagri": "YERİNDE GÖRÜN",
+  "telefon": "0 (507) 118 23 62",
+  "sure_sn": 4.5,
+  "logo_animasyonu": "maske",
+  "notlar": [
+   "Müzik: Kevin MacLeod (incompetech.com) · CC BY 4.0"
+  ]
+ }
+}

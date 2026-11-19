@@ -1,0 +1,57 @@
+{
+ "dron": {
+  "video": "medya/secim/dron.mp4",
+  "en_fazla_sn": 6.5,
+  "not": "dron fotoğrafından yaklaşma: Malatya Caddesi, binalar, ana cadde"
+ },
+ "koridor": {
+  "video": "medya/secim/koridor.mp4",
+  "en_fazla_sn": 8.1,
+  "not": "mermer zeminli antre/koridor, kapıdan giriş"
+ },
+ "dolap": {
+  "video": "medya/secim/dolap.mp4",
+  "en_fazla_sn": 8.6,
+  "not": "koridorda beyaz gömme dolaplar"
+ },
+ "salon": {
+  "video": "medya/secim/salon.mp4",
+  "en_fazla_sn": 11.1,
+  "not": "gün ışıklı salon, koltuklar"
+ },
+ "balkon": {
+  "video": "medya/secim/balkon.mp4",
+  "en_fazla_sn": 3.1,
+  "not": "cam balkona giriş kapısı"
+ },
+ "balkon2": {
+  "video": "medya/secim/balkon2.mp4",
+  "en_fazla_sn": 4.3,
+  "not": "cam balkon içi, geniş"
+ },
+ "manzara": {
+  "video": "medya/secim/manzara.mp4",
+  "en_fazla_sn": 6.1,
+  "not": "balkondan şehir manzarası"
+ },
+ "yatak1": {
+  "video": "medya/secim/yatak1.mp4",
+  "en_fazla_sn": 5.6,
+  "not": "yatak odası 1 (boş, kapı görünür)"
+ },
+ "yatak2": {
+  "video": "medya/secim/yatak2.mp4",
+  "en_fazla_sn": 6.6,
+  "not": "yatak odası 2 (yatak, perde)"
+ },
+ "banyo": {
+  "video": "medya/secim/banyo.mp4",
+  "en_fazla_sn": 4.6,
+  "not": "banyo: duşakabin, klozet"
+ },
+ "banyo2": {
+  "video": "medya/secim/banyo2.mp4",
+  "en_fazla_sn": 3.6,
+  "not": "ikinci banyo"
+ }
+}

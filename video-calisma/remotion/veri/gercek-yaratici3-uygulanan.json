@@ -1,0 +1,290 @@
+{
+ "konsept_adaylari": [
+  "Ufuktan Girişe: Balkonun açık şehir perspektifinden başlayıp evin mahrem odalarına ve antre kapısına uzanan ters kurgu",
+  "Akşam Güneşiyle Eve Dönüş: Balkon keyfinden başlayarak yaşam alanları boyunca kapıya doğru geri sarılan bir gün batımı hikâyesi",
+  "Panoramadan Karşılamaya: Evin en geniş manzaralı teras/balkon köşesinden antredeki şık vestiyere doğru süzülen mimari keşif"
+ ],
+ "konsept": "Ufuktan Girişe: Balkonun açık şehir perspektifinden başlayıp evin mahrem odalarına ve antre kapısına uzanan ters kurgu",
+ "kisit_uygulamasi": "Ters Tur Kuralı: Film dış cephe ve cam balkonun geniş manzarasıyla başlar; salon, mutfak, yatak odaları ve banyolardan geçerek koridordaki gömme dolaplar ve ana giriş kapısında son bulur.",
+ "enerji_egrisi": [
+  {
+   "bolum": "Açılış & Balkon Ferahlığı",
+   "planlar": "1-2",
+   "enerji": "orta"
+  },
+  {
+   "bolum": "Yaşam Alanı & Mutfak Akışı",
+   "planlar": "3-4",
+   "enerji": "yuksek"
+  },
+  {
+   "bolum": "Özel Alanlar & Odalar",
+   "planlar": "5-8",
+   "enerji": "dusuk"
+  },
+  {
+   "bolum": "Antre & Çıkış Zirvesi",
+   "planlar": "9-10",
+   "enerji": "orta"
+  }
+ ],
+ "yeni_teknikler": [
+  {
+   "ad": "Tersine İlerleme Kadrajı",
+   "tarif": "Kamera hareketi fiziksel olarak kapıdan içeri doğru olsa da kurgu mekânsal olarak evin en dip köşesinden kapıya doğru ters sırayla dizilir; geçişler hep aynı yönlü sağa kayma ile tutarlı bir geri çekilme hissi üretir.",
+   "nerede": "Plan 1'den Plan 10'a kadar tüm plan diziliminde"
+  }
+ ],
+ "muzik": {
+  "dosya": "medya/wallpaper.mp3",
+  "baslangic_sn": 0,
+  "neden": "Modern indie synth ritmiyle ters yönlü tura dinamizm ve çağdaş bir tempo kazandırır; izleyiciyi sürükler."
+ },
+ "renk_tonu": "dogal",
+ "font": {
+  "baslik": "Anton",
+  "alt": "Anton"
+ },
+ "vurgu_rengi": "#D4AF37",
+ "acilis": {
+  "teknik": "sonucla_basla",
+  "klipler": [
+   {
+    "video": "medya/gercek/balkon-giris.mp4",
+    "kesit_bas_sn": 0.8
+   }
+  ],
+  "stil": "kontur",
+  "metin": "MALATYA CADDESİ|ATAŞEHİR 3+1",
+  "sure_sn": 1.3,
+  "ses": "vurus"
+ },
+ "planlar": [
+  {
+   "klip": "balkon",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.8,
+   "sure_sn": 2.5,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "sehir",
+   "sonraki_gecis": {
+    "ad": "whip_sag",
+    "sure_sn": 0.4,
+    "ses": "whoosh"
+   },
+   "neden": "Ters turun en uç noktasından, cam balkon kapısından dışarıya açılan ferah bakışla başlar.",
+   "video": "medya/gercek/balkon-giris.mp4"
+  },
+  {
+   "klip": "balkon2",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 4.0,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": {
+    "metin": "TEK BALKON",
+    "stil": "kontur",
+    "konum": "alt",
+    "giris_sn": 0.5,
+    "font": "Anton"
+   },
+   "ortam_sesi": "kus",
+   "sonraki_gecis": {
+    "ad": "kesme",
+    "sure_sn": 0.04,
+    "ses": "yok"
+   },
+   "neden": "Cam balkonun geniş köşe yapısını ve ferah cephesini gösterir; tek balkon gerçeğini vurgular.",
+   "video": "medya/gercek/balkon-genis.mp4"
+  },
+  {
+   "klip": "salon",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.5,
+   "sure_sn": 5.0,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": {
+    "metin": "FERAH SALON",
+    "stil": "yan_cizgi",
+    "konum": "orta",
+    "giris_sn": 0.6,
+    "font": "Anton"
+   },
+   "ortam_sesi": "yok",
+   "sonraki_gecis": {
+    "ad": "kesme",
+    "sure_sn": 0.04,
+    "ses": "yok"
+   },
+   "neden": "Balkondan salona geçiş; ana oturma alanının aydınlığını net şekilde sergiler.",
+   "video": "medya/gercek/u-salon.mp4"
+  },
+  {
+   "klip": "mutfak",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 2.2,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "su",
+   "sonraki_gecis": {
+    "ad": "saat",
+    "sure_sn": 0.5,
+    "ses": "hava"
+   },
+   "neden": "Kısa mutfak planı akıcı bir geçişle mutfak dolaplarının detayını hissettirir.",
+   "video": "medya/gercek/plan-4.mp4"
+  },
+  {
+   "klip": "yatak2",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.5,
+   "sure_sn": 4.5,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": {
+    "metin": "YATAK ODASI",
+    "stil": "kelime",
+    "konum": "alt",
+    "giris_sn": 0.5,
+    "font": "Anton"
+   },
+   "ortam_sesi": "yok",
+   "sonraki_gecis": {
+    "ad": "kesme",
+    "sure_sn": 0.04,
+    "ses": "yok"
+   },
+   "neden": "Ters kurguda yaşam alanından özel ebeveyn alanına geçiş.",
+   "video": "medya/gercek/u-yatak2.mp4"
+  },
+  {
+   "klip": "banyo",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 3.8,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": {
+    "metin": "ÇİFT BANYO",
+    "stil": "kontur",
+    "konum": "alt",
+    "giris_sn": 0.5,
+    "font": "Anton"
+   },
+   "ortam_sesi": "yok",
+   "sonraki_gecis": {
+    "ad": "whip_sag",
+    "sure_sn": 0.4,
+    "ses": "whoosh"
+   },
+   "neden": "Çift banyodan ilkini (geniş duşakabinli) tanıtır.",
+   "video": "medya/gercek/u-banyo.mp4"
+  },
+  {
+   "klip": "yatak1",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 2.8,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "yok",
+   "sonraki_gecis": {
+    "ad": "kesme",
+    "sure_sn": 0.04,
+    "ses": "yok"
+   },
+   "neden": "İkinci yatak odasını yazısız ve sade biçimde gösterir.",
+   "video": "medya/gercek/plan-7.mp4"
+  },
+  {
+   "klip": "banyo2",
+   "hiz": 1.0,
+   "kesit_bas_sn": 0.0,
+   "sure_sn": 2.3,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "yok",
+   "sonraki_gecis": {
+    "ad": "kesme",
+    "sure_sn": 0.04,
+    "ses": "yok"
+   },
+   "neden": "İkinci banyoyu tamamlayarak çift banyo vaadini doğrular.",
+   "video": "medya/gercek/ek-banyo.mp4"
+  },
+  {
+   "klip": "dolap",
+   "hiz": 1.0,
+   "kesit_bas_sn": 1.0,
+   "sure_sn": 4.5,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "kapi",
+   "sonraki_gecis": {
+    "ad": "whip_sag",
+    "sure_sn": 0.4,
+    "ses": "whoosh"
+   },
+   "neden": "Giriş koridorundaki geniş gömme dolap alanına dönüşü sağlar.",
+   "video": "medya/gercek/u-dolap.mp4"
+  },
+  {
+   "klip": "koridor",
+   "hiz": 1.0,
+   "kesit_bas_sn": 1.0,
+   "sure_sn": 5.0,
+   "efekt": {
+    "ad": "yok",
+    "an_sn": 0.0
+   },
+   "yazi": null,
+   "ortam_sesi": "adim",
+   "sonraki_gecis": {
+    "ad": "zoom_vurus",
+    "sure_sn": 0.5,
+    "ses": "vurus"
+   },
+   "neden": "Ters turun son durağı; mermer zeminli antre ve çıkış kapısına ulaşarak turu tamamlar.",
+   "video": "medya/gercek/u-koridor.mp4"
+  }
+ ],
+ "gerekce": "Yaratıcı ters tur kuralına tam uyularak ev en ferah noktası olan cam balkondan başlatılmış ve antredeki çıkış kapısında sonlandırılmıştır. Yasaklı tüm geçiş, efekt, font ve tonlardan kaçınılarak sadece geçerli 'Anton' fontu ve 'whip_sag/kesme/saat/zoom_vurus' geçiş kurgusuyla yön duygusu tutarlı ve sade bir tanıtım üretilmiştir.",
+ "_kisit": "Ters tur: en etkileyici mekândan başla, girişe (koridor) doğru geri yürü; kapanış kapıda.",
+ "kapanis": {
+  "logo": "medya/logo.png",
+  "cagri": "YERİNDE GÖRÜN",
+  "telefon": "0 (507) 118 23 62",
+  "sure_sn": 4.5,
+  "logo_animasyonu": "parilti",
+  "notlar": [
+   "Müzik: Kevin MacLeod (incompetech.com) · CC BY 4.0"
+  ]
+ }
+}

@@ -113,5 +113,69 @@
    "yazi:isik",
    "yazi:yay"
   ]
+ },
+ {
+  "video": "gercek-yaratici3-uygulanan.json",
+  "konsept": "Ufuktan Girişe: Balkonun açık şehir perspektifinden başlayıp evin mahrem odalarına ve antre kapısına uzanan ters kurgu",
+  "kisit": "Ters tur: en etkileyici mekândan başla, girişe (koridor) doğru geri yürü; kapanış kapıda.",
+  "teknikler": [
+   "acilis:sonucla_basla",
+   "acilis_yazi:kontur",
+   "font:Anton",
+   "gecis:kesme",
+   "gecis:saat",
+   "gecis:whip_sag",
+   "gecis:zoom_vurus",
+   "logo:parilti",
+   "muzik:wallpaper.mp3",
+   "ton:dogal",
+   "yazi:kelime",
+   "yazi:kontur",
+   "yazi:yan_cizgi"
+  ]
+ },
+ {
+  "video": "arsa-seferihisar-3794-174-uygulanan.json",
+  "konsept": "Tapudan toprağa",
+  "kisit": null,
+  "teknikler": [
+   "acilis:donusum",
+   "acilis_yazi:daktilo",
+   "efekt:isik_huzmesi",
+   "efekt:vinyet",
+   "font:Montserrat",
+   "font:Raleway",
+   "gecis:bulanik_kayma_sag",
+   "gecis:cozulme",
+   "gecis:isik_sizinti",
+   "gecis:kayma_sag",
+   "logo:yukselis",
+   "muzik:lightless-dawn.mp3",
+   "ton:parlak",
+   "yazi:cizgi",
+   "yazi:daktilo",
+   "yazi:maske_yukari"
+  ]
+ },
+ {
+  "video": "secim-ae-uygulanan.json",
+  "konsept": "Sessiz Sinema ve Mekân Akustiği: Hiçbir metin müdahalesi olmadan sadece evin mimari detayları ve doğal ortam sesleriyle duyusal bir tur.",
+  "kisit": "Yazı yalnız açılışta ve kapanışta; arada anlatım tamamen görüntü ve ortam sesleriyle.",
+  "teknikler": [
+   "acilis:sessizlik_vurus",
+   "acilis_yazi:maske_yukari",
+   "efekt:mercek",
+   "efekt:parilti_toz",
+   "font:Oswald",
+   "font:PlayfairDisplay",
+   "gecis:bulanik_kayma_sol",
+   "gecis:kayma_alt",
+   "gecis:kayma_sol",
+   "gecis:silme",
+   "gecis:whip_sol",
+   "logo:maske",
+   "muzik:inspired.mp3",
+   "ton:sicak"
+  ]
  }
 ]

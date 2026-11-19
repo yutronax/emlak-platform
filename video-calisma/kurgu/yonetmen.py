@@ -11,6 +11,7 @@ import urllib.request
 
 KOK = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, KOK)
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from izlet import anahtar, yukle  # noqa: E402
 
 MODELLER = ("gemini-pro-latest", "gemini-3.5-flash", "gemini-flash-latest", "gemini-2.5-flash")
@@ -136,30 +137,56 @@ SADECE şu JSON'u döndür:
  "gerekce":"bu kararların bu ev için neden doğru olduğu"}}"""
 
 
+def qwen_sor(video, metin, json_mod=False):
+    """Qwen'i GPU'lu sanal ortamda ayrı süreçte çalıştırır (sistem Python'unda torch yok)."""
+    import subprocess, tempfile
+    kok = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    py = os.path.join(kok, ".venv-capcut", "Scripts", "python.exe")
+    with tempfile.TemporaryDirectory() as d:
+        istem, hedef = os.path.join(d, "istem.txt"), os.path.join(d, "cevap.txt")
+        open(istem, "w", encoding="utf-8").write(metin)
+        subprocess.run([py, "-X", "utf8", os.path.join(kok, "qwen_yerel.py"), video, istem, hedef]
+                       + (["--json"] if json_mod else []), check=True)
+        yazi = open(hedef, encoding="utf-8").read().strip()
+    if not json_mod:
+        return yazi
+    yazi = yazi.replace("```json", "").replace("```", "")
+    return json.JSONDecoder().raw_decode(yazi[yazi.index("{"):])[0]
+
+
 def sor(video, metin, gecmis_mesaj=None):
-    k = anahtar()
-    d = yukle(video, k)
-    icerik = [{"role": "user", "parts": [{"file_data": {"mime_type": d["mimeType"], "file_uri": d["uri"]}}, {"text": metin}]}]
-    icerik += gecmis_mesaj or []
-    govde = {"contents": icerik,
-             "generationConfig": {"responseMimeType": "application/json", "temperature": 1.0}}
+    """Tüm anahtarları ve modelleri dener: kota (402/429) veya yoğunlukta (503) sıradaki anahtara/modele geçer."""
     import time
-    for tur in range(4):                       # 503 (yoğunluk) geçicidir: tüm modelleri bekleyerek yeniden dene
+    if os.environ.get("YZ_SAGLAYICI") == "qwen":                  # yerel yedek: Qwen2.5-VL (ses dinlemez)
+        return "qwen-yerel", qwen_sor(video, metin, json_mod=True)
+    from gemini_anahtar import hepsi
+    yuklu = {}
+    for tur in range(3):
       if tur:
           print(f'Gemini yoğun, {30 * tur} sn bekleniyor…', file=sys.stderr)
           time.sleep(30 * tur)
-      for m in MODELLER:
+      for ai, k in enumerate(hepsi()):
         try:
+            if k not in yuklu:
+                yuklu[k] = yukle(video, k)
+        except Exception as e:
+            print(f"anahtar #{ai + 1} yükleme olmadı:", getattr(e, "code", type(e).__name__), file=sys.stderr); continue
+        d = yuklu[k]
+        icerik = [{"role": "user", "parts": [{"file_data": {"mime_type": d["mimeType"], "file_uri": d["uri"]}}, {"text": metin}]}] + (gecmis_mesaj or [])
+        govde = {"contents": icerik, "generationConfig": {"responseMimeType": "application/json", "temperature": 1.0}}
+        for m in MODELLER:
+          try:
             r = urllib.request.Request(f"https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent",
                                        data=json.dumps(govde).encode(), method="POST",
                                        headers={"x-goog-api-key": k, "Content-Type": "application/json"})
             c = json.loads(urllib.request.urlopen(r, timeout=300).read())
-            metin = "".join(p.get("text", "") for p in c["candidates"][0]["content"]["parts"]).strip()
-            return m, json.JSONDecoder().raw_decode(metin[metin.index("{"):])[0]
-        except urllib.error.HTTPError as e:
-            print(m, e.code, file=sys.stderr)
-        except (TimeoutError, urllib.error.URLError, ConnectionError) as e:   # yoğunlukta bağlantı da düşebilir
-            print(m, "zaman aşımı/bağlantı:", type(e).__name__, file=sys.stderr)
+            metin2 = "".join(p.get("text", "") for p in c["candidates"][0]["content"]["parts"]).strip()
+            print(f"anahtar #{ai + 1} / {m}", file=sys.stderr)
+            return m, json.JSONDecoder().raw_decode(metin2[metin2.index("{"):])[0]
+          except urllib.error.HTTPError as e:
+            print(f"anahtar #{ai + 1} {m} {e.code}", file=sys.stderr)
+          except (TimeoutError, urllib.error.URLError, ConnectionError) as e:
+            print(f"anahtar #{ai + 1} {m} zaman aşımı/bağlantı:", type(e).__name__, file=sys.stderr)
     raise RuntimeError("hiçbir Gemini modeli cevap vermedi")
 
 

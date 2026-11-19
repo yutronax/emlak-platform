@@ -68,7 +68,16 @@ const YaziKutu: React.FC<{y: Yazi; sure: number; vurgu: string; bf: string; af: 
 	const cikis = interpolate(f, [sure - 8, sure], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
 	const s = spring({frame: f, fps, config: {damping: 13}});
 	const lin = (a: number, b: number) => interpolate(f, [a, b], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)});
-	const harf = (fn: (i: number) => React.CSSProperties) => [...y.metin].map((c, i) => <span key={i} style={{display: 'inline-block', whiteSpace: 'pre', ...fn(i)}}>{c}</span>);
+	// harfler kelime kelime gruplanır: satır yalnız kelime arasından kırılır (kelime ortası bölünmez)
+	const harf = (fn: (i: number) => React.CSSProperties) => {
+		let i = 0;
+		return y.metin.split(' ').map((w, wi) => (
+			<span key={wi} style={{display: 'inline-block', whiteSpace: 'nowrap', marginRight: '0.28em'}}>
+				{[...w].map((c) => { const j = i++; return <span key={j} style={{display: 'inline-block', ...fn(j)}}>{c}</span>; })}
+				{(() => { i++; return null; })()}
+			</span>
+		));
+	};
 	const temel: React.CSSProperties = {fontWeight: 700, fontFamily: font, fontSize: boyut, color: '#fff', textShadow: golge, lineHeight: 1.05, textAlign: 'center'};
 	let ana: React.ReactNode;
 	switch (y.stil) {

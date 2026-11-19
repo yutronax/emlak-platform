@@ -27,6 +27,10 @@ MENU = {
         "sessizlik_vurus": "ilk 0.7 sn müzik yok, derin vuruşla girer"},
     "logo_animasyonlari": {"yukselis": "aşağıdan yükselip yaylanır (varsayılan)", "parilti": "bulanıktan netleşir", "maske": "soldan sağa çizilir", "isik": "karanlıktan parlar"},
     "plan_turleri": {"tek": "tek klip (varsayılan)", "izgara": "planda 'izgara': [klip adları] — 4 klip 2x2, 9 klip 3x3; hücreler sırayla pop ile açılır"},
+    "ae_gecisleri": {"DissolveDefocus": "odak kaçarak sakin geçiş", "DissolveFilm": "doğal çift pozlama", "Swish3D": "yumuşak 3D kayma (tek yön motifi)",
+                     "HyperPull": "balık gözü çekme — videoda en fazla 1", "DissolveLightLeak": "hafif sıcak ışık kaçağıyla çözülme", "yok": "sert kesme"},
+    "ae_gorunum": {"FilmEffect": "film stoğu", "UltraGrain": "hafif gren", "SoftFocus": "yumuşak odak", "BleachBypass": "kontrastlı lüks", "Vignette": "kenar karartma",
+                   "LightLeak": "hafif ışık kaçağı", "_not": "UltraGlow yalnız plan efekti"},
     "hiz": "planda 'hiz': 0.5–2.0 (1=normal; >1 hızlandırma, <1 ağır çekim). Kesit süresi sure_sn*hiz kadar kaynak tüketir.",
     "ortam_sesleri": {"adim": "ayak sesi", "anahtar": "anahtar şıngırtısı", "kapi": "kapı gıcırtısı", "kus": "kuş cıvıltısı", "perde_hisirti": "perde/kumaş", "sehir": "uzak şehir uğultusu", "su": "akan su", "zil": "kapı zili/çan"},
     "renk_tonlari": ["dogal", "sicak", "soguk", "sinematik", "parlak"],
@@ -77,8 +81,9 @@ SADECE şu JSON'u döndür:
  "logo_animasyonu": "<logo_animasyonlari>",
  "planlar": [{{"klip": "<klip adı>", "izgara": ["<opsiyonel klip adları>"], "hiz": 1.0, "kesit_bas_sn": 0.0, "sure_sn": 4.0, "efekt": {{"ad": "...", "an_sn": 0.5}},
    "yazi": {{"metin": "...", "alt": "...|null", "stil": "...", "konum": "...", "giris_sn": 0.5, "font": "<opsiyonel>"}} | null,
-   "ortam_sesi": "<ortam_sesleri|yok>", "sonraki_gecis": {{"ad": "...", "sure_sn": 0.5, "ses": "..."}}, "neden": "..."}}],
+   "ortam_sesi": "<ortam_sesleri|yok>", "sonraki_gecis": {{"ad": "...", "sure_sn": 0.5, "ses": "...", "ae": "<ae_gecisleri>"}}, "neden": "..."}}],
  "kapanis_gecisi": {{"ad": "...", "sure_sn": 0.6, "ses": "..."}},
+ "ae": {{"gorunum": ["<ae_gorunum, en fazla 3>"], "neden": "..."}},
  "gerekce": "..."}}"""
 m, c = y.sor(reel, ist)
 c["_kisit"] = kisit

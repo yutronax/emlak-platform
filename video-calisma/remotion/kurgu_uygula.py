@@ -12,7 +12,19 @@ for p in c["planlar"]:
     p["sure_sn"] = min(p["sure_sn"], (K[p["klip"]]["en_fazla_sn"] - p.get("kesit_bas_sn", 0)) / max(p.get("hiz", 1), 0.1))
     y = p.get("yazi")
     if y and not y.get("alt"): y.pop("alt", None)
+# OKUMA SÜRESİ KURALI: her yazı en az 2 sn + karakter başına 0.05 sn ekranda kalır; plan kısa ise klip sınırına kadar uzatılır,
+# yine yetmezse yazı girişi öne çekilir. Açılış iki satırsa en az 2 sn.
+for p in c["planlar"]:
+    y = p.get("yazi")
+    if not y: continue
+    gerek = 2.0 + 0.05 * (len(y.get("metin", "")) + len(y.get("alt") or ""))
+    gir = y.get("giris_sn", 0.4)
+    if p["sure_sn"] - gir - 0.2 < gerek:
+        mx = (K.get(p["klip"], {}).get("en_fazla_sn", p["sure_sn"]) - p.get("kesit_bas_sn", 0)) / max(p.get("hiz", 1), 0.1)
+        p["sure_sn"] = round(min(mx, gir + 0.2 + gerek), 2)
+        if p["sure_sn"] - gir - 0.2 < gerek: y["giris_sn"] = round(max(0.2, p["sure_sn"] - 0.2 - gerek), 2)
 a = c["acilis"]
+if "|" in a.get("metin", ""): a["sure_sn"] = max(a.get("sure_sn", 1.5), 2.0)
 a["klipler"] = [{"video": K[x["klip"]]["video"], "kesit_bas_sn": x.get("kesit_bas_sn", 0)} for x in a.get("klipler", []) if x.get("klip") in K]
 if "kapanis_gecisi" in c: c["planlar"][-1]["sonraki_gecis"] = c.pop("kapanis_gecisi")
 kat = {m["dosya"]: m for m in json.load(open("../muzik/katalog.json", encoding="utf-8"))}

@@ -65,24 +65,40 @@ def yukle(yol, k):
 
 
 def izlet(yol, ek="", model=VARSAYILAN_MODEL):
-    k = anahtar()
-    dosya = yukle(yol, k)
+    """Tüm anahtarları ve modelleri sırayla dener (kota/yoğunlukta sıradakine geçer)."""
+    import urllib.error, time
+    from gemini_anahtar import hepsi
     metin = ROL + (f"\n\nEk not: {ek}" if ek else "")
-    govde = {"contents": [{"parts": [{"file_data": {"mime_type": dosya["mimeType"], "file_uri": dosya["uri"]}},
-                                     {"text": metin}]}]}
-    import urllib.error
-    for m in [model] + [x for x in YEDEKLER if x != model]:       # ücretsiz kotada pro 429 verebilir → flash'a düş
-        try:
-            _, g = istek(f"{API}/v1beta/models/{m}:generateContent", yontem="POST", veri=json.dumps(govde).encode(),
-                         basliklar={"x-goog-api-key": k, "Content-Type": "application/json"})
-            model = m
-            break
-        except urllib.error.HTTPError as e:
-            print(f"{m}: HTTP {e.code} — {e.read()[:200]!r}", file=sys.stderr)
-            if e.code not in (429, 404, 503):
-                raise
-    else:
-        raise RuntimeError("Hiçbir model cevap vermedi (kota?)")
+    if os.environ.get("YZ_SAGLAYICI") == "qwen":                  # yerel yedek: Qwen2.5-VL (ses dinlemez)
+        sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "kurgu"))
+        from yonetmen import qwen_sor
+        yazi = qwen_sor(yol, metin + "\nNot: sesi duyamıyorsun; ses/müzik maddesini 'değerlendirilemedi' diye geç.")
+        cikti = os.path.splitext(yol)[0] + "-elestiri.md"
+        with open(cikti, "w", encoding="utf-8") as f:
+            f.write(f"# {os.path.basename(yol)} — Qwen2.5-VL (yerel) eleştirisi\n\n{yazi}\n")
+        return cikti
+    g = None
+    for tur in range(3):
+        if tur: time.sleep(30 * tur)
+        for ai, k in enumerate(hepsi()):
+            try:
+                dosya = yukle(yol, k)
+            except Exception as e:
+                print(f"anahtar #{ai + 1} yükleme olmadı: {getattr(e, 'code', type(e).__name__)}", file=sys.stderr); continue
+            govde = {"contents": [{"parts": [{"file_data": {"mime_type": dosya["mimeType"], "file_uri": dosya["uri"]}}, {"text": metin}]}]}
+            for m in [model] + [x for x in YEDEKLER if x != model]:
+                try:
+                    _, g = istek(f"{API}/v1beta/models/{m}:generateContent", yontem="POST", veri=json.dumps(govde).encode(),
+                                 basliklar={"x-goog-api-key": k, "Content-Type": "application/json"}, )
+                    model = m; break
+                except urllib.error.HTTPError as e:
+                    print(f"anahtar #{ai + 1} {m}: HTTP {e.code}", file=sys.stderr)
+                except Exception as e:
+                    print(f"anahtar #{ai + 1} {m}: {type(e).__name__}", file=sys.stderr)
+            if g: break
+        if g: break
+    if not g:
+        raise RuntimeError("Hiçbir anahtar/model cevap vermedi")
     cevap = json.loads(g)
     yazi = "".join(p.get("text", "") for p in cevap["candidates"][0]["content"]["parts"])
     try:                                                           # yüklenen dosyayı sunucudan sil
